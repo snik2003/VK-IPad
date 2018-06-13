@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
-    <device id="ipad12_9" orientation="portrait">
+    <device id="ipad12_9" orientation="landscape">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -16,44 +15,46 @@
             <objects>
                 <viewController id="01J-lp-oVM" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
-                        <rect key="frame" x="0.0" y="0.0" width="1024" height="1366"/>
+                        <rect key="frame" x="0.0" y="0.0" width="1366" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="startImage" translatesAutoresizingMaskIntoConstraints="NO" id="V8S-tV-8fW">
-                                <rect key="frame" x="-71" y="110" width="1166" height="1166"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="startLogo" translatesAutoresizingMaskIntoConstraints="NO" id="V8S-tV-8fW">
+                                <rect key="frame" x="433" y="272" width="500" height="500"/>
                                 <color key="backgroundColor" red="0.12156862745098039" green="0.51372549019607838" blue="0.72549019607843135" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ВКлючайся! для IPad" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zXQ-Zm-xLI">
-                                <rect key="frame" x="-71" y="110" width="1166" height="100"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="100" id="bwg-Zw-jDm"/>
+                                    <constraint firstAttribute="width" constant="500" id="SLD-2G-2rK"/>
+                                    <constraint firstAttribute="height" constant="500" id="aRG-cj-2PV"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="Verdana-Bold" family="Verdana" pointSize="50"/>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ВКлючайся! для IPad" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="zXQ-Zm-xLI">
+                                <rect key="frame" x="493" y="292" width="380" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="bwg-Zw-jDm"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Verdana-Bold" family="Verdana" pointSize="45"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2018 Ⓒ Никитин Сергей" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4xz-3E-sdI">
-                                <rect key="frame" x="-71" y="1206" width="1166" height="70"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2018 Ⓒ Никитин Сергей" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="4xz-3E-sdI">
+                                <rect key="frame" x="493" y="722" width="380" height="30"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="70" id="1hK-Ih-Wiy"/>
+                                    <constraint firstAttribute="height" constant="30" id="1hK-Ih-Wiy"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name="Verdana-Bold" family="Verdana" pointSize="30"/>
                                 <color key="textColor" red="0.019607843140000001" green="0.4039215686" blue="0.64313725489999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
-                        <color key="backgroundColor" red="0.058823529411764705" green="0.44705882352941179" blue="0.65098039215686276" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="V8S-tV-8fW" firstAttribute="height" secondItem="Ze5-6b-2t3" secondAttribute="height" constant="-200" id="BnM-rc-udy"/>
-                            <constraint firstItem="V8S-tV-8fW" firstAttribute="width" secondItem="Ze5-6b-2t3" secondAttribute="height" constant="-200" id="Iox-dU-qQ8"/>
-                            <constraint firstItem="4xz-3E-sdI" firstAttribute="bottom" secondItem="V8S-tV-8fW" secondAttribute="bottom" id="OUI-TM-R5P"/>
+                            <constraint firstItem="4xz-3E-sdI" firstAttribute="bottom" secondItem="V8S-tV-8fW" secondAttribute="bottom" constant="-20" id="OUI-TM-R5P"/>
                             <constraint firstItem="4xz-3E-sdI" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="UPV-eh-ycF"/>
-                            <constraint firstItem="zXQ-Zm-xLI" firstAttribute="width" secondItem="V8S-tV-8fW" secondAttribute="width" id="X6g-C4-vUW"/>
-                            <constraint firstItem="V8S-tV-8fW" firstAttribute="top" secondItem="zXQ-Zm-xLI" secondAttribute="top" id="maT-KQ-Z15"/>
+                            <constraint firstItem="zXQ-Zm-xLI" firstAttribute="width" secondItem="V8S-tV-8fW" secondAttribute="width" constant="-120" id="X6g-C4-vUW"/>
+                            <constraint firstItem="V8S-tV-8fW" firstAttribute="top" secondItem="zXQ-Zm-xLI" secondAttribute="top" constant="-20" id="maT-KQ-Z15"/>
                             <constraint firstItem="zXQ-Zm-xLI" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="pol-xY-K8M"/>
                             <constraint firstItem="V8S-tV-8fW" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="qkm-JJ-GAg"/>
                             <constraint firstItem="V8S-tV-8fW" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="r8r-cy-BTQ"/>
-                            <constraint firstItem="4xz-3E-sdI" firstAttribute="width" secondItem="V8S-tV-8fW" secondAttribute="width" id="wlK-Al-MVV"/>
+                            <constraint firstItem="4xz-3E-sdI" firstAttribute="width" secondItem="V8S-tV-8fW" secondAttribute="width" constant="-120" id="wlK-Al-MVV"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
@@ -64,6 +65,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="startImage" width="512" height="512"/>
+        <image name="startLogo" width="1200" height="1200"/>
     </resources>
 </document>

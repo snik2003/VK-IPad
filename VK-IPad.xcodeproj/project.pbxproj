@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		170C587520D12CEA007E8B81 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170C587420D12CEA007E8B81 /* LoginViewController.swift */; };
+		170C587820D13523007E8B81 /* vkSingleton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170C587720D13523007E8B81 /* vkSingleton.swift */; };
 		17AF811320D11D1F00FF1913 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17AF811220D11D1F00FF1913 /* AppDelegate.swift */; };
 		17AF811520D11D1F00FF1913 /* StartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17AF811420D11D1F00FF1913 /* StartViewController.swift */; };
 		17AF811820D11D1F00FF1913 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17AF811620D11D1F00FF1913 /* Main.storyboard */; };
@@ -17,6 +19,8 @@
 
 /* Begin PBXFileReference section */
 		1380E5F9747FC22A8E1480B7 /* Pods-VK-IPad.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VK-IPad.release.xcconfig"; path = "Pods/Target Support Files/Pods-VK-IPad/Pods-VK-IPad.release.xcconfig"; sourceTree = "<group>"; };
+		170C587420D12CEA007E8B81 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		170C587720D13523007E8B81 /* vkSingleton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = vkSingleton.swift; sourceTree = "<group>"; };
 		17AF810F20D11D1F00FF1913 /* VK-IPad.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "VK-IPad.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		17AF811220D11D1F00FF1913 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		17AF811420D11D1F00FF1913 /* StartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartViewController.swift; sourceTree = "<group>"; };
@@ -48,6 +52,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		170C587620D13500007E8B81 /* AppConfig */ = {
+			isa = PBXGroup;
+			children = (
+				170C587720D13523007E8B81 /* vkSingleton.swift */,
+			);
+			path = AppConfig;
+			sourceTree = "<group>";
+		};
 		17AF810620D11D1F00FF1913 = {
 			isa = PBXGroup;
 			children = (
@@ -69,8 +81,10 @@
 		17AF811120D11D1F00FF1913 /* VK-IPad */ = {
 			isa = PBXGroup;
 			children = (
+				170C587620D13500007E8B81 /* AppConfig */,
 				17AF811220D11D1F00FF1913 /* AppDelegate.swift */,
 				17AF811420D11D1F00FF1913 /* StartViewController.swift */,
+				170C587420D12CEA007E8B81 /* LoginViewController.swift */,
 				17AF811B20D11D2000FF1913 /* LaunchScreen.storyboard */,
 				17AF811620D11D1F00FF1913 /* Main.storyboard */,
 				17AF811920D11D2000FF1913 /* Assets.xcassets */,
@@ -228,6 +242,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				170C587820D13523007E8B81 /* vkSingleton.swift in Sources */,
+				170C587520D12CEA007E8B81 /* LoginViewController.swift in Sources */,
 				17AF811520D11D1F00FF1913 /* StartViewController.swift in Sources */,
 				17AF811320D11D1F00FF1913 /* AppDelegate.swift in Sources */,
 			);
