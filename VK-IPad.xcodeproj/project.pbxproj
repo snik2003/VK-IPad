@@ -8,24 +8,24 @@
 
 /* Begin PBXBuildFile section */
 		17AF811320D11D1F00FF1913 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17AF811220D11D1F00FF1913 /* AppDelegate.swift */; };
-		17AF811520D11D1F00FF1913 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17AF811420D11D1F00FF1913 /* ViewController.swift */; };
+		17AF811520D11D1F00FF1913 /* StartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17AF811420D11D1F00FF1913 /* StartViewController.swift */; };
 		17AF811820D11D1F00FF1913 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17AF811620D11D1F00FF1913 /* Main.storyboard */; };
 		17AF811A20D11D2000FF1913 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 17AF811920D11D2000FF1913 /* Assets.xcassets */; };
 		17AF811D20D11D2000FF1913 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17AF811B20D11D2000FF1913 /* LaunchScreen.storyboard */; };
-		C86385F11422C04D168B4760 /* Pods_VK_IPad.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C4852DE1BA5ABDBACA4BA7E /* Pods_VK_IPad.framework */; };
+		2286DFA9FA1B572377DE03A3 /* Pods_VK_IPad.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ECEFB335DD55F5E58C7A64A /* Pods_VK_IPad.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1380E5F9747FC22A8E1480B7 /* Pods-VK-IPad.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VK-IPad.release.xcconfig"; path = "Pods/Target Support Files/Pods-VK-IPad/Pods-VK-IPad.release.xcconfig"; sourceTree = "<group>"; };
 		17AF810F20D11D1F00FF1913 /* VK-IPad.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "VK-IPad.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		17AF811220D11D1F00FF1913 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		17AF811420D11D1F00FF1913 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		17AF811420D11D1F00FF1913 /* StartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartViewController.swift; sourceTree = "<group>"; };
 		17AF811720D11D1F00FF1913 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		17AF811920D11D2000FF1913 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		17AF811C20D11D2000FF1913 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		17AF811E20D11D2000FF1913 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		2C4852DE1BA5ABDBACA4BA7E /* Pods_VK_IPad.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_VK_IPad.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		4EC2548A57A17F8F14F8806A /* Pods-VK-IPad.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VK-IPad.debug.xcconfig"; path = "Pods/Target Support Files/Pods-VK-IPad/Pods-VK-IPad.debug.xcconfig"; sourceTree = "<group>"; };
-		A5DE96A637FAE32CB622AF6A /* Pods-VK-IPad.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VK-IPad.release.xcconfig"; path = "Pods/Target Support Files/Pods-VK-IPad/Pods-VK-IPad.release.xcconfig"; sourceTree = "<group>"; };
+		1ECEFB335DD55F5E58C7A64A /* Pods_VK_IPad.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_VK_IPad.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		92ED85805D6C190E02304F34 /* Pods-VK-IPad.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VK-IPad.debug.xcconfig"; path = "Pods/Target Support Files/Pods-VK-IPad/Pods-VK-IPad.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -33,20 +33,28 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C86385F11422C04D168B4760 /* Pods_VK_IPad.framework in Frameworks */,
+				2286DFA9FA1B572377DE03A3 /* Pods_VK_IPad.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		147DA1CBA060DCF7606FBDE6 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1ECEFB335DD55F5E58C7A64A /* Pods_VK_IPad.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		17AF810620D11D1F00FF1913 = {
 			isa = PBXGroup;
 			children = (
 				17AF811120D11D1F00FF1913 /* VK-IPad */,
 				17AF811020D11D1F00FF1913 /* Products */,
-				3B361122A6D0383D5A59B1B1 /* Pods */,
-				EF4E99F30B9D98E41AA03E56 /* Frameworks */,
+				AB08445BDD0DEE9723EB655C /* Pods */,
+				147DA1CBA060DCF7606FBDE6 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -62,30 +70,22 @@
 			isa = PBXGroup;
 			children = (
 				17AF811220D11D1F00FF1913 /* AppDelegate.swift */,
-				17AF811420D11D1F00FF1913 /* ViewController.swift */,
+				17AF811420D11D1F00FF1913 /* StartViewController.swift */,
+				17AF811B20D11D2000FF1913 /* LaunchScreen.storyboard */,
 				17AF811620D11D1F00FF1913 /* Main.storyboard */,
 				17AF811920D11D2000FF1913 /* Assets.xcassets */,
-				17AF811B20D11D2000FF1913 /* LaunchScreen.storyboard */,
 				17AF811E20D11D2000FF1913 /* Info.plist */,
 			);
 			path = "VK-IPad";
 			sourceTree = "<group>";
 		};
-		3B361122A6D0383D5A59B1B1 /* Pods */ = {
+		AB08445BDD0DEE9723EB655C /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				4EC2548A57A17F8F14F8806A /* Pods-VK-IPad.debug.xcconfig */,
-				A5DE96A637FAE32CB622AF6A /* Pods-VK-IPad.release.xcconfig */,
+				92ED85805D6C190E02304F34 /* Pods-VK-IPad.debug.xcconfig */,
+				1380E5F9747FC22A8E1480B7 /* Pods-VK-IPad.release.xcconfig */,
 			);
 			name = Pods;
-			sourceTree = "<group>";
-		};
-		EF4E99F30B9D98E41AA03E56 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				2C4852DE1BA5ABDBACA4BA7E /* Pods_VK_IPad.framework */,
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -95,11 +95,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 17AF812120D11D2000FF1913 /* Build configuration list for PBXNativeTarget "VK-IPad" */;
 			buildPhases = (
-				6D823D8A235F108FBE117A87 /* [CP] Check Pods Manifest.lock */,
+				BD41B03A7D7F77084CC05152 /* [CP] Check Pods Manifest.lock */,
 				17AF810B20D11D1F00FF1913 /* Sources */,
 				17AF810C20D11D1F00FF1913 /* Frameworks */,
 				17AF810D20D11D1F00FF1913 /* Resources */,
-				DF0ED8570BF11676F5C2E35D /* [CP] Embed Pods Frameworks */,
+				50874808AC58BB67E2B2BA1D /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -157,25 +157,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		6D823D8A235F108FBE117A87 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-VK-IPad-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		DF0ED8570BF11676F5C2E35D /* [CP] Embed Pods Frameworks */ = {
+		50874808AC58BB67E2B2BA1D /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -221,6 +203,24 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-VK-IPad/Pods-VK-IPad-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		BD41B03A7D7F77084CC05152 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-VK-IPad-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -228,7 +228,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				17AF811520D11D1F00FF1913 /* ViewController.swift in Sources */,
+				17AF811520D11D1F00FF1913 /* StartViewController.swift in Sources */,
 				17AF811320D11D1F00FF1913 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -371,33 +371,41 @@
 		};
 		17AF812220D11D2000FF1913 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4EC2548A57A17F8F14F8806A /* Pods-VK-IPad.debug.xcconfig */;
+			baseConfigurationReference = 92ED85805D6C190E02304F34 /* Pods-VK-IPad.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = WML363H532;
 				INFOPLIST_FILE = "VK-IPad/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "Snik2003.VK-IPad";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Debug;
 		};
 		17AF812320D11D2000FF1913 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A5DE96A637FAE32CB622AF6A /* Pods-VK-IPad.release.xcconfig */;
+			baseConfigurationReference = 1380E5F9747FC22A8E1480B7 /* Pods-VK-IPad.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = WML363H532;
 				INFOPLIST_FILE = "VK-IPad/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "Snik2003.VK-IPad";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Release;
 		};

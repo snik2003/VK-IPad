@@ -12,7 +12,7 @@
 
 /**
  the send button was tapped.
- @param the text that was entered in the comment view.
+ @param text that was entered in the comment view.
  */
 -(void)didSendComment:(NSString*)text;
 
