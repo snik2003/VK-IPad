@@ -11,14 +11,16 @@ import Foundation
 final class vkSingleton {
     static let shared = vkSingleton()
     
-    let vkAppID: [String] = ["6363391","6483790","6483830","6483831"]
-    var accessToken: String = ""
-
-    var userID: String = ""
-    var commentFromGroup = 0
-    
+    let apiURL = "https://api.vk.com"
+    let vkAppID: [String] = ["6604375"]
     let version = "5.71"
     let lpVersion = "3"
+    
+    var userID: String = ""
+    var userAppID: Int = 0
+    var accessToken: String = ""
+    
+    var commentFromGroup = 0
     
     var deviceToken = ""
     var deviceRegisterOnPush = false
