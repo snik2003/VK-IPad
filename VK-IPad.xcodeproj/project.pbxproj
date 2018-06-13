@@ -156,8 +156,8 @@
 				170C587420D12CEA007E8B81 /* LoginViewController.swift */,
 				17AF811620D11D1F00FF1913 /* Main.storyboard */,
 				17AF811B20D11D2000FF1913 /* LaunchScreen.storyboard */,
-				17AF811920D11D2000FF1913 /* Assets.xcassets */,
 				17AF811E20D11D2000FF1913 /* Info.plist */,
+				17AF811920D11D2000FF1913 /* Assets.xcassets */,
 			);
 			path = "VK-IPad";
 			sourceTree = "<group>";
