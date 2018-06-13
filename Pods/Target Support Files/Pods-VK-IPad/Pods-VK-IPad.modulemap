@@ -1,0 +1,6 @@
+framework module Pods_VK_IPad {
+  umbrella header "Pods-VK-IPad-umbrella.h"
+
+  export *
+  module * { export * }
+}
