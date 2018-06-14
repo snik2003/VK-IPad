@@ -20,7 +20,7 @@ class MenuViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        refreshUserInfo()
+        getUserInfo()
     }
 
     override func didReceiveMemoryWarning() {
@@ -30,12 +30,12 @@ class MenuViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        if indexPath.section == 0 && indexPath.row == 0 {
-            profileCell.setBadgeValue(value: 0)
+        if indexPath.section == 0 && indexPath.row == 1 {
+            notificationsCell.setBadgeValue(value: 15)
         }
         
         if indexPath.section == 0 && indexPath.row == 2 {
-            messagesCell.setBadgeValue(value: 25)
+            messagesCell.setBadgeValue(value: 3)
         }
         
         tableView.deselectRow(at: indexPath, animated: false)
@@ -52,13 +52,30 @@ class MenuViewController: UITableViewController {
         return view
     }
     
-    func refreshUserInfo() {
+    func getUserInfo() {
         
-        let url = "/method/users.get"
+        var code = "var f = API.users.get({\"user_id\":\"\(vkSingleton.shared.userID)\",\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"fields\":\"id,first_name,last_name,domain,last_seen,online,photo_max_orig,photo_max,deactivated,sex\",\"v\":\"\(vkSingleton.shared.version)\"});\n"
+        
+        code = "\(code) var a = API.account.getCounters({\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"filter\":\"friends,messages\",\"v\": \"\(vkSingleton.shared.version)\"});\n"
+        
+        code = "\(code) var b = API.notifications.get({\"count\":\"100\",\"start_time\":\"\(Date().timeIntervalSince1970 - 15552000)\",\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"v\": \"\(vkSingleton.shared.version)\"});\n"
+        
+        code = "\(code) var c = API.groups.getInvites({\"count\":\"100\",\"extended\":\"1\",\"fields\":\"id,first_name,last_name,photo_100,sex\",\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"v\":\"\(vkSingleton.shared.version)\"});\n"
+        
+        code = "\(code) var d = API.groups.get({\"user_id\":\"\(vkSingleton.shared.userID)\",\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"filter\":\"moder\",\"v\":\"\(vkSingleton.shared.version)\"});\n"
+        
+        code = "\(code) var stat = API.stats.trackVisitor({\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"v\":\"\(vkSingleton.shared.version)\"}); \n"
+        
+        code = "\(code) var e1 = API.groups.isMember({\"group_id\":\"166099539\",\"user_id\":\"\(vkSingleton.shared.userID)\"});\n"
+        
+        code = "\(code) if (e1 != 1) { var e2 = API.groups.join({\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"group_id\":\"166099539\",\"v\": \"\(vkSingleton.shared.version)\"}); return [a,b,c,d,f,stat,e1,e2]; } \n"
+        
+        code = "\(code) return [a,b,c,d,f,stat,e1];"
+        
+        let url = "/method/execute"
         let parameters = [
-            "user_id": vkSingleton.shared.userID,
             "access_token": vkSingleton.shared.accessToken,
-            "fields": "id,first_name,last_name,domain,last_seen,online,photo_max_orig,photo_max,deactivated,sex",
+            "code": code,
             "v": vkSingleton.shared.version
         ]
         
@@ -67,9 +84,9 @@ class MenuViewController: UITableViewController {
             guard let data = getServerDataOperation.data else { return }
             
             guard let json = try? JSON(data: data) else { print("json error"); return }
+            //print(json)
             
-            let userProfile = json["response"].compactMap { UserProfile(json: $0.1) }
-            //print(json["response"][0])
+            let userProfile = json["response"][4].compactMap { UserProfile(json: $0.1) }
             
             OperationQueue.main.addOperation {
                 if userProfile.count > 0 {
@@ -79,7 +96,41 @@ class MenuViewController: UITableViewController {
                     if user.uid == vkSingleton.shared.userID {
                         self.saveAccountToRealm(user: user)
                     }
-                    self.profileCell.setBadgeValue(value: 100)
+                }
+            }
+            
+            let messages = 4 //json["response"][0]["messages"].intValue
+            let friends = 2 //json["response"][0]["friends"].intValue
+            
+            OperationQueue.main.addOperation {
+                self.messagesCell.setBadgeValue(value: messages)
+                self.friendsCell.setBadgeValue(value: friends)
+            }
+            
+            /*let notData = json["response"][1]["items"].compactMap { Notifications(json: $0.1) }
+            
+            var countNewNots = 0
+            let lastViewed = json["response"][1]["last_viewed"].intValue
+            for not in notData {
+                if not.date > lastViewed {
+                    countNewNots += not.feedback.count
+                }
+            }
+            
+            let groups = json["response"][2]["items"].compactMap { Groups(json: $0.1) }*/
+            
+            let countNewNots = 25
+            OperationQueue.main.addOperation {
+                self.notificationsCell.setBadgeValue(value: countNewNots)
+                //self.groupsCell.setBadgeValue(value: groups.count)
+            }
+            
+            let count = json["response"][3]["count"].intValue
+            vkSingleton.shared.adminGroupID.removeAll(keepingCapacity: false)
+            if count > 0 {
+                for index in 0...count-1 {
+                    let groupID = json["response"][3]["items"][index].intValue
+                    vkSingleton.shared.adminGroupID.append(groupID)
                 }
             }
         }
@@ -127,7 +178,7 @@ extension UINavigationBar {
         let nameLabel = UILabel()
         nameLabel.text = "\(user.firstName) \(user.lastName)"
         nameLabel.textColor = UIColor.white
-        nameLabel.font = UIFont(name: "TrebuchetMS-Bold", size: 18)
+        nameLabel.font = UIFont(name: "TrebuchetMS-Bold", size: 16)
         nameLabel.adjustsFontSizeToFitWidth = true
         nameLabel.minimumScaleFactor = 0.5
         nameLabel.frame = CGRect(x: 50, y: 4, width: frame.width - 80, height: 20)
@@ -159,7 +210,7 @@ extension UINavigationBar {
             statusLabel.textColor = UIColor.white
         }
         
-        statusLabel.font = UIFont(name: "TrebuchetMS", size: 12)
+        statusLabel.font = UIFont(name: "TrebuchetMS", size: 11)
         statusLabel.adjustsFontSizeToFitWidth = true
         statusLabel.minimumScaleFactor = 0.5
         statusLabel.frame = CGRect(x: 50, y: 20, width: frame.width - 80, height: 20)

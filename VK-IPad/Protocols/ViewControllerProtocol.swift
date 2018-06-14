@@ -211,6 +211,18 @@ extension UIViewController: ViewControllerProtocol {
         
         return 0
     }
+    
+    func getTextSize(text: String, font: UIFont, maxWidth: CGFloat) -> CGSize {
+        
+        let textBlock = CGSize(width: maxWidth, height: CGFloat.greatestFiniteMagnitude)
+        
+        let rect = text.boundingRect(with: textBlock, options: .usesLineFragmentOrigin, attributes: [NSAttributedStringKey.font: font], context: nil)
+        
+        let width = Double(rect.size.width)
+        let height = Double(rect.size.height)
+        
+        return CGSize(width: ceil(width), height: ceil(height))
+    }
 }
 
 

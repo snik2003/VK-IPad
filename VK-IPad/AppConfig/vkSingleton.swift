@@ -6,7 +6,7 @@
 //  Copyright © 2018 Sergey Nikitin. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 final class vkSingleton {
     static let shared = vkSingleton()
@@ -19,7 +19,9 @@ final class vkSingleton {
     var userID: String = ""
     var userAppID: Int = 0
     var accessToken: String = ""
+    var avatarURL: String = ""
     
+    var adminGroupID: [Int] = []
     var commentFromGroup = 0
     
     var deviceToken = ""
@@ -31,4 +33,5 @@ final class vkSingleton {
     var pushInfo: [AnyHashable: Any]? = nil
     
     let appOpenedCountKey = "APP_OPENED_COUNT"
+    let mainColor = UIColor(displayP3Red: 5/255, green: 103/255, blue: 164/255, alpha: 1)
 }

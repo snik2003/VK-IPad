@@ -19,6 +19,12 @@
 		170C588C20D15D8C007E8B81 /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170C588B20D15D8C007E8B81 /* UserProfile.swift */; };
 		170C588E20D15DCC007E8B81 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170C588D20D15DCC007E8B81 /* ProfileViewController.swift */; };
 		17A122E320D260D200F8A605 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A122E220D260D200F8A605 /* TableViewCell.swift */; };
+		17A122E520D273F300F8A605 /* Photos.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A122E420D273F300F8A605 /* Photos.swift */; };
+		17A122E720D2756C00F8A605 /* ViewControllerUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A122E620D2756C00F8A605 /* ViewControllerUtils.swift */; };
+		17A122EB20D2786700F8A605 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A122EA20D2786700F8A605 /* ProfileView.swift */; };
+		17A122ED20D27D1000F8A605 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A122EC20D27D1000F8A605 /* Image.swift */; };
+		17A122EF20D2935900F8A605 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A122EE20D2935900F8A605 /* String.swift */; };
+		17A122F120D2942600F8A605 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A122F020D2942600F8A605 /* Date.swift */; };
 		17AF811320D11D1F00FF1913 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17AF811220D11D1F00FF1913 /* AppDelegate.swift */; };
 		17AF811520D11D1F00FF1913 /* StartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17AF811420D11D1F00FF1913 /* StartViewController.swift */; };
 		17AF811820D11D1F00FF1913 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17AF811620D11D1F00FF1913 /* Main.storyboard */; };
@@ -46,6 +52,12 @@
 		170C588B20D15D8C007E8B81 /* UserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
 		170C588D20D15DCC007E8B81 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		17A122E220D260D200F8A605 /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
+		17A122E420D273F300F8A605 /* Photos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Photos.swift; sourceTree = "<group>"; };
+		17A122E620D2756C00F8A605 /* ViewControllerUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewControllerUtils.swift; sourceTree = "<group>"; };
+		17A122EA20D2786700F8A605 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		17A122EC20D27D1000F8A605 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
+		17A122EE20D2935900F8A605 /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
+		17A122F020D2942600F8A605 /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
 		17AF810F20D11D1F00FF1913 /* VK-IPad.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "VK-IPad.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		17AF811220D11D1F00FF1913 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		17AF811420D11D1F00FF1913 /* StartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartViewController.swift; sourceTree = "<group>"; };
@@ -96,6 +108,7 @@
 			children = (
 				170C587A20D145D8007E8B81 /* MenuViewController.swift */,
 				170C588D20D15DCC007E8B81 /* ProfileViewController.swift */,
+				17A122EA20D2786700F8A605 /* ProfileView.swift */,
 			);
 			path = MainMenu;
 			sourceTree = "<group>";
@@ -106,6 +119,7 @@
 				170C587D20D155E1007E8B81 /* vkAccount.swift */,
 				170C588920D159CA007E8B81 /* ErrorJson.swift */,
 				170C588B20D15D8C007E8B81 /* UserProfile.swift */,
+				17A122E420D273F300F8A605 /* Photos.swift */,
 			);
 			path = Objects;
 			sourceTree = "<group>";
@@ -113,6 +127,7 @@
 		170C587F20D1562F007E8B81 /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
+				17A122E620D2756C00F8A605 /* ViewControllerUtils.swift */,
 				170C588020D15649007E8B81 /* ViewControllerProtocol.swift */,
 			);
 			path = Protocols;
@@ -172,6 +187,9 @@
 				17E8833520D174EA00E48B1C /* Int.swift */,
 				17E8833E20D183EB00E48B1C /* Label.swift */,
 				17A122E220D260D200F8A605 /* TableViewCell.swift */,
+				17A122EC20D27D1000F8A605 /* Image.swift */,
+				17A122EE20D2935900F8A605 /* String.swift */,
+				17A122F020D2942600F8A605 /* Date.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -338,12 +356,17 @@
 			files = (
 				17E8833D20D1766A00E48B1C /* GetCacheImage.swift in Sources */,
 				17E8833B20D1766A00E48B1C /* SetImageToRow.swift in Sources */,
+				17A122ED20D27D1000F8A605 /* Image.swift in Sources */,
+				17A122E720D2756C00F8A605 /* ViewControllerUtils.swift in Sources */,
 				170C587820D13523007E8B81 /* vkSingleton.swift in Sources */,
 				170C588320D157F8007E8B81 /* AppConfig.swift in Sources */,
+				17A122F120D2942600F8A605 /* Date.swift in Sources */,
+				17A122EF20D2935900F8A605 /* String.swift in Sources */,
 				17A122E320D260D200F8A605 /* TableViewCell.swift in Sources */,
 				17E8833C20D1766A00E48B1C /* SetAnimatedImageToRow.swift in Sources */,
 				170C587B20D145D8007E8B81 /* MenuViewController.swift in Sources */,
 				17E8833620D174EA00E48B1C /* Int.swift in Sources */,
+				17A122E520D273F300F8A605 /* Photos.swift in Sources */,
 				170C588A20D159CA007E8B81 /* ErrorJson.swift in Sources */,
 				170C587520D12CEA007E8B81 /* LoginViewController.swift in Sources */,
 				170C588620D15867007E8B81 /* GetServerDataOperation.swift in Sources */,
@@ -354,6 +377,7 @@
 				17E8833F20D183EB00E48B1C /* Label.swift in Sources */,
 				170C588E20D15DCC007E8B81 /* ProfileViewController.swift in Sources */,
 				170C588820D1587B007E8B81 /* AsyncOperation.swift in Sources */,
+				17A122EB20D2786700F8A605 /* ProfileView.swift in Sources */,
 				17AF811320D11D1F00FF1913 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
