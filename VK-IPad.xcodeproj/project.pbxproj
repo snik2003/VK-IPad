@@ -18,6 +18,7 @@
 		170C588A20D159CA007E8B81 /* ErrorJson.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170C588920D159CA007E8B81 /* ErrorJson.swift */; };
 		170C588C20D15D8C007E8B81 /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170C588B20D15D8C007E8B81 /* UserProfile.swift */; };
 		170C588E20D15DCC007E8B81 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170C588D20D15DCC007E8B81 /* ProfileViewController.swift */; };
+		17A122E320D260D200F8A605 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A122E220D260D200F8A605 /* TableViewCell.swift */; };
 		17AF811320D11D1F00FF1913 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17AF811220D11D1F00FF1913 /* AppDelegate.swift */; };
 		17AF811520D11D1F00FF1913 /* StartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17AF811420D11D1F00FF1913 /* StartViewController.swift */; };
 		17AF811820D11D1F00FF1913 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17AF811620D11D1F00FF1913 /* Main.storyboard */; };
@@ -27,6 +28,7 @@
 		17E8833B20D1766A00E48B1C /* SetImageToRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E8833820D1766A00E48B1C /* SetImageToRow.swift */; };
 		17E8833C20D1766A00E48B1C /* SetAnimatedImageToRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E8833920D1766A00E48B1C /* SetAnimatedImageToRow.swift */; };
 		17E8833D20D1766A00E48B1C /* GetCacheImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E8833A20D1766A00E48B1C /* GetCacheImage.swift */; };
+		17E8833F20D183EB00E48B1C /* Label.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E8833E20D183EB00E48B1C /* Label.swift */; };
 		2286DFA9FA1B572377DE03A3 /* Pods_VK_IPad.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ECEFB335DD55F5E58C7A64A /* Pods_VK_IPad.framework */; };
 /* End PBXBuildFile section */
 
@@ -43,6 +45,7 @@
 		170C588920D159CA007E8B81 /* ErrorJson.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorJson.swift; sourceTree = "<group>"; };
 		170C588B20D15D8C007E8B81 /* UserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
 		170C588D20D15DCC007E8B81 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		17A122E220D260D200F8A605 /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
 		17AF810F20D11D1F00FF1913 /* VK-IPad.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "VK-IPad.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		17AF811220D11D1F00FF1913 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		17AF811420D11D1F00FF1913 /* StartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartViewController.swift; sourceTree = "<group>"; };
@@ -54,6 +57,7 @@
 		17E8833820D1766A00E48B1C /* SetImageToRow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetImageToRow.swift; sourceTree = "<group>"; };
 		17E8833920D1766A00E48B1C /* SetAnimatedImageToRow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetAnimatedImageToRow.swift; sourceTree = "<group>"; };
 		17E8833A20D1766A00E48B1C /* GetCacheImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetCacheImage.swift; sourceTree = "<group>"; };
+		17E8833E20D183EB00E48B1C /* Label.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Label.swift; sourceTree = "<group>"; };
 		1ECEFB335DD55F5E58C7A64A /* Pods_VK_IPad.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_VK_IPad.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		92ED85805D6C190E02304F34 /* Pods-VK-IPad.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VK-IPad.debug.xcconfig"; path = "Pods/Target Support Files/Pods-VK-IPad/Pods-VK-IPad.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -166,6 +170,8 @@
 			isa = PBXGroup;
 			children = (
 				17E8833520D174EA00E48B1C /* Int.swift */,
+				17E8833E20D183EB00E48B1C /* Label.swift */,
+				17A122E220D260D200F8A605 /* TableViewCell.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -334,6 +340,7 @@
 				17E8833B20D1766A00E48B1C /* SetImageToRow.swift in Sources */,
 				170C587820D13523007E8B81 /* vkSingleton.swift in Sources */,
 				170C588320D157F8007E8B81 /* AppConfig.swift in Sources */,
+				17A122E320D260D200F8A605 /* TableViewCell.swift in Sources */,
 				17E8833C20D1766A00E48B1C /* SetAnimatedImageToRow.swift in Sources */,
 				170C587B20D145D8007E8B81 /* MenuViewController.swift in Sources */,
 				17E8833620D174EA00E48B1C /* Int.swift in Sources */,
@@ -344,6 +351,7 @@
 				170C588120D15649007E8B81 /* ViewControllerProtocol.swift in Sources */,
 				170C588C20D15D8C007E8B81 /* UserProfile.swift in Sources */,
 				170C587E20D155E1007E8B81 /* vkAccount.swift in Sources */,
+				17E8833F20D183EB00E48B1C /* Label.swift in Sources */,
 				170C588E20D15DCC007E8B81 /* ProfileViewController.swift in Sources */,
 				170C588820D1587B007E8B81 /* AsyncOperation.swift in Sources */,
 				17AF811320D11D1F00FF1913 /* AppDelegate.swift in Sources */,

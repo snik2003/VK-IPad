@@ -12,11 +12,15 @@ import SwiftyJSON
 
 class MenuViewController: UITableViewController {
 
+    @IBOutlet weak var profileCell: UITableViewCell!
+    @IBOutlet weak var notificationsCell: UITableViewCell!
+    @IBOutlet weak var messagesCell: UITableViewCell!
+    @IBOutlet weak var friendsCell: UITableViewCell!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         refreshUserInfo()
-        
     }
 
     override func didReceiveMemoryWarning() {
@@ -24,6 +28,18 @@ class MenuViewController: UITableViewController {
         
     }
 
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        if indexPath.section == 0 && indexPath.row == 0 {
+            profileCell.setBadgeValue(value: 0)
+        }
+        
+        if indexPath.section == 0 && indexPath.row == 2 {
+            messagesCell.setBadgeValue(value: 25)
+        }
+        
+        tableView.deselectRow(at: indexPath, animated: false)
+    }
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let view = UIView()
         view.backgroundColor = UIColor.white
@@ -63,6 +79,7 @@ class MenuViewController: UITableViewController {
                     if user.uid == vkSingleton.shared.userID {
                         self.saveAccountToRealm(user: user)
                     }
+                    self.profileCell.setBadgeValue(value: 100)
                 }
             }
         }
