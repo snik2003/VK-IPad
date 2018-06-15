@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		173D666120D3C07900EEBF46 /* Control.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173D666020D3C07900EEBF46 /* Control.swift */; };
+		173D666420D3C91300EEBF46 /* GroupsListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173D666320D3C91300EEBF46 /* GroupsListController.swift */; };
+		173D666620D3C94500EEBF46 /* Groups.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173D666520D3C94500EEBF46 /* Groups.swift */; };
+		173D666820D3C9DB00EEBF46 /* ParseGroupList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173D666720D3C9DB00EEBF46 /* ParseGroupList.swift */; };
+		173D666B20D3CAD100EEBF46 /* ReloadGroupsListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173D666A20D3CAD100EEBF46 /* ReloadGroupsListController.swift */; };
 		174912D920D300DD00FCF9F9 /* SetImageToRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 174912B020D300DC00FCF9F9 /* SetImageToRow.swift */; };
 		174912DA20D300DD00FCF9F9 /* SetAnimatedImageToRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 174912B120D300DC00FCF9F9 /* SetAnimatedImageToRow.swift */; };
 		174912DB20D300DD00FCF9F9 /* GetCacheImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 174912B220D300DC00FCF9F9 /* GetCacheImage.swift */; };
@@ -50,6 +54,10 @@
 /* Begin PBXFileReference section */
 		1380E5F9747FC22A8E1480B7 /* Pods-VK-IPad.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VK-IPad.release.xcconfig"; path = "Pods/Target Support Files/Pods-VK-IPad/Pods-VK-IPad.release.xcconfig"; sourceTree = "<group>"; };
 		173D666020D3C07900EEBF46 /* Control.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Control.swift; sourceTree = "<group>"; };
+		173D666320D3C91300EEBF46 /* GroupsListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupsListController.swift; sourceTree = "<group>"; };
+		173D666520D3C94500EEBF46 /* Groups.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Groups.swift; sourceTree = "<group>"; };
+		173D666720D3C9DB00EEBF46 /* ParseGroupList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParseGroupList.swift; sourceTree = "<group>"; };
+		173D666A20D3CAD100EEBF46 /* ReloadGroupsListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReloadGroupsListController.swift; sourceTree = "<group>"; };
 		174912B020D300DC00FCF9F9 /* SetImageToRow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetImageToRow.swift; sourceTree = "<group>"; };
 		174912B120D300DC00FCF9F9 /* SetAnimatedImageToRow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetAnimatedImageToRow.swift; sourceTree = "<group>"; };
 		174912B220D300DC00FCF9F9 /* GetCacheImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetCacheImage.swift; sourceTree = "<group>"; };
@@ -111,9 +119,27 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		173D666220D3C75000EEBF46 /* Groups */ = {
+			isa = PBXGroup;
+			children = (
+				173D666320D3C91300EEBF46 /* GroupsListController.swift */,
+			);
+			path = Groups;
+			sourceTree = "<group>";
+		};
+		173D666920D3CA9F00EEBF46 /* ReloadInterface */ = {
+			isa = PBXGroup;
+			children = (
+				173D666A20D3CAD100EEBF46 /* ReloadGroupsListController.swift */,
+			);
+			path = ReloadInterface;
+			sourceTree = "<group>";
+		};
 		174912AE20D300DC00FCF9F9 /* VK-IPad */ = {
 			isa = PBXGroup;
 			children = (
+				173D666920D3CA9F00EEBF46 /* ReloadInterface */,
+				173D666220D3C75000EEBF46 /* Groups */,
 				174912FF20D3048A00FCF9F9 /* ParseServerData */,
 				174912C820D300DC00FCF9F9 /* AppConfig */,
 				174912BD20D300DC00FCF9F9 /* Extensions */,
@@ -153,6 +179,7 @@
 				174912B720D300DC00FCF9F9 /* ErrorJson.swift */,
 				174912B820D300DC00FCF9F9 /* vkAccount.swift */,
 				174912F920D302B700FCF9F9 /* Friends.swift */,
+				173D666520D3C94500EEBF46 /* Groups.swift */,
 			);
 			path = Objects;
 			sourceTree = "<group>";
@@ -223,6 +250,7 @@
 				1749130420D3050200FCF9F9 /* ParseRequest.swift */,
 				1749130220D304DD00FCF9F9 /* ParseRequestList.swift */,
 				174912FC20D303F400FCF9F9 /* ParseFriends.swift */,
+				173D666720D3C9DB00EEBF46 /* ParseGroupList.swift */,
 			);
 			path = ParseServerData;
 			sourceTree = "<group>";
@@ -398,6 +426,7 @@
 				174912EC20D300DD00FCF9F9 /* vkSingleton.swift in Sources */,
 				174912DD20D300DD00FCF9F9 /* Photos.swift in Sources */,
 				174912E920D300DD00FCF9F9 /* StartViewController.swift in Sources */,
+				173D666B20D3CAD100EEBF46 /* ReloadGroupsListController.swift in Sources */,
 				174912E820D300DD00FCF9F9 /* String.swift in Sources */,
 				174912D920D300DD00FCF9F9 /* SetImageToRow.swift in Sources */,
 				174912DF20D300DD00FCF9F9 /* ErrorJson.swift in Sources */,
@@ -408,12 +437,14 @@
 				174912DE20D300DD00FCF9F9 /* UserProfile.swift in Sources */,
 				174912F120D300DD00FCF9F9 /* LoginViewController.swift in Sources */,
 				1749130320D304DD00FCF9F9 /* ParseRequestList.swift in Sources */,
+				173D666620D3C94500EEBF46 /* Groups.swift in Sources */,
 				174912ED20D300DD00FCF9F9 /* AppConfig.swift in Sources */,
 				174912E520D300DD00FCF9F9 /* TableViewCell.swift in Sources */,
 				1749130720D3055100FCF9F9 /* FriendRequest.swift in Sources */,
 				174912F720D300DD00FCF9F9 /* ViewControllerUtils.swift in Sources */,
 				173D666120D3C07900EEBF46 /* Control.swift in Sources */,
 				174912E420D300DD00FCF9F9 /* Label.swift in Sources */,
+				173D666420D3C91300EEBF46 /* GroupsListController.swift in Sources */,
 				174912F420D300DD00FCF9F9 /* MenuViewController.swift in Sources */,
 				174912EA20D300DD00FCF9F9 /* GetServerDataOperation.swift in Sources */,
 				174912EE20D300DD00FCF9F9 /* UsersController.swift in Sources */,
@@ -428,6 +459,7 @@
 				174912E620D300DD00FCF9F9 /* Image.swift in Sources */,
 				174912EB20D300DD00FCF9F9 /* AsyncOperation.swift in Sources */,
 				174912DA20D300DD00FCF9F9 /* SetAnimatedImageToRow.swift in Sources */,
+				173D666820D3C9DB00EEBF46 /* ParseGroupList.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

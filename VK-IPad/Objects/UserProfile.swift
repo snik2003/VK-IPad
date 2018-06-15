@@ -63,6 +63,7 @@ class UserProfile {
     var firstNameAbl: String = "" // Имя в предложном падеже (О Ком?)
     var firstNameGen: String = "" // Имя в родительном падеже (Чей?)
     var firstNameDat: String = "" // Имя в дательном падеже (Кому?)
+    var firstNameIns: String = "" // Имя в творительном падеже (Кем?)
     var firstNameAcc: String = "" // Имя в винительном падеже (Кому?)
     var canSendFriendRequest: Int = 0
     var canWritePrivateMessage: Int = 0
@@ -147,6 +148,7 @@ class UserProfile {
         self.firstNameAbl = json["first_name_abl"].stringValue
         self.firstNameGen = json["first_name_gen"].stringValue
         self.firstNameDat = json["first_name_dat"].stringValue
+        self.firstNameIns = json["first_name_ins"].stringValue
         self.firstNameAcc = json["first_name_acc"].stringValue
         self.canSendFriendRequest = json["can_send_friend_request"].intValue
         self.canWritePrivateMessage = json["can_write_private_message"].intValue

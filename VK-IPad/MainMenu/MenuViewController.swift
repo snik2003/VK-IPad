@@ -58,7 +58,7 @@ class MenuViewController: UITableViewController {
         
         // Мои сообщества
         if indexPath.section == 1 && indexPath.row == 1 {
-            
+            self.openGroupsListController(uid: vkSingleton.shared.userID, title: "Мои сообщества", type: "")
         }
         
         // Мои фотографии

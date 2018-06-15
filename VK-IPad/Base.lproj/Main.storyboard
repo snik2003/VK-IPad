@@ -183,6 +183,78 @@
             </objects>
             <point key="canvasLocation" x="1579" y="1788"/>
         </scene>
+        <!--Groups List Controller-->
+        <scene sceneID="kOt-cL-DRM">
+            <objects>
+                <viewController storyboardIdentifier="GroupsListController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="9jf-eN-qMQ" customClass="GroupsListController" customModule="VK_IPad" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="yW8-Pq-PjE">
+                        <rect key="frame" x="0.0" y="0.0" width="1366" height="1024"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="liy-Yt-mlC">
+                                <rect key="frame" x="0.0" y="64" width="1366" height="56"/>
+                                <color key="barTintColor" red="0.019607843140000001" green="0.4039215686" blue="0.64313725489999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </searchBar>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Jza-2N-WOL">
+                                <rect key="frame" x="0.0" y="120" width="1366" height="904"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="groupsCell" textLabel="1EP-BO-qG5" detailTextLabel="Gjl-8e-8OJ" imageView="A1j-gx-6Gt" style="IBUITableViewCellStyleSubtitle" id="ApA-Zq-VWS">
+                                        <rect key="frame" x="0.0" y="28" width="1366" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ApA-Zq-VWS" id="tmL-wu-uaj">
+                                            <rect key="frame" x="0.0" y="0.0" width="1366" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="1EP-BO-qG5">
+                                                    <rect key="frame" x="74" y="7" width="31" height="17.5"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" name="TrebuchetMS" family="Trebuchet MS" pointSize="15"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" enabled="NO" adjustsFontSizeToFit="NO" id="Gjl-8e-8OJ">
+                                                    <rect key="frame" x="74" y="24.5" width="42.5" height="14"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" name="TrebuchetMS" family="Trebuchet MS" pointSize="12"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" image="nophoto" id="A1j-gx-6Gt">
+                                                    <rect key="frame" x="15" y="0.0" width="44" height="44"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                </imageView>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="Jza-2N-WOL" firstAttribute="top" secondItem="liy-Yt-mlC" secondAttribute="bottom" id="2hf-mp-Uf8"/>
+                            <constraint firstItem="quN-VD-Exe" firstAttribute="bottom" secondItem="Jza-2N-WOL" secondAttribute="bottom" id="G56-ww-x4f"/>
+                            <constraint firstItem="liy-Yt-mlC" firstAttribute="top" secondItem="quN-VD-Exe" secondAttribute="top" id="ISu-ms-SV3"/>
+                            <constraint firstItem="Jza-2N-WOL" firstAttribute="width" secondItem="yW8-Pq-PjE" secondAttribute="width" id="WNy-B1-yeH"/>
+                            <constraint firstItem="Jza-2N-WOL" firstAttribute="centerX" secondItem="quN-VD-Exe" secondAttribute="centerX" id="beT-yg-EBY"/>
+                            <constraint firstItem="liy-Yt-mlC" firstAttribute="width" secondItem="yW8-Pq-PjE" secondAttribute="width" id="fZF-bA-BUn"/>
+                            <constraint firstItem="liy-Yt-mlC" firstAttribute="centerX" secondItem="quN-VD-Exe" secondAttribute="centerX" id="hfK-Qf-INR"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="quN-VD-Exe"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="j7q-YF-GSc">
+                        <barButtonItem key="backBarButtonItem" title="Назад" id="QBc-WV-tBT"/>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="searchBar" destination="liy-Yt-mlC" id="HXz-CU-Qxg"/>
+                        <outlet property="tableView" destination="Jza-2N-WOL" id="tFE-1x-78I"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="L9f-go-FPh" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1583" y="2483"/>
+        </scene>
         <!--MenuViewController-->
         <scene sceneID="fjE-PV-isb">
             <objects>
@@ -203,15 +275,15 @@
                                             <rect key="frame" x="0.0" y="0.0" width="341" height="39.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="   Профиль" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="axz-Fb-pTD">
-                                                    <rect key="frame" x="15" y="13" width="79" height="17.5"/>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="   Моя страница" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="axz-Fb-pTD">
+                                                    <rect key="frame" x="15" y="13" width="113.5" height="17.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" name="TrebuchetMS-Bold" family="Trebuchet MS" pointSize="15"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label hidden="YES" opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="0" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="VVi-nJ-U0D">
-                                                    <rect key="frame" x="328" y="8" width="12" height="23.5"/>
+                                                <label hidden="YES" opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="VVi-nJ-U0D">
+                                                    <rect key="frame" x="285" y="8" width="55" height="23.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" name="TrebuchetMS-Bold" family="Trebuchet MS" pointSize="20"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -624,6 +696,25 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="njS-DP-JIp" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="886" y="1788"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="iio-rt-Fyf">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="u25-I2-dAd" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="0oV-u0-5KU">
+                        <rect key="frame" x="0.0" y="20" width="1366" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="barTintColor" red="0.019607843140000001" green="0.4039215686" blue="0.64313725489999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="9jf-eN-qMQ" kind="relationship" relationship="rootViewController" id="ajk-cd-ikB"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="76u-Fg-Syu" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="886" y="2483"/>
         </scene>
     </scenes>
     <resources>

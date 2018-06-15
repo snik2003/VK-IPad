@@ -452,7 +452,7 @@ class ProfileView: UIView {
                         
                         let tap = UITapGestureRecognizer()
                         tap.add {
-                            self.delegate.openUsersController(uid: self.delegate.userID, title: "Общие друзья", type: "commonFriends")
+                            self.delegate.openUsersController(uid: self.delegate.userID, title: "Общие друзья c \(profile.firstNameIns)", type: "commonFriends")
                         }
                         tap.numberOfTapsRequired = 1
                         label1.isUserInteractionEnabled = true
@@ -496,6 +496,7 @@ class ProfileView: UIView {
                     if profile.groupsCount - profile.pagesCount > 0 {
                         let label1 = UILabel()
                         label1.text = (profile.groupsCount - profile.pagesCount).getCounterToString()
+                        label1.textColor = label1.tintColor
                         label1.textAlignment = .center
                         label1.font = UIFont(name: "TrebuchetMS-Bold", size: 18)
                         label1.adjustsFontSizeToFitWidth = true
@@ -513,12 +514,26 @@ class ProfileView: UIView {
                         label2.frame = CGRect(x: leftX, y: topY + counterHeight/2, width: counterHeight, height: 20)
                         userInfoView.addSubview(label2)
                         
+                        let tap = UITapGestureRecognizer()
+                        tap.add {
+                            var title = "Мои группы"
+                            if self.delegate.userID != vkSingleton.shared.userID {
+                                title = "Группы \(profile.firstNameGen)"
+                            }
+                            
+                            self.delegate.openGroupsListController(uid: self.delegate.userID, title: title, type: "groups")
+                        }
+                        tap.numberOfTapsRequired = 1
+                        label1.isUserInteractionEnabled = true
+                        label1.addGestureRecognizer(tap)
+                        
                         leftX += counterHeight + counterInterSpacing
                     }
                     
                     if profile.pagesCount > 0 {
                         let label1 = UILabel()
                         label1.text = profile.pagesCount.getCounterToString()
+                        label1.textColor = label1.tintColor
                         label1.textAlignment = .center
                         label1.font = UIFont(name: "TrebuchetMS-Bold", size: 18)
                         label1.adjustsFontSizeToFitWidth = true
@@ -535,6 +550,19 @@ class ProfileView: UIView {
                         label2.minimumScaleFactor = 0.5
                         label2.frame = CGRect(x: leftX, y: topY + counterHeight/2, width: counterHeight, height: 20)
                         userInfoView.addSubview(label2)
+                        
+                        let tap = UITapGestureRecognizer()
+                        tap.add {
+                            var title = "Мои страницы"
+                            if self.delegate.userID != vkSingleton.shared.userID {
+                                title = "Страницы \(profile.firstNameGen)"
+                            }
+                            
+                            self.delegate.openGroupsListController(uid: self.delegate.userID, title: title, type: "pages")
+                        }
+                        tap.numberOfTapsRequired = 1
+                        label1.isUserInteractionEnabled = true
+                        label1.addGestureRecognizer(tap)
                         
                         leftX += counterHeight + counterInterSpacing
                     }

@@ -248,7 +248,17 @@ extension UIViewController: ViewControllerProtocol {
         }
     }
     
-    
+    func openGroupsListController(uid: String, title: String, type: String) {
+        let controller = self.storyboard?.instantiateViewController(withIdentifier: "GroupsListController") as! GroupsListController
+        
+        controller.userID = uid
+        controller.type = type
+        controller.source = ""
+        controller.title = title
+        
+        let detailVC = self.splitViewController!.viewControllers[self.splitViewController!.viewControllers.endIndex - 1]
+        detailVC.childViewControllers[0].navigationController?.pushViewController(controller, animated: true)
+    }
 }
 
 
