@@ -9,6 +9,10 @@
 import Foundation
 
 extension String {
+    func containsIgnoringCase(find: String) -> Bool{
+        return self.range(of: find, options: .caseInsensitive) != nil
+    }
+    
     func getDateFromString() -> Date? {
         let dateStr = self
         let calendar = NSCalendar(identifier: NSCalendar.Identifier.gregorian)

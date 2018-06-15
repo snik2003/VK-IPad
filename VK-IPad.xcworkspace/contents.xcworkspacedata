@@ -4,6 +4,301 @@
    <FileRef
       location = "group:VK-IPad.xcodeproj">
    </FileRef>
+   <Group
+      location = "group:VK-IPad"
+      name = "VK-IPad">
+      <Group
+         location = "group:Images"
+         name = "Images">
+         <FileRef
+            location = "group:SetImageToRow.swift">
+         </FileRef>
+         <FileRef
+            location = "group:SetAnimatedImageToRow.swift">
+         </FileRef>
+         <FileRef
+            location = "group:GetCacheImage.swift">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:Assets.xcassets"
+         name = "Assets.xcassets">
+         <Group
+            location = "group:startImage.imageset"
+            name = "startImage.imageset">
+            <FileRef
+               location = "group:1024.png">
+            </FileRef>
+            <FileRef
+               location = "group:1024-1.png">
+            </FileRef>
+            <FileRef
+               location = "group:1024-2.png">
+            </FileRef>
+            <FileRef
+               location = "group:Contents.json">
+            </FileRef>
+         </Group>
+         <Group
+            location = "group:platform"
+            name = "platform">
+            <Group
+               location = "group:iphone.imageset"
+               name = "iphone.imageset">
+               <FileRef
+                  location = "group:apple.png">
+               </FileRef>
+               <FileRef
+                  location = "group:apple-2.png">
+               </FileRef>
+               <FileRef
+                  location = "group:Contents.json">
+               </FileRef>
+               <FileRef
+                  location = "group:apple-1.png">
+               </FileRef>
+            </Group>
+            <FileRef
+               location = "group:Contents.json">
+            </FileRef>
+            <Group
+               location = "group:android.imageset"
+               name = "android.imageset">
+               <FileRef
+                  location = "group:android.png">
+               </FileRef>
+               <FileRef
+                  location = "group:android-2.png">
+               </FileRef>
+               <FileRef
+                  location = "group:android-1.png">
+               </FileRef>
+               <FileRef
+                  location = "group:Contents.json">
+               </FileRef>
+            </Group>
+            <Group
+               location = "group:onlinemobile.imageset"
+               name = "onlinemobile.imageset">
+               <FileRef
+                  location = "group:onlinemobile.png">
+               </FileRef>
+               <FileRef
+                  location = "group:onlinemobile-1.png">
+               </FileRef>
+               <FileRef
+                  location = "group:Contents.json">
+               </FileRef>
+               <FileRef
+                  location = "group:onlinemobile-2.png">
+               </FileRef>
+            </Group>
+         </Group>
+         <Group
+            location = "group:AppIcon.appiconset"
+            name = "AppIcon.appiconset">
+            <FileRef
+               location = "group:20x1.png">
+            </FileRef>
+            <FileRef
+               location = "group:1024.png">
+            </FileRef>
+            <FileRef
+               location = "group:20x2.png">
+            </FileRef>
+            <FileRef
+               location = "group:20x3.png">
+            </FileRef>
+            <FileRef
+               location = "group:40x3.png">
+            </FileRef>
+            <FileRef
+               location = "group:40x2.png">
+            </FileRef>
+            <FileRef
+               location = "group:40x1.png">
+            </FileRef>
+            <FileRef
+               location = "group:83.5x2.png">
+            </FileRef>
+            <FileRef
+               location = "group:60x3.png">
+            </FileRef>
+            <FileRef
+               location = "group:60x2.png">
+            </FileRef>
+            <FileRef
+               location = "group:29x2.png">
+            </FileRef>
+            <FileRef
+               location = "group:40x2-1.png">
+            </FileRef>
+            <FileRef
+               location = "group:29x3.png">
+            </FileRef>
+            <FileRef
+               location = "group:29x1.png">
+            </FileRef>
+            <FileRef
+               location = "group:Contents.json">
+            </FileRef>
+            <FileRef
+               location = "group:76x2.png">
+            </FileRef>
+            <FileRef
+               location = "group:76x1.png">
+            </FileRef>
+            <FileRef
+               location = "group:20x2-1.png">
+            </FileRef>
+            <FileRef
+               location = "group:29x2-1.png">
+            </FileRef>
+         </Group>
+         <Group
+            location = "group:startLogo.imageset"
+            name = "startLogo.imageset">
+            <FileRef
+               location = "group:startLogo.png">
+            </FileRef>
+            <FileRef
+               location = "group:startLogo-1.png">
+            </FileRef>
+            <FileRef
+               location = "group:startLogo-2.png">
+            </FileRef>
+            <FileRef
+               location = "group:Contents.json">
+            </FileRef>
+         </Group>
+         <FileRef
+            location = "group:Contents.json">
+         </FileRef>
+         <Group
+            location = "group:nophoto.imageset"
+            name = "nophoto.imageset">
+            <FileRef
+               location = "group:Contents.json">
+            </FileRef>
+         </Group>
+      </Group>
+      <Group
+         location = "group:Objects"
+         name = "Objects">
+         <FileRef
+            location = "group:Photos.swift">
+         </FileRef>
+         <FileRef
+            location = "group:UserProfile.swift">
+         </FileRef>
+         <FileRef
+            location = "group:ErrorJson.swift">
+         </FileRef>
+         <FileRef
+            location = "group:vkAccount.swift">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:Base.lproj"
+         name = "Base.lproj">
+         <FileRef
+            location = "group:LaunchScreen.storyboard">
+         </FileRef>
+         <FileRef
+            location = "group:Main.storyboard">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:Extensions"
+         name = "Extensions">
+         <FileRef
+            location = "group:Date.swift">
+         </FileRef>
+         <FileRef
+            location = "group:Label.swift">
+         </FileRef>
+         <FileRef
+            location = "group:TableViewCell.swift">
+         </FileRef>
+         <FileRef
+            location = "group:Image.swift">
+         </FileRef>
+         <FileRef
+            location = "group:Int.swift">
+         </FileRef>
+         <FileRef
+            location = "group:String.swift">
+         </FileRef>
+      </Group>
+      <FileRef
+         location = "group:StartViewController.swift">
+      </FileRef>
+      <Group
+         location = "group:WebService"
+         name = "WebService">
+         <FileRef
+            location = "group:GetServerDataOperation.swift">
+         </FileRef>
+         <FileRef
+            location = "group:AsyncOperation.swift">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:AppConfig"
+         name = "AppConfig">
+         <FileRef
+            location = "group:vkSingleton.swift">
+         </FileRef>
+         <FileRef
+            location = "group:AppConfig.swift">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:Users"
+         name = "Users">
+         <FileRef
+            location = "group:UsersController.swift">
+         </FileRef>
+         <FileRef
+            location = "group:MembersCell.swift">
+         </FileRef>
+         <FileRef
+            location = "group:MembersController.swift">
+         </FileRef>
+      </Group>
+      <FileRef
+         location = "group:LoginViewController.swift">
+      </FileRef>
+      <Group
+         location = "group:MainMenu"
+         name = "MainMenu">
+         <FileRef
+            location = "group:ProfileView.swift">
+         </FileRef>
+         <FileRef
+            location = "group:ProfileViewController.swift">
+         </FileRef>
+         <FileRef
+            location = "group:MenuViewController.swift">
+         </FileRef>
+      </Group>
+      <FileRef
+         location = "group:AppDelegate.swift">
+      </FileRef>
+      <Group
+         location = "group:Protocols"
+         name = "Protocols">
+         <FileRef
+            location = "group:ViewControllerProtocol.swift">
+         </FileRef>
+         <FileRef
+            location = "group:ViewControllerUtils.swift">
+         </FileRef>
+      </Group>
+      <FileRef
+         location = "group:Info.plist">
+      </FileRef>
+   </Group>
    <FileRef
       location = "group:Pods/Pods.xcodeproj">
    </FileRef>

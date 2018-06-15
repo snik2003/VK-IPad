@@ -56,7 +56,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <color key="sectionIndexTrackingBackgroundColor" red="0.90588235294117647" green="0.90980392156862744" blue="0.92549019607843142" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="n3M-6R-u0R">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="recordCell" id="n3M-6R-u0R">
                                 <rect key="frame" x="0.0" y="28" width="990.5" height="52"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="n3M-6R-u0R" id="fIs-nS-fdh">
@@ -70,7 +70,11 @@
                             <outlet property="delegate" destination="9I0-Vt-NWy" id="KVq-xl-9KV"/>
                         </connections>
                     </tableView>
+                    <navigationItem key="navigationItem" id="URD-TA-JXX">
+                        <barButtonItem key="backBarButtonItem" title="Назад" id="Iol-kC-Ej3"/>
+                    </navigationItem>
                     <refreshControl key="refreshControl" opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="bl8-eU-gB3">
+                        <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <attributedString key="attributedTitle">
                             <fragment content="Обновляем данные...">
@@ -84,7 +88,100 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cC7-iQ-x8a" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="886" y="1079"/>
+            <point key="canvasLocation" x="1579.0629575402634" y="1078.7109375"/>
+        </scene>
+        <!--Users Controller-->
+        <scene sceneID="a2h-Da-WwL">
+            <objects>
+                <viewController storyboardIdentifier="UsersController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="aLQ-L1-lfV" customClass="UsersController" customModule="VK_IPad" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="qv8-Rj-zjK">
+                        <rect key="frame" x="0.0" y="0.0" width="1366" height="1024"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="SUo-wn-PEG">
+                                <rect key="frame" x="0.0" y="64" width="1366" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="5Nv-P8-t0Z"/>
+                                </constraints>
+                                <color key="barTintColor" red="0.0" green="0.43137254899999999" blue="0.76470588240000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </searchBar>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bordered" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="4SR-Fo-tLn">
+                                <rect key="frame" x="100" y="964" width="1166" height="41"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="Hox-zz-ks1"/>
+                                </constraints>
+                                <segments>
+                                    <segment title="Все друзья: 0"/>
+                                    <segment title="Онлайн: 0"/>
+                                </segments>
+                                <color key="tintColor" red="0.0" green="0.43137254899999999" blue="0.76470588240000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <connections>
+                                    <action selector="indexChangedWithSender:" destination="aLQ-L1-lfV" eventType="valueChanged" id="QbI-Rw-KAy"/>
+                                </connections>
+                            </segmentedControl>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="cai-zt-Qyp">
+                                <rect key="frame" x="0.0" y="114" width="1366" height="850"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="usersCell" textLabel="HrU-xt-dIo" detailTextLabel="1k7-Nh-lIf" imageView="C04-8y-r5h" style="IBUITableViewCellStyleSubtitle" id="6pz-x3-XLb">
+                                        <rect key="frame" x="0.0" y="28" width="1366" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="6pz-x3-XLb" id="7BF-uf-2pi">
+                                            <rect key="frame" x="0.0" y="0.0" width="1366" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="HrU-xt-dIo">
+                                                    <rect key="frame" x="74" y="7" width="31" height="17.5"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" name="TrebuchetMS" family="Trebuchet MS" pointSize="15"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" enabled="NO" adjustsFontSizeToFit="NO" id="1k7-Nh-lIf">
+                                                    <rect key="frame" x="74" y="24.5" width="42.5" height="14"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" name="TrebuchetMS" family="Trebuchet MS" pointSize="12"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" image="nophoto" id="C04-8y-r5h">
+                                                    <rect key="frame" x="15" y="0.0" width="44" height="44"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                </imageView>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="cai-zt-Qyp" firstAttribute="centerX" secondItem="wE3-39-r2E" secondAttribute="centerX" id="7Wg-TC-B0J"/>
+                            <constraint firstItem="SUo-wn-PEG" firstAttribute="centerX" secondItem="wE3-39-r2E" secondAttribute="centerX" id="8HF-XG-3GN"/>
+                            <constraint firstItem="SUo-wn-PEG" firstAttribute="width" secondItem="qv8-Rj-zjK" secondAttribute="width" id="F5j-zl-BP3"/>
+                            <constraint firstItem="SUo-wn-PEG" firstAttribute="top" secondItem="wE3-39-r2E" secondAttribute="top" id="H3g-6O-zob"/>
+                            <constraint firstItem="4SR-Fo-tLn" firstAttribute="top" secondItem="cai-zt-Qyp" secondAttribute="bottom" id="Kxy-Ws-R27"/>
+                            <constraint firstItem="4SR-Fo-tLn" firstAttribute="width" secondItem="qv8-Rj-zjK" secondAttribute="width" constant="-200" id="e4U-gM-zaT"/>
+                            <constraint firstItem="4SR-Fo-tLn" firstAttribute="centerX" secondItem="wE3-39-r2E" secondAttribute="centerX" id="fe5-We-kVI"/>
+                            <constraint firstItem="cai-zt-Qyp" firstAttribute="top" secondItem="SUo-wn-PEG" secondAttribute="bottom" id="hGo-m8-qyN"/>
+                            <constraint firstItem="cai-zt-Qyp" firstAttribute="width" secondItem="qv8-Rj-zjK" secondAttribute="width" id="kKf-Fu-uH8"/>
+                            <constraint firstItem="wE3-39-r2E" firstAttribute="bottom" secondItem="4SR-Fo-tLn" secondAttribute="bottom" constant="20" id="rmy-bV-fJr"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="wE3-39-r2E"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="Dfd-0s-Alp">
+                        <barButtonItem key="backBarButtonItem" title="Назад" id="M2u-JA-pez"/>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="searchBar" destination="SUo-wn-PEG" id="TJJ-mG-shs"/>
+                        <outlet property="segmentedControl" destination="4SR-Fo-tLn" id="qoz-fU-ZYe"/>
+                        <outlet property="tableView" destination="cai-zt-Qyp" id="Fu3-ia-kjp"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="O07-n2-B7v" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1579" y="1788"/>
         </scene>
         <!--MenuViewController-->
         <scene sceneID="fjE-PV-isb">
@@ -99,7 +196,7 @@
                         <sections>
                             <tableViewSection headerTitle=" " id="LZp-w6-77V">
                                 <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="axz-Fb-pTD" detailTextLabel="VVi-nJ-U0D" style="IBUITableViewCellStyleValue1" id="fTx-WU-2fH">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="menuCell" textLabel="axz-Fb-pTD" detailTextLabel="VVi-nJ-U0D" style="IBUITableViewCellStyleValue1" id="fTx-WU-2fH">
                                         <rect key="frame" x="0.0" y="5" width="375" height="40"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="fTx-WU-2fH" id="QE3-z0-Mk3">
@@ -125,7 +222,7 @@
                                         <color key="backgroundColor" red="0.019607843140000001" green="0.4039215686" blue="0.64313725489999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <inset key="separatorInset" minX="15" minY="0.0" maxX="15" maxY="0.0"/>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="V4i-Ye-sj9" style="IBUITableViewCellStyleDefault" id="QUd-h3-9yh">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="menuCell" textLabel="V4i-Ye-sj9" style="IBUITableViewCellStyleDefault" id="QUd-h3-9yh">
                                         <rect key="frame" x="0.0" y="45" width="375" height="40"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="QUd-h3-9yh" id="CnR-0A-AlG">
@@ -144,14 +241,14 @@
                                         <color key="backgroundColor" red="0.019607843140000001" green="0.4039215686" blue="0.64313725489999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <inset key="separatorInset" minX="15" minY="0.0" maxX="15" maxY="0.0"/>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="igF-v8-IUf" style="IBUITableViewCellStyleDefault" id="VTF-aU-mBd">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="menuCell" textLabel="igF-v8-IUf" style="IBUITableViewCellStyleDefault" id="VTF-aU-mBd">
                                         <rect key="frame" x="0.0" y="85" width="375" height="40"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="VTF-aU-mBd" id="2Ch-1W-PRu">
                                             <rect key="frame" x="0.0" y="0.0" width="341" height="39.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="   Сообщения" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="igF-v8-IUf">
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="   Сообщения" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="igF-v8-IUf">
                                                     <rect key="frame" x="15" y="0.0" width="325" height="39.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" name="TrebuchetMS-Bold" family="Trebuchet MS" pointSize="15"/>
@@ -163,7 +260,7 @@
                                         <color key="backgroundColor" red="0.019607843140000001" green="0.4039215686" blue="0.64313725489999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <inset key="separatorInset" minX="15" minY="0.0" maxX="15" maxY="0.0"/>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="9NR-Xg-obH" style="IBUITableViewCellStyleDefault" id="QoT-Cb-zwS">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="menuCell" textLabel="9NR-Xg-obH" style="IBUITableViewCellStyleDefault" id="QoT-Cb-zwS">
                                         <rect key="frame" x="0.0" y="125" width="375" height="40"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="QoT-Cb-zwS" id="Q6t-Lr-112">
@@ -186,7 +283,7 @@
                             </tableViewSection>
                             <tableViewSection headerTitle=" " id="ulE-XA-9AY">
                                 <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="D38-m1-9l8" style="IBUITableViewCellStyleDefault" id="YTE-TZ-obP">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="menuCell" textLabel="D38-m1-9l8" style="IBUITableViewCellStyleDefault" id="YTE-TZ-obP">
                                         <rect key="frame" x="0.0" y="170" width="375" height="40"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="YTE-TZ-obP" id="MZt-dH-9gh">
@@ -205,7 +302,7 @@
                                         <color key="backgroundColor" red="0.019607843140000001" green="0.4039215686" blue="0.64313725489999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <inset key="separatorInset" minX="15" minY="0.0" maxX="15" maxY="0.0"/>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="J3t-pa-ThH" style="IBUITableViewCellStyleDefault" id="Qoq-sO-xVa">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="menuCell" textLabel="J3t-pa-ThH" style="IBUITableViewCellStyleDefault" id="Qoq-sO-xVa">
                                         <rect key="frame" x="0.0" y="210" width="375" height="40"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Qoq-sO-xVa" id="9aO-Gx-qxe">
@@ -224,7 +321,7 @@
                                         <color key="backgroundColor" red="0.019607843140000001" green="0.4039215686" blue="0.64313725489999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <inset key="separatorInset" minX="15" minY="0.0" maxX="15" maxY="0.0"/>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="5Mz-AP-VPg" style="IBUITableViewCellStyleDefault" id="OqW-rp-Pim">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="menuCell" textLabel="5Mz-AP-VPg" style="IBUITableViewCellStyleDefault" id="OqW-rp-Pim">
                                         <rect key="frame" x="0.0" y="250" width="375" height="40"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="OqW-rp-Pim" id="I8l-F3-Q8T">
@@ -243,7 +340,7 @@
                                         <color key="backgroundColor" red="0.019607843140000001" green="0.4039215686" blue="0.64313725489999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <inset key="separatorInset" minX="15" minY="0.0" maxX="15" maxY="0.0"/>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="Uop-dv-YWY" style="IBUITableViewCellStyleDefault" id="qV2-u6-rmo">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="menuCell" textLabel="Uop-dv-YWY" style="IBUITableViewCellStyleDefault" id="qV2-u6-rmo">
                                         <rect key="frame" x="0.0" y="290" width="375" height="40"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="qV2-u6-rmo" id="TBW-IX-f8h">
@@ -262,7 +359,7 @@
                                         <color key="backgroundColor" red="0.019607843140000001" green="0.4039215686" blue="0.64313725489999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <inset key="separatorInset" minX="15" minY="0.0" maxX="15" maxY="0.0"/>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="CIe-FT-NqX" style="IBUITableViewCellStyleDefault" id="H4W-WU-AUB">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="menuCell" textLabel="CIe-FT-NqX" style="IBUITableViewCellStyleDefault" id="H4W-WU-AUB">
                                         <rect key="frame" x="0.0" y="330" width="375" height="40"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="H4W-WU-AUB" id="3WA-jx-xdP">
@@ -281,7 +378,7 @@
                                         <color key="backgroundColor" red="0.019607843140000001" green="0.4039215686" blue="0.64313725489999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <inset key="separatorInset" minX="15" minY="0.0" maxX="15" maxY="0.0"/>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="SyE-Lz-NTN" style="IBUITableViewCellStyleDefault" id="W94-6I-2lK">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="menuCell" textLabel="SyE-Lz-NTN" style="IBUITableViewCellStyleDefault" id="W94-6I-2lK">
                                         <rect key="frame" x="0.0" y="370" width="375" height="40"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="W94-6I-2lK" id="Ldm-Pq-eXB">
@@ -300,7 +397,7 @@
                                         <color key="backgroundColor" red="0.019607843140000001" green="0.4039215686" blue="0.64313725489999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <inset key="separatorInset" minX="15" minY="0.0" maxX="15" maxY="0.0"/>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="a2W-mr-dsR" style="IBUITableViewCellStyleDefault" id="qNP-Uz-flM">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="menuCell" textLabel="a2W-mr-dsR" style="IBUITableViewCellStyleDefault" id="qNP-Uz-flM">
                                         <rect key="frame" x="0.0" y="410" width="375" height="40"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="qNP-Uz-flM" id="sz6-iP-vgR">
@@ -323,7 +420,7 @@
                             </tableViewSection>
                             <tableViewSection headerTitle=" " footerTitle=" " id="Rul-na-TRk">
                                 <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="mIW-j4-AX9" style="IBUITableViewCellStyleDefault" id="Uty-6M-GHv">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="menuCell" textLabel="mIW-j4-AX9" style="IBUITableViewCellStyleDefault" id="Uty-6M-GHv">
                                         <rect key="frame" x="0.0" y="455" width="375" height="40"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Uty-6M-GHv" id="4B5-jB-Mli">
@@ -342,7 +439,7 @@
                                         <color key="backgroundColor" red="0.019607843140000001" green="0.4039215686" blue="0.64313725489999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <inset key="separatorInset" minX="15" minY="0.0" maxX="15" maxY="0.0"/>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="7Q5-gC-V8R" style="IBUITableViewCellStyleDefault" id="RLa-Fu-fqS">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="menuCell" textLabel="7Q5-gC-V8R" style="IBUITableViewCellStyleDefault" id="RLa-Fu-fqS">
                                         <rect key="frame" x="0.0" y="495" width="375" height="40"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="RLa-Fu-fqS" id="Uih-lr-k9n">
@@ -361,14 +458,14 @@
                                         <color key="backgroundColor" red="0.019607843140000001" green="0.4039215686" blue="0.64313725489999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <inset key="separatorInset" minX="15" minY="0.0" maxX="15" maxY="0.0"/>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="niq-BU-SRd" style="IBUITableViewCellStyleDefault" id="wHB-X6-bvG">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="menuCell" textLabel="niq-BU-SRd" style="IBUITableViewCellStyleDefault" id="wHB-X6-bvG">
                                         <rect key="frame" x="0.0" y="535" width="375" height="40"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="wHB-X6-bvG" id="M53-vb-ERA">
                                             <rect key="frame" x="0.0" y="0.0" width="341" height="39.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="   Написать разработчикам" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="niq-BU-SRd">
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="   Написать разработчикам" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="niq-BU-SRd">
                                                     <rect key="frame" x="15" y="0.0" width="325" height="39.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" name="TrebuchetMS-Bold" family="Trebuchet MS" pointSize="15"/>
@@ -380,7 +477,7 @@
                                         <color key="backgroundColor" red="0.019607843140000001" green="0.4039215686" blue="0.64313725489999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <inset key="separatorInset" minX="15" minY="0.0" maxX="15" maxY="0.0"/>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" textLabel="f7s-j6-owW" style="IBUITableViewCellStyleDefault" id="UZl-aq-Z9L">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="menuCell" textLabel="f7s-j6-owW" style="IBUITableViewCellStyleDefault" id="UZl-aq-Z9L">
                                         <rect key="frame" x="0.0" y="575" width="375" height="40"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="UZl-aq-Z9L" id="pZy-ME-6qN">
@@ -399,7 +496,7 @@
                                         <color key="backgroundColor" red="0.019607843140000001" green="0.4039215686" blue="0.64313725489999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <inset key="separatorInset" minX="15" minY="0.0" maxX="15" maxY="0.0"/>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" textLabel="5Eb-Pv-Xch" style="IBUITableViewCellStyleDefault" id="wxm-ch-ayx">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="menuCell" textLabel="5Eb-Pv-Xch" style="IBUITableViewCellStyleDefault" id="wxm-ch-ayx">
                                         <rect key="frame" x="0.0" y="615" width="375" height="40"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="wxm-ch-ayx" id="Um5-Uj-LTt">
@@ -429,6 +526,7 @@
                     <navigationItem key="navigationItem" id="Tp6-JZ-Gna"/>
                     <connections>
                         <outlet property="friendsCell" destination="YTE-TZ-obP" id="fJW-Od-V9q"/>
+                        <outlet property="groupsCell" destination="Qoq-sO-xVa" id="JOv-Gq-hwt"/>
                         <outlet property="messagesCell" destination="VTF-aU-mBd" id="RLz-Iy-y19"/>
                         <outlet property="notificationsCell" destination="QUd-h3-9yh" id="gxG-dD-Lur"/>
                         <outlet property="profileCell" destination="fTx-WU-2fH" id="kSn-Kd-Z8g"/>
@@ -465,15 +563,70 @@
         <!--Split View Controller-->
         <scene sceneID="ufR-Vc-zWM">
             <objects>
-                <splitViewController id="nNv-bu-x8e" sceneMemberID="viewController">
+                <splitViewController storyboardIdentifier="SplitViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="nNv-bu-x8e" sceneMemberID="viewController">
                     <connections>
                         <segue destination="LYR-Bt-WRv" kind="relationship" relationship="masterViewController" id="mw3-dj-Vsa"/>
-                        <segue destination="9I0-Vt-NWy" kind="relationship" relationship="detailViewController" id="lCL-JR-1Hl"/>
+                        <segue destination="zu0-Uw-49Y" kind="relationship" relationship="detailViewController" id="lCL-JR-1Hl"/>
                     </connections>
                 </splitViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bBa-AP-HMt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="25" y="778"/>
         </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="d00-Ri-mQz">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="zu0-Uw-49Y" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="byd-pu-9WN">
+                        <rect key="frame" x="0.0" y="20" width="990.5" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="barTintColor" red="0.019607843140000001" green="0.4039215686" blue="0.64313725489999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <textAttributes key="titleTextAttributes">
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </textAttributes>
+                        <textAttributes key="largeTitleTextAttributes">
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </textAttributes>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="9I0-Vt-NWy" kind="relationship" relationship="rootViewController" id="0Bc-OA-oKM"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="JVZ-Pk-Q96" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="885.94436310395304" y="1078.7109375"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="NND-Vn-U9q">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="dGk-1q-kbs" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="jcZ-yB-KQt">
+                        <rect key="frame" x="0.0" y="20" width="1366" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="barTintColor" red="0.019607843140000001" green="0.4039215686" blue="0.64313725489999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <textAttributes key="titleTextAttributes">
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </textAttributes>
+                        <textAttributes key="largeTitleTextAttributes">
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </textAttributes>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="aLQ-L1-lfV" kind="relationship" relationship="rootViewController" id="YT3-ky-SnJ"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="njS-DP-JIp" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="886" y="1788"/>
+        </scene>
     </scenes>
+    <resources>
+        <image name="nophoto" width="100" height="100"/>
+    </resources>
 </document>

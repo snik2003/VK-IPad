@@ -223,6 +223,32 @@ extension UIViewController: ViewControllerProtocol {
         
         return CGSize(width: ceil(width), height: ceil(height))
     }
+    
+    func openUsersController(uid: String, title: String, type: String) {
+        let usersController = self.storyboard?.instantiateViewController(withIdentifier: "UsersController") as! UsersController
+        
+        usersController.userID = uid
+        usersController.type = type
+        usersController.source = ""
+        usersController.title = title
+        
+        let detailVC = self.splitViewController!.viewControllers[self.splitViewController!.viewControllers.endIndex - 1]
+        detailVC.childViewControllers[0].navigationController?.pushViewController(usersController, animated: true)
+    }
+    
+    func openProfileController(id: Int, name: String) {
+        if id > 0 {
+            let profileController = self.storyboard?.instantiateViewController(withIdentifier: "ProfileViewController") as! ProfileViewController
+            
+            profileController.userID = "\(id)"
+            profileController.title = name
+            
+            let detailVC = self.splitViewController!.viewControllers[self.splitViewController!.viewControllers.endIndex - 1]
+            detailVC.childViewControllers[0].navigationController?.pushViewController(profileController, animated: true)
+        }
+    }
+    
+    
 }
 
 

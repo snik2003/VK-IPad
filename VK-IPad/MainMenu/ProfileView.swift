@@ -20,6 +20,8 @@ class ProfileView: UIView {
     var messageButton = UIButton()
     var friendButton = UIButton()
     var additionalButton = UIButton()
+    var allRecordsButton = UIButton()
+    var ownerButton = UIButton()
     
     var avatarHeight: CGFloat = 20
     let buttonHeight: CGFloat = 25
@@ -53,14 +55,14 @@ class ProfileView: UIView {
                 if delegate.userID != vkSingleton.shared.userID {
                     messageButton.layer.borderColor = UIColor.lightGray.cgColor
                     messageButton.layer.borderWidth = 0.6
-                    messageButton.layer.cornerRadius = 6
+                    messageButton.layer.cornerRadius = 5
                     messageButton.clipsToBounds = true
                     messageButton.setTitle("Написать сообщение", for: .normal)
                     
                     friendButton.titleLabel?.textAlignment = .center
                     friendButton.layer.borderColor = UIColor.lightGray.cgColor
                     friendButton.layer.borderWidth = 0.6
-                    friendButton.layer.cornerRadius = 6
+                    friendButton.layer.cornerRadius = 5
                     friendButton.clipsToBounds = true
                     
                     if profile.canWritePrivateMessage == 1 {
@@ -86,7 +88,7 @@ class ProfileView: UIView {
                 
                 additionalButton.layer.borderColor = UIColor.lightGray.cgColor
                 additionalButton.layer.borderWidth = 0.6
-                additionalButton.layer.cornerRadius = 6
+                additionalButton.layer.cornerRadius = 5
                 additionalButton.clipsToBounds = true
                 additionalButton.setTitle("Дополнительные функции", for: .normal)
                 additionalButton.backgroundColor = vkSingleton.shared.mainColor
@@ -122,12 +124,25 @@ class ProfileView: UIView {
                 let width = delegate.tableView.frame.width - 20
                 let photoHeight: CGFloat = (width - 10 * 4 - 2 * 10) / 5
                 
-                let label = UILabel()
-                label.text = "Фотографии \(profile.firstNameGen)"
-                label.textColor = label.tintColor
-                label.font = UIFont(name: "TrebuchetMS", size: 14)
-                label.frame = CGRect(x: 10, y: 10, width: width - 20, height: 20)
-                photosView.addSubview(label)
+                let label1 = UILabel()
+                if delegate.userID == vkSingleton.shared.userID {
+                    label1.text = "Мои фотографии "
+                } else {
+                    label1.text = "Фотографии \(profile.firstNameGen) "
+                }
+                label1.textColor = label1.tintColor
+                label1.font = UIFont(name: "TrebuchetMS", size: 14)
+                let size1 = delegate.getTextSize(text: label1.text!, font: label1.font!, maxWidth: width)
+                label1.frame = CGRect(x: 10, y: 10, width: size1.width, height: 20)
+                photosView.addSubview(label1)
+                
+                let label2 = UILabel()
+                label2.text = "\(profile.photosCount)"
+                label2.textColor = label1.tintColor
+                label2.font = UIFont(name: "TrebuchetMS", size: 14)
+                label2.isEnabled = false
+                label2.frame = CGRect(x: 10 + size1.width, y: 10, width: width - 20 - size1.width, height: 20)
+                photosView.addSubview(label2)
                 
                 var num = 5
                 if photos.count < 5 {
@@ -157,6 +172,20 @@ class ProfileView: UIView {
                 photosView.frame = CGRect(x: 10, y: topY, width: width, height: photoHeight + 50)
                 self.addSubview(photosView)
                 topY += photoHeight + 50
+            }
+            
+            if profile.deactivated == "" {
+                topY += 10
+                
+                let ownersButtonsView = UIView()
+                ownersButtonsView.backgroundColor = UIColor.white
+                let width = delegate.tableView.frame.width - 20
+                ownersButtonsView.frame = CGRect(x: 10, y: topY, width: width, height: 10 + buttonHeight)
+                
+                setOwnerButton(view: ownersButtonsView, topY: topY)
+                
+                self.addSubview(ownersButtonsView)
+                topY += buttonHeight + 10
             }
         }
         
@@ -371,6 +400,7 @@ class ProfileView: UIView {
                     if profile.friendsCount >= 0 {
                         let label1 = UILabel()
                         label1.text = profile.friendsCount.getCounterToString()
+                        label1.textColor = label1.tintColor
                         label1.textAlignment = .center
                         label1.font = UIFont(name: "TrebuchetMS-Bold", size: 18)
                         label1.adjustsFontSizeToFitWidth = true
@@ -388,12 +418,21 @@ class ProfileView: UIView {
                         label2.frame = CGRect(x: leftX, y: topY + counterHeight/2, width: counterHeight, height: 20)
                         userInfoView.addSubview(label2)
                         
+                        let tap = UITapGestureRecognizer()
+                        tap.add {
+                            self.delegate.openUsersController(uid: self.delegate.userID, title: "Друзья \(profile.firstNameGen)", type: "friends")
+                        }
+                        tap.numberOfTapsRequired = 1
+                        label1.isUserInteractionEnabled = true
+                        label1.addGestureRecognizer(tap)
+                        
                         leftX += counterHeight + counterInterSpacing
                     }
                     
                     if profile.commonFriendsCount > 0 {
                         let label1 = UILabel()
                         label1.text = profile.commonFriendsCount.getCounterToString()
+                        label1.textColor = label1.tintColor
                         label1.textAlignment = .center
                         label1.font = UIFont(name: "TrebuchetMS-Bold", size: 18)
                         label1.adjustsFontSizeToFitWidth = true
@@ -411,12 +450,21 @@ class ProfileView: UIView {
                         label2.frame = CGRect(x: leftX, y: topY + counterHeight/2, width: counterHeight, height: 20)
                         userInfoView.addSubview(label2)
                         
+                        let tap = UITapGestureRecognizer()
+                        tap.add {
+                            self.delegate.openUsersController(uid: self.delegate.userID, title: "Общие друзья", type: "commonFriends")
+                        }
+                        tap.numberOfTapsRequired = 1
+                        label1.isUserInteractionEnabled = true
+                        label1.addGestureRecognizer(tap)
+                        
                         leftX += counterHeight + counterInterSpacing
                     }
                     
                     if profile.followersCount > 0 {
                         let label1 = UILabel()
                         label1.text = profile.followersCount.getCounterToString()
+                        label1.textColor = label1.tintColor
                         label1.textAlignment = .center
                         label1.font = UIFont(name: "TrebuchetMS-Bold", size: 18)
                         label1.adjustsFontSizeToFitWidth = true
@@ -433,6 +481,14 @@ class ProfileView: UIView {
                         label2.minimumScaleFactor = 0.5
                         label2.frame = CGRect(x: leftX, y: topY + counterHeight/2, width: counterHeight, height: 20)
                         userInfoView.addSubview(label2)
+                        
+                        let tap = UITapGestureRecognizer()
+                        tap.add {
+                            self.delegate.openUsersController(uid: self.delegate.userID, title: "Подписчики \(profile.firstNameGen)", type: "followers")
+                        }
+                        tap.numberOfTapsRequired = 1
+                        label1.isUserInteractionEnabled = true
+                        label1.addGestureRecognizer(tap)
                         
                         leftX += counterHeight + counterInterSpacing
                     }
@@ -720,6 +776,77 @@ class ProfileView: UIView {
                 friendButton.isEnabled = true
                 friendButton.backgroundColor = UIColor.lightGray
             }
+        }
+    }
+    
+    func updateOwnerButtons() {
+        if allRecordsButton.isSelected {
+            allRecordsButton.setTitleColor(UIColor.white, for: .selected)
+            allRecordsButton.layer.borderColor = UIColor.black.cgColor
+            allRecordsButton.layer.cornerRadius = 5
+            allRecordsButton.clipsToBounds = true
+            allRecordsButton.backgroundColor = vkSingleton.shared.mainColor
+            allRecordsButton.tintColor = vkSingleton.shared.mainColor
+            
+            ownerButton.isSelected = false
+            ownerButton.setTitleColor(UIColor.black, for: .normal)
+            ownerButton.clipsToBounds = true
+            ownerButton.backgroundColor = UIColor.lightGray
+            ownerButton.tintColor = UIColor.lightGray
+            ownerButton.layer.cornerRadius = 5
+        }
+        
+        if ownerButton.isSelected {
+            ownerButton.setTitleColor(UIColor.white, for: .selected)
+            ownerButton.layer.borderColor = UIColor.black.cgColor
+            ownerButton.clipsToBounds = true
+            ownerButton.backgroundColor = UIColor.init(displayP3Red: 0/255, green: 84/255, blue: 147/255, alpha: 1)
+            ownerButton.tintColor = UIColor.init(displayP3Red: 0/255, green: 84/255, blue: 147/255, alpha: 1)
+            ownerButton.layer.cornerRadius = 5
+            
+            allRecordsButton.isSelected = false
+            allRecordsButton.setTitleColor(UIColor.black, for: .normal)
+            allRecordsButton.clipsToBounds = true
+            allRecordsButton.backgroundColor = UIColor.lightGray
+            allRecordsButton.tintColor = UIColor.lightGray
+            allRecordsButton.layer.cornerRadius = 5
+        }
+    }
+    
+    func setOwnerButton(view: UIView, topY: CGFloat) {
+        
+        if let profile = user {
+            allRecordsButton.setTitle("Все записи", for: .normal)
+            allRecordsButton.setTitle("Все записи", for: .selected)
+            allRecordsButton.titleLabel?.font = UIFont(name: "TrebuchetMS-Bold", size: 13)!
+            
+            allRecordsButton.frame = CGRect(x: view.bounds.width / 4 - 75, y: 5, width: 150, height: buttonHeight)
+            
+            if delegate.userID == vkSingleton.shared.userID {
+                ownerButton.setTitle("Мои записи", for: .selected)
+                ownerButton.setTitle("Мои записи", for: .normal)
+            } else {
+                ownerButton.setTitle("Записи \(profile.firstNameGen)", for: .selected)
+                ownerButton.setTitle("Записи \(profile.firstNameGen)", for: .normal)
+            }
+            ownerButton.titleLabel?.font = UIFont(name: "TrebuchetMS-Bold", size: 13)!
+            ownerButton.titleLabel?.adjustsFontSizeToFitWidth = true
+            ownerButton.titleLabel?.minimumScaleFactor = 0.5
+            
+            ownerButton.frame = CGRect(x: 3 * view.bounds.width / 4 - 75, y: 5, width: 150, height: buttonHeight)
+            
+            if delegate.filterRecords == "owner" {
+                allRecordsButton.isSelected = false
+                ownerButton.isSelected = true
+            } else {
+                allRecordsButton.isSelected = true
+                ownerButton.isSelected = false
+            }
+            
+            updateOwnerButtons()
+            
+            view.addSubview(allRecordsButton)
+            view.addSubview(ownerButton)
         }
     }
 }

@@ -24,6 +24,7 @@ class ProfileViewController: UITableViewController {
     
     var offset = 0
     let count = 20
+    var filterRecords = "owner"
     
     var isRefresh = false
     

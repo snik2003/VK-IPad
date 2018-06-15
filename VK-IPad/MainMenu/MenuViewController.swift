@@ -16,6 +16,7 @@ class MenuViewController: UITableViewController {
     @IBOutlet weak var notificationsCell: UITableViewCell!
     @IBOutlet weak var messagesCell: UITableViewCell!
     @IBOutlet weak var friendsCell: UITableViewCell!
+    @IBOutlet weak var groupsCell: UITableViewCell!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,12 +31,59 @@ class MenuViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        if indexPath.section == 0 && indexPath.row == 1 {
-            notificationsCell.setBadgeValue(value: 15)
+        // Профиль
+        if indexPath.section == 0 && indexPath.row == 0 {
+            self.openProfileController(id: Int(vkSingleton.shared.userID)!, name: "")
         }
         
+        // Ответы
+        if indexPath.section == 0 && indexPath.row == 1 {
+            
+        }
+        
+        // Мои сообщения
         if indexPath.section == 0 && indexPath.row == 2 {
-            messagesCell.setBadgeValue(value: 3)
+            
+        }
+        
+        // Новости
+        if indexPath.section == 0 && indexPath.row == 3 {
+            
+        }
+        
+        // Мои друзья
+        if indexPath.section == 1 && indexPath.row == 0 {
+            self.openUsersController(uid: vkSingleton.shared.userID, title: "Мои друзья", type: "friends")
+        }
+        
+        // Мои сообщества
+        if indexPath.section == 1 && indexPath.row == 1 {
+            
+        }
+        
+        // Мои фотографии
+        if indexPath.section == 1 && indexPath.row == 2 {
+            
+        }
+        
+        // Мои видеозаписи
+        if indexPath.section == 1 && indexPath.row == 3 {
+            
+        }
+        
+        // Мои закладки
+        if indexPath.section == 1 && indexPath.row == 4 {
+            
+        }
+        
+        // Мои подписки
+        if indexPath.section == 1 && indexPath.row == 5 {
+            self.openUsersController(uid: vkSingleton.shared.userID, title: "Мои отправленные заявки в друзья", type: "subscript")
+        }
+        
+        // Моя музыка ITunes
+        if indexPath.section == 1 && indexPath.row == 6 {
+            
         }
         
         tableView.deselectRow(at: indexPath, animated: false)
@@ -99,18 +147,18 @@ class MenuViewController: UITableViewController {
                 }
             }
             
-            let messages = 4 //json["response"][0]["messages"].intValue
-            let friends = 2 //json["response"][0]["friends"].intValue
+            let messages = json["response"][0]["messages"].intValue
+            let friends = json["response"][0]["friends"].intValue
             
             OperationQueue.main.addOperation {
                 self.messagesCell.setBadgeValue(value: messages)
                 self.friendsCell.setBadgeValue(value: friends)
             }
             
-            /*let notData = json["response"][1]["items"].compactMap { Notifications(json: $0.1) }
+            //let notData = json["response"][1]["items"].compactMap { Notifications(json: $0.1) }
             
             var countNewNots = 0
-            let lastViewed = json["response"][1]["last_viewed"].intValue
+            /*let lastViewed = json["response"][1]["last_viewed"].intValue
             for not in notData {
                 if not.date > lastViewed {
                     countNewNots += not.feedback.count
@@ -119,7 +167,6 @@ class MenuViewController: UITableViewController {
             
             let groups = json["response"][2]["items"].compactMap { Groups(json: $0.1) }*/
             
-            let countNewNots = 25
             OperationQueue.main.addOperation {
                 self.notificationsCell.setBadgeValue(value: countNewNots)
                 //self.groupsCell.setBadgeValue(value: groups.count)
@@ -217,5 +264,24 @@ extension UINavigationBar {
         view.addSubview(statusLabel)
         
         topItem?.titleView = view
+    }
+}
+
+extension UISplitViewController {
+    func toggleMasterView() {
+        if UIScreen.main.bounds.height > UIScreen.main.bounds.width {
+            var nextDisplayMode: UISplitViewControllerDisplayMode
+            switch(self.preferredDisplayMode){
+            case .primaryHidden:
+                nextDisplayMode = .allVisible
+            default:
+                nextDisplayMode = .primaryHidden
+            }
+            UIView.animate(withDuration: 0.2) { () -> Void in
+                self.preferredDisplayMode = nextDisplayMode
+            }
+        } else {
+            // do nothing
+        }
     }
 }
