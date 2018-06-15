@@ -207,7 +207,7 @@ class ProfileView: UIView {
             
             let lastLabel = UILabel()
             if profile.deactivated == "" {
-                if profile.onlineMobile == 1 {
+                if profile.onlineStatus == 1 {
                     lastLabel.text = " онлайн"
                     lastLabel.textColor = UIColor.blue
                     lastLabel.isEnabled = true
