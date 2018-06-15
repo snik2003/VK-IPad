@@ -15,6 +15,8 @@ class ProfileViewController: UITableViewController {
     var userProfile: [UserProfile] = []
     var photos: [Photos] = []
   
+    var heights: [IndexPath: CGFloat] = [:]
+    
 //    var userID = "76632752" // заблокирована
 //    var userID = "176257230"
 //    var userID = "46616527" // Юра
@@ -25,6 +27,14 @@ class ProfileViewController: UITableViewController {
     var offset = 0
     let count = 20
     var filterRecords = "owner"
+    
+    var wall: [Record] = []
+    var wallProfiles: [UserProfile] = []
+    var wallGroups: [GroupProfile] = []
+    
+    var postponedWall: [Record] = []
+    var postponedWallProfiles: [UserProfile] = []
+    var postponedWallGroups: [GroupProfile] = []
     
     var isRefresh = false
     
@@ -50,23 +60,62 @@ class ProfileViewController: UITableViewController {
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 0
+        return wall.count
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
+
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if let height = heights[indexPath] {
+            return height
+        } else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "recordCell") as! RecordCell
+            
+            cell.delegate = self
+            cell.record = wall[indexPath.section]
+            cell.cellWidth = self.tableView.frame.width
+            
+            let height = cell.getRowHeight()
+            heights[indexPath] = height
+            
+            return height
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 0
     }
-
-    /*
+    
+    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 10
+    }
+    
+    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let viewFooter = UIView()
+        viewFooter.backgroundColor = vkSingleton.shared.backColor
+        
+        return viewFooter
+    }
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: "recordCell", for: indexPath) as! RecordCell
 
-        // Configure the cell...
-
+        cell.delegate = self
+        
+        cell.record = wall[indexPath.section]
+        cell.users = wallProfiles
+        cell.groups = wallGroups
+        
+        cell.cellWidth = self.tableView.frame.width
+        
+        cell.configureCell()
+        
         return cell
     }
-    */
-
+    
     @objc func pullToRefresh() {
         offset = 0
         refreshExecute()
@@ -81,13 +130,11 @@ class ProfileViewController: UITableViewController {
         
         code = "\(code) var b = API.photos.getAll({\"owner_id\":\"\(userID)\",\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"extended\":1,\"count\":100,\"photo_sizes\":0,\"skip_hidden\":0,\"v\": \"\(vkSingleton.shared.version)\"});\n"
         
-        /*code = "\(code) var c = API.wall.get({\"owner_id\":\(userID),\"offset\":\(offset),\"access_token\": \"\(vkSingleton.shared.accessToken)\",\"count\":\(count),\"filter\":\"\(filterRecords)\",\"extended\":1,\"v\":\"\(vkSingleton.shared.version)\"});\n"
+        code = "\(code) var c = API.wall.get({\"owner_id\":\(userID),\"offset\":\(offset),\"access_token\": \"\(vkSingleton.shared.accessToken)\",\"count\":\(count),\"filter\":\"\(filterRecords)\",\"extended\":1,\"v\":\"\(vkSingleton.shared.version)\"});\n"
         
         code = "\(code) var d = API.wall.get({\"owner_id\":\(userID),\"offset\":\(offset),\"access_token\": \"\(vkSingleton.shared.accessToken)\",\"count\":\(count),\"filter\":\"postponed\",\"extended\":1,\"v\":\"\(vkSingleton.shared.version)\"});\n"
         
-        code = "\(code) return [a,b,c,d];"*/
-        
-        code = "\(code) return [a,b];"
+        code = "\(code) return [a,b,c,d];"
         
         let url = "/method/execute"
         let parameters = [
@@ -105,7 +152,7 @@ class ProfileViewController: UITableViewController {
             self.userProfile = json["response"][0].compactMap { UserProfile(json: $0.1) }
             self.photos = json["response"][1]["items"].compactMap { Photos(json: $0.1) }
             
-            //print(json["response"][0])
+            print(json["response"][2])
             
             if self.userID == vkSingleton.shared.userID {
                 OperationQueue.main.addOperation {
@@ -122,6 +169,30 @@ class ProfileViewController: UITableViewController {
                 let user = self.userProfile[0]
                 if user.blacklisted == 1 {
                     self.showErrorMessage(title: "Предупреждение", msg: "\nВы находитесь в черном списке \(user.firstNameGen)\n")
+                }
+            }
+            
+            self.postponedWall = json["response"][3]["items"].compactMap { Record(json: $0.1) }
+            self.postponedWallProfiles = json["response"][3]["profiles"].compactMap { UserProfile(json: $0.1) }
+            self.postponedWallGroups = json["response"][3]["groups"].compactMap { GroupProfile(json: $0.1) }
+            
+            let wallData = json["response"][2]["items"].compactMap { Record(json: $0.1) }
+            let profilesData = json["response"][2]["profiles"].compactMap { UserProfile(json: $0.1) }
+            let groupsData = json["response"][2]["groups"].compactMap { GroupProfile(json: $0.1) }
+            
+            if self.offset == 0 {
+                self.wall = wallData
+                self.wallProfiles = profilesData
+                self.wallGroups = groupsData
+            } else {
+                for record in wallData {
+                    self.wall.append(record)
+                }
+                for group in groupsData {
+                    self.wallGroups.append(group)
+                }
+                for profile in profilesData {
+                    self.wallProfiles.append(profile)
                 }
             }
             
@@ -146,7 +217,7 @@ class ProfileViewController: UITableViewController {
     func setProfileView() {
         if userProfile.count > 0 {
             profileView = ProfileView()
-            profileView.backgroundColor = UIColor(displayP3Red: 225/255, green: 225/255, blue: 225/255, alpha: 1)
+            profileView.backgroundColor = vkSingleton.shared.backColor
             
             profileView.delegate = self
             profileView.user = userProfile[0]
@@ -154,15 +225,6 @@ class ProfileViewController: UITableViewController {
             
             let height: CGFloat = profileView.configureView(more: false)
             
-            
-            /*profileView.infoButton.addTarget(self, action: #selector(self.infoUserTouch(sender:)), for: .touchUpInside)
-            profileView.messageButton.addTarget(self, action: #selector(self.tapMessageButton(sender:)), for: .touchUpInside)
-            profileView.friendButton.addTarget(self, action: #selector(self.addFriendButton), for: .touchUpInside)
-            profileView.newRecordButton.addTarget(self, action: #selector(self.tapNewRecordButton(sender:)), for: .touchUpInside)
-            profileView.postponedWallButton.addTarget(self, action: #selector(self.tapPostponedWallButton(sender:)), for: .touchUpInside)
-            
-            profileView.allRecordsButton.addTarget(self, action: #selector(self.tapAllRecordsButton(sender:)), for: .touchUpInside)
-            profileView.ownerButton.addTarget(self, action: #selector(self.tapOwnerButton(sender:)), for: .touchUpInside)*/
             
             profileView.frame = CGRect(x: 0, y: 0, width: self.tableView.bounds.width, height: height)
             

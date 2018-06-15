@@ -93,6 +93,7 @@ class UserProfile {
     var persSmoking = 0
     var persAlcohol = 0
     var relatives: [Relatives] = []
+    var photo100 = ""
     
     init(json: JSON) {
         self.uid = json["id"].stringValue
@@ -169,6 +170,7 @@ class UserProfile {
         self.photoHeight = json["crop_photo"]["photo"]["height"].intValue
         self.isHiddenFromFeed = json["is_hidden_from_feed"].intValue
         self.wallDefault = json["wall_default"].stringValue
+        self.photo100 = json["photo_100"].stringValue
         
         self.cropPhotoURL = json["crop_photo"]["photo"]["photo_1280"].stringValue
         if self.cropPhotoURL == "" {

@@ -12,6 +12,14 @@
 		173D666620D3C94500EEBF46 /* Groups.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173D666520D3C94500EEBF46 /* Groups.swift */; };
 		173D666820D3C9DB00EEBF46 /* ParseGroupList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173D666720D3C9DB00EEBF46 /* ParseGroupList.swift */; };
 		173D666B20D3CAD100EEBF46 /* ReloadGroupsListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173D666A20D3CAD100EEBF46 /* ReloadGroupsListController.swift */; };
+		173D666D20D3E4BE00EEBF46 /* Record.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173D666C20D3E4BE00EEBF46 /* Record.swift */; };
+		173D666F20D3EAC800EEBF46 /* GroupProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173D666E20D3EAC800EEBF46 /* GroupProfile.swift */; };
+		173D667220D3F56600EEBF46 /* RecordCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173D667120D3F56600EEBF46 /* RecordCell.swift */; };
+		173D667420D40FAC00EEBF46 /* AdditionalFeatures in Resources */ = {isa = PBXBuildFile; fileRef = 173D667320D40FAC00EEBF46 /* AdditionalFeatures */; };
+		173D667920D40FCE00EEBF46 /* UITextViewPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173D667520D40FCD00EEBF46 /* UITextViewPlaceholder.swift */; };
+		173D667A20D40FCE00EEBF46 /* StoreReviewHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173D667620D40FCD00EEBF46 /* StoreReviewHelper.swift */; };
+		173D667B20D40FCE00EEBF46 /* URLsInLabels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173D667720D40FCE00EEBF46 /* URLsInLabels.swift */; };
+		173D667C20D40FCE00EEBF46 /* KGCopyableLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173D667820D40FCE00EEBF46 /* KGCopyableLabel.swift */; };
 		174912D920D300DD00FCF9F9 /* SetImageToRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 174912B020D300DC00FCF9F9 /* SetImageToRow.swift */; };
 		174912DA20D300DD00FCF9F9 /* SetAnimatedImageToRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 174912B120D300DC00FCF9F9 /* SetAnimatedImageToRow.swift */; };
 		174912DB20D300DD00FCF9F9 /* GetCacheImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 174912B220D300DC00FCF9F9 /* GetCacheImage.swift */; };
@@ -58,6 +66,14 @@
 		173D666520D3C94500EEBF46 /* Groups.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Groups.swift; sourceTree = "<group>"; };
 		173D666720D3C9DB00EEBF46 /* ParseGroupList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParseGroupList.swift; sourceTree = "<group>"; };
 		173D666A20D3CAD100EEBF46 /* ReloadGroupsListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReloadGroupsListController.swift; sourceTree = "<group>"; };
+		173D666C20D3E4BE00EEBF46 /* Record.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Record.swift; sourceTree = "<group>"; };
+		173D666E20D3EAC800EEBF46 /* GroupProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupProfile.swift; sourceTree = "<group>"; };
+		173D667120D3F56600EEBF46 /* RecordCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordCell.swift; sourceTree = "<group>"; };
+		173D667320D40FAC00EEBF46 /* AdditionalFeatures */ = {isa = PBXFileReference; lastKnownFileType = folder; name = AdditionalFeatures; path = "VK-IPad/AdditionalFeatures"; sourceTree = SOURCE_ROOT; };
+		173D667520D40FCD00EEBF46 /* UITextViewPlaceholder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITextViewPlaceholder.swift; sourceTree = "<group>"; };
+		173D667620D40FCD00EEBF46 /* StoreReviewHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoreReviewHelper.swift; sourceTree = "<group>"; };
+		173D667720D40FCE00EEBF46 /* URLsInLabels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLsInLabels.swift; sourceTree = "<group>"; };
+		173D667820D40FCE00EEBF46 /* KGCopyableLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KGCopyableLabel.swift; sourceTree = "<group>"; };
 		174912B020D300DC00FCF9F9 /* SetImageToRow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetImageToRow.swift; sourceTree = "<group>"; };
 		174912B120D300DC00FCF9F9 /* SetAnimatedImageToRow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetAnimatedImageToRow.swift; sourceTree = "<group>"; };
 		174912B220D300DC00FCF9F9 /* GetCacheImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetCacheImage.swift; sourceTree = "<group>"; };
@@ -135,9 +151,30 @@
 			path = ReloadInterface;
 			sourceTree = "<group>";
 		};
+		173D667020D3F54600EEBF46 /* Record */ = {
+			isa = PBXGroup;
+			children = (
+				173D667120D3F56600EEBF46 /* RecordCell.swift */,
+			);
+			path = Record;
+			sourceTree = "<group>";
+		};
+		173D667D20D40FD900EEBF46 /* AdditionalFunction */ = {
+			isa = PBXGroup;
+			children = (
+				173D667820D40FCE00EEBF46 /* KGCopyableLabel.swift */,
+				173D667620D40FCD00EEBF46 /* StoreReviewHelper.swift */,
+				173D667520D40FCD00EEBF46 /* UITextViewPlaceholder.swift */,
+				173D667720D40FCE00EEBF46 /* URLsInLabels.swift */,
+			);
+			path = AdditionalFunction;
+			sourceTree = "<group>";
+		};
 		174912AE20D300DC00FCF9F9 /* VK-IPad */ = {
 			isa = PBXGroup;
 			children = (
+				173D667D20D40FD900EEBF46 /* AdditionalFunction */,
+				173D667020D3F54600EEBF46 /* Record */,
 				173D666920D3CA9F00EEBF46 /* ReloadInterface */,
 				173D666220D3C75000EEBF46 /* Groups */,
 				174912FF20D3048A00FCF9F9 /* ParseServerData */,
@@ -180,6 +217,8 @@
 				174912B820D300DC00FCF9F9 /* vkAccount.swift */,
 				174912F920D302B700FCF9F9 /* Friends.swift */,
 				173D666520D3C94500EEBF46 /* Groups.swift */,
+				173D666C20D3E4BE00EEBF46 /* Record.swift */,
+				173D666E20D3EAC800EEBF46 /* GroupProfile.swift */,
 			);
 			path = Objects;
 			sourceTree = "<group>";
@@ -239,6 +278,7 @@
 			isa = PBXGroup;
 			children = (
 				174912D620D300DC00FCF9F9 /* ViewControllerProtocol.swift */,
+				173D667320D40FAC00EEBF46 /* AdditionalFeatures */,
 				174912D720D300DC00FCF9F9 /* ViewControllerUtils.swift */,
 			);
 			path = Protocols;
@@ -342,6 +382,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				173D667420D40FAC00EEBF46 /* AdditionalFeatures in Resources */,
 				174912F820D300DD00FCF9F9 /* Info.plist in Resources */,
 				174912E220D300DD00FCF9F9 /* Main.storyboard in Resources */,
 				174912DC20D300DD00FCF9F9 /* Assets.xcassets in Resources */,
@@ -435,15 +476,20 @@
 				174912F520D300DD00FCF9F9 /* AppDelegate.swift in Sources */,
 				174912E320D300DD00FCF9F9 /* Date.swift in Sources */,
 				174912DE20D300DD00FCF9F9 /* UserProfile.swift in Sources */,
+				173D667B20D40FCE00EEBF46 /* URLsInLabels.swift in Sources */,
+				173D667C20D40FCE00EEBF46 /* KGCopyableLabel.swift in Sources */,
+				173D666F20D3EAC800EEBF46 /* GroupProfile.swift in Sources */,
 				174912F120D300DD00FCF9F9 /* LoginViewController.swift in Sources */,
 				1749130320D304DD00FCF9F9 /* ParseRequestList.swift in Sources */,
 				173D666620D3C94500EEBF46 /* Groups.swift in Sources */,
 				174912ED20D300DD00FCF9F9 /* AppConfig.swift in Sources */,
+				173D667A20D40FCE00EEBF46 /* StoreReviewHelper.swift in Sources */,
 				174912E520D300DD00FCF9F9 /* TableViewCell.swift in Sources */,
 				1749130720D3055100FCF9F9 /* FriendRequest.swift in Sources */,
 				174912F720D300DD00FCF9F9 /* ViewControllerUtils.swift in Sources */,
 				173D666120D3C07900EEBF46 /* Control.swift in Sources */,
 				174912E420D300DD00FCF9F9 /* Label.swift in Sources */,
+				173D667920D40FCE00EEBF46 /* UITextViewPlaceholder.swift in Sources */,
 				173D666420D3C91300EEBF46 /* GroupsListController.swift in Sources */,
 				174912F420D300DD00FCF9F9 /* MenuViewController.swift in Sources */,
 				174912EA20D300DD00FCF9F9 /* GetServerDataOperation.swift in Sources */,
@@ -453,8 +499,10 @@
 				174912DB20D300DD00FCF9F9 /* GetCacheImage.swift in Sources */,
 				174912FA20D302B700FCF9F9 /* Friends.swift in Sources */,
 				174912FE20D303F400FCF9F9 /* ParseFriends.swift in Sources */,
+				173D666D20D3E4BE00EEBF46 /* Record.swift in Sources */,
 				174912FD20D303F400FCF9F9 /* ReloadUsersController.swift in Sources */,
 				174912E020D300DD00FCF9F9 /* vkAccount.swift in Sources */,
+				173D667220D3F56600EEBF46 /* RecordCell.swift in Sources */,
 				1749130520D3050200FCF9F9 /* ParseRequest.swift in Sources */,
 				174912E620D300DD00FCF9F9 /* Image.swift in Sources */,
 				174912EB20D300DD00FCF9F9 /* AsyncOperation.swift in Sources */,

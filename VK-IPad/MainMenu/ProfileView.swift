@@ -22,6 +22,8 @@ class ProfileView: UIView {
     var additionalButton = UIButton()
     var allRecordsButton = UIButton()
     var ownerButton = UIButton()
+    var newRecordButton = UIButton()
+    var postponedButton = UIButton()
     
     var avatarHeight: CGFloat = 20
     let buttonHeight: CGFloat = 25
@@ -185,6 +187,20 @@ class ProfileView: UIView {
                 setOwnerButton(view: ownersButtonsView, topY: topY)
                 
                 self.addSubview(ownersButtonsView)
+                topY += buttonHeight + 10
+            }
+            
+            if profile.deactivated == "" && (profile.canPost == 1 || self.delegate.postponedWall.count > 0) {
+                topY += 10
+                
+                let recordsButtonsView = UIView()
+                recordsButtonsView.backgroundColor = UIColor.white
+                let width = delegate.tableView.frame.width - 20
+                recordsButtonsView.frame = CGRect(x: 10, y: topY, width: width, height: 10 + buttonHeight)
+                
+                setRecordsButton(view: recordsButtonsView, topY: topY)
+                
+                self.addSubview(recordsButtonsView)
                 topY += buttonHeight + 10
             }
         }
@@ -730,7 +746,7 @@ class ProfileView: UIView {
     func setSeparator(inView view: UIView, topY: CGFloat) {
         let separator = UIView()
         separator.frame = CGRect(x: 10, y: topY, width: view.bounds.width - 20, height: 0.8)
-        separator.backgroundColor = UIColor(displayP3Red: 225/255, green: 225/255, blue: 225/255, alpha: 0.8)
+        separator.backgroundColor = vkSingleton.shared.backColor.withAlphaComponent(0.8)
         separator.layer.borderWidth = 0.1
         separator.layer.borderColor = UIColor.gray.cgColor
         view.addSubview(separator)
@@ -828,8 +844,8 @@ class ProfileView: UIView {
             ownerButton.setTitleColor(UIColor.white, for: .selected)
             ownerButton.layer.borderColor = UIColor.black.cgColor
             ownerButton.clipsToBounds = true
-            ownerButton.backgroundColor = UIColor.init(displayP3Red: 0/255, green: 84/255, blue: 147/255, alpha: 1)
-            ownerButton.tintColor = UIColor.init(displayP3Red: 0/255, green: 84/255, blue: 147/255, alpha: 1)
+            ownerButton.backgroundColor = vkSingleton.shared.mainColor
+            ownerButton.tintColor = vkSingleton.shared.mainColor
             ownerButton.layer.cornerRadius = 5
             
             allRecordsButton.isSelected = false
@@ -875,6 +891,37 @@ class ProfileView: UIView {
             
             view.addSubview(allRecordsButton)
             view.addSubview(ownerButton)
+        }
+    }
+    
+    func setRecordsButton(view: UIView, topY: CGFloat) {
+        
+        if let profile = user {
+            if profile.canPost == 1 {
+                newRecordButton.setTitle("Новая запись", for: .normal)
+                newRecordButton.setTitleColor(newRecordButton.tintColor, for: .normal)
+                newRecordButton.setTitleColor(UIColor.black, for: .highlighted)
+                newRecordButton.setTitleColor(UIColor.black, for: .selected)
+                newRecordButton.titleLabel?.font = UIFont(name: "TrebuchetMS", size: 14)!
+                newRecordButton.contentHorizontalAlignment = .left
+                newRecordButton.contentMode = .center
+                
+                newRecordButton.frame = CGRect(x: 10, y: 5, width: 100, height: buttonHeight)
+                view.addSubview(newRecordButton)
+            }
+            
+            if delegate.postponedWall.count > 0 {
+                postponedButton.setTitle("Отложенные записи (\(delegate.postponedWall.count))", for: .normal)
+                postponedButton.setTitleColor(postponedButton.tintColor, for: .normal)
+                postponedButton.setTitleColor(UIColor.black, for: .highlighted)
+                postponedButton.setTitleColor(UIColor.black, for: .selected)
+                postponedButton.titleLabel?.font = UIFont(name: "TrebuchetMS", size: 14)!
+                postponedButton.contentHorizontalAlignment = .left
+                postponedButton.contentMode = .center
+                
+                postponedButton.frame = CGRect(x: 150, y: 5, width: 250, height: buttonHeight)
+                view.addSubview(postponedButton)
+            }
         }
     }
 }

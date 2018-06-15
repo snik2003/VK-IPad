@@ -33,5 +33,7 @@ final class vkSingleton {
     var pushInfo: [AnyHashable: Any]? = nil
     
     let appOpenedCountKey = "APP_OPENED_COUNT"
+    
     let mainColor = UIColor(displayP3Red: 5/255, green: 103/255, blue: 164/255, alpha: 1)
+    let backColor = UIColor(displayP3Red: 225/255, green: 225/255, blue: 225/255, alpha: 1)
 }

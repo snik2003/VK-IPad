@@ -219,8 +219,11 @@ extension UIViewController: ViewControllerProtocol {
         let rect = text.boundingRect(with: textBlock, options: .usesLineFragmentOrigin, attributes: [NSAttributedStringKey.font: font], context: nil)
         
         let width = Double(rect.size.width)
-        let height = Double(rect.size.height)
+        var height = Double(rect.size.height)
         
+        if text == "" {
+            height = 0
+        }
         return CGSize(width: ceil(width), height: ceil(height))
     }
     

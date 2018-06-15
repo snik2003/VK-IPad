@@ -41,4 +41,12 @@ extension UITableViewCell {
             self.addSubview(label)
         }
     }
+    
+    func removeAllSubviews() {
+        for subview in self.subviews {
+            if subview.tag == 250 {
+                subview.removeFromSuperview()
+            }
+        }
+    }
 }
