@@ -19,7 +19,6 @@ PODS:
   - SwiftMessages/App (4.1.4)
   - SwiftyJSON (4.1.0)
   - SWRevealViewController (2.3.0)
-  - TRMosaicLayout (1.0.0)
 
 DEPENDENCIES:
   - Alamofire (~> 4.5)
@@ -36,7 +35,6 @@ DEPENDENCIES:
   - SwiftMessages
   - SwiftyJSON (~> 4.0)
   - SWRevealViewController (~> 2.3)
-  - TRMosaicLayout
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
@@ -55,7 +53,6 @@ SPEC REPOS:
     - SwiftMessages
     - SwiftyJSON
     - SWRevealViewController
-    - TRMosaicLayout
 
 SPEC CHECKSUMS:
   Alamofire: e4fa87002c137ba2d8d634d2c51fabcda0d5c223
@@ -73,8 +70,7 @@ SPEC CHECKSUMS:
   SwiftMessages: 2c33fdee8b8f38dfc7e1036684456b505891da8c
   SwiftyJSON: c29297daf073d2aa016295d5809cdd68045c39b3
   SWRevealViewController: 6d3fd97f70112fd7cef9de14df4260eacce4c63a
-  TRMosaicLayout: 1875505c48dd2877afd69a8bea7b4c1c63afa5b5
 
-PODFILE CHECKSUM: c15495dcb1cb7928a8f00956199cc90c24b1eeea
+PODFILE CHECKSUM: 64a9ece68e6e497e2f46baf9b2e66a28a4cc322d
 
 COCOAPODS: 1.5.0

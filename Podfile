@@ -20,5 +20,4 @@ pod 'Alamofire', '~> 4.5'
   pod 'SwiftMessages'
   pod 'Popover'
   pod 'CMPhotoCropEditor'
-  pod 'TRMosaicLayout'
 end
