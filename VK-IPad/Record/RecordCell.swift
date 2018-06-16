@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import WebKit
+import SwiftyJSON
 
 class RecordCell: UITableViewCell {
     
@@ -286,51 +288,64 @@ class RecordCell: UITableViewCell {
         }
         
         if attach.type == "video" && attach.video.count > 0 {
+            
             let videoWidth: CGFloat = 320
             let videoHeight: CGFloat = 240
             
-            let video = UIImageView()
-            video.tag = 250
+            let webView = WKWebView()
+            webView.tintColor = UIColor.green
             
-            let getCacheImage = GetCacheImage(url: attach.video[0].photo320, lifeTime: .userPhotoImage)
-            getCacheImage.completionBlock = {
-                OperationQueue.main.addOperation {
-                    video.image = getCacheImage.outputImage
-                    video.layer.borderWidth = 0.6
-                    video.layer.borderColor = UIColor.gray.cgColor
-                    video.layer.cornerRadius = 12
-                    video.clipsToBounds = true
-                    video.contentMode = .scaleToFill
+            if let controller = delegate as? WKNavigationDelegate {
+                webView.navigationDelegate = controller
+            }
+            
+            let url = "/method/video.get"
+            let parameters = [
+                "access_token": vkSingleton.shared.accessToken,
+                "owner_id": "\(attach.video[0].ownerID)",
+                "videos": "\(attach.video[0].ownerID)_\(attach.video[0].id)_\(attach.video[0].accessKey)",
+                "v": vkSingleton.shared.version
+                ]
+            let getServerData = GetServerDataOperation(url: url, parameters: parameters)
+            getServerData.completionBlock = {
+                guard let data = getServerData.data else { return }
+                guard let json = try? JSON(data: data) else { print("json error"); return }
+                print(json)
+                
+                let videos = json["response"]["items"].compactMap({ Video(json: $0.1) })
+                if videos.count > 0 {
+                    if let url = URL(string: videos[0].player) {
+                        OperationQueue.main.addOperation {
+                            let request = URLRequest(url: url)
+                            webView.load(request)
+                        }
+                    }
                 }
             }
-            OperationQueue().addOperation(getCacheImage)
+            OperationQueue().addOperation(getServerData)
             
-            let videoImage = UIImageView()
-            videoImage.image = UIImage(named: "video")
-            videoImage.frame = CGRect(x: videoWidth / 2 - 30, y: (videoHeight - 4) / 2 - 30, width: 60, height: 60)
-            video.addSubview(videoImage)
+            webView.tag = 250
+            webView.frame = CGRect(x: leftX, y: topY, width: videoWidth, height: videoHeight)
+            self.addSubview(webView)
+        
+            let titleLabel = UILabel()
+            titleLabel.tag = 250
+            titleLabel.frame = CGRect(x: leftX, y: webView.frame.maxY, width: maxSize, height: 20)
+            titleLabel.text = attach.video[0].title
+            titleLabel.textColor = titleLabel.tintColor
+            titleLabel.font = UIFont(name: "TrebuchetMS", size: 13)!
             
+            let viewsLabel = UILabel()
+            viewsLabel.tag = 250
+            viewsLabel.frame = CGRect(x: leftX, y: webView.frame.maxY + 20, width: maxSize, height: 20)
+            viewsLabel.text = "Просмотров: \(attach.video[0].views.getCounterToString())"
+            viewsLabel.isEnabled = false
+            viewsLabel.font = UIFont(name: "TrebuchetMS", size: 13)!
             
-            let durationLabel = UILabel()
-            durationLabel.text = attach.video[0].duration.getVideoDurationToString()
-            durationLabel.font = UIFont(name: "Verdana-Bold", size: 12.0)!
-            durationLabel.textAlignment = .center
-            durationLabel.textColor = UIColor.black
-            durationLabel.backgroundColor = UIColor.lightText.withAlphaComponent(0.5)
-            durationLabel.layer.cornerRadius = 10
-            durationLabel.clipsToBounds = true
-            if let length = durationLabel.text?.length, length > 5 {
-                durationLabel.frame = CGRect(x: videoWidth - 10 - 90, y: videoHeight - 4 - 10 - 20, width: 90, height: 20)
-            } else {
-                durationLabel.frame = CGRect(x: videoWidth - 10 - 60, y: videoHeight - 4 - 10 - 20, width: 60, height: 20)
-            }
-            video.addSubview(durationLabel)
+            self.addSubview(titleLabel)
+            self.addSubview(viewsLabel)
             
-            
-            video.frame = CGRect(x: leftX, y: topY, width: videoWidth, height: videoHeight)
-            self.addSubview(video)
-            
-            topY += videoHeight
+            topY += videoHeight + 40
         }
         
         return topY
@@ -574,7 +589,7 @@ extension RecordCell {
             }
             
             if attach.type == "video" && attach.video.count > 0 {
-                height += 240
+                height += 240 + 40
             }
             
             if attach.type == "audio" && attach.audio.count > 0 {
@@ -634,7 +649,7 @@ extension RecordCell {
                     }
                     
                     if attach.type == "video" && attach.video.count > 0 {
-                        height += 240
+                        height += 240 + 40
                     }
                     
                     if attach.type == "audio" && attach.audio.count > 0 {

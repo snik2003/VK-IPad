@@ -9,8 +9,9 @@
 import UIKit
 import RealmSwift
 import SwiftyJSON
+import WebKit
 
-class ProfileViewController: UITableViewController {
+class ProfileViewController: UITableViewController, WKNavigationDelegate {
 
     var userProfile: [UserProfile] = []
     var photos: [Photos] = []
@@ -153,7 +154,7 @@ class ProfileViewController: UITableViewController {
             self.userProfile = json["response"][0].compactMap { UserProfile(json: $0.1) }
             self.photos = json["response"][1]["items"].compactMap { Photos(json: $0.1) }
             
-            print(json["response"][2])
+            //print(json["response"][2])
             
             if self.userID == vkSingleton.shared.userID {
                 OperationQueue.main.addOperation {
