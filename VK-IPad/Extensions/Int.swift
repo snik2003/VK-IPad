@@ -389,5 +389,22 @@ extension Int {
         
         return str
     }
+    
+    func getVideoDurationToString() -> String {
+        var res = "00:00"
+        
+        let dur = self
+        let hour = dur / 3600
+        let min = (dur % 3600) / 60
+        let sec = dur % 60
+        
+        if hour > 0 {
+            res = String(format: "%d:%02d:%02d", hour, min, sec)
+        } else {
+            res = String(format: "%02d:%02d", min, sec)
+        }
+        
+        return res
+    }
 }
 

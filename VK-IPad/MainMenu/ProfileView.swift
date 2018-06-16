@@ -683,7 +683,7 @@ class ProfileView: UIView {
                         guard let json = try? JSON(data: data) else { print("json error"); return }
                         let photos = json["response"].compactMap { Photo(json: $0.1) }
                         if photos.count > 0 {
-                            let getCacheImage = GetCacheImage(url: photos[0].bigPhotoURL, lifeTime: .avatarImage)
+                            let getCacheImage = GetCacheImage(url: photos[0].photo604, lifeTime: .avatarImage)
                             getCacheImage.completionBlock = {
                                 OperationQueue.main.addOperation {
                                     self.avatarImage.image = getCacheImage.outputImage

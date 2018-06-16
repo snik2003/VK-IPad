@@ -674,7 +674,7 @@
         <!--Navigation Controller-->
         <scene sceneID="NND-Vn-U9q">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="dGk-1q-kbs" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="UsersListNavigation" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="dGk-1q-kbs" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="jcZ-yB-KQt">
                         <rect key="frame" x="0.0" y="20" width="1366" height="44"/>
@@ -700,7 +700,7 @@
         <!--Navigation Controller-->
         <scene sceneID="iio-rt-Fyf">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="u25-I2-dAd" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="GroupsListNavigation" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="u25-I2-dAd" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="0oV-u0-5KU">
                         <rect key="frame" x="0.0" y="20" width="1366" height="44"/>

@@ -82,6 +82,7 @@ class ProfileViewController: UITableViewController {
             
             return height
         }
+        
     }
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {

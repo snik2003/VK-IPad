@@ -37,7 +37,10 @@ class Record {
     var canEdit = 0
     var isPinned = 0
     
+    var attachments: [Attachment] = []
     var copy: [Record] = []
+    
+    var attachCount = 0
     
     init(json: JSON) {
         self.id = json["id"].intValue
@@ -68,11 +71,14 @@ class Record {
         self.text = json["text"].stringValue
         self.postType = json["post_type"].stringValue
         
+        self.attachments = json["attachments"].compactMap({ Attachment(json: $0.1) })
         self.copy = json["copy_history"].compactMap({ Record(json: $0.1) })
+        
+        for attach in self.attachments {
+            if attach.photo.count > 0 || attach.video.count > 0 || attach.doc.count > 0 {
+                self.attachCount += 1
+            }
+        }
     }
-    
-}
-
-struct Attachment {
     
 }

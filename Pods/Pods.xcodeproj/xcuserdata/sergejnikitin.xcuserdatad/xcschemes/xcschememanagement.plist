@@ -123,6 +123,13 @@
 			<key>orderHint</key>
 			<integer>15</integer>
 		</dict>
+		<key>TRMosaicLayout.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>17</integer>
+		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict/>
