@@ -22,6 +22,7 @@ class ProfileView: UIView {
     var additionalButton = UIButton()
     var allRecordsButton = UIButton()
     var ownerButton = UIButton()
+    var othersButton = UIButton()
     var newRecordButton = UIButton()
     var postponedButton = UIButton()
     
@@ -838,6 +839,20 @@ class ProfileView: UIView {
             ownerButton.backgroundColor = UIColor.lightGray
             ownerButton.tintColor = UIColor.lightGray
             ownerButton.layer.cornerRadius = 5
+            
+            othersButton.isSelected = false
+            othersButton.setTitleColor(UIColor.black, for: .normal)
+            othersButton.clipsToBounds = true
+            othersButton.backgroundColor = UIColor.lightGray
+            othersButton.tintColor = UIColor.lightGray
+            othersButton.layer.cornerRadius = 5
+            
+            postponedButton.isSelected = false
+            postponedButton.setTitleColor(UIColor.black, for: .normal)
+            postponedButton.clipsToBounds = true
+            postponedButton.backgroundColor = UIColor.lightGray
+            postponedButton.tintColor = UIColor.lightGray
+            postponedButton.layer.cornerRadius = 5
         }
         
         if ownerButton.isSelected {
@@ -854,6 +869,80 @@ class ProfileView: UIView {
             allRecordsButton.backgroundColor = UIColor.lightGray
             allRecordsButton.tintColor = UIColor.lightGray
             allRecordsButton.layer.cornerRadius = 5
+            
+            othersButton.isSelected = false
+            othersButton.setTitleColor(UIColor.black, for: .normal)
+            othersButton.clipsToBounds = true
+            othersButton.backgroundColor = UIColor.lightGray
+            othersButton.tintColor = UIColor.lightGray
+            othersButton.layer.cornerRadius = 5
+            
+            postponedButton.isSelected = false
+            postponedButton.setTitleColor(UIColor.black, for: .normal)
+            postponedButton.clipsToBounds = true
+            postponedButton.backgroundColor = UIColor.lightGray
+            postponedButton.tintColor = UIColor.lightGray
+            postponedButton.layer.cornerRadius = 5
+        }
+        
+        if othersButton.isSelected {
+            othersButton.setTitleColor(UIColor.white, for: .selected)
+            othersButton.layer.borderColor = UIColor.black.cgColor
+            othersButton.clipsToBounds = true
+            othersButton.backgroundColor = vkSingleton.shared.mainColor
+            othersButton.tintColor = vkSingleton.shared.mainColor
+            othersButton.layer.cornerRadius = 5
+            
+            allRecordsButton.isSelected = false
+            allRecordsButton.setTitleColor(UIColor.black, for: .normal)
+            allRecordsButton.clipsToBounds = true
+            allRecordsButton.backgroundColor = UIColor.lightGray
+            allRecordsButton.tintColor = UIColor.lightGray
+            allRecordsButton.layer.cornerRadius = 5
+            
+            ownerButton.isSelected = false
+            ownerButton.setTitleColor(UIColor.black, for: .normal)
+            ownerButton.clipsToBounds = true
+            ownerButton.backgroundColor = UIColor.lightGray
+            ownerButton.tintColor = UIColor.lightGray
+            ownerButton.layer.cornerRadius = 5
+            
+            postponedButton.isSelected = false
+            postponedButton.setTitleColor(UIColor.black, for: .normal)
+            postponedButton.clipsToBounds = true
+            postponedButton.backgroundColor = UIColor.lightGray
+            postponedButton.tintColor = UIColor.lightGray
+            postponedButton.layer.cornerRadius = 5
+        }
+        
+        if postponedButton.isSelected {
+            postponedButton.setTitleColor(UIColor.white, for: .selected)
+            postponedButton.layer.borderColor = UIColor.black.cgColor
+            postponedButton.clipsToBounds = true
+            postponedButton.backgroundColor = vkSingleton.shared.mainColor
+            postponedButton.tintColor = vkSingleton.shared.mainColor
+            postponedButton.layer.cornerRadius = 5
+            
+            allRecordsButton.isSelected = false
+            allRecordsButton.setTitleColor(UIColor.black, for: .normal)
+            allRecordsButton.clipsToBounds = true
+            allRecordsButton.backgroundColor = UIColor.lightGray
+            allRecordsButton.tintColor = UIColor.lightGray
+            allRecordsButton.layer.cornerRadius = 5
+            
+            ownerButton.isSelected = false
+            ownerButton.setTitleColor(UIColor.black, for: .normal)
+            ownerButton.clipsToBounds = true
+            ownerButton.backgroundColor = UIColor.lightGray
+            ownerButton.tintColor = UIColor.lightGray
+            ownerButton.layer.cornerRadius = 5
+            
+            othersButton.isSelected = false
+            othersButton.setTitleColor(UIColor.black, for: .normal)
+            othersButton.clipsToBounds = true
+            othersButton.backgroundColor = UIColor.lightGray
+            othersButton.tintColor = UIColor.lightGray
+            othersButton.layer.cornerRadius = 5
         }
     }
     
@@ -863,8 +952,10 @@ class ProfileView: UIView {
             allRecordsButton.setTitle("Все записи", for: .normal)
             allRecordsButton.setTitle("Все записи", for: .selected)
             allRecordsButton.titleLabel?.font = UIFont(name: "TrebuchetMS-Bold", size: 13)!
+            allRecordsButton.titleLabel?.adjustsFontSizeToFitWidth = true
+            allRecordsButton.titleLabel?.minimumScaleFactor = 0.5
             
-            allRecordsButton.frame = CGRect(x: view.bounds.width / 4 - 75, y: 5, width: 150, height: buttonHeight)
+            allRecordsButton.frame = CGRect(x: view.bounds.width / 2 - 80, y: 5, width: 160, height: buttonHeight)
             
             if delegate.userID == vkSingleton.shared.userID {
                 ownerButton.setTitle("Мои записи", for: .selected)
@@ -877,20 +968,35 @@ class ProfileView: UIView {
             ownerButton.titleLabel?.adjustsFontSizeToFitWidth = true
             ownerButton.titleLabel?.minimumScaleFactor = 0.5
             
-            ownerButton.frame = CGRect(x: 3 * view.bounds.width / 4 - 75, y: 5, width: 150, height: buttonHeight)
+            ownerButton.frame = CGRect(x: 4 * view.bounds.width / 5 - 80, y: 5, width: 160, height: buttonHeight)
+            
+            othersButton.setTitle("Чужие записи", for: .normal)
+            othersButton.setTitle("Чужие записи", for: .selected)
+            othersButton.titleLabel?.font = UIFont(name: "TrebuchetMS-Bold", size: 13)!
+            othersButton.titleLabel?.adjustsFontSizeToFitWidth = true
+            othersButton.titleLabel?.minimumScaleFactor = 0.5
+            
+            othersButton.frame = CGRect(x: view.bounds.width / 5 - 80, y: 5, width: 160, height: buttonHeight)
             
             if delegate.filterRecords == "owner" {
                 allRecordsButton.isSelected = false
                 ownerButton.isSelected = true
+                othersButton.isSelected = false
+            } else if delegate.filterRecords == "others" {
+                allRecordsButton.isSelected = false
+                ownerButton.isSelected = false
+                othersButton.isSelected = true
             } else {
                 allRecordsButton.isSelected = true
                 ownerButton.isSelected = false
+                othersButton.isSelected = false
             }
             
             updateOwnerButtons()
             
             view.addSubview(allRecordsButton)
             view.addSubview(ownerButton)
+            view.addSubview(othersButton)
         }
     }
     
@@ -912,14 +1018,19 @@ class ProfileView: UIView {
             
             if delegate.postponedWall.count > 0 {
                 postponedButton.setTitle("Отложенные записи (\(delegate.postponedWall.count))", for: .normal)
-                postponedButton.setTitleColor(postponedButton.tintColor, for: .normal)
-                postponedButton.setTitleColor(UIColor.black, for: .highlighted)
-                postponedButton.setTitleColor(UIColor.black, for: .selected)
-                postponedButton.titleLabel?.font = UIFont(name: "TrebuchetMS", size: 14)!
-                postponedButton.contentHorizontalAlignment = .left
-                postponedButton.contentMode = .center
+                postponedButton.setTitle("Отложенные записи (\(delegate.postponedWall.count))", for: .selected)
+                postponedButton.titleLabel?.font = UIFont(name: "TrebuchetMS-Bold", size: 13)!
+                postponedButton.titleLabel?.adjustsFontSizeToFitWidth = true
+                postponedButton.titleLabel?.minimumScaleFactor = 0.6
                 
-                postponedButton.frame = CGRect(x: 150, y: 5, width: 250, height: buttonHeight)
+                postponedButton.isSelected = false
+                postponedButton.setTitleColor(UIColor.black, for: .normal)
+                postponedButton.clipsToBounds = true
+                postponedButton.backgroundColor = UIColor.lightGray
+                postponedButton.tintColor = UIColor.lightGray
+                postponedButton.layer.cornerRadius = 5
+                
+                postponedButton.frame = CGRect(x: view.bounds.width / 2 - 80, y: 5, width: 160, height: buttonHeight)
                 view.addSubview(postponedButton)
             }
         }

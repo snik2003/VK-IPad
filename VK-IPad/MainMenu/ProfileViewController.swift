@@ -77,6 +77,7 @@ class ProfileViewController: UITableViewController, WKNavigationDelegate {
             cell.delegate = self
             cell.record = wall[indexPath.section]
             cell.cellWidth = self.tableView.frame.width
+            cell.showLikesPanel = true
             
             let height = cell.getRowHeight()
             heights[indexPath] = height
@@ -106,6 +107,10 @@ class ProfileViewController: UITableViewController, WKNavigationDelegate {
         let cell = tableView.dequeueReusableCell(withIdentifier: "recordCell", for: indexPath) as! RecordCell
 
         cell.delegate = self
+        cell.indexPath = indexPath
+        cell.cell = cell
+        cell.tableView = self.tableView
+        cell.showLikesPanel = true
         
         cell.record = wall[indexPath.section]
         cell.users = wallProfiles
@@ -154,7 +159,7 @@ class ProfileViewController: UITableViewController, WKNavigationDelegate {
             self.userProfile = json["response"][0].compactMap { UserProfile(json: $0.1) }
             self.photos = json["response"][1]["items"].compactMap { Photos(json: $0.1) }
             
-            //print(json["response"][2])
+            print(json["response"][2])
             
             if self.userID == vkSingleton.shared.userID {
                 OperationQueue.main.addOperation {

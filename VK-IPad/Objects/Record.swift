@@ -75,7 +75,7 @@ class Record {
         self.copy = json["copy_history"].compactMap({ Record(json: $0.1) })
         
         for attach in self.attachments {
-            if attach.photo.count > 0 || attach.video.count > 0 || attach.doc.count > 0 {
+            if attach.photo.count > 0 {
                 self.attachCount += 1
             }
         }

@@ -77,6 +77,15 @@ class Attachment {
             doc.url = json["doc"]["url"].stringValue
             doc.date = json["doc"]["date"].intValue
             doc.type = json["doc"]["type"].intValue
+            for index in 0...3 {
+                let url = json["doc"]["preview"]["photo"]["sizes"][index]["src"].stringValue
+                if url != "" {
+                    doc.photoURL.append(url)
+                }
+            }
+            doc.videoURL = json["doc"]["preview"]["video"]["src"].stringValue
+            doc.width = json["doc"]["preview"]["video"]["width"].intValue
+            doc.height = json["doc"]["preview"]["video"]["height"].intValue
             self.doc.append(doc)
         }
         

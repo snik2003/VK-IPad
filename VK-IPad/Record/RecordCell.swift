@@ -9,6 +9,7 @@
 import UIKit
 import WebKit
 import SwiftyJSON
+import FLAnimatedImage
 
 class RecordCell: UITableViewCell {
     
@@ -16,6 +17,12 @@ class RecordCell: UITableViewCell {
     var record: Record!
     var users: [UserProfile]!
     var groups: [GroupProfile]!
+    
+    var showLikesPanel = false
+    
+    var indexPath: IndexPath!
+    var cell: UITableViewCell!
+    var tableView: UITableView!
     
     var cellWidth: CGFloat = 0
     var leftX: CGFloat = 20
@@ -34,6 +41,13 @@ class RecordCell: UITableViewCell {
     let qLabelFont = UIFont(name: "TrebuchetMS-Bold", size: 13)!
     let aLabelFont = UIFont(name: "TrebuchetMS", size: 12)!
     
+    let likesHeight: CGFloat = 30
+    
+    var likesButton = UIButton()
+    var repostsButton = UIButton()
+    var commentsButton = UIButton()
+    var viewsButton = UIButton()
+    
     var poll: Poll!
     
     func configureCell() {
@@ -49,6 +63,7 @@ class RecordCell: UITableViewCell {
             
             var topY: CGFloat = 0
             leftX = 20
+            let maxWidth = cellWidth - leftX - 20
             setOnlyFriends()
             
             setHeader(topY: topY, size: avatarHeight, record: record)
@@ -56,11 +71,25 @@ class RecordCell: UITableViewCell {
             topY += 5 + avatarHeight + 5
             topY = setText(text: record.text, topY: topY)
             
+            let aView = AttachmentsView()
+            aView.tag = 250
+            let aHeight = aView.configureAttachView(attaches: record.attachments, maxSize: maxWidth - 40, getRow: false)
+            aView.frame = CGRect(x: leftX + 20, y: topY, width: maxWidth - 40, height: aHeight)
+            self.addSubview(aView)
+            
+            topY += aHeight
             topY -= 5
             for attach in record.attachments {
-                if attach.type != "audio" && attach.type != "link" && attach.type != "poll" {
+                if attach.type == "doc" {
                     topY += 5
-                    topY = setAttachment(attach, topY: topY)
+                    topY = setDoc(attach, topY: topY)
+                }
+            }
+            
+            for attach in record.attachments {
+                if attach.type == "video" {
+                    topY += 5
+                    topY = setVideo(attach, topY: topY)
                 }
             }
             
@@ -92,16 +121,31 @@ class RecordCell: UITableViewCell {
                     let x1 = topY
                     
                     leftX += 20
+                    let maxWidth2 = cellWidth - leftX - 20
                     setHeader(topY: topY, size: avatarHeight2, record: record.copy[index])
                     
                     topY += 5 + avatarHeight2 + 5
-                    topY = setText(text: record.copy[index].text, topY: topY)
+                    topY = setText(text: record.copy[index].text.prepareTextForPublic(), topY: topY)
                     
+                    let aView = AttachmentsView()
+                    aView.tag = 250
+                    let aHeight = aView.configureAttachView(attaches: record.copy[index].attachments, maxSize: maxWidth2 - 40, getRow: false)
+                    aView.frame = CGRect(x: leftX + 20, y: topY, width: maxWidth2 - 40, height: aHeight)
+                    self.addSubview(aView)
+                    
+                    topY += aHeight
                     topY -= 5
                     for attach in record.copy[index].attachments {
-                        if attach.type != "audio" && attach.type != "link" && attach.type != "poll" {
+                        if attach.type == "doc" {
                             topY += 5
-                            topY = setAttachment(attach, topY: topY)
+                            topY = setDoc(attach, topY: topY)
+                        }
+                    }
+                    
+                    for attach in record.copy[index].attachments {
+                        if attach.type == "video" {
+                            topY += 5
+                            topY = setVideo(attach, topY: topY)
                         }
                     }
                     
@@ -128,10 +172,20 @@ class RecordCell: UITableViewCell {
                     }
                     topY += 5
                     
+                    topY = setSigner(record: record.copy[index], topY: topY)
+                    
                     let x2 = topY
                     drawRepostLine(x1, x2)
                 }
             }
+            
+            leftX = 20
+            
+            topY = setSigner(record: record, topY: topY)
+            topY += 5
+            
+            setSeparator(inView: self, topY: topY)
+            topY = setLikesPanel(topY: topY)
         }
     }
         
@@ -205,6 +259,27 @@ class RecordCell: UITableViewCell {
         nameLabel.frame = CGRect(x: avatarImage.frame.maxX + 10, y: avatarImage.frame.midY - 20, width: cellWidth - avatarImage.frame.maxX - 20, height: 20)
         dateLabel.frame = CGRect(x: avatarImage.frame.maxX + 10, y: avatarImage.frame.midY, width: cellWidth - avatarImage.frame.maxX - 20, height: 16)
         
+        let tap1 = UITapGestureRecognizer()
+        avatarImage.isUserInteractionEnabled = true
+        avatarImage.addGestureRecognizer(tap1)
+        tap1.add {
+            self.delegate.openProfileController(id: record.fromID, name: name)
+        }
+        
+        let tap2 = UITapGestureRecognizer()
+        nameLabel.isUserInteractionEnabled = true
+        nameLabel.addGestureRecognizer(tap2)
+        tap2.add {
+            self.delegate.openProfileController(id: record.fromID, name: name)
+        }
+        
+        let tap3 = UITapGestureRecognizer()
+        dateLabel.isUserInteractionEnabled = true
+        dateLabel.addGestureRecognizer(tap3)
+        tap3.add {
+            self.delegate.openProfileController(id: record.fromID, name: name)
+        }
+        
         self.addSubview(avatarImage)
         self.addSubview(nameLabel)
         self.addSubview(dateLabel)
@@ -237,115 +312,193 @@ class RecordCell: UITableViewCell {
         return topY
     }
     
-    func setAttachment(_ attach: Attachment, topY: CGFloat) -> CGFloat {
+    func setDoc(_ attach: Attachment, topY: CGFloat) -> CGFloat {
     
         var topY = topY
         
         let maxSize = cellWidth - leftX - 20
         
-        if attach.type == "photo" && attach.photo.count > 0 {
-            if attach.photo[0].width > 0 && attach.photo[0].height > 0 {
-                var photoWidth = CGFloat(attach.photo[0].width)
-                var photoHeight = CGFloat(attach.photo[0].height)
+        if attach.type == "doc" && attach.doc.count > 0 {
+            if attach.doc[0].width > 0 && attach.doc[0].height > 0 {
+                var photoWidth = CGFloat(attach.doc[0].width)
+                var photoHeight = CGFloat(attach.doc[0].height)
                 
                 if photoWidth > photoHeight {
-                    photoWidth = maxSize/2
-                    photoHeight = photoWidth * CGFloat(attach.photo[0].height) / CGFloat(attach.photo[0].width)
+                    photoWidth = maxSize - 40
+                    photoHeight = photoWidth * CGFloat(attach.doc[0].height) / CGFloat(attach.doc[0].width)
                 } else {
-                    photoHeight = maxSize/2
-                    photoWidth = photoHeight * CGFloat(attach.photo[0].width) / CGFloat(attach.photo[0].height)
+                    photoHeight = maxSize - 40
+                    photoWidth = photoHeight * CGFloat(attach.doc[0].width) / CGFloat(attach.doc[0].height)
                 }
                 
-                let photo = UIImageView()
-                photo.tag = 250
+                let doc = UIImageView()
+                doc.tag = 250
                 
-                var url = attach.photo[0].photo1280
-                if url == "" {
-                    url = attach.photo[0].photo807
-                    if url == "" {
-                        url = attach.photo[0].photo604
+                if attach.doc[0].photoURL.count > 0 {
+                    let url = attach.doc[0].photoURL[attach.doc[0].photoURL.count-1]
+                    let getCacheImage = GetCacheImage(url: url, lifeTime: .userPhotoImage)
+                    getCacheImage.completionBlock = {
+                        OperationQueue.main.addOperation {
+                            doc.image = getCacheImage.outputImage
+                            doc.clipsToBounds = true
+                            doc.contentMode = .scaleToFill
+                        }
                     }
-                    if url == "" {
-                        url = attach.photo[0].photo130
+                    OperationQueue().addOperation(getCacheImage)
+                }
+                
+                doc.frame = CGRect(x: leftX + 20, y: topY, width: photoWidth, height: photoHeight)
+                self.addSubview(doc)
+                
+                if attach.doc[0].ext == "gif" && attach.doc[0].url != "" {
+                    
+                    let loadingView = UIView()
+                    loadingView.frame = CGRect(x: 0, y: 0, width: 60, height: 60)
+                    loadingView.center = CGPoint(x: doc.frame.width/2, y: doc.frame.height/2)
+                    loadingView.backgroundColor = UIColor.darkGray.withAlphaComponent(0.7)
+                    loadingView.clipsToBounds = true
+                    loadingView.layer.cornerRadius = 8.5
+                    doc.addSubview(loadingView)
+                    
+                    let activityIndicator = UIActivityIndicatorView()
+                    activityIndicator.frame = CGRect(x: 0, y: 0, width: loadingView.frame.maxX, height: loadingView.frame.maxY);
+                    activityIndicator.activityIndicatorViewStyle = .whiteLarge
+                    activityIndicator.center = CGPoint(x: loadingView.frame.width/2, y: loadingView.frame.height/2)
+                    loadingView.addSubview(activityIndicator)
+                    activityIndicator.startAnimating()
+                    
+                    let gifSizeLabel = UILabel()
+                    gifSizeLabel.text = "GIF: \(attach.doc[0].size.getFileSizeToString())"
+                    gifSizeLabel.numberOfLines = 1
+                    gifSizeLabel.font = UIFont(name: "TrebuchetMS-Bold", size: 12.0)!
+                    gifSizeLabel.textAlignment = .center
+                    gifSizeLabel.contentMode = .center
+                    gifSizeLabel.textColor = UIColor.black
+                    gifSizeLabel.backgroundColor = UIColor.lightText.withAlphaComponent(0.5)
+                    gifSizeLabel.layer.cornerRadius = 5
+                    gifSizeLabel.clipsToBounds = true
+                    let gifSize = delegate.getTextSize(text: gifSizeLabel.text!, font: gifSizeLabel.font!, maxWidth: doc.frame.width)
+                    gifSizeLabel.frame = CGRect(x: doc.frame.width - 10 - gifSize.width - 10, y: doc.frame.height - 10 - 20, width: gifSize.width + 10, height: 20)
+                    doc.addSubview(gifSizeLabel)
+                    
+                    OperationQueue().addOperation {
+                        let url = URL(string: attach.doc[0].url)
+                        if let data = try? Data(contentsOf: url!) {
+                            let setAnimatedImageToRow = SetAnimatedImageToRow.init(data: data, imageView: doc, cell: self.cell, indexPath: self.indexPath, tableView: self.tableView)
+                            setAnimatedImageToRow.completionBlock = {
+                                OperationQueue.main.addOperation {
+                                    gifSizeLabel.removeFromSuperview()
+                                    activityIndicator.stopAnimating()
+                                    loadingView.removeFromSuperview()
+                                }
+                            }
+                            OperationQueue.main.addOperation(setAnimatedImageToRow)
+                            
+                        }
                     }
                 }
-                let getCacheImage = GetCacheImage(url: url, lifeTime: .userPhotoImage)
-                getCacheImage.completionBlock = {
-                    OperationQueue.main.addOperation {
-                        photo.image = getCacheImage.outputImage
-                        photo.clipsToBounds = true
-                        photo.contentMode = .scaleToFill
-                    }
-                }
-                OperationQueue().addOperation(getCacheImage)
-                
-                
-                photo.frame = CGRect(x: leftX, y: topY, width: photoWidth, height: photoHeight)
-                self.addSubview(photo)
                 
                 topY += photoHeight
             }
         }
         
+        return topY
+    }
+    
+    func setVideo(_ attach: Attachment, topY: CGFloat) -> CGFloat {
+        
+        var topY = topY
+        
+        let maxSize = cellWidth - leftX - 20
+        
         if attach.type == "video" && attach.video.count > 0 {
             
-            let videoWidth: CGFloat = 320
-            let videoHeight: CGFloat = 240
+            let videoWidth: CGFloat = maxSize - 40
+            let videoHeight: CGFloat = 240 * videoWidth / 320
+            
+            let view = UIView()
+            view.tag = 250
+            view.backgroundColor = UIColor.black
+            
+            view.frame = CGRect(x: leftX + 20, y: topY, width: videoWidth, height: videoHeight)
+            self.addSubview(view)
+            
+            let loadingView = UIView()
+            loadingView.frame = CGRect(x: 0, y: 0, width: 60, height: 60)
+            loadingView.center = CGPoint(x: view.frame.width/2, y: view.frame.height/2)
+            loadingView.backgroundColor = UIColor.darkGray.withAlphaComponent(0.7)
+            loadingView.clipsToBounds = true
+            loadingView.layer.cornerRadius = 8.5
+            view.addSubview(loadingView)
+            
+            let activityIndicator = UIActivityIndicatorView()
+            activityIndicator.frame = CGRect(x: 0, y: 0, width: loadingView.frame.maxX, height: loadingView.frame.maxY);
+            activityIndicator.activityIndicatorViewStyle = .whiteLarge
+            activityIndicator.center = CGPoint(x: loadingView.frame.width/2, y: loadingView.frame.height/2)
+            loadingView.addSubview(activityIndicator)
+            activityIndicator.startAnimating()
             
             let webView = WKWebView()
-            webView.tintColor = UIColor.green
+            webView.tag = 250
+            webView.isOpaque = false
+            webView.frame = CGRect(x: leftX + 20, y: topY, width: videoWidth, height: videoHeight)
             
             if let controller = delegate as? WKNavigationDelegate {
                 webView.navigationDelegate = controller
             }
             
-            let url = "/method/video.get"
-            let parameters = [
-                "access_token": vkSingleton.shared.accessToken,
-                "owner_id": "\(attach.video[0].ownerID)",
-                "videos": "\(attach.video[0].ownerID)_\(attach.video[0].id)_\(attach.video[0].accessKey)",
-                "v": vkSingleton.shared.version
-                ]
-            let getServerData = GetServerDataOperation(url: url, parameters: parameters)
-            getServerData.completionBlock = {
-                guard let data = getServerData.data else { return }
-                guard let json = try? JSON(data: data) else { print("json error"); return }
-                print(json)
-                
-                let videos = json["response"]["items"].compactMap({ Video(json: $0.1) })
-                if videos.count > 0 {
-                    if let url = URL(string: videos[0].player) {
-                        OperationQueue.main.addOperation {
+            if attach.video[0].player == "" {
+                let url = "/method/video.get"
+                let parameters = [
+                    "access_token": vkSingleton.shared.accessToken,
+                    "owner_id": "\(attach.video[0].ownerID)",
+                    "videos": "\(attach.video[0].ownerID)_\(attach.video[0].id)_\(attach.video[0].accessKey)",
+                    "v": vkSingleton.shared.version
+                    ]
+                let getServerData = GetServerDataOperation(url: url, parameters: parameters)
+                getServerData.completionBlock = {
+                    guard let data = getServerData.data else { return }
+                    guard let json = try? JSON(data: data) else { print("json error"); return }
+                    
+                    let videos = json["response"]["items"].compactMap({ Video(json: $0.1) })
+                    if videos.count > 0 {
+                        if let url = URL(string: videos[0].player) {
                             let request = URLRequest(url: url)
-                            webView.load(request)
+                            OperationQueue.main.addOperation {
+                                webView.load(request)
+                                self.addSubview(webView)
+                            }
                         }
                     }
                 }
+                OperationQueue().addOperation(getServerData)
+            } else {
+                if let url = URL(string: attach.video[0].player) {
+                    let request = URLRequest(url: url)
+                    webView.load(request)
+                    self.addSubview(webView)
+                }
             }
-            OperationQueue().addOperation(getServerData)
             
-            webView.tag = 250
-            webView.frame = CGRect(x: leftX, y: topY, width: videoWidth, height: videoHeight)
-            self.addSubview(webView)
-        
             let titleLabel = UILabel()
             titleLabel.tag = 250
-            titleLabel.frame = CGRect(x: leftX, y: webView.frame.maxY, width: maxSize, height: 20)
-            titleLabel.text = attach.video[0].title
+            titleLabel.frame = CGRect(x: leftX + 20, y: webView.frame.maxY, width: videoWidth-200, height: 20)
+            titleLabel.text = "Видео: \(attach.video[0].title)"
             titleLabel.textColor = titleLabel.tintColor
             titleLabel.font = UIFont(name: "TrebuchetMS", size: 13)!
             
             let viewsLabel = UILabel()
             viewsLabel.tag = 250
-            viewsLabel.frame = CGRect(x: leftX, y: webView.frame.maxY + 20, width: maxSize, height: 20)
+            viewsLabel.frame = CGRect(x: leftX + 20 + videoWidth - 200, y: webView.frame.maxY, width: 200, height: 20)
             viewsLabel.text = "Просмотров: \(attach.video[0].views.getCounterToString())"
+            viewsLabel.textAlignment = .right
             viewsLabel.isEnabled = false
-            viewsLabel.font = UIFont(name: "TrebuchetMS", size: 13)!
+            viewsLabel.font = UIFont(name: "TrebuchetMS", size: 12)!
             
             self.addSubview(titleLabel)
             self.addSubview(viewsLabel)
             
-            topY += videoHeight + 40
+            topY += videoHeight + 25
         }
         
         return topY
@@ -446,7 +599,7 @@ class RecordCell: UITableViewCell {
         view.tag = 250
         
         var viewY: CGFloat = 5
-        let width = (cellWidth - leftX - 20) * 2 / 3
+        let width = cellWidth - leftX - 20 - 40
         
         let qLabel = UILabel()
         qLabel.font = qLabelFont
@@ -511,8 +664,7 @@ class RecordCell: UITableViewCell {
         view.addSubview(totalLabel)
         viewY += 20
         
-        let sdvig = (cellWidth - leftX - 20 - width) / 2
-        view.frame = CGRect(x: leftX + sdvig, y: topY, width: width, height: viewY)
+        view.frame = CGRect(x: leftX + 20, y: topY, width: width, height: viewY)
         view.layer.borderColor = UIColor.init(displayP3Red: 0/255, green: 84/255, blue: 147/255, alpha: 1).cgColor
         view.layer.borderWidth = 1.0
         self.addSubview(view)
@@ -547,14 +699,125 @@ class RecordCell: UITableViewCell {
         let view = UIView()
         
         view.tag = 250
-        view.backgroundColor = vkSingleton.shared.mainColor
-        view.frame = CGRect(x: leftX - 20, y: x1, width: 3, height: x2 - x1)
-        view.layer.borderColor = UIColor.lightGray.cgColor
-        view.layer.borderWidth = 0.2
+        view.backgroundColor = UIColor.lightGray
+        view.frame = CGRect(x: leftX - 20, y: x1, width: 2, height: x2 - x1)
         view.layer.cornerRadius = 0.5
         view.clipsToBounds = true
         
         self.addSubview(view)
+    }
+    
+    func setSigner(record: Record, topY: CGFloat) -> CGFloat {
+        
+        var topY = topY
+        let maxSize = cellWidth - leftX - 20
+        
+        if record.signerID > 0 {
+            let user = users.filter({ $0.uid == "\(record.signerID)" })
+            if user.count > 0 {
+                let signerLabel = UILabel()
+                signerLabel.text = "\(user[0].firstName) \(user[0].lastName)"
+                signerLabel.textAlignment = .right
+                signerLabel.textColor = signerLabel.tintColor
+                
+                signerLabel.frame = CGRect(x: leftX, y: topY, width: maxSize, height: 25)
+                self.addSubview(signerLabel)
+                
+                let tap = UITapGestureRecognizer()
+                signerLabel.isUserInteractionEnabled = true
+                signerLabel.addGestureRecognizer(tap)
+                tap.add {
+                    self.delegate.openProfileController(id: record.signerID, name: signerLabel.text!)
+                }
+            }
+            topY += 25
+        }
+        
+        return topY
+    }
+    
+    func setLikesPanel(topY: CGFloat) -> CGFloat {
+        
+        var topY = topY
+        let maxWidth = cellWidth - leftX - 20
+        
+        if showLikesPanel {
+            let buttonWidth = maxWidth / 5
+            
+            likesButton.tag = 250
+            likesButton.frame = CGRect(x: leftX, y: topY, width: buttonWidth, height: likesHeight)
+            likesButton.titleLabel?.font = UIFont(name: "TrebuchetMS-Bold", size: 14)!
+            likesButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 12)
+            //likesButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 0)
+            //likesButton.contentHorizontalAlignment = .left
+            
+            setLikesButton()
+            
+            self.addSubview(likesButton)
+            
+            
+            repostsButton.tag = 250
+            repostsButton.frame = CGRect(x: leftX + buttonWidth, y: topY, width: buttonWidth, height: likesHeight)
+            repostsButton.titleLabel?.font = UIFont(name: "TrebuchetMS-Bold", size: 14)!
+            repostsButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 8)
+            
+            repostsButton.setTitle("\(record.repostCount)", for: UIControlState.normal)
+            repostsButton.setTitle("\(record.repostCount)", for: UIControlState.selected)
+            repostsButton.setImage(UIImage(named: "repost"), for: .normal)
+            repostsButton.imageView?.tintColor = UIColor.black
+            repostsButton.setTitleColor(UIColor.black, for: .normal)
+            if record.userReposted == 1 {
+                repostsButton.setTitleColor(UIColor.purple, for: .normal)
+                repostsButton.imageView?.tintColor = UIColor.purple
+            }
+            
+            self.addSubview(repostsButton)
+            
+            
+            commentsButton.tag = 250
+            commentsButton.frame = CGRect(x: leftX + 3 * buttonWidth, y: topY, width: buttonWidth, height: likesHeight)
+            commentsButton.titleLabel?.font = UIFont(name: "TrebuchetMS-Bold", size: 14)!
+            commentsButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 12)
+            commentsButton.setImage(UIImage(named: "comments"), for: .normal)
+            commentsButton.setTitleColor(UIColor.init(red: 124/255, green: 172/255, blue: 238/255, alpha: 1), for: .normal)
+            
+            commentsButton.setTitle("\(record.commentsCount)", for: UIControlState.normal)
+            commentsButton.setTitle("\(record.commentsCount)", for: UIControlState.selected)
+            
+            self.addSubview(commentsButton)
+            
+            
+            viewsButton.tag = 250
+            viewsButton.frame = CGRect(x: leftX + 4 * buttonWidth, y: topY, width: buttonWidth, height: likesHeight)
+            viewsButton.titleLabel?.font = UIFont(name: "TrebuchetMS-Bold", size: 14)!
+            viewsButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 12)
+            //viewsButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 20)
+            //viewsButton.contentHorizontalAlignment = .right
+            
+            viewsButton.setTitle("\(record.viewsCount.getCounterToString())", for: UIControlState.normal)
+            viewsButton.setTitle("\(record.viewsCount.getCounterToString())", for: UIControlState.selected)
+            viewsButton.setImage(UIImage(named: "views"), for: .normal)
+            viewsButton.setTitleColor(UIColor.darkGray, for: .normal)
+            viewsButton.isEnabled = false
+            
+            self.addSubview(viewsButton)
+            
+            topY += likesHeight
+        }
+        return topY
+    }
+    
+    func setLikesButton() {
+        likesButton.setTitle("\(record.likesCount)", for: UIControlState.normal)
+        likesButton.setTitle("\(record.likesCount)", for: UIControlState.selected)
+        
+        if record.userLikes == 1 {
+            likesButton.setTitleColor(UIColor.purple, for: .normal)
+            likesButton.setImage(UIImage(named: "like")?.tint(tintColor:  UIColor.purple), for: .normal)
+        } else {
+            likesButton.setTitleColor(UIColor.darkGray, for: .normal)
+            likesButton.setImage(UIImage(named: "like")?.tint(tintColor:  UIColor.darkGray), for: .normal)
+        }
     }
 }
 
@@ -563,7 +826,7 @@ extension RecordCell {
         
         var height = 5 + avatarHeight + 5
         var leftX: CGFloat = 20
-        
+
         let maxWidth = cellWidth - leftX - 20
         var size = delegate.getTextSize(text: record.text.prepareTextForPublic(), font: textFont, maxWidth: maxWidth)
         
@@ -572,35 +835,44 @@ extension RecordCell {
         }
         height += size.height
         
+        let aView = AttachmentsView()
+        height += aView.configureAttachView(attaches: record.attachments, maxSize: maxWidth - 40, getRow: true)
+        
         height -= 5
         for attach in record.attachments {
-            height += 5
-            if attach.type == "photo" && attach.photo.count > 0 {
-                if attach.photo[0].width > 0 && attach.photo[0].height > 0 {
-                    let photoHeight = CGFloat(attach.photo[0].height)
-                    let maxSize = cellWidth - leftX - 20
+            if attach.type == "doc" && attach.doc.count > 0 {
+                height += 5
+                if attach.doc[0].width > 0 && attach.doc[0].height > 0 {
+                    let photoHeight = CGFloat(attach.doc[0].height)
                     
-                    if CGFloat(attach.photo[0].width) > photoHeight {
-                        height += maxSize / 2 * CGFloat(attach.photo[0].height) / CGFloat(attach.photo[0].width)
+                    if CGFloat(attach.doc[0].width) > photoHeight {
+                        height += (maxWidth - 40) * CGFloat(attach.doc[0].height) / CGFloat(attach.doc[0].width)
                     } else {
-                        height += maxSize / 2
+                        height += maxWidth - 40
                     }
                 }
             }
             
             if attach.type == "video" && attach.video.count > 0 {
-                height += 240 + 40
+                height += 5
+                let videoWidth: CGFloat = maxWidth - 40
+                let videoHeight: CGFloat = 240 * videoWidth / 320
+                
+                height += videoHeight + 25
             }
             
             if attach.type == "audio" && attach.audio.count > 0 {
+                height += 5
                 height += 40
             }
             
             if attach.type == "link" && attach.link.count > 0 {
+                height += 5
                 height += 40
             }
             
             if attach.type == "poll" && attach.poll.count > 0 {
+                height += 5
                 
                 let poll = attach.poll[0]
                 let qLabelSize = delegate.getTextSize(text: "Опрос: \(poll.question)", font: qLabelFont, maxWidth: maxWidth)
@@ -626,41 +898,51 @@ extension RecordCell {
                 let maxWidth2 = cellWidth - leftX - 20
                 var size2 = delegate.getTextSize(text: record.copy[index].text.prepareTextForPublic(), font: textFont, maxWidth: maxWidth2)
                 
+                print("getRow = \(size2.height)")
                 if size2.height > 0 {
                     size2.height += 10
                 }
                 height += size2.height
                 
+                let aView = AttachmentsView()
+                height += aView.configureAttachView(attaches: record.copy[index].attachments, maxSize: maxWidth2 - 40, getRow: true)
+                
                 height -= 5
                 for attach in record.copy[index].attachments {
-                    height += 5
-                    
-                    if attach.type == "photo" && attach.photo.count > 0 {
-                        if attach.photo[0].width > 0 && attach.photo[0].height > 0 {
-                            let photoHeight = CGFloat(attach.photo[0].height)
+                    if attach.type == "doc" && attach.doc.count > 0 {
+                        height += 5
+                        if attach.doc[0].width > 0 && attach.doc[0].height > 0 {
+                            let photoHeight = CGFloat(attach.doc[0].height)
                             let maxSize = cellWidth - leftX - 20
                             
-                            if CGFloat(attach.photo[0].width) > photoHeight {
-                                height += maxSize / 2 * CGFloat(attach.photo[0].height) / CGFloat(attach.photo[0].width)
+                            if CGFloat(attach.doc[0].width) > photoHeight {
+                                height += (maxSize - 40) * CGFloat(attach.doc[0].height) / CGFloat(attach.doc[0].width)
                             } else {
-                                height += maxSize / 2
+                                height += maxSize - 40
                             }
                         }
                     }
                     
                     if attach.type == "video" && attach.video.count > 0 {
-                        height += 240 + 40
+                        height += 5
+                        let videoWidth: CGFloat = maxWidth2 - 40
+                        let videoHeight: CGFloat = 240 * videoWidth / 320
+                        
+                        height += videoHeight + 25
                     }
                     
                     if attach.type == "audio" && attach.audio.count > 0 {
+                        height += 5
                         height += 40
                     }
                     
                     if attach.type == "link" && attach.link.count > 0 {
+                        height += 5
                         height += 40
                     }
                     
                     if attach.type == "poll" && attach.poll.count > 0 {
+                        height += 5
                         
                         let poll = attach.poll[0]
                         let qLabelSize = delegate.getTextSize(text: "Опрос: \(poll.question)", font: qLabelFont, maxWidth: maxWidth)
@@ -676,9 +958,33 @@ extension RecordCell {
                     }
                 }
                 height += 5
+                
+                if record.copy[index].signerID > 0 {
+                    height += 25
+                }
             }
         }
         
-        return height + 5
+        if record.signerID > 0 {
+            height += 25
+        }
+        
+        height += 5
+        
+        if showLikesPanel {
+            height += likesHeight
+        }
+        
+        return height
+    }
+    
+    func setSeparator(inView view: UIView, topY: CGFloat) {
+        let separator = UIView()
+        separator.tag = 250
+        separator.frame = CGRect(x: 10, y: topY, width: cellWidth - 20, height: 0.8)
+        separator.backgroundColor = vkSingleton.shared.backColor.withAlphaComponent(0.8)
+        separator.layer.borderWidth = 0.1
+        separator.layer.borderColor = UIColor.gray.cgColor
+        view.addSubview(separator)
     }
 }

@@ -390,12 +390,28 @@ extension Int {
         return str
     }
     
+    func getFileSizeToString() -> String {
+        var res = "\(self)"
+        
+        if self >= 1_000_000 {
+            let size = self / 1_000_000
+            res = "\(size)Mb"
+        } else if self >= 1_000 {
+            let size = self / 1_000
+            res = "\(size)Kb"
+        } else {
+            res = "\(self)b"
+        }
+        
+        return res
+    }
+    
     func getVideoDurationToString() -> String {
         var res = "00:00"
         
         let dur = self
-        let hour = dur / 3600
-        let min = (dur % 3600) / 60
+        let hour = dur / 3_600
+        let min = (dur % 3_600) / 60
         let sec = dur % 60
         
         if hour > 0 {

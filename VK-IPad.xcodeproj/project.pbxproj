@@ -15,7 +15,6 @@
 		173D666D20D3E4BE00EEBF46 /* Record.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173D666C20D3E4BE00EEBF46 /* Record.swift */; };
 		173D666F20D3EAC800EEBF46 /* GroupProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173D666E20D3EAC800EEBF46 /* GroupProfile.swift */; };
 		173D667220D3F56600EEBF46 /* RecordCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173D667120D3F56600EEBF46 /* RecordCell.swift */; };
-		173D667420D40FAC00EEBF46 /* AdditionalFeatures in Resources */ = {isa = PBXBuildFile; fileRef = 173D667320D40FAC00EEBF46 /* AdditionalFeatures */; };
 		173D667920D40FCE00EEBF46 /* UITextViewPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173D667520D40FCD00EEBF46 /* UITextViewPlaceholder.swift */; };
 		173D667A20D40FCE00EEBF46 /* StoreReviewHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173D667620D40FCD00EEBF46 /* StoreReviewHelper.swift */; };
 		173D667B20D40FCE00EEBF46 /* URLsInLabels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173D667720D40FCE00EEBF46 /* URLsInLabels.swift */; };
@@ -59,6 +58,7 @@
 		1749130320D304DD00FCF9F9 /* ParseRequestList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1749130220D304DD00FCF9F9 /* ParseRequestList.swift */; };
 		1749130520D3050200FCF9F9 /* ParseRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1749130420D3050200FCF9F9 /* ParseRequest.swift */; };
 		1749130720D3055100FCF9F9 /* FriendRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1749130620D3055100FCF9F9 /* FriendRequest.swift */; };
+		17DD5DB820D7CBE20019938D /* AttachmentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17DD5DB720D7CBE20019938D /* AttachmentsView.swift */; };
 		17EBC3A120D51A46009130FC /* Attachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17EBC3A020D51A46009130FC /* Attachment.swift */; };
 		17EBC3A320D52C5D009130FC /* Video.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17EBC3A220D52C5D009130FC /* Video.swift */; };
 		2286DFA9FA1B572377DE03A3 /* Pods_VK_IPad.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ECEFB335DD55F5E58C7A64A /* Pods_VK_IPad.framework */; settings = {ATTRIBUTES = (Required, ); }; };
@@ -74,7 +74,6 @@
 		173D666C20D3E4BE00EEBF46 /* Record.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Record.swift; sourceTree = "<group>"; };
 		173D666E20D3EAC800EEBF46 /* GroupProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupProfile.swift; sourceTree = "<group>"; };
 		173D667120D3F56600EEBF46 /* RecordCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordCell.swift; sourceTree = "<group>"; };
-		173D667320D40FAC00EEBF46 /* AdditionalFeatures */ = {isa = PBXFileReference; lastKnownFileType = folder; name = AdditionalFeatures; path = "VK-IPad/AdditionalFeatures"; sourceTree = SOURCE_ROOT; };
 		173D667520D40FCD00EEBF46 /* UITextViewPlaceholder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITextViewPlaceholder.swift; sourceTree = "<group>"; };
 		173D667620D40FCD00EEBF46 /* StoreReviewHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoreReviewHelper.swift; sourceTree = "<group>"; };
 		173D667720D40FCE00EEBF46 /* URLsInLabels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLsInLabels.swift; sourceTree = "<group>"; };
@@ -120,6 +119,7 @@
 		1749130420D3050200FCF9F9 /* ParseRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseRequest.swift; sourceTree = "<group>"; };
 		1749130620D3055100FCF9F9 /* FriendRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendRequest.swift; sourceTree = "<group>"; };
 		17AF810F20D11D1F00FF1913 /* VK-IPad.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "VK-IPad.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		17DD5DB720D7CBE20019938D /* AttachmentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentsView.swift; sourceTree = "<group>"; };
 		17EBC3A020D51A46009130FC /* Attachment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Attachment.swift; sourceTree = "<group>"; };
 		17EBC3A220D52C5D009130FC /* Video.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Video.swift; sourceTree = "<group>"; };
 		1ECEFB335DD55F5E58C7A64A /* Pods_VK_IPad.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_VK_IPad.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -166,6 +166,7 @@
 			isa = PBXGroup;
 			children = (
 				173D667120D3F56600EEBF46 /* RecordCell.swift */,
+				17DD5DB720D7CBE20019938D /* AttachmentsView.swift */,
 			);
 			path = Record;
 			sourceTree = "<group>";
@@ -295,7 +296,6 @@
 			isa = PBXGroup;
 			children = (
 				174912D620D300DC00FCF9F9 /* ViewControllerProtocol.swift */,
-				173D667320D40FAC00EEBF46 /* AdditionalFeatures */,
 				174912D720D300DC00FCF9F9 /* ViewControllerUtils.swift */,
 			);
 			path = Protocols;
@@ -399,7 +399,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				173D667420D40FAC00EEBF46 /* AdditionalFeatures in Resources */,
 				174912E220D300DD00FCF9F9 /* Main.storyboard in Resources */,
 				174912DC20D300DD00FCF9F9 /* Assets.xcassets in Resources */,
 				174912E120D300DD00FCF9F9 /* LaunchScreen.storyboard in Resources */,
@@ -484,6 +483,7 @@
 				174912EC20D300DD00FCF9F9 /* vkSingleton.swift in Sources */,
 				174912DD20D300DD00FCF9F9 /* Photos.swift in Sources */,
 				174912E920D300DD00FCF9F9 /* StartViewController.swift in Sources */,
+				17DD5DB820D7CBE20019938D /* AttachmentsView.swift in Sources */,
 				17424FED20D53DC100F52C4C /* Link.swift in Sources */,
 				173D666B20D3CAD100EEBF46 /* ReloadGroupsListController.swift in Sources */,
 				174912E820D300DD00FCF9F9 /* String.swift in Sources */,
@@ -678,7 +678,10 @@
 				DEVELOPMENT_TEAM = WML363H532;
 				INFOPLIST_FILE = "VK-IPad/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "Snik2003.VK-IPad";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -695,7 +698,10 @@
 				DEVELOPMENT_TEAM = WML363H532;
 				INFOPLIST_FILE = "VK-IPad/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "Snik2003.VK-IPad";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;

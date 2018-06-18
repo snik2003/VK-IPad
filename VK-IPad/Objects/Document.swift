@@ -18,6 +18,10 @@ class Document {
     var url = ""
     var date = 0
     var type = 0
+    var photoURL: [String] = []
+    var width = 0
+    var height = 0
+    var videoURL = ""
     
     init(json: JSON) {
         self.id = json["id"].intValue
@@ -28,5 +32,15 @@ class Document {
         self.url = json["url"].stringValue
         self.date = json["date"].intValue
         self.type = json["type"].intValue
+        
+        for index in 0...3 {
+            let url = json["preview"]["photo"]["sizes"][index]["src"].stringValue
+            if url != "" {
+                self.photoURL.append(url)
+            }
+        }
+        self.videoURL = json["preview"]["video"]["src"].stringValue
+        self.width = json["preview"]["video"]["width"].intValue
+        self.height = json["preview"]["video"]["height"].intValue
     }
 }
