@@ -25,6 +25,7 @@ class ProfileView: UIView {
     var othersButton = UIButton()
     var newRecordButton = UIButton()
     var postponedButton = UIButton()
+    var recordsCountLabel = UILabel()
     
     var avatarHeight: CGFloat = 20
     let buttonHeight: CGFloat = 25
@@ -191,7 +192,7 @@ class ProfileView: UIView {
                 topY += buttonHeight + 10
             }
             
-            if profile.deactivated == "" && (profile.canPost == 1 || self.delegate.postponedWall.count > 0) {
+            if profile.deactivated == "" /*&& (profile.canPost == 1 || self.delegate.postponedWall.count > 0)*/ {
                 topY += 10
                 
                 let recordsButtonsView = UIView()
@@ -982,17 +983,58 @@ class ProfileView: UIView {
                 allRecordsButton.isSelected = false
                 ownerButton.isSelected = true
                 othersButton.isSelected = false
+                postponedButton.isSelected = false
             } else if delegate.filterRecords == "others" {
                 allRecordsButton.isSelected = false
                 ownerButton.isSelected = false
                 othersButton.isSelected = true
+                postponedButton.isSelected = false
+            } else if delegate.filterRecords == "postponed" {
+                allRecordsButton.isSelected = false
+                ownerButton.isSelected = false
+                othersButton.isSelected = false
+                postponedButton.isSelected = true
             } else {
                 allRecordsButton.isSelected = true
                 ownerButton.isSelected = false
                 othersButton.isSelected = false
+                postponedButton.isSelected = false
             }
             
             updateOwnerButtons()
+            
+            allRecordsButton.add(for: .touchUpInside) {
+                self.delegate.offset = 0
+                
+                self.allRecordsButton.isSelected = true
+                self.ownerButton.isSelected = false
+                self.othersButton.isSelected = false
+                self.postponedButton.isSelected = false
+                
+                self.delegate.refreshWall(filter: "all")
+            }
+            
+            ownerButton.add(for: .touchUpInside) {
+                self.delegate.offset = 0
+                
+                self.allRecordsButton.isSelected = false
+                self.ownerButton.isSelected = true
+                self.othersButton.isSelected = false
+                self.postponedButton.isSelected = false
+                
+                self.delegate.refreshWall(filter: "owner")
+            }
+            
+            othersButton.add(for: .touchUpInside) {
+                self.delegate.offset = 0
+                
+                self.allRecordsButton.isSelected = false
+                self.ownerButton.isSelected = false
+                self.othersButton.isSelected = true
+                self.postponedButton.isSelected = false
+                
+                self.delegate.refreshWall(filter: "others")
+            }
             
             view.addSubview(allRecordsButton)
             view.addSubview(ownerButton)
@@ -1030,9 +1072,27 @@ class ProfileView: UIView {
                 postponedButton.tintColor = UIColor.lightGray
                 postponedButton.layer.cornerRadius = 5
                 
+                postponedButton.add(for: .touchUpInside) {
+                    self.delegate.offset = 0
+                    
+                    self.allRecordsButton.isSelected = false
+                    self.ownerButton.isSelected = false
+                    self.othersButton.isSelected = false
+                    self.postponedButton.isSelected = true
+                    
+                    self.delegate.refreshWall(filter: "postponed")
+                }
                 postponedButton.frame = CGRect(x: view.bounds.width / 2 - 80, y: 5, width: 160, height: buttonHeight)
                 view.addSubview(postponedButton)
             }
+            
+            recordsCountLabel.text = "Всего записей: \(delegate.recordsCount)"
+            recordsCountLabel.textAlignment = .right
+            recordsCountLabel.textColor = recordsCountLabel.tintColor
+            recordsCountLabel.font = UIFont(name: "TrebuchetMS", size: 14)!
+            
+            recordsCountLabel.frame = CGRect(x: view.bounds.width - 10 - 150, y: 5, width: 150, height: buttonHeight)
+            view.addSubview(recordsCountLabel)
         }
     }
 }

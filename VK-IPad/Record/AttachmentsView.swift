@@ -252,11 +252,6 @@ class AttachmentsView: UIView {
         
         self.frame = CGRect(x: 0, y: 0, width: maxSize, height: topY)
         
-        if getRow {
-            print("getRow = \(topY)")
-        } else {
-            print("cell = \(topY)")
-        }
         return topY
     }
 }

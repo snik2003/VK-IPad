@@ -41,7 +41,7 @@ class RecordCell: UITableViewCell {
     let qLabelFont = UIFont(name: "TrebuchetMS-Bold", size: 13)!
     let aLabelFont = UIFont(name: "TrebuchetMS", size: 12)!
     
-    let likesHeight: CGFloat = 30
+    let likesHeight: CGFloat = 35
     
     var likesButton = UIButton()
     var repostsButton = UIButton()
@@ -748,8 +748,7 @@ class RecordCell: UITableViewCell {
             likesButton.frame = CGRect(x: leftX, y: topY, width: buttonWidth, height: likesHeight)
             likesButton.titleLabel?.font = UIFont(name: "TrebuchetMS-Bold", size: 14)!
             likesButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 12)
-            //likesButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 0)
-            //likesButton.contentHorizontalAlignment = .left
+            likesButton.contentVerticalAlignment = .center
             
             setLikesButton()
             
@@ -760,6 +759,7 @@ class RecordCell: UITableViewCell {
             repostsButton.frame = CGRect(x: leftX + buttonWidth, y: topY, width: buttonWidth, height: likesHeight)
             repostsButton.titleLabel?.font = UIFont(name: "TrebuchetMS-Bold", size: 14)!
             repostsButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 8)
+            repostsButton.contentVerticalAlignment = .center
             
             repostsButton.setTitle("\(record.repostCount)", for: UIControlState.normal)
             repostsButton.setTitle("\(record.repostCount)", for: UIControlState.selected)
@@ -778,6 +778,8 @@ class RecordCell: UITableViewCell {
             commentsButton.frame = CGRect(x: leftX + 3 * buttonWidth, y: topY, width: buttonWidth, height: likesHeight)
             commentsButton.titleLabel?.font = UIFont(name: "TrebuchetMS-Bold", size: 14)!
             commentsButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 12)
+            commentsButton.contentVerticalAlignment = .center
+            
             commentsButton.setImage(UIImage(named: "comments"), for: .normal)
             commentsButton.setTitleColor(UIColor.init(red: 124/255, green: 172/255, blue: 238/255, alpha: 1), for: .normal)
             
@@ -791,8 +793,7 @@ class RecordCell: UITableViewCell {
             viewsButton.frame = CGRect(x: leftX + 4 * buttonWidth, y: topY, width: buttonWidth, height: likesHeight)
             viewsButton.titleLabel?.font = UIFont(name: "TrebuchetMS-Bold", size: 14)!
             viewsButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 12)
-            //viewsButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 20)
-            //viewsButton.contentHorizontalAlignment = .right
+            viewsButton.contentVerticalAlignment = .center
             
             viewsButton.setTitle("\(record.viewsCount.getCounterToString())", for: UIControlState.normal)
             viewsButton.setTitle("\(record.viewsCount.getCounterToString())", for: UIControlState.selected)
@@ -898,7 +899,6 @@ extension RecordCell {
                 let maxWidth2 = cellWidth - leftX - 20
                 var size2 = delegate.getTextSize(text: record.copy[index].text.prepareTextForPublic(), font: textFont, maxWidth: maxWidth2)
                 
-                print("getRow = \(size2.height)")
                 if size2.height > 0 {
                     size2.height += 10
                 }
