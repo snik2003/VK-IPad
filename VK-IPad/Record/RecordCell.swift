@@ -240,8 +240,6 @@ class RecordCell: UITableViewCell {
         getCacheImage.completionBlock = {
             OperationQueue.main.addOperation {
                 avatarImage.image = getCacheImage.outputImage
-                avatarImage.layer.borderColor = UIColor.lightGray.cgColor
-                avatarImage.layer.borderWidth = 0.6
                 avatarImage.layer.cornerRadius = size/2
                 avatarImage.clipsToBounds = true
             }

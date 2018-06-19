@@ -43,6 +43,7 @@ class GroupProfile {
     var canPost: Int = 0
     var isHiddenFromFeed = 0
     var canMessage: Int = 0
+    var verified: Int = 0
     var contacts: [Contact] = []
     
     init(json: JSON) {
@@ -79,6 +80,7 @@ class GroupProfile {
         canPost = json["can_post"].intValue
         canMessage = json["can_message"].intValue
         isHiddenFromFeed = json["is_hidden_from_feed"].intValue
+        verified = json["verified"].intValue
         
         for index in 0...9 {
             var contact = Contact()
@@ -90,6 +92,63 @@ class GroupProfile {
                 self.contacts.append(contact)
             }
         }
+    }
+    
+    func groupType() -> String {
+        
+        if self.deactivated != "" {
+            if self.deactivated == "banned" {
+                return "Сообщество заблокировано"
+            }
+            if self.deactivated == "deleted" {
+                return "Сообщество удалено"
+            }
+        } else if self.type == "group" {
+            if self.isClosed == 0 {
+                return "Открытая группа"
+            } else {
+                return "Закрытая группа"
+            }
+        } else if self.type == "page" {
+            return "Публичная страница"
+        } else if self.type == "event" {
+            return "Мероприятие"
+        }
+        
+        return ""
+    }
+    
+    func memberButtonText() -> String {
+        
+        if self.isAdmin > 0 {
+            if self.levelAdmin == 1 {
+                return "Вы модератор"
+            } else if self.levelAdmin == 2 {
+                return "Вы редактор"
+            } else if self.levelAdmin == 3 {
+                return "Вы администратор"
+            }
+        } else {
+            if self.isMember == 1 {
+                if self.type == "group" {
+                    return "Вы участник"
+                } else {
+                    return "Вы подписаны"
+                }
+            } else {
+                if self.type == "group" {
+                    if self.isClosed == 0 {
+                        return "Присоединиться"
+                    } else {
+                        return "Подать заявку"
+                    }
+                } else {
+                    return "Подписаться"
+                }
+            }
+        }
+        
+        return ""
     }
 }
 

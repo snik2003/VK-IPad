@@ -9,6 +9,35 @@
 import Foundation
 
 extension String {
+    func groupTypeToString(profile: GroupProfile) -> String {
+        
+        var type = ""
+        if profile.deactivated != "" {
+            if profile.deactivated == "banned" {
+                type = "Сообщество заблокировано"
+            }
+            if profile.deactivated == "deleted" {
+                type = "Сообщество удалено"
+            }
+        } else {
+            if profile.type == "group" {
+                if profile.isClosed == 0 {
+                    type = "Открытая группа"
+                } else {
+                    type = "Закрытая группа"
+                }
+            }
+            if profile.type == "page" {
+                type = "Публичная страница"
+            }
+            if profile.type == "event" {
+                type = "Мероприятие"
+            }
+        }
+        
+        return type
+    }
+    
     func containsIgnoringCase(find: String) -> Bool{
         return self.range(of: find, options: .caseInsensitive) != nil
     }

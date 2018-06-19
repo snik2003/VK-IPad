@@ -239,7 +239,8 @@ extension UINavigationBar {
                 if user.onlineMobile == 1 {
                     statusLabel.text = "онлайн (моб.)"
                 }
-                statusLabel.textColor = UIColor.blue
+                statusLabel.textColor = vkSingleton.shared.onlineColor
+                statusLabel.font = UIFont(name: "Verdana-Bold", size: 12)
             } else {
                 if user.sex == 1 {
                     statusLabel.text = "заходила \(user.lastSeen.toStringLastTime())"
@@ -247,6 +248,7 @@ extension UINavigationBar {
                     statusLabel.text = "заходил \(user.lastSeen.toStringLastTime())"
                 }
                 statusLabel.textColor = UIColor.white
+                statusLabel.font = UIFont(name: "Verdana", size: 11)
             }
         } else {
             if user.deactivated == "deleted" {
@@ -255,9 +257,9 @@ extension UINavigationBar {
                 statusLabel.text = "страница заблокирована"
             }
             statusLabel.textColor = UIColor.white
+            statusLabel.font = UIFont(name: "Verdana", size: 11)
         }
         
-        statusLabel.font = UIFont(name: "Verdana", size: 11)
         statusLabel.adjustsFontSizeToFitWidth = true
         statusLabel.minimumScaleFactor = 0.5
         statusLabel.frame = CGRect(x: 50, y: 20, width: frame.width - 80, height: 20)

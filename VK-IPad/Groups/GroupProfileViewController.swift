@@ -152,7 +152,7 @@ class GroupProfileViewController: UITableViewController {
         let parameters1 = [
             "access_token": vkSingleton.shared.accessToken,
             "group_id": "\(groupID)",
-            "fields": "activity,counters,cover,description,has_photo,member_status,site,status,members_count,is_favorite,can_post,is_hidden_from_feed,can_message,contacts",
+            "fields": "activity,counters,cover,description,has_photo,member_status,site,status,members_count,is_favorite,can_post,is_hidden_from_feed,can_message,contacts,verified",
             "v": vkSingleton.shared.version
         ]
         
@@ -233,9 +233,9 @@ class GroupProfileViewController: UITableViewController {
             profileView.backgroundColor = vkSingleton.shared.backColor
             
             profileView.delegate = self
-            profileView.group = groupProfile[0]
+            profileView.profile = groupProfile[0]
             
-            let height: CGFloat = 200 //profileView.configureView(more: false)
+            let height = profileView.configureView()
             
             profileView.frame = CGRect(x: 0, y: 0, width: self.tableView.bounds.width, height: height)
             
