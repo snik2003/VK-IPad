@@ -9,6 +9,25 @@
 import Foundation
 
 extension String {
+    func isValidURL() -> Bool {
+        if let url1 = self.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+            if URL(string: url1) == nil {
+                return false
+            }
+            
+            var validURL = url1
+            if !url1.containsIgnoringCase(find: "http") && !url1.containsIgnoringCase(find: "https") {
+                validURL = "http://\(url1)"
+            }
+            
+            if let url2 = URL(string: validURL), url2.host != nil {
+                return true
+            }
+        }
+        
+        return false
+    }
+    
     func groupTypeToString(profile: GroupProfile) -> String {
         
         var type = ""

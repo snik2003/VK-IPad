@@ -128,23 +128,25 @@ class GroupProfile {
             } else if self.levelAdmin == 3 {
                 return "Вы администратор"
             }
-        } else {
-            if self.isMember == 1 {
-                if self.type == "group" {
-                    return "Вы участник"
-                } else {
-                    return "Вы подписаны"
-                }
+        } else if self.isMember == 1 {
+            if self.type == "group" {
+                return "Вы участник"
+            } else if self.type == "page" {
+                return "Вы подписаны"
             } else {
-                if self.type == "group" {
-                    if self.isClosed == 0 {
-                        return "Присоединиться"
-                    } else {
-                        return "Подать заявку"
-                    }
+                return "Вы участвуете"
+            }
+        } else {
+            if self.type == "group" {
+                if self.isClosed == 0 {
+                    return "Вступить в группу"
                 } else {
-                    return "Подписаться"
+                    return "Отправить заявку"
                 }
+            } else if self.type == "page" {
+                return "Подписаться"
+            } else {
+                return "Принять участие"
             }
         }
         
