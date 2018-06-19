@@ -248,6 +248,14 @@ extension UIViewController: ViewControllerProtocol {
             
             let detailVC = self.splitViewController!.viewControllers[self.splitViewController!.viewControllers.endIndex - 1]
             detailVC.childViewControllers[0].navigationController?.pushViewController(profileController, animated: true)
+        } else if id < 0 {
+            let profileController = self.storyboard?.instantiateViewController(withIdentifier: "GroupProfileViewController") as! GroupProfileViewController
+            
+            profileController.groupID = abs(id)
+            profileController.title = name
+            
+            let detailVC = self.splitViewController!.viewControllers[self.splitViewController!.viewControllers.endIndex - 1]
+            detailVC.childViewControllers[0].navigationController?.pushViewController(profileController, animated: true)
         }
     }
     

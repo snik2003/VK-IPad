@@ -63,11 +63,19 @@ class ProfileView: UIView {
                     messageButton.clipsToBounds = true
                     messageButton.setTitle("Написать сообщение", for: .normal)
                     
+                    messageButton.add(for: .touchUpInside) {
+                        self.messageButton.buttonTouched()
+                    }
+                    
                     friendButton.titleLabel?.textAlignment = .center
                     friendButton.layer.borderColor = UIColor.lightGray.cgColor
                     friendButton.layer.borderWidth = 0.6
                     friendButton.layer.cornerRadius = 5
                     friendButton.clipsToBounds = true
+                    
+                    friendButton.add(for: .touchUpInside) {
+                        self.friendButton.buttonTouched()
+                    }
                     
                     if profile.canWritePrivateMessage == 1 {
                         messageButton.isEnabled = true
@@ -79,8 +87,8 @@ class ProfileView: UIView {
                     
                     updateFriendButton()
                     
-                    messageButton.titleLabel?.font = UIFont(name: "TrebuchetMS-Bold", size: 13)!
-                    friendButton.titleLabel?.font = UIFont(name: "TrebuchetMS-Bold", size: 13)!
+                    messageButton.titleLabel?.font = UIFont(name: "Verdana-Bold", size: 12)!
+                    friendButton.titleLabel?.font = UIFont(name: "Verdana-Bold", size: 12)!
                     
                     
                     friendButton.frame = CGRect(x: 10, y: avatarImage.frame.maxY+10, width: avatarHeight, height: buttonHeight)
@@ -96,7 +104,11 @@ class ProfileView: UIView {
                 additionalButton.clipsToBounds = true
                 additionalButton.setTitle("Дополнительные функции", for: .normal)
                 additionalButton.backgroundColor = vkSingleton.shared.mainColor
-                additionalButton.titleLabel?.font = UIFont(name: "TrebuchetMS-Bold", size: 13)!
+                additionalButton.titleLabel?.font = UIFont(name: "Verdana-Bold", size: 12)!
+                
+                additionalButton.add(for: .touchUpInside) {
+                    self.additionalButton.buttonTouched()
+                }
                 
                 if delegate.userID == vkSingleton.shared.userID {
                     additionalButton.frame = CGRect(x: 10, y: avatarImage.frame.maxY+10, width: avatarHeight, height: buttonHeight)
@@ -135,7 +147,7 @@ class ProfileView: UIView {
                     label1.text = "Фотографии \(profile.firstNameGen) "
                 }
                 label1.textColor = label1.tintColor
-                label1.font = UIFont(name: "TrebuchetMS", size: 14)
+                label1.font = UIFont(name: "Verdana", size: 13)
                 let size1 = delegate.getTextSize(text: label1.text!, font: label1.font!, maxWidth: width)
                 label1.frame = CGRect(x: 10, y: 10, width: size1.width, height: 20)
                 photosView.addSubview(label1)
@@ -143,7 +155,7 @@ class ProfileView: UIView {
                 let label2 = UILabel()
                 label2.text = "\(profile.photosCount)"
                 label2.textColor = label1.tintColor
-                label2.font = UIFont(name: "TrebuchetMS", size: 14)
+                label2.font = UIFont(name: "Verdana", size: 13)
                 label2.isEnabled = false
                 label2.frame = CGRect(x: 10 + size1.width, y: 10, width: width - 20 - size1.width, height: 20)
                 photosView.addSubview(label2)
@@ -218,7 +230,7 @@ class ProfileView: UIView {
             let nameLabel = UILabel()
             nameLabel.text = "\(profile.firstName) \(profile.lastName)"
             nameLabel.frame = CGRect(x: 20, y: 10, width: userInfoView.frame.width * 0.5 - 30, height: 30)
-            nameLabel.font = UIFont(name: "TrebuchetMS-Bold", size: 20)
+            nameLabel.font = UIFont(name: "Verdana-Bold", size: 18)
             nameLabel.adjustsFontSizeToFitWidth = true
             nameLabel.minimumScaleFactor = 0.5
             userInfoView.addSubview(nameLabel)
@@ -253,7 +265,7 @@ class ProfileView: UIView {
             
             lastLabel.textAlignment = .right
             lastLabel.frame = CGRect(x: userInfoView.frame.width * 0.5 + 10, y: 10, width: userInfoView.frame.width * 0.5 - 30, height: 30)
-            lastLabel.font = UIFont(name: "TrebuchetMS-Bold", size: 14)
+            lastLabel.font = UIFont(name: "Verdana", size: 12)
             lastLabel.adjustsFontSizeToFitWidth = true
             lastLabel.minimumScaleFactor = 0.5
             userInfoView.addSubview(lastLabel)
@@ -263,7 +275,7 @@ class ProfileView: UIView {
                 let statusLabel = UILabel()
                 statusLabel.text = profile.status
                 statusLabel.numberOfLines = 0
-                statusLabel.font = UIFont(name: "TrebuchetMS", size: 14)
+                statusLabel.font = UIFont(name: "Verdana", size: 13)
                 let size = delegate.getTextSize(text: statusLabel.text!, font: statusLabel.font!, maxWidth: userInfoView.frame.width - 40)
                 statusLabel.frame = CGRect(x: 20, y: topY, width: size.width, height: size.height)
                 userInfoView.addSubview(statusLabel)
@@ -287,7 +299,7 @@ class ProfileView: UIView {
                     
                     let label1 = UILabel()
                     label1.text = "День рождения:"
-                    label1.font = UIFont(name: "TrebuchetMS", size: 14)
+                    label1.font = UIFont(name: "Verdana", size: 13)
                     label1.adjustsFontSizeToFitWidth = true
                     label1.minimumScaleFactor = 0.5
                     label1.isEnabled = false
@@ -296,7 +308,7 @@ class ProfileView: UIView {
                     
                     let label2 = UILabel()
                     label2.text = dateFormatter.string(from: date!)
-                    label2.font = UIFont(name: "TrebuchetMS", size: 14)
+                    label2.font = UIFont(name: "Verdana", size: 13)
                     label2.adjustsFontSizeToFitWidth = true
                     label2.minimumScaleFactor = 0.5
                     label2.frame = CGRect(x: userInfoView.frame.width * 0.4, y: topY + 10, width: userInfoView.frame.width * 0.6 - 20, height: 20)
@@ -308,7 +320,7 @@ class ProfileView: UIView {
                 if profile.countryName != "" {
                     let label1 = UILabel()
                     label1.text = "Страна:"
-                    label1.font = UIFont(name: "TrebuchetMS", size: 14)
+                    label1.font = UIFont(name: "Verdana", size: 13)
                     label1.adjustsFontSizeToFitWidth = true
                     label1.minimumScaleFactor = 0.5
                     label1.isEnabled = false
@@ -317,7 +329,7 @@ class ProfileView: UIView {
                     
                     let label2 = UILabel()
                     label2.text = profile.countryName
-                    label2.font = UIFont(name: "TrebuchetMS", size: 14)
+                    label2.font = UIFont(name: "Verdana", size: 13)
                     label2.adjustsFontSizeToFitWidth = true
                     label2.minimumScaleFactor = 0.5
                     label2.frame = CGRect(x: userInfoView.frame.width * 0.4, y: topY + 10, width: userInfoView.frame.width * 0.6 - 20, height: 20)
@@ -329,7 +341,7 @@ class ProfileView: UIView {
                 if profile.cityName != "" {
                     let label1 = UILabel()
                     label1.text = "Город:"
-                    label1.font = UIFont(name: "TrebuchetMS", size: 14)
+                    label1.font = UIFont(name: "Verdana", size: 13)
                     label1.adjustsFontSizeToFitWidth = true
                     label1.minimumScaleFactor = 0.5
                     label1.isEnabled = false
@@ -338,7 +350,7 @@ class ProfileView: UIView {
                     
                     let label2 = UILabel()
                     label2.text = profile.cityName
-                    label2.font = UIFont(name: "TrebuchetMS", size: 14)
+                    label2.font = UIFont(name: "Verdana", size: 13)
                     label2.adjustsFontSizeToFitWidth = true
                     label2.minimumScaleFactor = 0.5
                     label2.frame = CGRect(x: userInfoView.frame.width * 0.4, y: topY + 10, width: userInfoView.frame.width * 0.6 - 20, height: 20)
@@ -350,7 +362,7 @@ class ProfileView: UIView {
                 if profile.relation != 0 {
                     let label1 = UILabel()
                     label1.text = "Семейное положение:"
-                    label1.font = UIFont(name: "TrebuchetMS", size: 14)
+                    label1.font = UIFont(name: "Verdana", size: 13)
                     label1.adjustsFontSizeToFitWidth = true
                     label1.minimumScaleFactor = 0.5
                     label1.isEnabled = false
@@ -359,7 +371,7 @@ class ProfileView: UIView {
                     
                     let label2 = UILabel()
                     label2.text = profile.relation.relationCodeIntoString(sex: profile.sex)
-                    label2.font = UIFont(name: "TrebuchetMS", size: 14)
+                    label2.font = UIFont(name: "Verdana", size: 13)
                     label2.adjustsFontSizeToFitWidth = true
                     label2.minimumScaleFactor = 0.5
                     label2.frame = CGRect(x: userInfoView.frame.width * 0.4, y: topY + 10, width: userInfoView.frame.width * 0.6 - 20, height: 20)
@@ -371,7 +383,7 @@ class ProfileView: UIView {
                 if profile.site != "" {
                     let label1 = UILabel()
                     label1.text = "Веб-сайт:"
-                    label1.font = UIFont(name: "TrebuchetMS", size: 14)
+                    label1.font = UIFont(name: "Verdana", size: 13)
                     label1.adjustsFontSizeToFitWidth = true
                     label1.minimumScaleFactor = 0.5
                     label1.isEnabled = false
@@ -381,7 +393,7 @@ class ProfileView: UIView {
                     let label2 = UILabel()
                     label2.text = profile.site
                     label2.textColor = label2.tintColor
-                    label2.font = UIFont(name: "TrebuchetMS", size: 14)
+                    label2.font = UIFont(name: "Verdana", size: 13)
                     label2.adjustsFontSizeToFitWidth = true
                     label2.minimumScaleFactor = 0.5
                     label2.frame = CGRect(x: userInfoView.frame.width * 0.4, y: topY + 10, width: userInfoView.frame.width * 0.6 - 20, height: 20)
@@ -393,7 +405,7 @@ class ProfileView: UIView {
                 let moreInfoButton = UIButton()
                 moreInfoButton.setTitle("Посмотреть подробную информацию", for: .normal)
                 moreInfoButton.setTitleColor(moreInfoButton.titleLabel?.tintColor, for: .normal)
-                moreInfoButton.titleLabel?.font = UIFont(name: "TrebuchetMS", size: 15)
+                moreInfoButton.titleLabel?.font = UIFont(name: "Verdana", size: 14)
                 moreInfoButton.frame = CGRect(x: 40, y: topY + 10, width: userInfoView.frame.width - 80, height: 30)
                 userInfoView.addSubview(moreInfoButton)
                 
@@ -420,7 +432,7 @@ class ProfileView: UIView {
                         label1.text = profile.friendsCount.getCounterToString()
                         label1.textColor = label1.tintColor
                         label1.textAlignment = .center
-                        label1.font = UIFont(name: "TrebuchetMS-Bold", size: 18)
+                        label1.font = UIFont(name: "Verdana-Bold", size: 16)
                         label1.adjustsFontSizeToFitWidth = true
                         label1.minimumScaleFactor = 0.5
                         label1.frame = CGRect(x: leftX, y: topY, width: counterHeight, height: counterHeight/2)
@@ -430,7 +442,7 @@ class ProfileView: UIView {
                         label2.text = "друзья"
                         label2.isEnabled = false
                         label2.textAlignment = .center
-                        label2.font = UIFont(name: "TrebuchetMS", size: 10)
+                        label2.font = UIFont(name: "Verdana", size: 10)
                         label2.adjustsFontSizeToFitWidth = true
                         label2.minimumScaleFactor = 0.5
                         label2.frame = CGRect(x: leftX, y: topY + counterHeight/2, width: counterHeight, height: 20)
@@ -452,7 +464,7 @@ class ProfileView: UIView {
                         label1.text = profile.commonFriendsCount.getCounterToString()
                         label1.textColor = label1.tintColor
                         label1.textAlignment = .center
-                        label1.font = UIFont(name: "TrebuchetMS-Bold", size: 18)
+                        label1.font = UIFont(name: "Verdana-Bold", size: 16)
                         label1.adjustsFontSizeToFitWidth = true
                         label1.minimumScaleFactor = 0.5
                         label1.frame = CGRect(x: leftX, y: topY, width: counterHeight, height: counterHeight/2)
@@ -462,7 +474,7 @@ class ProfileView: UIView {
                         label2.text = "общие друзья"
                         label2.isEnabled = false
                         label2.textAlignment = .center
-                        label2.font = UIFont(name: "TrebuchetMS", size: 10)
+                        label2.font = UIFont(name: "Verdana", size: 10)
                         label2.adjustsFontSizeToFitWidth = true
                         label2.minimumScaleFactor = 0.5
                         label2.frame = CGRect(x: leftX, y: topY + counterHeight/2, width: counterHeight, height: 20)
@@ -484,7 +496,7 @@ class ProfileView: UIView {
                         label1.text = profile.followersCount.getCounterToString()
                         label1.textColor = label1.tintColor
                         label1.textAlignment = .center
-                        label1.font = UIFont(name: "TrebuchetMS-Bold", size: 18)
+                        label1.font = UIFont(name: "Verdana-Bold", size: 16)
                         label1.adjustsFontSizeToFitWidth = true
                         label1.minimumScaleFactor = 0.5
                         label1.frame = CGRect(x: leftX, y: topY, width: counterHeight, height: counterHeight/2)
@@ -494,7 +506,7 @@ class ProfileView: UIView {
                         label2.text = "подписчики"
                         label2.isEnabled = false
                         label2.textAlignment = .center
-                        label2.font = UIFont(name: "TrebuchetMS", size: 10)
+                        label2.font = UIFont(name: "Verdana", size: 10)
                         label2.adjustsFontSizeToFitWidth = true
                         label2.minimumScaleFactor = 0.5
                         label2.frame = CGRect(x: leftX, y: topY + counterHeight/2, width: counterHeight, height: 20)
@@ -516,7 +528,7 @@ class ProfileView: UIView {
                         label1.text = (profile.groupsCount - profile.pagesCount).getCounterToString()
                         label1.textColor = label1.tintColor
                         label1.textAlignment = .center
-                        label1.font = UIFont(name: "TrebuchetMS-Bold", size: 18)
+                        label1.font = UIFont(name: "Verdana-Bold", size: 16)
                         label1.adjustsFontSizeToFitWidth = true
                         label1.minimumScaleFactor = 0.5
                         label1.frame = CGRect(x: leftX, y: topY, width: counterHeight, height: counterHeight/2)
@@ -526,7 +538,7 @@ class ProfileView: UIView {
                         label2.text = "группы"
                         label2.isEnabled = false
                         label2.textAlignment = .center
-                        label2.font = UIFont(name: "TrebuchetMS", size: 10)
+                        label2.font = UIFont(name: "Verdana", size: 10)
                         label2.adjustsFontSizeToFitWidth = true
                         label2.minimumScaleFactor = 0.5
                         label2.frame = CGRect(x: leftX, y: topY + counterHeight/2, width: counterHeight, height: 20)
@@ -553,7 +565,7 @@ class ProfileView: UIView {
                         label1.text = profile.pagesCount.getCounterToString()
                         label1.textColor = label1.tintColor
                         label1.textAlignment = .center
-                        label1.font = UIFont(name: "TrebuchetMS-Bold", size: 18)
+                        label1.font = UIFont(name: "Verdana-Bold", size: 16)
                         label1.adjustsFontSizeToFitWidth = true
                         label1.minimumScaleFactor = 0.5
                         label1.frame = CGRect(x: leftX, y: topY, width: counterHeight, height: counterHeight/2)
@@ -563,7 +575,7 @@ class ProfileView: UIView {
                         label2.text = "страницы"
                         label2.isEnabled = false
                         label2.textAlignment = .center
-                        label2.font = UIFont(name: "TrebuchetMS", size: 10)
+                        label2.font = UIFont(name: "Verdana", size: 10)
                         label2.adjustsFontSizeToFitWidth = true
                         label2.minimumScaleFactor = 0.5
                         label2.frame = CGRect(x: leftX, y: topY + counterHeight/2, width: counterHeight, height: 20)
@@ -589,7 +601,7 @@ class ProfileView: UIView {
                         let label1 = UILabel()
                         label1.text = profile.photosCount.getCounterToString()
                         label1.textAlignment = .center
-                        label1.font = UIFont(name: "TrebuchetMS-Bold", size: 18)
+                        label1.font = UIFont(name: "Verdana-Bold", size: 16)
                         label1.adjustsFontSizeToFitWidth = true
                         label1.minimumScaleFactor = 0.5
                         label1.frame = CGRect(x: leftX, y: topY, width: counterHeight, height: counterHeight/2)
@@ -599,7 +611,7 @@ class ProfileView: UIView {
                         label2.text = "фото"
                         label2.isEnabled = false
                         label2.textAlignment = .center
-                        label2.font = UIFont(name: "TrebuchetMS", size: 10)
+                        label2.font = UIFont(name: "Verdana", size: 10)
                         label2.adjustsFontSizeToFitWidth = true
                         label2.minimumScaleFactor = 0.5
                         label2.frame = CGRect(x: leftX, y: topY + counterHeight/2, width: counterHeight, height: 20)
@@ -612,7 +624,7 @@ class ProfileView: UIView {
                         let label1 = UILabel()
                         label1.text = profile.videosCount.getCounterToString()
                         label1.textAlignment = .center
-                        label1.font = UIFont(name: "TrebuchetMS-Bold", size: 18)
+                        label1.font = UIFont(name: "Verdana-Bold", size: 16)
                         label1.adjustsFontSizeToFitWidth = true
                         label1.minimumScaleFactor = 0.5
                         label1.frame = CGRect(x: leftX, y: topY, width: counterHeight, height: counterHeight/2)
@@ -622,7 +634,7 @@ class ProfileView: UIView {
                         label2.text = "видео"
                         label2.isEnabled = false
                         label2.textAlignment = .center
-                        label2.font = UIFont(name: "TrebuchetMS", size: 10)
+                        label2.font = UIFont(name: "Verdana", size: 10)
                         label2.adjustsFontSizeToFitWidth = true
                         label2.minimumScaleFactor = 0.5
                         label2.frame = CGRect(x: leftX, y: topY + counterHeight/2, width: counterHeight, height: 20)
@@ -952,7 +964,7 @@ class ProfileView: UIView {
         if let profile = user {
             allRecordsButton.setTitle("Все записи", for: .normal)
             allRecordsButton.setTitle("Все записи", for: .selected)
-            allRecordsButton.titleLabel?.font = UIFont(name: "TrebuchetMS-Bold", size: 13)!
+            allRecordsButton.titleLabel?.font = UIFont(name: "Verdana", size: 12)!
             allRecordsButton.titleLabel?.adjustsFontSizeToFitWidth = true
             allRecordsButton.titleLabel?.minimumScaleFactor = 0.5
             
@@ -965,7 +977,7 @@ class ProfileView: UIView {
                 ownerButton.setTitle("Записи \(profile.firstNameGen)", for: .selected)
                 ownerButton.setTitle("Записи \(profile.firstNameGen)", for: .normal)
             }
-            ownerButton.titleLabel?.font = UIFont(name: "TrebuchetMS-Bold", size: 13)!
+            ownerButton.titleLabel?.font = UIFont(name: "Verdana", size: 12)!
             ownerButton.titleLabel?.adjustsFontSizeToFitWidth = true
             ownerButton.titleLabel?.minimumScaleFactor = 0.5
             
@@ -973,7 +985,7 @@ class ProfileView: UIView {
             
             othersButton.setTitle("Чужие записи", for: .normal)
             othersButton.setTitle("Чужие записи", for: .selected)
-            othersButton.titleLabel?.font = UIFont(name: "TrebuchetMS-Bold", size: 13)!
+            othersButton.titleLabel?.font = UIFont(name: "Verdana", size: 12)!
             othersButton.titleLabel?.adjustsFontSizeToFitWidth = true
             othersButton.titleLabel?.minimumScaleFactor = 0.5
             
@@ -1004,6 +1016,7 @@ class ProfileView: UIView {
             updateOwnerButtons()
             
             allRecordsButton.add(for: .touchUpInside) {
+                self.allRecordsButton.buttonTouched()
                 self.delegate.offset = 0
                 
                 self.allRecordsButton.isSelected = true
@@ -1015,6 +1028,7 @@ class ProfileView: UIView {
             }
             
             ownerButton.add(for: .touchUpInside) {
+                self.ownerButton.buttonTouched()
                 self.delegate.offset = 0
                 
                 self.allRecordsButton.isSelected = false
@@ -1026,6 +1040,7 @@ class ProfileView: UIView {
             }
             
             othersButton.add(for: .touchUpInside) {
+                self.othersButton.buttonTouched()
                 self.delegate.offset = 0
                 
                 self.allRecordsButton.isSelected = false
@@ -1050,9 +1065,13 @@ class ProfileView: UIView {
                 newRecordButton.setTitleColor(newRecordButton.tintColor, for: .normal)
                 newRecordButton.setTitleColor(UIColor.black, for: .highlighted)
                 newRecordButton.setTitleColor(UIColor.black, for: .selected)
-                newRecordButton.titleLabel?.font = UIFont(name: "TrebuchetMS", size: 14)!
+                newRecordButton.titleLabel?.font = UIFont(name: "Verdana", size: 13)!
                 newRecordButton.contentHorizontalAlignment = .left
                 newRecordButton.contentMode = .center
+                
+                newRecordButton.add(for: .touchUpInside) {
+                    self.newRecordButton.buttonTouched()
+                }
                 
                 newRecordButton.frame = CGRect(x: 10, y: 5, width: 100, height: buttonHeight)
                 view.addSubview(newRecordButton)
@@ -1061,7 +1080,7 @@ class ProfileView: UIView {
             if delegate.postponedWall.count > 0 {
                 postponedButton.setTitle("Отложенные записи (\(delegate.postponedWall.count))", for: .normal)
                 postponedButton.setTitle("Отложенные записи (\(delegate.postponedWall.count))", for: .selected)
-                postponedButton.titleLabel?.font = UIFont(name: "TrebuchetMS-Bold", size: 13)!
+                postponedButton.titleLabel?.font = UIFont(name: "Verdana", size: 12)!
                 postponedButton.titleLabel?.adjustsFontSizeToFitWidth = true
                 postponedButton.titleLabel?.minimumScaleFactor = 0.6
                 
@@ -1073,6 +1092,7 @@ class ProfileView: UIView {
                 postponedButton.layer.cornerRadius = 5
                 
                 postponedButton.add(for: .touchUpInside) {
+                    self.postponedButton.buttonTouched()
                     self.delegate.offset = 0
                     
                     self.allRecordsButton.isSelected = false
@@ -1089,7 +1109,7 @@ class ProfileView: UIView {
             recordsCountLabel.text = "Всего записей: \(delegate.recordsCount)"
             recordsCountLabel.textAlignment = .right
             recordsCountLabel.textColor = recordsCountLabel.tintColor
-            recordsCountLabel.font = UIFont(name: "TrebuchetMS", size: 14)!
+            recordsCountLabel.font = UIFont(name: "Verdana", size: 13)!
             
             recordsCountLabel.frame = CGRect(x: view.bounds.width - 10 - 150, y: 5, width: 150, height: buttonHeight)
             view.addSubview(recordsCountLabel)

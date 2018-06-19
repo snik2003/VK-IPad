@@ -58,6 +58,12 @@
 		1749130320D304DD00FCF9F9 /* ParseRequestList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1749130220D304DD00FCF9F9 /* ParseRequestList.swift */; };
 		1749130520D3050200FCF9F9 /* ParseRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1749130420D3050200FCF9F9 /* ParseRequest.swift */; };
 		1749130720D3055100FCF9F9 /* FriendRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1749130620D3055100FCF9F9 /* FriendRequest.swift */; };
+		17A1A5B720D8D31200D9CE00 /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A1A5B620D8D31200D9CE00 /* Button.swift */; };
+		17A1A5B920D8E37400D9CE00 /* GroupProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A1A5B820D8E37400D9CE00 /* GroupProfileViewController.swift */; };
+		17A1A5BB20D8E63000D9CE00 /* ParseGroupProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A1A5BA20D8E63000D9CE00 /* ParseGroupProfile.swift */; };
+		17A1A5BD20D8E6A700D9CE00 /* ParseWall.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A1A5BC20D8E6A700D9CE00 /* ParseWall.swift */; };
+		17A1A5BF20D8E7FD00D9CE00 /* GroupProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A1A5BE20D8E7FD00D9CE00 /* GroupProfileView.swift */; };
+		17A1A5C120D8EA4C00D9CE00 /* ReloadGroupProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A1A5C020D8EA4C00D9CE00 /* ReloadGroupProfileController.swift */; };
 		17DD5DB820D7CBE20019938D /* AttachmentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17DD5DB720D7CBE20019938D /* AttachmentsView.swift */; };
 		17EBC3A120D51A46009130FC /* Attachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17EBC3A020D51A46009130FC /* Attachment.swift */; };
 		17EBC3A320D52C5D009130FC /* Video.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17EBC3A220D52C5D009130FC /* Video.swift */; };
@@ -118,6 +124,12 @@
 		1749130220D304DD00FCF9F9 /* ParseRequestList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseRequestList.swift; sourceTree = "<group>"; };
 		1749130420D3050200FCF9F9 /* ParseRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseRequest.swift; sourceTree = "<group>"; };
 		1749130620D3055100FCF9F9 /* FriendRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendRequest.swift; sourceTree = "<group>"; };
+		17A1A5B620D8D31200D9CE00 /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
+		17A1A5B820D8E37400D9CE00 /* GroupProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupProfileViewController.swift; sourceTree = "<group>"; };
+		17A1A5BA20D8E63000D9CE00 /* ParseGroupProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParseGroupProfile.swift; sourceTree = "<group>"; };
+		17A1A5BC20D8E6A700D9CE00 /* ParseWall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParseWall.swift; sourceTree = "<group>"; };
+		17A1A5BE20D8E7FD00D9CE00 /* GroupProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupProfileView.swift; sourceTree = "<group>"; };
+		17A1A5C020D8EA4C00D9CE00 /* ReloadGroupProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReloadGroupProfileController.swift; sourceTree = "<group>"; };
 		17AF810F20D11D1F00FF1913 /* VK-IPad.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "VK-IPad.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		17DD5DB720D7CBE20019938D /* AttachmentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentsView.swift; sourceTree = "<group>"; };
 		17EBC3A020D51A46009130FC /* Attachment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Attachment.swift; sourceTree = "<group>"; };
@@ -150,6 +162,8 @@
 			isa = PBXGroup;
 			children = (
 				173D666320D3C91300EEBF46 /* GroupsListController.swift */,
+				17A1A5B820D8E37400D9CE00 /* GroupProfileViewController.swift */,
+				17A1A5BE20D8E7FD00D9CE00 /* GroupProfileView.swift */,
 			);
 			path = Groups;
 			sourceTree = "<group>";
@@ -158,6 +172,7 @@
 			isa = PBXGroup;
 			children = (
 				173D666A20D3CAD100EEBF46 /* ReloadGroupsListController.swift */,
+				17A1A5C020D8EA4C00D9CE00 /* ReloadGroupProfileController.swift */,
 			);
 			path = ReloadInterface;
 			sourceTree = "<group>";
@@ -251,6 +266,7 @@
 				174912C220D300DC00FCF9F9 /* Int.swift */,
 				174912C320D300DC00FCF9F9 /* String.swift */,
 				173D666020D3C07900EEBF46 /* Control.swift */,
+				17A1A5B620D8D31200D9CE00 /* Button.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -308,6 +324,8 @@
 				1749130220D304DD00FCF9F9 /* ParseRequestList.swift */,
 				174912FC20D303F400FCF9F9 /* ParseFriends.swift */,
 				173D666720D3C9DB00EEBF46 /* ParseGroupList.swift */,
+				17A1A5BA20D8E63000D9CE00 /* ParseGroupProfile.swift */,
+				17A1A5BC20D8E6A700D9CE00 /* ParseWall.swift */,
 			);
 			path = ParseServerData;
 			sourceTree = "<group>";
@@ -481,6 +499,7 @@
 			files = (
 				17424FF120D5A3C400F52C4C /* Poll.swift in Sources */,
 				174912EC20D300DD00FCF9F9 /* vkSingleton.swift in Sources */,
+				17A1A5BF20D8E7FD00D9CE00 /* GroupProfileView.swift in Sources */,
 				174912DD20D300DD00FCF9F9 /* Photos.swift in Sources */,
 				174912E920D300DD00FCF9F9 /* StartViewController.swift in Sources */,
 				17DD5DB820D7CBE20019938D /* AttachmentsView.swift in Sources */,
@@ -490,6 +509,7 @@
 				174912D920D300DD00FCF9F9 /* SetImageToRow.swift in Sources */,
 				174912DF20D300DD00FCF9F9 /* ErrorJson.swift in Sources */,
 				174912F320D300DD00FCF9F9 /* ProfileViewController.swift in Sources */,
+				17A1A5B720D8D31200D9CE00 /* Button.swift in Sources */,
 				174912E720D300DD00FCF9F9 /* Int.swift in Sources */,
 				174912F520D300DD00FCF9F9 /* AppDelegate.swift in Sources */,
 				174912E320D300DD00FCF9F9 /* Date.swift in Sources */,
@@ -501,6 +521,7 @@
 				174912F120D300DD00FCF9F9 /* LoginViewController.swift in Sources */,
 				1749130320D304DD00FCF9F9 /* ParseRequestList.swift in Sources */,
 				17424FEF20D591E800F52C4C /* Document.swift in Sources */,
+				17A1A5C120D8EA4C00D9CE00 /* ReloadGroupProfileController.swift in Sources */,
 				173D666620D3C94500EEBF46 /* Groups.swift in Sources */,
 				174912ED20D300DD00FCF9F9 /* AppConfig.swift in Sources */,
 				17EBC3A120D51A46009130FC /* Attachment.swift in Sources */,
@@ -512,6 +533,7 @@
 				174912E420D300DD00FCF9F9 /* Label.swift in Sources */,
 				173D667920D40FCE00EEBF46 /* UITextViewPlaceholder.swift in Sources */,
 				173D666420D3C91300EEBF46 /* GroupsListController.swift in Sources */,
+				17A1A5BD20D8E6A700D9CE00 /* ParseWall.swift in Sources */,
 				174912F420D300DD00FCF9F9 /* MenuViewController.swift in Sources */,
 				174912EA20D300DD00FCF9F9 /* GetServerDataOperation.swift in Sources */,
 				174912EE20D300DD00FCF9F9 /* UsersController.swift in Sources */,
@@ -521,7 +543,9 @@
 				174912FA20D302B700FCF9F9 /* Friends.swift in Sources */,
 				17EBC3A320D52C5D009130FC /* Video.swift in Sources */,
 				174912FE20D303F400FCF9F9 /* ParseFriends.swift in Sources */,
+				17A1A5B920D8E37400D9CE00 /* GroupProfileViewController.swift in Sources */,
 				173D666D20D3E4BE00EEBF46 /* Record.swift in Sources */,
+				17A1A5BB20D8E63000D9CE00 /* ParseGroupProfile.swift in Sources */,
 				174912FD20D303F400FCF9F9 /* ReloadUsersController.swift in Sources */,
 				174912E020D300DD00FCF9F9 /* vkAccount.swift in Sources */,
 				173D667220D3F56600EEBF46 /* RecordCell.swift in Sources */,

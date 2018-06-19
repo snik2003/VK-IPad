@@ -30,7 +30,7 @@ class Record {
     var userReposted = 0
     var viewsCount = 0
     var postType = ""
-    var sourcePlatform = 0
+    var sourcePlatform = ""
     var signerID = 0
     var canPin = 0
     var canDelete = 0
@@ -61,7 +61,7 @@ class Record {
         self.repostCount = json["reposts"]["count"].intValue
         self.userReposted = json["reposts"]["user_reposted"].intValue
         self.viewsCount = json["views"]["count"].intValue
-        self.sourcePlatform = json["post_source"]["platform"].intValue
+        self.sourcePlatform = json["post_source"]["platform"].stringValue
         self.signerID = json["signer_id"].intValue
         self.canPin = json["can_pin"].intValue
         self.canDelete = json["can_delete"].intValue

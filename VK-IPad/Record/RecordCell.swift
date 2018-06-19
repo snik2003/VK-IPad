@@ -36,10 +36,10 @@ class RecordCell: UITableViewCell {
     
     let friendsOnlyLabel = UILabel()
     
-    let textFont = UIFont(name: "TrebuchetMS", size: 13)!
-    let nameFont = UIFont(name: "TrebuchetMS-Bold", size: 14)!
-    let qLabelFont = UIFont(name: "TrebuchetMS-Bold", size: 13)!
-    let aLabelFont = UIFont(name: "TrebuchetMS", size: 12)!
+    let textFont = UIFont(name: "Verdana", size: 13)!
+    let nameFont = UIFont(name: "Verdana-Bold", size: 13)!
+    let qLabelFont = UIFont(name: "Verdana-Bold", size: 13)!
+    let aLabelFont = UIFont(name: "Verdana", size: 12)!
     
     let likesHeight: CGFloat = 35
     
@@ -197,9 +197,9 @@ class RecordCell: UITableViewCell {
                 let friendsOnlyLabel = UILabel()
                 
                 friendsOnlyLabel.tag = 250
-                friendsOnlyLabel.text = "Запись только друзей!"
+                friendsOnlyLabel.text = "Запись только для друзей!"
                 friendsOnlyLabel.textAlignment = .right
-                friendsOnlyLabel.font = UIFont(name: "TrebuchetMS", size: 12)!
+                friendsOnlyLabel.font = UIFont(name: "Verdana", size: 11)!
                 friendsOnlyLabel.textColor = UIColor.red
                 
                 friendsOnlyLabel.frame = CGRect(x: cellWidth - 170, y: 2, width: 150, height: 18)
@@ -249,10 +249,20 @@ class RecordCell: UITableViewCell {
         OperationQueue().addOperation(getCacheImage)
         
         nameLabel.text = name
+        if record.isPinned == 1 {
+            nameLabel.text = "📌 \(name)"
+        }
         nameLabel.font = nameFont
         
-        dateLabel.text = record.date.toStringLastTime()
-        dateLabel.font = UIFont(name: "TrebuchetMS", size: 12)!
+        if record.postType == "postpone" {
+            dateLabel.text = "⏱ \(record.date.toStringLastTime())"
+        } else {
+            dateLabel.text = record.date.toStringLastTime()
+            if record.sourcePlatform != "" {
+                dateLabel.setSourceOfRecord(text: " \(dateLabel.text!)", source: record.sourcePlatform, delegate: delegate)
+            }
+        }
+        dateLabel.font = UIFont(name: "Verdana", size: 11)!
         dateLabel.isEnabled = false
         
         avatarImage.frame = CGRect(x: leftX - 10, y: topY + 5, width: size, height: size)
@@ -370,7 +380,7 @@ class RecordCell: UITableViewCell {
                     let gifSizeLabel = UILabel()
                     gifSizeLabel.text = "GIF: \(attach.doc[0].size.getFileSizeToString())"
                     gifSizeLabel.numberOfLines = 1
-                    gifSizeLabel.font = UIFont(name: "TrebuchetMS-Bold", size: 12.0)!
+                    gifSizeLabel.font = UIFont(name: "Verdana-Bold", size: 11.0)!
                     gifSizeLabel.textAlignment = .center
                     gifSizeLabel.contentMode = .center
                     gifSizeLabel.textColor = UIColor.black
@@ -485,7 +495,7 @@ class RecordCell: UITableViewCell {
             titleLabel.frame = CGRect(x: leftX + 20, y: webView.frame.maxY, width: videoWidth-200, height: 20)
             titleLabel.text = "Видео: \(attach.video[0].title)"
             titleLabel.textColor = titleLabel.tintColor
-            titleLabel.font = UIFont(name: "TrebuchetMS", size: 13)!
+            titleLabel.font = UIFont(name: "Verdana", size: 12)!
             
             let viewsLabel = UILabel()
             viewsLabel.tag = 250
@@ -493,7 +503,7 @@ class RecordCell: UITableViewCell {
             viewsLabel.text = "Просмотров: \(attach.video[0].views.getCounterToString())"
             viewsLabel.textAlignment = .right
             viewsLabel.isEnabled = false
-            viewsLabel.font = UIFont(name: "TrebuchetMS", size: 12)!
+            viewsLabel.font = UIFont(name: "Verdana", size: 11)!
             
             self.addSubview(titleLabel)
             self.addSubview(viewsLabel)
@@ -520,14 +530,14 @@ class RecordCell: UITableViewCell {
         artistLabel.tag = 250
         artistLabel.frame = CGRect(x: leftX + 50, y: musicImage.frame.midY - 16, width: maxSize - 50, height: 16)
         artistLabel.text = attach.audio[0].artist
-        artistLabel.font = UIFont(name: "TrebuchetMS", size: 13)!
+        artistLabel.font = UIFont(name: "Verdana", size: 12)!
         
         let titleLabel = UILabel()
         titleLabel.tag = 250
         titleLabel.frame = CGRect(x: leftX + 50, y: musicImage.frame.midY, width: maxSize - 50, height: 16)
         titleLabel.text = attach.audio[0].title
         titleLabel.textColor = titleLabel.tintColor
-        titleLabel.font = UIFont(name: "TrebuchetMS", size: 13)!
+        titleLabel.font = UIFont(name: "Verdana", size: 12)!
         
         self.addSubview(musicImage)
         self.addSubview(artistLabel)
@@ -571,7 +581,7 @@ class RecordCell: UITableViewCell {
                 }
             }
         }
-        titleLabel.font = UIFont(name: "TrebuchetMS", size: 13)!
+        titleLabel.font = UIFont(name: "Verdana", size: 12)!
         
         let linkLabel = UILabel()
         linkLabel.tag = 250
@@ -582,7 +592,7 @@ class RecordCell: UITableViewCell {
             linkLabel.text = attach.link[0].url
         }
         linkLabel.textColor = linkLabel.tintColor
-        linkLabel.font = UIFont(name: "TrebuchetMS", size: 13)!
+        linkLabel.font = UIFont(name: "Verdana", size: 12)!
         
         self.addSubview(linkImage)
         self.addSubview(titleLabel)
@@ -644,17 +654,23 @@ class RecordCell: UITableViewCell {
             rLabel.text = ""
             rLabel.textAlignment = .right
             rLabel.textColor = UIColor.clear
-            rLabel.font = UIFont(name: "TrebuchetMS-Bold", size: 10)!
+            rLabel.font = UIFont(name: "Verdana-Bold", size: 10)!
             rLabel.frame = CGRect(x: 5, y: viewY+5, width: width - 10, height: 15)
             view.addSubview(rLabel)
             rateLabels.append(rLabel)
             
+            let tap = UITapGestureRecognizer()
+            tap.add {
+                self.pollVote(sender: aLabel)
+            }
+            aLabel.isUserInteractionEnabled = true
+            aLabel.addGestureRecognizer(tap)
             
             viewY += 25
             answerLabels.append(aLabel)
         }
         
-        totalLabel.font = UIFont(name: "TrebuchetMS-Bold", size: 12)!
+        totalLabel.font = UIFont(name: "Verdana-Bold", size: 11)!
         totalLabel.textAlignment = .right
         totalLabel.textColor = UIColor.init(displayP3Red: 0/255, green: 84/255, blue: 147/255, alpha: 1)
         totalLabel.isEnabled = true
@@ -716,6 +732,7 @@ class RecordCell: UITableViewCell {
             let user = users.filter({ $0.uid == "\(record.signerID)" })
             if user.count > 0 {
                 let signerLabel = UILabel()
+                signerLabel.tag = 250
                 signerLabel.text = "\(user[0].firstName) \(user[0].lastName)"
                 signerLabel.textAlignment = .right
                 signerLabel.textColor = signerLabel.tintColor
@@ -746,7 +763,7 @@ class RecordCell: UITableViewCell {
             
             likesButton.tag = 250
             likesButton.frame = CGRect(x: leftX, y: topY, width: buttonWidth, height: likesHeight)
-            likesButton.titleLabel?.font = UIFont(name: "TrebuchetMS-Bold", size: 14)!
+            likesButton.titleLabel?.font = UIFont(name: "Verdana-Bold", size: 13)!
             likesButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 12)
             likesButton.contentVerticalAlignment = .center
             
@@ -754,10 +771,13 @@ class RecordCell: UITableViewCell {
             
             self.addSubview(likesButton)
             
+            likesButton.add(for: .touchUpInside) {
+                self.likesButton.smallButtonTouched()
+            }
             
             repostsButton.tag = 250
             repostsButton.frame = CGRect(x: leftX + buttonWidth, y: topY, width: buttonWidth, height: likesHeight)
-            repostsButton.titleLabel?.font = UIFont(name: "TrebuchetMS-Bold", size: 14)!
+            repostsButton.titleLabel?.font = UIFont(name: "Verdana-Bold", size: 13)!
             repostsButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 8)
             repostsButton.contentVerticalAlignment = .center
             
@@ -773,10 +793,13 @@ class RecordCell: UITableViewCell {
             
             self.addSubview(repostsButton)
             
+            repostsButton.add(for: .touchUpInside) {
+                self.repostsButton.smallButtonTouched()
+            }
             
             commentsButton.tag = 250
             commentsButton.frame = CGRect(x: leftX + 3 * buttonWidth, y: topY, width: buttonWidth, height: likesHeight)
-            commentsButton.titleLabel?.font = UIFont(name: "TrebuchetMS-Bold", size: 14)!
+            commentsButton.titleLabel?.font = UIFont(name: "Verdana-Bold", size: 13)!
             commentsButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 12)
             commentsButton.contentVerticalAlignment = .center
             
@@ -788,10 +811,13 @@ class RecordCell: UITableViewCell {
             
             self.addSubview(commentsButton)
             
+            commentsButton.add(for: .touchUpInside) {
+                self.commentsButton.smallButtonTouched()
+            }
             
             viewsButton.tag = 250
             viewsButton.frame = CGRect(x: leftX + 4 * buttonWidth, y: topY, width: buttonWidth, height: likesHeight)
-            viewsButton.titleLabel?.font = UIFont(name: "TrebuchetMS-Bold", size: 14)!
+            viewsButton.titleLabel?.font = UIFont(name: "Verdana-Bold", size: 13)!
             viewsButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 12)
             viewsButton.contentVerticalAlignment = .center
             
@@ -986,5 +1012,140 @@ extension RecordCell {
         separator.layer.borderWidth = 0.1
         separator.layer.borderColor = UIColor.gray.cgColor
         view.addSubview(separator)
+    }
+    
+    func pollVote(sender: UILabel) {
+        let num = sender.tag
+        
+        if let poll = self.poll {
+            if poll.answerID == 0 {
+                
+                let alertController = UIAlertController(title: "Вы выбрали следующий вариант:", message: "\(num+1). \(poll.answers[num].text)", preferredStyle: .actionSheet)
+                
+                let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
+                alertController.addAction(cancelAction)
+                
+                let action = UIAlertAction(title: "Отдать свой голос", style: .default) { action in
+                    let url = "/method/polls.addVote"
+                    let parameters = [
+                        "access_token": vkSingleton.shared.accessToken,
+                        "owner_id": "\(poll.ownerID)",
+                        "poll_id": "\(poll.id)",
+                        "answer_id": "\(poll.answers[num].id)",
+                        "v": vkSingleton.shared.version
+                    ]
+                    
+                    let request = GetServerDataOperation(url: url, parameters: parameters)
+                    
+                    request.completionBlock = {
+                        guard let data = request.data else { return }
+                        
+                        guard let json = try? JSON(data: data) else { print("json error"); return }
+                        
+                        let error = ErrorJson(json: JSON.null)
+                        error.errorCode = json["error"]["error_code"].intValue
+                        error.errorMsg = json["error"]["error_msg"].stringValue
+                        
+                        if error.errorCode == 0 {
+                            OperationQueue.main.addOperation {
+                                poll.votes += 1
+                                poll.answers[num].votes += 1
+                                for answer in poll.answers {
+                                    answer.rate = Int(Double(answer.votes) / Double(poll.votes) * 100)
+                                }
+                                poll.answerID = poll.answers[num].id
+                                self.updatePoll()
+                            }
+                        } else if error.errorCode == 250 {
+                            self.delegate.showErrorMessage(title: "Голосование по опросу!", msg: "Нет доступа к опросу.")
+                        } else if error.errorCode == 251 {
+                            self.delegate.showErrorMessage(title: "Голосование по опросу!", msg: "Недопустимый идентификатор опроса.")
+                        } else if error.errorCode == 252 {
+                            self.delegate.showErrorMessage(title: "Голосование по опросу!", msg: "Недопустимый идентификатор ответа. ")
+                        } else {
+                            self.delegate.showErrorMessage(title: "Ошибка #\(error.errorCode)", msg: "\n\(error.errorMsg)\n")
+                        }
+                    }
+                    
+                    OperationQueue().addOperation(request)
+                }
+                alertController.addAction(action)
+                
+                if let popoverController = alertController.popoverPresentationController {
+                    popoverController.sourceView = self.delegate.view
+                    popoverController.sourceRect = CGRect(x: self.delegate.view.bounds.midX, y: self.delegate.view.bounds.maxY - 100, width: 0, height: 0)
+                    popoverController.permittedArrowDirections = []
+                }
+                
+                delegate.present(alertController, animated: true)
+            } else {
+            
+                var message = ""
+                for index in 0...poll.answers.count-1 {
+                    if poll.answers[index].id == poll.answerID {
+                        message = "\(index+1). \(poll.answers[index].text)"
+                    }
+                }
+                
+                let alertController = UIAlertController(title: "Вы проголосовали за вариант:", message: message, preferredStyle: .actionSheet)
+                
+                let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
+                alertController.addAction(cancelAction)
+                
+                let action = UIAlertAction(title: "Отозвать свой голос", style: .destructive) { action in
+                    let url = "/method/polls.deleteVote"
+                    let parameters = [
+                        "access_token": vkSingleton.shared.accessToken,
+                        "owner_id": "\(poll.ownerID)",
+                        "poll_id": "\(poll.id)",
+                        "answer_id": "\(poll.answerID)",
+                        "v": vkSingleton.shared.version
+                    ]
+                    
+                    let request = GetServerDataOperation(url: url, parameters: parameters)
+                    
+                    request.completionBlock = {
+                        guard let data = request.data else { return }
+                        
+                        guard let json = try? JSON(data: data) else { print("json error"); return }
+                        
+                        let error = ErrorJson(json: JSON.null)
+                        error.errorCode = json["error"]["error_code"].intValue
+                        error.errorMsg = json["error"]["error_msg"].stringValue
+                        
+                        if error.errorCode == 0 {
+                            OperationQueue.main.addOperation {
+                                poll.votes -= 1
+                                poll.answers[num].votes -= 1
+                                for answer in poll.answers {
+                                    answer.rate = Int(Double(answer.votes) / Double(poll.votes) * 100)
+                                }
+                                poll.answerID = 0
+                                self.updatePoll()
+                            }
+                        } else if error.errorCode == 250 {
+                            self.delegate.showErrorMessage(title: "Голосование по опросу!", msg: "Нет доступа к опросу.")
+                        } else if error.errorCode == 251 {
+                            self.delegate.showErrorMessage(title: "Голосование по опросу!", msg: "Недопустимый идентификатор опроса.")
+                        } else if error.errorCode == 252 {
+                            self.delegate.showErrorMessage(title: "Голосование по опросу!", msg: "Недопустимый идентификатор ответа. ")
+                        } else {
+                            self.delegate.showErrorMessage(title: "Ошибка #\(error.errorCode)", msg: "\n\(error.errorMsg)\n")
+                        }
+                    }
+                    
+                    OperationQueue().addOperation(request)
+                }
+                alertController.addAction(action)
+                
+                if let popoverController = alertController.popoverPresentationController {
+                    popoverController.sourceView = self.delegate.view
+                    popoverController.sourceRect = CGRect(x: self.delegate.view.bounds.midX, y: self.delegate.view.bounds.maxY - 100, width: 0, height: 0)
+                    popoverController.permittedArrowDirections = []
+                }
+                
+                delegate.present(alertController, animated: true)
+            }
+        }
     }
 }

@@ -225,7 +225,7 @@ extension UINavigationBar {
         let nameLabel = UILabel()
         nameLabel.text = "\(user.firstName) \(user.lastName)"
         nameLabel.textColor = UIColor.white
-        nameLabel.font = UIFont(name: "TrebuchetMS-Bold", size: 16)
+        nameLabel.font = UIFont(name: "Verdana-Bold", size: 16)
         nameLabel.adjustsFontSizeToFitWidth = true
         nameLabel.minimumScaleFactor = 0.5
         nameLabel.frame = CGRect(x: 50, y: 4, width: frame.width - 80, height: 20)
@@ -257,7 +257,7 @@ extension UINavigationBar {
             statusLabel.textColor = UIColor.white
         }
         
-        statusLabel.font = UIFont(name: "TrebuchetMS", size: 11)
+        statusLabel.font = UIFont(name: "Verdana", size: 11)
         statusLabel.adjustsFontSizeToFitWidth = true
         statusLabel.minimumScaleFactor = 0.5
         statusLabel.frame = CGRect(x: 50, y: 20, width: frame.width - 80, height: 20)

@@ -36,7 +36,7 @@ extension UITableViewCell {
             }
             label.textColor = UIColor.gray
             label.textAlignment = .center
-            label.font = UIFont(name: "TrebuchetMS-Bold", size: 14)
+            label.font = UIFont(name: "Verdana-Bold", size: 12)
             label.frame = CGRect(x: frame.width-80, y: frame.height/2-10, width: 40, height: 20)
             self.addSubview(label)
         }

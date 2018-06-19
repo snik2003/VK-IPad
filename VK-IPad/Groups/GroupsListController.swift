@@ -59,7 +59,7 @@ class GroupsListController: UIViewController, UITableViewDelegate, UITableViewDa
         }
         
         refresh()
-        //StoreReviewHelper.checkAndAskForReview()
+        StoreReviewHelper.checkAndAskForReview()
     }
     
     override func didReceiveMemoryWarning() {
