@@ -271,17 +271,31 @@ extension UIViewController: ViewControllerProtocol {
         detailVC.childViewControllers[0].navigationController?.pushViewController(controller, animated: true)
     }
     
-    func openPhotoViewController(numPhoto: Int, photos: [Photo], delegate: UIViewController) {
+    func openPhotoViewController(numPhoto: Int, photos: [Photo]) {
         let photoViewController = self.storyboard?.instantiateViewController(withIdentifier: "PhotoViewController") as! PhotoViewController
         
         
         photoViewController.numPhoto = numPhoto
         photoViewController.photos = photos
         
-        photoViewController.delegate = delegate
+        photoViewController.delegate = self
         
         let detailVC = self.splitViewController!.viewControllers[self.splitViewController!.viewControllers.endIndex - 1]
         detailVC.childViewControllers[0].navigationController?.pushViewController(photoViewController, animated: true)
+    }
+    
+    func openWallRecord(ownerID: Int, postID: Int, accessKey: String, type: String) {
+        let recordController = self.storyboard?.instantiateViewController(withIdentifier: "RecordController") as! RecordController
+        
+        recordController.type = type
+        recordController.uid = ownerID
+        recordController.pid = postID
+        recordController.accessKey = accessKey
+        
+        recordController.delegate = self
+        
+        let detailVC = self.splitViewController!.viewControllers[self.splitViewController!.viewControllers.endIndex - 1]
+        detailVC.childViewControllers[0].navigationController?.pushViewController(recordController, animated: true)
     }
 }
 

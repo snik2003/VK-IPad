@@ -210,15 +210,15 @@ extension UILabel {
                 if isTap == false {
                     print("tap nithing")
                     
-                    /*if let vc = delegate as? Record2Controller {
+                    /*if let vc = delegate as? RecordController {
                         
                         if tap.state == .ended {
                             let buttonPosition: CGPoint = tap.location(in: vc.tableView)
                             
                             if let indexPath = vc.tableView.indexPathForRow(at: buttonPosition) {
                                 if indexPath.section == 0 {
-                                    let record = vc.news[indexPath.row]
-                                    if let cell = vc.tableView.cellForRow(at: indexPath) as? Record2Cell {
+                                    let record = vc.record[0]
+                                    if let cell = vc.tableView.cellForRow(at: indexPath) as? RecordCell {
                                         if self == cell.repostTextLabel {
                                             vc.openWallRecord(ownerID: record.repostOwnerID, postID: record.repostID, accessKey: "", type: "post")
                                         }

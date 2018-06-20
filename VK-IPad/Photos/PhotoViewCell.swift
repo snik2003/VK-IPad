@@ -22,7 +22,7 @@ class PhotoViewCell: UITableViewCell {
     func configureLikesCell() {
         
         self.removeAllSubviews()
-        let buttonWidth = (cellWidth - 20 - 40 - 40) / 3
+        let buttonWidth = (cellWidth - 20 - 50 - 50) / 3
         let buttonHeight = self.bounds.height
         
         likesButton.tag = 250
@@ -40,7 +40,7 @@ class PhotoViewCell: UITableViewCell {
         }
         
         usersButton.tag = 250
-        usersButton.frame = CGRect(x: 10 + buttonWidth + 40, y: 0, width: buttonWidth, height: buttonHeight)
+        usersButton.frame = CGRect(x: 10 + buttonWidth + 50, y: 0, width: buttonWidth, height: buttonHeight)
         usersButton.contentVerticalAlignment = .center
         usersButton.setImage(UIImage(named: "likes-list"), for: .normal)
         usersButton.imageView?.tintColor = UIColor.black
@@ -52,7 +52,7 @@ class PhotoViewCell: UITableViewCell {
         }
         
         commentsButton.tag = 250
-        commentsButton.frame = CGRect(x: 10 + 2 * buttonWidth + 40 + 40, y: 0, width: buttonWidth, height: buttonHeight)
+        commentsButton.frame = CGRect(x: 10 + 2 * buttonWidth + 50 + 50, y: 0, width: buttonWidth, height: buttonHeight)
         commentsButton.titleLabel?.font = UIFont(name: "Verdana-Bold", size: 13)!
         commentsButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 12)
         commentsButton.contentVerticalAlignment = .center
@@ -76,10 +76,11 @@ class PhotoViewCell: UITableViewCell {
         
         if photo.userLikes == 1 {
             likesButton.setTitleColor(UIColor.purple, for: .normal)
-            likesButton.setImage(UIImage(named: "like")?.tint(tintColor:  UIColor.purple), for: .normal)
+            likesButton.setImage(UIImage(named: "like")?.tint(tintColor: UIColor.purple), for: .normal)
         } else {
             likesButton.setTitleColor(UIColor.darkGray, for: .normal)
-            likesButton.setImage(UIImage(named: "like")?.tint(tintColor:  UIColor.white), for: .normal)
+            likesButton.setImage(UIImage(named: "like")?.tint(tintColor: UIColor.white), for: .normal)
+            likesButton.imageView?.tintColor = UIColor.white
         }
     }
 }

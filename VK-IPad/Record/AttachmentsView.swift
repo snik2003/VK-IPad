@@ -75,7 +75,7 @@ class AttachmentsView: UIView {
                     photoImage.isUserInteractionEnabled = true
                     photoImage.addGestureRecognizer(tap)
                     tap.add {
-                        self.delegate.openPhotoViewController(numPhoto: 0, photos: self.photos, delegate: self.delegate)
+                        self.delegate.openPhotoViewController(numPhoto: 0, photos: self.photos)
                     }
                 }
                 topY += height + 2.5
@@ -124,7 +124,7 @@ class AttachmentsView: UIView {
                     photoImage.isUserInteractionEnabled = true
                     photoImage.addGestureRecognizer(tap)
                     tap.add {
-                        self.delegate.openPhotoViewController(numPhoto: 0, photos: self.photos, delegate: self.delegate)
+                        self.delegate.openPhotoViewController(numPhoto: 0, photos: self.photos)
                     }
                 }
                 topY += height + 2.5
@@ -191,7 +191,7 @@ class AttachmentsView: UIView {
                         photoImage1.isUserInteractionEnabled = true
                         photoImage1.addGestureRecognizer(tap1)
                         tap1.add {
-                            self.delegate.openPhotoViewController(numPhoto: index, photos: self.photos, delegate: self.delegate)
+                            self.delegate.openPhotoViewController(numPhoto: index, photos: self.photos)
                         }
                         
                         let photoImage2 = UIImageView()
@@ -225,7 +225,7 @@ class AttachmentsView: UIView {
                         photoImage2.isUserInteractionEnabled = true
                         photoImage2.addGestureRecognizer(tap2)
                         tap2.add {
-                            self.delegate.openPhotoViewController(numPhoto: index+1, photos: self.photos, delegate: self.delegate)
+                            self.delegate.openPhotoViewController(numPhoto: index+1, photos: self.photos)
                         }
                     }
                     topY += height1 + 2.5
@@ -293,7 +293,7 @@ class AttachmentsView: UIView {
                         photoImage1.isUserInteractionEnabled = true
                         photoImage1.addGestureRecognizer(tap1)
                         tap1.add {
-                            self.delegate.openPhotoViewController(numPhoto: index, photos: self.photos, delegate: self.delegate)
+                            self.delegate.openPhotoViewController(numPhoto: index, photos: self.photos)
                         }
                         
                         let photoImage2 = UIImageView()
@@ -327,7 +327,7 @@ class AttachmentsView: UIView {
                         photoImage2.isUserInteractionEnabled = true
                         photoImage2.addGestureRecognizer(tap2)
                         tap2.add {
-                            self.delegate.openPhotoViewController(numPhoto: index+1, photos: self.photos, delegate: self.delegate)
+                            self.delegate.openPhotoViewController(numPhoto: index+1, photos: self.photos)
                         }
                     }
                     topY += height1 + 2.5

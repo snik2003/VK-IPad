@@ -183,7 +183,7 @@ class ProfileView: UIView {
                     photo.isUserInteractionEnabled = true
                     photo.addGestureRecognizer(tap)
                     tap.add {
-                        self.delegate.openPhotoViewController(numPhoto: index, photos: self.photos, delegate: self.delegate)
+                        self.delegate.openPhotoViewController(numPhoto: index, photos: self.photos)
                     }
                 }
                 
@@ -793,7 +793,7 @@ class ProfileView: UIView {
                     }
                 }
                 
-                self.delegate.openPhotoViewController(numPhoto: numPhoto, photos: photos, delegate: self.delegate)
+                self.delegate.openPhotoViewController(numPhoto: numPhoto, photos: photos)
             }
         }
     }

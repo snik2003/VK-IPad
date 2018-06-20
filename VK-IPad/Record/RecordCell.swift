@@ -69,7 +69,7 @@ class RecordCell: UITableViewCell {
             setHeader(topY: topY, size: avatarHeight, record: record)
             
             topY += 5 + avatarHeight + 5
-            topY = setText(text: record.text, topY: topY)
+            topY = setText(text: record.text, topY: topY, numCopy: nil)
             
             let aView = AttachmentsView()
             aView.tag = 250
@@ -126,7 +126,7 @@ class RecordCell: UITableViewCell {
                     setHeader(topY: topY, size: avatarHeight2, record: record.copy[index])
                     
                     topY += 5 + avatarHeight2 + 5
-                    topY = setText(text: record.copy[index].text.prepareTextForPublic(), topY: topY)
+                    topY = setText(text: record.copy[index].text.prepareTextForPublic(), topY: topY, numCopy: index)
                     
                     let aView = AttachmentsView()
                     aView.tag = 250
@@ -295,7 +295,7 @@ class RecordCell: UITableViewCell {
         self.addSubview(dateLabel)
     }
     
-    func setText(text: String, topY: CGFloat) -> CGFloat {
+    func setText(text: String, topY: CGFloat, numCopy: Int!) -> CGFloat {
         
         var topY = topY
         
@@ -316,6 +316,19 @@ class RecordCell: UITableViewCell {
         
         label.frame = CGRect(x: leftX, y: topY, width: maxWidth, height: size.height)
         self.addSubview(label)
+        
+        let tap = UITapGestureRecognizer()
+        label.isUserInteractionEnabled = true
+        label.addGestureRecognizer(tap)
+        tap.add {
+            if let controller = self.delegate as? RecordController {
+                if let index = numCopy {
+                    controller.openWallRecord(ownerID: self.record.copy[index].ownerID, postID: self.record.copy[index].id, accessKey: "", type: "post")
+                }
+            } else {
+                self.delegate.openWallRecord(ownerID: self.record.ownerID, postID: self.record.id, accessKey: "", type: "post")
+            }
+        }
         
         topY += size.height
         
@@ -814,7 +827,10 @@ class RecordCell: UITableViewCell {
             self.addSubview(commentsButton)
             
             commentsButton.add(for: .touchUpInside) {
-                self.commentsButton.smallButtonTouched()
+                if (self.delegate as? RecordController) == nil {
+                    self.commentsButton.smallButtonTouched()
+                    self.delegate.openWallRecord(ownerID: self.record.ownerID, postID: self.record.id, accessKey: "", type: "post")
+                }
             }
             
             viewsButton.tag = 250
