@@ -13,7 +13,7 @@ class ProfileView: UIView {
 
     var delegate: ProfileViewController!
     var user: UserProfile!
-    var photos: [Photos] = []
+    var photos: [Photo] = []
     
     var avatarImage = UIImageView()
     var userInfoView = UIView()
@@ -160,16 +160,11 @@ class ProfileView: UIView {
                 label2.frame = CGRect(x: 10 + size1.width, y: 10, width: width - 20 - size1.width, height: 20)
                 photosView.addSubview(label2)
                 
-                var num = 5
-                if photos.count < 5 {
-                    num = photos.count
-                }
-                
                 var leftX: CGFloat = 10
-                for index in 0...num-1 {
+                for index in 0...min(4, photos.count-1) {
                     let photo = UIImageView()
                     
-                    let getCacheImage = GetCacheImage(url: photos[index].bigPhotoURL, lifeTime: .avatarImage)
+                    let getCacheImage = GetCacheImage(url: photos[index].photo604, lifeTime: .avatarImage)
                     getCacheImage.completionBlock = {
                         OperationQueue.main.addOperation {
                             photo.image = getCacheImage.outputImage
@@ -183,6 +178,13 @@ class ProfileView: UIView {
                     photo.frame = CGRect(x: leftX, y: 40, width: photoHeight, height: photoHeight)
                     photosView.addSubview(photo)
                     leftX += photoHeight + 10
+                    
+                    let tap = UITapGestureRecognizer()
+                    photo.isUserInteractionEnabled = true
+                    photo.addGestureRecognizer(tap)
+                    tap.add {
+                        self.delegate.openPhotoViewController(numPhoto: index, photos: self.photos, delegate: self.delegate)
+                    }
                 }
                 
                 photosView.frame = CGRect(x: 10, y: topY, width: width, height: photoHeight + 50)
@@ -753,6 +755,45 @@ class ProfileView: UIView {
                     self.avatarImage.layer.borderColor = UIColor.gray.cgColor
                     self.avatarImage.clipsToBounds = true
                 }
+            }
+            
+            let tap = UITapGestureRecognizer()
+            avatarImage.isUserInteractionEnabled = true
+            avatarImage.addGestureRecognizer(tap)
+            tap.add {
+                var photos: [Photo] = []
+                var numPhoto = -1
+                
+                let comps = profile.avatarID.components(separatedBy: "_")
+                if comps.count > 1, let ownerID = Int(comps[0]), let id = Int(comps[1]) {
+                    
+                    let photo = Photo(json: JSON.null)
+                    photo.ownerID = ownerID
+                    photo.id = id
+                    
+                    if self.photos.count > 0 {
+                        for index in 0...self.photos.count - 1 {
+                            if photo.id == self.photos[index].id {
+                                numPhoto = index
+                                photos = self.photos
+                            }
+                        }
+                    }
+                    
+                    if numPhoto == -1 && photos.count == 0 {
+                        photo.photo807 = profile.maxPhotoOrigURL
+                        photo.photo604 = profile.maxPhotoOrigURL
+                        photo.photo1280 = profile.maxPhotoOrigURL
+                        photo.photo2560 = profile.maxPhotoOrigURL
+                        photo.width = Int(self.delegate.tableView.bounds.width)
+                        photo.height = Int(self.delegate.tableView.bounds.width)
+                        
+                        numPhoto = 0
+                        photos.append(photo)
+                    }
+                }
+                
+                self.delegate.openPhotoViewController(numPhoto: numPhoto, photos: photos, delegate: self.delegate)
             }
         }
     }

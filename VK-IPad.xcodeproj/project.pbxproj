@@ -64,6 +64,9 @@
 		17A1A5BD20D8E6A700D9CE00 /* ParseWall.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A1A5BC20D8E6A700D9CE00 /* ParseWall.swift */; };
 		17A1A5BF20D8E7FD00D9CE00 /* GroupProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A1A5BE20D8E7FD00D9CE00 /* GroupProfileView.swift */; };
 		17A1A5C120D8EA4C00D9CE00 /* ReloadGroupProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A1A5C020D8EA4C00D9CE00 /* ReloadGroupProfileController.swift */; };
+		17B134A320DA8B720058E1A8 /* PhotoViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B134A220DA8B720058E1A8 /* PhotoViewCell.swift */; };
+		17B134A520DA8B840058E1A8 /* PhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B134A420DA8B840058E1A8 /* PhotoViewController.swift */; };
+		17B134A720DACD110058E1A8 /* Likes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B134A620DACD110058E1A8 /* Likes.swift */; };
 		17DD5DB820D7CBE20019938D /* AttachmentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17DD5DB720D7CBE20019938D /* AttachmentsView.swift */; };
 		17EBC3A120D51A46009130FC /* Attachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17EBC3A020D51A46009130FC /* Attachment.swift */; };
 		17EBC3A320D52C5D009130FC /* Video.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17EBC3A220D52C5D009130FC /* Video.swift */; };
@@ -131,6 +134,9 @@
 		17A1A5BE20D8E7FD00D9CE00 /* GroupProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupProfileView.swift; sourceTree = "<group>"; };
 		17A1A5C020D8EA4C00D9CE00 /* ReloadGroupProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReloadGroupProfileController.swift; sourceTree = "<group>"; };
 		17AF810F20D11D1F00FF1913 /* VK-IPad.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "VK-IPad.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		17B134A220DA8B720058E1A8 /* PhotoViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoViewCell.swift; sourceTree = "<group>"; };
+		17B134A420DA8B840058E1A8 /* PhotoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoViewController.swift; sourceTree = "<group>"; };
+		17B134A620DACD110058E1A8 /* Likes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Likes.swift; sourceTree = "<group>"; };
 		17DD5DB720D7CBE20019938D /* AttachmentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentsView.swift; sourceTree = "<group>"; };
 		17EBC3A020D51A46009130FC /* Attachment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Attachment.swift; sourceTree = "<group>"; };
 		17EBC3A220D52C5D009130FC /* Video.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Video.swift; sourceTree = "<group>"; };
@@ -200,6 +206,7 @@
 		174912AE20D300DC00FCF9F9 /* VK-IPad */ = {
 			isa = PBXGroup;
 			children = (
+				17A1A5C220DA7EE800D9CE00 /* Photos */,
 				173D667D20D40FD900EEBF46 /* AdditionalFunction */,
 				173D667020D3F54600EEBF46 /* Record */,
 				173D666920D3CA9F00EEBF46 /* ReloadInterface */,
@@ -252,6 +259,7 @@
 				17424FEC20D53DC100F52C4C /* Link.swift */,
 				17424FEE20D591E800F52C4C /* Document.swift */,
 				17424FF020D5A3C400F52C4C /* Poll.swift */,
+				17B134A620DACD110058E1A8 /* Likes.swift */,
 			);
 			path = Objects;
 			sourceTree = "<group>";
@@ -328,6 +336,15 @@
 				17A1A5BC20D8E6A700D9CE00 /* ParseWall.swift */,
 			);
 			path = ParseServerData;
+			sourceTree = "<group>";
+		};
+		17A1A5C220DA7EE800D9CE00 /* Photos */ = {
+			isa = PBXGroup;
+			children = (
+				17B134A420DA8B840058E1A8 /* PhotoViewController.swift */,
+				17B134A220DA8B720058E1A8 /* PhotoViewCell.swift */,
+			);
+			path = Photos;
 			sourceTree = "<group>";
 		};
 		17AF810620D11D1F00FF1913 = {
@@ -502,6 +519,7 @@
 				17A1A5BF20D8E7FD00D9CE00 /* GroupProfileView.swift in Sources */,
 				174912DD20D300DD00FCF9F9 /* Photos.swift in Sources */,
 				174912E920D300DD00FCF9F9 /* StartViewController.swift in Sources */,
+				17B134A520DA8B840058E1A8 /* PhotoViewController.swift in Sources */,
 				17DD5DB820D7CBE20019938D /* AttachmentsView.swift in Sources */,
 				17424FED20D53DC100F52C4C /* Link.swift in Sources */,
 				173D666B20D3CAD100EEBF46 /* ReloadGroupsListController.swift in Sources */,
@@ -514,6 +532,7 @@
 				174912F520D300DD00FCF9F9 /* AppDelegate.swift in Sources */,
 				174912E320D300DD00FCF9F9 /* Date.swift in Sources */,
 				174912DE20D300DD00FCF9F9 /* UserProfile.swift in Sources */,
+				17B134A320DA8B720058E1A8 /* PhotoViewCell.swift in Sources */,
 				173D667B20D40FCE00EEBF46 /* URLsInLabels.swift in Sources */,
 				173D667C20D40FCE00EEBF46 /* KGCopyableLabel.swift in Sources */,
 				17424FEB20D53C2100F52C4C /* Audio.swift in Sources */,
@@ -529,6 +548,7 @@
 				174912E520D300DD00FCF9F9 /* TableViewCell.swift in Sources */,
 				1749130720D3055100FCF9F9 /* FriendRequest.swift in Sources */,
 				174912F720D300DD00FCF9F9 /* ViewControllerUtils.swift in Sources */,
+				17B134A720DACD110058E1A8 /* Likes.swift in Sources */,
 				173D666120D3C07900EEBF46 /* Control.swift in Sources */,
 				174912E420D300DD00FCF9F9 /* Label.swift in Sources */,
 				173D667920D40FCE00EEBF46 /* UITextViewPlaceholder.swift in Sources */,

@@ -37,6 +37,7 @@ class Attachment {
             photo.photo807 = json["photo"]["photo_807"].stringValue
             photo.photo1280 = json["photo"]["photo_1280"].stringValue
             photo.photo2560 = json["photo"]["photo_2560"].stringValue
+            photo.accessKey = json["photo"]["access_key"].stringValue
             self.photo.append(photo)
         }
         
@@ -77,6 +78,7 @@ class Attachment {
             doc.url = json["doc"]["url"].stringValue
             doc.date = json["doc"]["date"].intValue
             doc.type = json["doc"]["type"].intValue
+            doc.accessKey = json["doc"]["access_key"].stringValue
             for index in 0...3 {
                 let url = json["doc"]["preview"]["photo"]["sizes"][index]["src"].stringValue
                 if url != "" {
@@ -98,6 +100,7 @@ class Attachment {
             audio.duration = json["audio"]["duration"].intValue
             audio.url = json["audio"]["url"].intValue
             audio.albumID = json["audio"]["album_id"].intValue
+            audio.accessKey = json["audio"]["access_key"].stringValue
             self.audio.append(audio)
         }
         

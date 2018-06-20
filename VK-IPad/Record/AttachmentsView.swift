@@ -10,6 +10,8 @@ import UIKit
 
 class AttachmentsView: UIView {
 
+    var delegate: UIViewController!
+    
     var photos: [Photo] = []
     
     func configureAttachView(attaches: [Attachment], maxSize: CGFloat, getRow: Bool) -> CGFloat {
@@ -68,6 +70,13 @@ class AttachmentsView: UIView {
                     photoImage.frame = CGRect(x: 0, y: topY + 2.5, width: width, height: height)
                     photoImage.clipsToBounds = true
                     self.addSubview(photoImage)
+                    
+                    let tap = UITapGestureRecognizer()
+                    photoImage.isUserInteractionEnabled = true
+                    photoImage.addGestureRecognizer(tap)
+                    tap.add {
+                        self.delegate.openPhotoViewController(numPhoto: 0, photos: self.photos, delegate: self.delegate)
+                    }
                 }
                 topY += height + 2.5
             case 3,5,7,9:
@@ -110,6 +119,13 @@ class AttachmentsView: UIView {
                     photoImage.frame = CGRect(x: 0, y: topY + 2.5, width: width, height: height)
                     photoImage.clipsToBounds = true
                     self.addSubview(photoImage)
+                    
+                    let tap = UITapGestureRecognizer()
+                    photoImage.isUserInteractionEnabled = true
+                    photoImage.addGestureRecognizer(tap)
+                    tap.add {
+                        self.delegate.openPhotoViewController(numPhoto: 0, photos: self.photos, delegate: self.delegate)
+                    }
                 }
                 topY += height + 2.5
                 
@@ -171,6 +187,13 @@ class AttachmentsView: UIView {
                         photoImage1.clipsToBounds = true
                         self.addSubview(photoImage1)
                         
+                        let tap1 = UITapGestureRecognizer()
+                        photoImage1.isUserInteractionEnabled = true
+                        photoImage1.addGestureRecognizer(tap1)
+                        tap1.add {
+                            self.delegate.openPhotoViewController(numPhoto: index, photos: self.photos, delegate: self.delegate)
+                        }
+                        
                         let photoImage2 = UIImageView()
                         photoImage2.tag = 250
                         
@@ -197,6 +220,13 @@ class AttachmentsView: UIView {
                         photoImage2.frame = CGRect(x: width11, y: topY + 2.5, width: width22 - 2.5, height: height1)
                         photoImage2.clipsToBounds = true
                         self.addSubview(photoImage2)
+                        
+                        let tap2 = UITapGestureRecognizer()
+                        photoImage2.isUserInteractionEnabled = true
+                        photoImage2.addGestureRecognizer(tap2)
+                        tap2.add {
+                            self.delegate.openPhotoViewController(numPhoto: index+1, photos: self.photos, delegate: self.delegate)
+                        }
                     }
                     topY += height1 + 2.5
                 }
@@ -259,6 +289,13 @@ class AttachmentsView: UIView {
                         photoImage1.clipsToBounds = true
                         self.addSubview(photoImage1)
                         
+                        let tap1 = UITapGestureRecognizer()
+                        photoImage1.isUserInteractionEnabled = true
+                        photoImage1.addGestureRecognizer(tap1)
+                        tap1.add {
+                            self.delegate.openPhotoViewController(numPhoto: index, photos: self.photos, delegate: self.delegate)
+                        }
+                        
                         let photoImage2 = UIImageView()
                         photoImage2.tag = 250
                         
@@ -285,6 +322,13 @@ class AttachmentsView: UIView {
                         photoImage2.frame = CGRect(x: width11, y: topY + 2.5, width: width22 - 2.5, height: height1)
                         photoImage2.clipsToBounds = true
                         self.addSubview(photoImage2)
+                        
+                        let tap2 = UITapGestureRecognizer()
+                        photoImage2.isUserInteractionEnabled = true
+                        photoImage2.addGestureRecognizer(tap2)
+                        tap2.add {
+                            self.delegate.openPhotoViewController(numPhoto: index+1, photos: self.photos, delegate: self.delegate)
+                        }
                     }
                     topY += height1 + 2.5
                 }

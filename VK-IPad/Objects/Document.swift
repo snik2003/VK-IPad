@@ -22,6 +22,7 @@ class Document {
     var width = 0
     var height = 0
     var videoURL = ""
+    var accessKey = ""
     
     init(json: JSON) {
         self.id = json["id"].intValue
@@ -32,6 +33,7 @@ class Document {
         self.url = json["url"].stringValue
         self.date = json["date"].intValue
         self.type = json["type"].intValue
+        self.accessKey = json["access_key"].stringValue
         
         for index in 0...3 {
             let url = json["preview"]["photo"]["sizes"][index]["src"].stringValue

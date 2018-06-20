@@ -73,6 +73,7 @@ class RecordCell: UITableViewCell {
             
             let aView = AttachmentsView()
             aView.tag = 250
+            aView.delegate = self.delegate
             let aHeight = aView.configureAttachView(attaches: record.attachments, maxSize: maxWidth - 40, getRow: false)
             aView.frame = CGRect(x: leftX + 20, y: topY, width: maxWidth - 40, height: aHeight)
             self.addSubview(aView)
@@ -129,6 +130,7 @@ class RecordCell: UITableViewCell {
                     
                     let aView = AttachmentsView()
                     aView.tag = 250
+                    aView.delegate = self.delegate
                     let aHeight = aView.configureAttachView(attaches: record.copy[index].attachments, maxSize: maxWidth2 - 40, getRow: false)
                     aView.frame = CGRect(x: leftX + 20, y: topY, width: maxWidth2 - 40, height: aHeight)
                     self.addSubview(aView)

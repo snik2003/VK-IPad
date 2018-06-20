@@ -9,34 +9,6 @@
 import Foundation
 import SwiftyJSON
 
-class Photos {
-    var uid: String = ""
-    var pid: String = ""
-    var createdTime: Int = 0
-    var width: Int = 0
-    var height: Int = 0
-    var photoURL: String = ""
-    var photoAccessKey: String = ""
-    var smallPhotoURL: String = ""
-    var bigPhotoURL: String = ""
-    var xbigPhotoURL: String = ""
-    var xxbigPhotoURL: String = ""
-    
-    init(json: JSON) {
-        self.uid = json["owner_id"].stringValue
-        self.pid = json["id"].stringValue
-        self.createdTime = json["date"].intValue
-        self.width = json["width"].intValue
-        self.height = json["height"].intValue
-        self.photoURL = json["photo_130"].stringValue
-        self.photoAccessKey = json["access_key"].stringValue
-        self.smallPhotoURL = json["photo_75"].stringValue
-        self.bigPhotoURL = json["photo_604"].stringValue
-        self.xbigPhotoURL = json["photo_807"].stringValue
-        self.xxbigPhotoURL = json["photo_1204"].stringValue
-    }
-}
-
 class Photo {
     var id = 0
     var albumID = 0
@@ -52,6 +24,16 @@ class Photo {
     var photo807 = ""
     var photo1280 = ""
     var photo2560 = ""
+    var accessKey = ""
+    
+    var commentsCount = 0
+    var canComment = 0
+    var likesCount = 0
+    var userLikes = 0
+    var tagsCount = 0
+    var userCanRepost = 0
+    var repostCount = 0
+    var userReposted = 0
     
     init(json: JSON) {
         self.id = json["id"].intValue
@@ -68,5 +50,14 @@ class Photo {
         self.photo807 = json["photo_807"].stringValue
         self.photo1280 = json["photo_1280"].stringValue
         self.photo2560 = json["photo_2560"].stringValue
+        self.accessKey = json["access_key"].stringValue
+        
+        self.canComment = json["comments"]["can_comment"].intValue
+        self.commentsCount = json["comments"]["count"].intValue
+        self.likesCount = json["likes"]["count"].intValue
+        self.userLikes = json["likes"]["user_likes"].intValue
+        self.userCanRepost = json["can_repost"].intValue
+        self.repostCount = json["reposts"]["count"].intValue
+        self.userReposted = json["reposts"]["user_reposted"].intValue
     }
 }

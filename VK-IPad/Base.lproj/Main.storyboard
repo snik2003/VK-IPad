@@ -90,6 +90,62 @@
             </objects>
             <point key="canvasLocation" x="1579.0629575402634" y="1078.7109375"/>
         </scene>
+        <!--Photo View Controller-->
+        <scene sceneID="wHi-MK-8KS">
+            <objects>
+                <tableViewController storyboardIdentifier="PhotoViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="nVz-en-TpL" customClass="PhotoViewController" customModule="VK_IPad" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="mjE-dT-GkQ">
+                        <rect key="frame" x="0.0" y="0.0" width="1366" height="1024"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <inset key="separatorInset" minX="15" minY="0.0" maxX="15" maxY="0.0"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="photoCell" rowHeight="400" id="eP6-84-eGi" customClass="PhotoViewCell" customModule="VK_IPad" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="28" width="1366" height="400"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="eP6-84-eGi" id="GHU-oj-vqr">
+                                    <rect key="frame" x="0.0" y="0.0" width="1366" height="399.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Qn5-6Y-cDn">
+                                            <rect key="frame" x="0.0" y="0.0" width="1366" height="400"/>
+                                        </imageView>
+                                    </subviews>
+                                </tableViewCellContentView>
+                                <color key="backgroundColor" red="0.90588235289999997" green="0.90980392160000001" blue="0.92549019610000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstItem="Qn5-6Y-cDn" firstAttribute="height" secondItem="eP6-84-eGi" secondAttribute="height" id="5kh-kO-fsN"/>
+                                    <constraint firstItem="Qn5-6Y-cDn" firstAttribute="width" secondItem="eP6-84-eGi" secondAttribute="width" id="Hu8-5A-HDc"/>
+                                    <constraint firstItem="Qn5-6Y-cDn" firstAttribute="centerY" secondItem="eP6-84-eGi" secondAttribute="centerY" id="YQf-4g-sqB"/>
+                                    <constraint firstItem="Qn5-6Y-cDn" firstAttribute="centerX" secondItem="eP6-84-eGi" secondAttribute="centerX" id="u18-34-Kdl"/>
+                                </constraints>
+                                <connections>
+                                    <outlet property="photoImage" destination="Qn5-6Y-cDn" id="7cT-6V-SXW"/>
+                                </connections>
+                            </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="likesCell" rowHeight="40" id="OKL-Iv-xyu" customClass="PhotoViewCell" customModule="VK_IPad" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="428" width="1366" height="40"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="OKL-Iv-xyu" id="Uib-sT-s6K">
+                                    <rect key="frame" x="0.0" y="0.0" width="1366" height="39.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                                <color key="backgroundColor" red="0.90588235289999997" green="0.90980392160000001" blue="0.92549019610000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="nVz-en-TpL" id="NbW-Zl-a9A"/>
+                            <outlet property="delegate" destination="nVz-en-TpL" id="gon-Bb-a0Y"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="P4x-rD-Ajw">
+                        <barButtonItem key="backBarButtonItem" title="Назад" id="8zg-BA-c4r"/>
+                    </navigationItem>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Smm-i0-HXn" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2897" y="1078"/>
+        </scene>
         <!--Users Controller-->
         <scene sceneID="a2h-Da-WwL">
             <objects>
@@ -282,51 +338,13 @@
                         <barButtonItem key="backBarButtonItem" title="Назад" id="2fu-Tz-NDI"/>
                     </navigationItem>
                     <refreshControl key="refreshControl" opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="WI2-5i-GVJ">
+                        <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <attributedString key="attributedTitle">
                             <fragment content="Обновляем данные...">
                                 <attributes>
                                     <font key="NSFont" size="10" name="Verdana"/>
-                                    <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
-                                        <tabStops>
-                                            <textTab alignment="left" location="28">
-                                                <options/>
-                                            </textTab>
-                                            <textTab alignment="left" location="56">
-                                                <options/>
-                                            </textTab>
-                                            <textTab alignment="left" location="84">
-                                                <options/>
-                                            </textTab>
-                                            <textTab alignment="left" location="112">
-                                                <options/>
-                                            </textTab>
-                                            <textTab alignment="left" location="140">
-                                                <options/>
-                                            </textTab>
-                                            <textTab alignment="left" location="168">
-                                                <options/>
-                                            </textTab>
-                                            <textTab alignment="left" location="196">
-                                                <options/>
-                                            </textTab>
-                                            <textTab alignment="left" location="224">
-                                                <options/>
-                                            </textTab>
-                                            <textTab alignment="left" location="252">
-                                                <options/>
-                                            </textTab>
-                                            <textTab alignment="left" location="280">
-                                                <options/>
-                                            </textTab>
-                                            <textTab alignment="left" location="308">
-                                                <options/>
-                                            </textTab>
-                                            <textTab alignment="left" location="336">
-                                                <options/>
-                                            </textTab>
-                                        </tabStops>
-                                    </paragraphStyle>
+                                    <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
                                 </attributes>
                             </fragment>
                         </attributedString>
@@ -808,6 +826,26 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Zqj-ZO-MEF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="886" y="3199"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="Mrr-FT-Hke">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="5Fg-hT-N32" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="pt7-gk-R32">
+                        <rect key="frame" x="0.0" y="20" width="1366" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="barTintColor" red="0.019607843140000001" green="0.4039215686" blue="0.64313725489999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="nVz-en-TpL" kind="relationship" relationship="rootViewController" id="YCi-9P-am4"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="fib-yQ-MWQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2234" y="1078"/>
         </scene>
     </scenes>
     <resources>

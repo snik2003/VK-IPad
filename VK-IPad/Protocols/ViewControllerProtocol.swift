@@ -270,6 +270,19 @@ extension UIViewController: ViewControllerProtocol {
         let detailVC = self.splitViewController!.viewControllers[self.splitViewController!.viewControllers.endIndex - 1]
         detailVC.childViewControllers[0].navigationController?.pushViewController(controller, animated: true)
     }
+    
+    func openPhotoViewController(numPhoto: Int, photos: [Photo], delegate: UIViewController) {
+        let photoViewController = self.storyboard?.instantiateViewController(withIdentifier: "PhotoViewController") as! PhotoViewController
+        
+        
+        photoViewController.numPhoto = numPhoto
+        photoViewController.photos = photos
+        
+        photoViewController.delegate = delegate
+        
+        let detailVC = self.splitViewController!.viewControllers[self.splitViewController!.viewControllers.endIndex - 1]
+        detailVC.childViewControllers[0].navigationController?.pushViewController(photoViewController, animated: true)
+    }
 }
 
 

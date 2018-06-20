@@ -28,7 +28,15 @@ extension UIControl {
     }
 }
 
-extension UITapGestureRecognizer {
+extension UIGestureRecognizer {
+    func add (_ closure: @escaping ()->()) {
+        let sleeve = ClosureSleeve(closure)
+        addTarget(sleeve, action: #selector(ClosureSleeve.invoke))
+        objc_setAssociatedObject(self, String(format: "[%d]", arc4random()), sleeve, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN)
+    }
+}
+
+/*extension UITapGestureRecognizer {
     func add (_ closure: @escaping ()->()) {
         let sleeve = ClosureSleeve(closure)
         addTarget(sleeve, action: #selector(ClosureSleeve.invoke))
@@ -42,4 +50,4 @@ extension UILongPressGestureRecognizer {
         addTarget(sleeve, action: #selector(ClosureSleeve.invoke))
         objc_setAssociatedObject(self, String(format: "[%d]", arc4random()), sleeve, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN)
     }
-}
+}*/

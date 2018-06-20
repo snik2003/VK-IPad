@@ -15,7 +15,7 @@ import WebKit
 class ProfileViewController: UITableViewController, WKNavigationDelegate {
 
     var userProfile: [UserProfile] = []
-    var photos: [Photos] = []
+    var photos: [Photo] = []
   
     var heights: [IndexPath: CGFloat] = [:]
     var recordsCount: Int = 0
@@ -181,7 +181,7 @@ class ProfileViewController: UITableViewController, WKNavigationDelegate {
             guard let json = try? JSON(data: data) else { print("json error"); return }
             
             self.userProfile = json["response"][0].compactMap { UserProfile(json: $0.1) }
-            self.photos = json["response"][1]["items"].compactMap { Photos(json: $0.1) }
+            self.photos = json["response"][1]["items"].compactMap { Photo(json: $0.1) }
             
             //print(json["response"][2])
             

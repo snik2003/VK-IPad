@@ -517,6 +517,7 @@ class GroupProfileView: UIView {
         let parameters = [
             "access_token": vkSingleton.shared.accessToken,
             "group_id": "\(profile.gid)",
+            "count": "30",
             "fields": "photo_100, first_name",
             "v": vkSingleton.shared.version
         ]
@@ -576,102 +577,6 @@ class GroupProfileView: UIView {
                             height += faceSize + 5
                         }
                     }
-            
-                    /*if users.count > 4 {
-                        var x1: CGFloat = 5
-                        for index in 4...min(7,users.count-1) {
-                            let faceImage = UIImageView()
-                            
-                            let getCacheImage = GetCacheImage(url: users[index].photo100, lifeTime: .avatarImage)
-                            getCacheImage.completionBlock = {
-                                OperationQueue.main.addOperation {
-                                    faceImage.image = getCacheImage.outputImage
-                                    faceImage.layer.cornerRadius = faceSize / 2
-                                    faceImage.contentMode = .scaleAspectFill
-                                    faceImage.clipsToBounds = true
-                                }
-                            }
-                            OperationQueue().addOperation(getCacheImage)
-                            
-                            let tap = UITapGestureRecognizer()
-                            faceImage.isUserInteractionEnabled = true
-                            faceImage.addGestureRecognizer(tap)
-                            tap.add {
-                                if let id = Int(users[index].uid) {
-                                    self.delegate.openProfileController(id: id, name: "\(users[index].firstName) \(users[index].lastName)")
-                                }
-                            }
-                            faceImage.frame = CGRect(x: x1, y: height, width: faceSize, height: faceSize)
-                            view.addSubview(faceImage)
-                            
-                            x1 += faceSize + 5
-                        }
-                        height += faceSize + 5
-                    }
-                    
-                    if users.count > 12 {
-                        var x1: CGFloat = 5
-                        for index in 12...min(15,users.count-1) {
-                            let faceImage = UIImageView()
-                            
-                            let getCacheImage = GetCacheImage(url: users[index].photo100, lifeTime: .avatarImage)
-                            getCacheImage.completionBlock = {
-                                OperationQueue.main.addOperation {
-                                    faceImage.image = getCacheImage.outputImage
-                                    faceImage.layer.cornerRadius = faceSize / 2
-                                    faceImage.contentMode = .scaleAspectFill
-                                    faceImage.clipsToBounds = true
-                                }
-                            }
-                            OperationQueue().addOperation(getCacheImage)
-                            
-                            let tap = UITapGestureRecognizer()
-                            faceImage.isUserInteractionEnabled = true
-                            faceImage.addGestureRecognizer(tap)
-                            tap.add {
-                                if let id = Int(users[index].uid) {
-                                    self.delegate.openProfileController(id: id, name: "\(users[index].firstName) \(users[index].lastName)")
-                                }
-                            }
-                            faceImage.frame = CGRect(x: x1, y: height, width: faceSize, height: faceSize)
-                            view.addSubview(faceImage)
-                            
-                            x1 += faceSize + 5
-                        }
-                        height += faceSize + 5
-                    }
-                    
-                    if users.count > 4 {
-                        var x1: CGFloat = 5
-                        for index in 4...min(7,users.count-1) {
-                            let faceImage = UIImageView()
-                            
-                            let getCacheImage = GetCacheImage(url: users[index].photo100, lifeTime: .avatarImage)
-                            getCacheImage.completionBlock = {
-                                OperationQueue.main.addOperation {
-                                    faceImage.image = getCacheImage.outputImage
-                                    faceImage.layer.cornerRadius = faceSize / 2
-                                    faceImage.contentMode = .scaleAspectFill
-                                    faceImage.clipsToBounds = true
-                                }
-                            }
-                            OperationQueue().addOperation(getCacheImage)
-                            
-                            let tap = UITapGestureRecognizer()
-                            faceImage.isUserInteractionEnabled = true
-                            faceImage.addGestureRecognizer(tap)
-                            tap.add {
-                                if let id = Int(users[index].uid) {
-                                    self.delegate.openProfileController(id: id, name: "\(users[index].firstName) \(users[index].lastName)")
-                                }
-                            }
-                            faceImage.frame = CGRect(x: x1, y: height, width: faceSize, height: faceSize)
-                            view.addSubview(faceImage)
-                            
-                            x1 += faceSize + 5
-                        }
-                        height += faceSize + 5
-                    }*/
                     
                     height += 5
                 }

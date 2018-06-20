@@ -17,6 +17,7 @@ class Audio {
     var duration = 0
     var url = 0
     var albumID = 0
+    var accessKey = ""
     
     init(json: JSON) {
         self.id = json["id"].intValue
@@ -26,5 +27,6 @@ class Audio {
         self.duration = json["duration"].intValue
         self.url = json["url"].intValue
         self.albumID = json["album_id"].intValue
+        self.accessKey = json["access_key"].stringValue
     }
 }
