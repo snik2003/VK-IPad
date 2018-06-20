@@ -236,10 +236,9 @@ class GroupProfileViewController: UITableViewController {
             profileView.profile = groupProfile[0]
             
             let height = profileView.configureView()
-            
-            profileView.frame = CGRect(x: 0, y: 0, width: self.tableView.bounds.width, height: height)
-            
-            self.tableView.tableHeaderView = profileView
+                
+            self.profileView.frame = CGRect(x: 0, y: 0, width: self.tableView.bounds.width, height: height)
+            self.tableView.tableHeaderView = self.profileView
         }
     }
     
@@ -289,6 +288,9 @@ class GroupProfileViewController: UITableViewController {
             }
             
             OperationQueue.main.addOperation {
+                self.profileView.updateOwnerButtons()
+                self.profileView.recordsCountLabel.text = "Всего записей: \(self.recordsCount)"
+                
                 self.offset += self.count
                 self.tableView.reloadData()
                 self.refreshControl?.endRefreshing()

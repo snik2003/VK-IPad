@@ -19,7 +19,8 @@ class ReloadGroupProfileController: Operation {
     override func main() {
         guard let parseGroupWall = dependencies[0] as? ParseWall, let parseGroupProfile = dependencies[1] as? ParseGroupProfile, let parsePostponed = dependencies[2] as? ParseWall else { return }
         
-        
+        controller.recordsCount = parseGroupWall.count
+            
         controller.postponedWall = parsePostponed.wall
         controller.postponedWallProfiles = parsePostponed.profiles
         controller.postponedWallGroups = parsePostponed.groups

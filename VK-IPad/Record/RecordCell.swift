@@ -491,9 +491,11 @@ class RecordCell: UITableViewCell {
             let titleLabel = UILabel()
             titleLabel.tag = 250
             titleLabel.frame = CGRect(x: leftX + 20, y: webView.frame.maxY, width: videoWidth-200, height: 20)
-            titleLabel.text = "Видео: \(attach.video[0].title)"
+            titleLabel.text = "\(attach.video[0].title)"
             titleLabel.textColor = titleLabel.tintColor
             titleLabel.font = UIFont(name: "Verdana", size: 12)!
+            titleLabel.adjustsFontSizeToFitWidth = true
+            titleLabel.minimumScaleFactor = 0.8
             
             let viewsLabel = UILabel()
             viewsLabel.tag = 250

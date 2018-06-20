@@ -14,6 +14,7 @@ class ParseWall: Operation {
     var wall: [Record] = []
     var profiles: [UserProfile] = []
     var groups: [GroupProfile] = []
+    var count: Int = 0
     
     override func main() {
         guard let getServerDataOperation = dependencies.first as? GetServerDataOperation, let data = getServerDataOperation.data else { return }
@@ -23,6 +24,7 @@ class ParseWall: Operation {
         let wallData = json["response"]["items"].compactMap { Record(json: $0.1) }
         let profilesData = json["response"]["profiles"].compactMap { UserProfile(json: $0.1) }
         let groupsData = json["response"]["groups"].compactMap { GroupProfile(json: $0.1) }
+        count = json["response"]["count"].intValue
         
         wall = wallData
         profiles = profilesData

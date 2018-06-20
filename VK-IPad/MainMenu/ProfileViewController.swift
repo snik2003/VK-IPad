@@ -157,7 +157,7 @@ class ProfileViewController: UITableViewController, WKNavigationDelegate {
         heights.removeAll(keepingCapacity: false)
         self.tableView.separatorStyle = .none
         
-        var code = "var a = API.users.get({\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"user_id\":\"\(userID)\",\"fields\":\"id,first_name,last_name,maiden_name,domain,sex,relation,bdate,home_town,has_photo,city,country,status,last_seen,online,photo_max_orig,photo_max,photo_id,followers_count,counters,deactivated,education,contacts,connections,site,about,interests,activities,books,games,movies,music,tv,quotes,first_name_abl,first_name_gen,first_name_acc,first_name_ins,can_post,can_send_friend_request,can_write_private_message,friend_status,is_favorite,blacklisted,blacklisted_by_me,crop_photo,is_hidden_from_feed,wall_default,personal,relatives\",\"v\":\"\(vkSingleton.shared.version)\"});\n"
+        var code = "var a = API.users.get({\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"user_id\":\"\(userID)\",\"fields\":\"id,first_name,last_name,maiden_name,domain,sex,relation,bdate,home_town,has_photo,city,country,status,last_seen,online,photo_max_orig,photo_max,photo_id,followers_count,counters,deactivated,education,contacts,connections,site,about,interests,activities,books,games,movies,music,tv,quotes,first_name_abl,first_name_gen,first_name_acc,first_name_ins,can_post,can_send_friend_request,can_write_private_message,friend_status,is_favorite,blacklisted,blacklisted_by_me,crop_photo,is_hidden_from_feed,wall_default,personal,relatives,can_see_all_posts\",\"v\":\"\(vkSingleton.shared.version)\"});\n"
         
         code = "\(code) var b = API.photos.getAll({\"owner_id\":\"\(userID)\",\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"extended\":1,\"count\":100,\"photo_sizes\":0,\"skip_hidden\":0,\"v\": \"\(vkSingleton.shared.version)\"});\n"
         
@@ -280,60 +280,76 @@ class ProfileViewController: UITableViewController, WKNavigationDelegate {
     }
     
     func refreshWall(filter: String) {
-        isRefresh = true
-        ViewControllerUtils().showActivityIndicator(uiView: self.view.superview!)
-        heights.removeAll(keepingCapacity: false)
-        filterRecords = filter
-        recordsCount = 0
-        
-        let url = "/method/wall.get"
-        let parameters = [
-            "access_token": vkSingleton.shared.accessToken,
-            "owner_id": userID,
-            "offset": "\(offset)",
-            "count": "\(count)",
-            "filter": filterRecords,
-            "extended": "1",
-            "v": vkSingleton.shared.version
-        ]
-        
-        let getServerDataOperation = GetServerDataOperation(url: url, parameters: parameters)
-        getServerDataOperation.completionBlock = {
-            guard let data = getServerDataOperation.data else { return }
+        if userProfile.count > 0 {
+            isRefresh = true
+            ViewControllerUtils().showActivityIndicator(uiView: self.view.superview!)
+            heights.removeAll(keepingCapacity: false)
+            filterRecords = filter
+            recordsCount = 0
             
-            guard let json = try? JSON(data: data) else { print("json error"); return }
-            let items = json["response"]["items"].compactMap { Record(json: $0.1) }
-            let profiles = json["response"]["profiles"].compactMap { UserProfile(json: $0.1) }
-            let groups = json["response"]["groups"].compactMap { GroupProfile(json: $0.1) }
-            
-            self.recordsCount = json["response"]["count"].intValue
-
-            if self.offset == 0 {
-                self.wall = items
-                self.wallProfiles = profiles
-                self.wallGroups = groups
-            } else {
-                for item in items {
-                    self.wall.append(item)
-                }
-                for profile in profiles {
-                    self.wallProfiles.append(profile)
-                }
-                for group in groups {
-                    self.wallGroups.append(group)
-                }
-            }
-            
-            OperationQueue.main.addOperation {
-                self.profileView.updateOwnerButtons()
-                self.profileView.recordsCountLabel.text = "Всего записей: \(self.recordsCount)"
+            if filterRecords == "others" && userProfile[0].canSeeAllPosts == 0 {
+                wall.removeAll(keepingCapacity: false)
+                wallGroups.removeAll(keepingCapacity: false)
+                wallProfiles.removeAll(keepingCapacity: false)
                 
-                self.offset += self.count
-                self.tableView.reloadData()
-                self.refreshControl?.endRefreshing()
+                profileView.updateOwnerButtons()
+                profileView.recordsCountLabel.text = "Всего записей: 0"
+                
+                offset += self.count
+                tableView.reloadData()
+                refreshControl?.endRefreshing()
                 ViewControllerUtils().hideActivityIndicator()
+            } else {
+                let url = "/method/wall.get"
+                let parameters = [
+                    "access_token": vkSingleton.shared.accessToken,
+                    "owner_id": userID,
+                    "offset": "\(offset)",
+                    "count": "\(count)",
+                    "filter": filterRecords,
+                    "extended": "1",
+                    "v": vkSingleton.shared.version
+                ]
+                
+                let getServerDataOperation = GetServerDataOperation(url: url, parameters: parameters)
+                getServerDataOperation.completionBlock = {
+                    guard let data = getServerDataOperation.data else { return }
+                    
+                    guard let json = try? JSON(data: data) else { print("json error"); return }
+                    let items = json["response"]["items"].compactMap { Record(json: $0.1) }
+                    let profiles = json["response"]["profiles"].compactMap { UserProfile(json: $0.1) }
+                    let groups = json["response"]["groups"].compactMap { GroupProfile(json: $0.1) }
+                    
+                    self.recordsCount = json["response"]["count"].intValue
+
+                    if self.offset == 0 {
+                        self.wall = items
+                        self.wallProfiles = profiles
+                        self.wallGroups = groups
+                    } else {
+                        for item in items {
+                            self.wall.append(item)
+                        }
+                        for profile in profiles {
+                            self.wallProfiles.append(profile)
+                        }
+                        for group in groups {
+                            self.wallGroups.append(group)
+                        }
+                    }
+                    
+                    OperationQueue.main.addOperation {
+                        self.profileView.updateOwnerButtons()
+                        self.profileView.recordsCountLabel.text = "Всего записей: \(self.recordsCount)"
+                        
+                        self.offset += self.count
+                        self.tableView.reloadData()
+                        self.refreshControl?.endRefreshing()
+                        ViewControllerUtils().hideActivityIndicator()
+                    }
+                }
+                OperationQueue().addOperation(getServerDataOperation)
             }
         }
-        OperationQueue().addOperation(getServerDataOperation)
     }
 }

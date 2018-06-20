@@ -25,7 +25,52 @@ class AttachmentsView: UIView {
         
         if photos.count > 0 {
             switch photos.count {
-            case 1,3,5,7,9:
+            case 1:
+                var width = CGFloat(photos[0].width)
+                var height = CGFloat(photos[0].height)
+                
+                if width > height {
+                    width = maxSize
+                    height = width * CGFloat(photos[0].height) / CGFloat(photos[0].width)
+                } else {
+                    height = maxSize
+                    width = height * CGFloat(photos[0].width) / CGFloat(photos[0].height)
+                }
+                
+                if !getRow {
+                    let photoImage = UIImageView()
+                    photoImage.tag = 250
+                    
+                    var url = photos[0].photo1280
+                    if url == "" {
+                        url = photos[0].photo807
+                        if url == "" {
+                            url = photos[0].photo604
+                        }
+                        if url == "" {
+                            url = photos[0].photo130
+                        }
+                    }
+                    let getCacheImage = GetCacheImage(url: url, lifeTime: .userPhotoImage)
+                    getCacheImage.completionBlock = {
+                        OperationQueue.main.addOperation {
+                            photoImage.image = getCacheImage.outputImage
+                            photoImage.clipsToBounds = true
+                            if width > height {
+                                photoImage.contentMode = .scaleAspectFill
+                            } else {
+                                photoImage.contentMode = .scaleAspectFit
+                            }
+                        }
+                    }
+                    OperationQueue().addOperation(getCacheImage)
+                    
+                    photoImage.frame = CGRect(x: 0, y: topY + 2.5, width: width, height: height)
+                    photoImage.clipsToBounds = true
+                    self.addSubview(photoImage)
+                }
+                topY += height + 2.5
+            case 3,5,7,9:
                 
                 var width = CGFloat(photos[0].width)
                 var height = CGFloat(photos[0].height)

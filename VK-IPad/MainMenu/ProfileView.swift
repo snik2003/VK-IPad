@@ -430,7 +430,7 @@ class ProfileView: UIView {
                     if profile.friendsCount >= 0 {
                         let label1 = UILabel()
                         label1.text = profile.friendsCount.getCounterToString()
-                        label1.textColor = label1.tintColor
+                        //label1.textColor = label1.tintColor
                         label1.textAlignment = .center
                         label1.font = UIFont(name: "Verdana-Bold", size: 16)
                         label1.adjustsFontSizeToFitWidth = true
@@ -462,7 +462,7 @@ class ProfileView: UIView {
                     if profile.commonFriendsCount > 0 {
                         let label1 = UILabel()
                         label1.text = profile.commonFriendsCount.getCounterToString()
-                        label1.textColor = label1.tintColor
+                        //label1.textColor = label1.tintColor
                         label1.textAlignment = .center
                         label1.font = UIFont(name: "Verdana-Bold", size: 16)
                         label1.adjustsFontSizeToFitWidth = true
@@ -494,7 +494,7 @@ class ProfileView: UIView {
                     if profile.followersCount > 0 {
                         let label1 = UILabel()
                         label1.text = profile.followersCount.getCounterToString()
-                        label1.textColor = label1.tintColor
+                        //label1.textColor = label1.tintColor
                         label1.textAlignment = .center
                         label1.font = UIFont(name: "Verdana-Bold", size: 16)
                         label1.adjustsFontSizeToFitWidth = true
@@ -526,7 +526,7 @@ class ProfileView: UIView {
                     if profile.groupsCount - profile.pagesCount > 0 {
                         let label1 = UILabel()
                         label1.text = (profile.groupsCount - profile.pagesCount).getCounterToString()
-                        label1.textColor = label1.tintColor
+                        //label1.textColor = label1.tintColor
                         label1.textAlignment = .center
                         label1.font = UIFont(name: "Verdana-Bold", size: 16)
                         label1.adjustsFontSizeToFitWidth = true
@@ -563,7 +563,7 @@ class ProfileView: UIView {
                     if profile.pagesCount > 0 {
                         let label1 = UILabel()
                         label1.text = profile.pagesCount.getCounterToString()
-                        label1.textColor = label1.tintColor
+                        //label1.textColor = label1.tintColor
                         label1.textAlignment = .center
                         label1.font = UIFont(name: "Verdana-Bold", size: 16)
                         label1.adjustsFontSizeToFitWidth = true
