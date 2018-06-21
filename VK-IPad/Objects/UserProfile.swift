@@ -65,6 +65,11 @@ class UserProfile {
     var firstNameDat: String = "" // Имя в дательном падеже (Кому?)
     var firstNameIns: String = "" // Имя в творительном падеже (Кем?)
     var firstNameAcc: String = "" // Имя в винительном падеже (Кому?)
+    var lastNameAbl: String = "" // Фамилия в предложном падеже (О Ком?)
+    var lastNameGen: String = "" // Фамилия в родительном падеже (Чей?)
+    var lastNameDat: String = "" // Фамилия в дательном падеже (Кому?)
+    var lastNameIns: String = "" // Фамилия в творительном падеже (Кем?)
+    var lastNameAcc: String = "" // Фамилия в винительном падеже (Кому?)
     var canSeeAllPosts: Int = 0
     var canSendFriendRequest: Int = 0
     var canWritePrivateMessage: Int = 0
@@ -152,6 +157,11 @@ class UserProfile {
         self.firstNameDat = json["first_name_dat"].stringValue
         self.firstNameIns = json["first_name_ins"].stringValue
         self.firstNameAcc = json["first_name_acc"].stringValue
+        self.lastNameAbl = json["last_name_abl"].stringValue
+        self.lastNameGen = json["last_name_gen"].stringValue
+        self.lastNameDat = json["last_name_dat"].stringValue
+        self.lastNameIns = json["last_name_ins"].stringValue
+        self.lastNameAcc = json["last_name_acc"].stringValue
         self.canSeeAllPosts = json["can_see_all_posts"].intValue
         self.canSendFriendRequest = json["can_send_friend_request"].intValue
         self.canWritePrivateMessage = json["can_write_private_message"].intValue

@@ -174,8 +174,11 @@ class PhotoViewController: UITableViewController {
             
             if photo.count > 0 {
                 cell.photo = photo[0]
+                
                 cell.cellWidth = self.tableView.bounds.width
                 cell.configureLikesCell()
+                
+                cell.usersButton.addTarget(self, action: #selector(showLikes(sender:)), for: .touchUpInside)
             }
             
             return cell
@@ -184,6 +187,10 @@ class PhotoViewController: UITableViewController {
             
             return cell
         }
+    }
+    
+    @objc func showLikes(sender: UIButton) {
+        self.openLikesUsersController(likes: self.likes, reposts: self.reposts)
     }
     
     @objc func handleSwipes(sender: UISwipeGestureRecognizer) {

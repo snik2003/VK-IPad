@@ -297,6 +297,17 @@ extension UIViewController: ViewControllerProtocol {
         let detailVC = self.splitViewController!.viewControllers[self.splitViewController!.viewControllers.endIndex - 1]
         detailVC.childViewControllers[0].navigationController?.pushViewController(recordController, animated: true)
     }
+    
+    func openLikesUsersController(likes: [Likes], reposts: [Likes]) {
+        let likesController = self.storyboard?.instantiateViewController(withIdentifier: "LikesUsersController") as! LikesUsersController
+    
+        likesController.likes = likes
+        likesController.reposts = reposts
+        likesController.title = "Оценили"
+        
+        let detailVC = self.splitViewController!.viewControllers[self.splitViewController!.viewControllers.endIndex - 1]
+        detailVC.childViewControllers[0].navigationController?.pushViewController(likesController, animated: true)
+    }
 }
 
 

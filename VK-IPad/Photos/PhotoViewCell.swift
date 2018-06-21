@@ -13,6 +13,7 @@ class PhotoViewCell: UITableViewCell {
     @IBOutlet weak var photoImage: UIImageView!
     
     var photo: Photo!
+    
     var cellWidth: CGFloat = 0
     
     var likesButton = UIButton()
@@ -46,10 +47,6 @@ class PhotoViewCell: UITableViewCell {
         usersButton.imageView?.tintColor = UIColor.black
         
         self.addSubview(usersButton)
-        
-        usersButton.add(for: .touchUpInside) {
-            self.usersButton.smallButtonTouched()
-        }
         
         commentsButton.tag = 250
         commentsButton.frame = CGRect(x: 10 + 2 * buttonWidth + 50 + 50, y: 0, width: buttonWidth, height: buttonHeight)

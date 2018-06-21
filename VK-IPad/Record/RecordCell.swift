@@ -18,6 +18,9 @@ class RecordCell: UITableViewCell {
     var users: [UserProfile]!
     var groups: [GroupProfile]!
     
+    var likes: [Likes]!
+    var reposts: [Likes]!
+    
     var showLikesPanel = false
     
     var indexPath: IndexPath!
@@ -48,6 +51,10 @@ class RecordCell: UITableViewCell {
     var commentsButton = UIButton()
     var viewsButton = UIButton()
     
+    let infoPanelHeight: CGFloat = 35
+    let infoAvatarHeight: CGFloat = 33
+    let infoAvatarTrailing: CGFloat = -5.0
+    
     var poll: Poll!
     
     func configureCell() {
@@ -69,7 +76,7 @@ class RecordCell: UITableViewCell {
             setHeader(topY: topY, size: avatarHeight, record: record)
             
             topY += 5 + avatarHeight + 5
-            topY = setText(text: record.text, topY: topY, numCopy: nil)
+            topY = setText(record: record, topY: topY, numCopy: nil)
             
             let aView = AttachmentsView()
             aView.tag = 250
@@ -126,7 +133,7 @@ class RecordCell: UITableViewCell {
                     setHeader(topY: topY, size: avatarHeight2, record: record.copy[index])
                     
                     topY += 5 + avatarHeight2 + 5
-                    topY = setText(text: record.copy[index].text.prepareTextForPublic(), topY: topY, numCopy: index)
+                    topY = setText(record: record.copy[index], topY: topY, numCopy: index)
                     
                     let aView = AttachmentsView()
                     aView.tag = 250
@@ -186,8 +193,14 @@ class RecordCell: UITableViewCell {
             topY = setSigner(record: record, topY: topY)
             topY += 5
             
-            setSeparator(inView: self, topY: topY)
-            topY = setLikesPanel(topY: topY)
+            if (delegate as? RecordController) != nil && record.postType != "postpone"  && record.postType != "suggest"{
+                topY = setInfoLikePanel(topY: topY)
+            }
+            
+            if record.postType != "postpone" && record.postType != "suggest" {
+                setSeparator(inView: self, topY: topY)
+                topY = setLikesPanel(topY: topY)
+            }
         }
     }
         
@@ -295,14 +308,14 @@ class RecordCell: UITableViewCell {
         self.addSubview(dateLabel)
     }
     
-    func setText(text: String, topY: CGFloat, numCopy: Int!) -> CGFloat {
+    func setText(record: Record, topY: CGFloat, numCopy: Int!) -> CGFloat {
         
         var topY = topY
         
         let label = UILabel()
         
         label.tag = 250
-        label.text = text
+        label.text = record.text
         label.font = textFont
         label.numberOfLines = 0
         label.prepareTextForPublish2(delegate)
@@ -768,6 +781,278 @@ class RecordCell: UITableViewCell {
         return topY
     }
     
+    func setInfoLikePanel(topY: CGFloat) -> CGFloat {
+        
+        let maxWidth = cellWidth - leftX - 20
+        
+        var countFriends = 0
+        var info = "Понравилось"
+        
+        let infoLikesLabel = UILabel()
+        let infoAvatar1 = UIImageView()
+        let infoAvatar2 = UIImageView()
+        let infoAvatar3 = UIImageView()
+        
+        infoLikesLabel.tag = 250
+        infoAvatar1.tag = 250
+        infoAvatar2.tag = 250
+        infoAvatar3.tag = 250
+        
+        if let likes = self.likes {
+            for like in likes {
+                if like.uid != vkSingleton.shared.userID {
+                    if like.friendStatus == 3 {
+                        countFriends += 1
+                        
+                        if countFriends == 1 {
+                            let getCacheImage = GetCacheImage(url: like.maxPhotoURL, lifeTime: .avatarImage)
+                            let setImageToRow = SetImageToRowOfTableView(cell: cell, imageView: infoAvatar1, indexPath: indexPath, tableView: tableView)
+                            setImageToRow.addDependency(getCacheImage)
+                            OperationQueue().addOperation(getCacheImage)
+                            OperationQueue.main.addOperation(setImageToRow)
+                            if record.userLikes == 1 {
+                                info = "\(info) Вам, \(like.firstNameDat)"
+                            } else {
+                                info = "\(info) \(like.firstNameDat)"
+                            }
+                            
+                            let tap = UITapGestureRecognizer()
+                            infoAvatar1.isUserInteractionEnabled = true
+                            infoAvatar1.addGestureRecognizer(tap)
+                            tap.add {
+                                if let id = Int(like.uid) {
+                                    self.delegate.openProfileController(id: id, name: "\(like.firstName) \(like.lastName)")
+                                }
+                            }
+                        }
+                        if countFriends == 2 {
+                            let getCacheImage = GetCacheImage(url: like.maxPhotoURL, lifeTime: .avatarImage)
+                            let setImageToRow = SetImageToRowOfTableView(cell: cell, imageView: infoAvatar2, indexPath: indexPath, tableView: tableView)
+                            setImageToRow.addDependency(getCacheImage)
+                            OperationQueue().addOperation(getCacheImage)
+                            OperationQueue.main.addOperation(setImageToRow)
+                            info = "\(info), \(like.firstNameDat)"
+                            
+                            let tap = UITapGestureRecognizer()
+                            infoAvatar2.isUserInteractionEnabled = true
+                            infoAvatar2.addGestureRecognizer(tap)
+                            tap.add {
+                                if let id = Int(like.uid) {
+                                    self.delegate.openProfileController(id: id, name: "\(like.firstName) \(like.lastName)")
+                                }
+                            }
+                        }
+                        if countFriends == 3 {
+                            let getCacheImage = GetCacheImage(url: like.maxPhotoURL, lifeTime: .avatarImage)
+                            let setImageToRow = SetImageToRowOfTableView(cell: cell, imageView: infoAvatar3, indexPath: indexPath, tableView: tableView)
+                            setImageToRow.addDependency(getCacheImage)
+                            OperationQueue().addOperation(getCacheImage)
+                            OperationQueue.main.addOperation(setImageToRow)
+                            info = "\(info), \(like.firstNameDat)"
+                            
+                            let tap = UITapGestureRecognizer()
+                            infoAvatar3.isUserInteractionEnabled = true
+                            infoAvatar3.addGestureRecognizer(tap)
+                            tap.add {
+                                if let id = Int(like.uid) {
+                                    self.delegate.openProfileController(id: id, name: "\(like.firstName) \(like.lastName)")
+                                }
+                            }
+                        }
+                        if countFriends == 3 { break }
+                    }
+                }
+            }
+            
+            if (countFriends > 0) {
+                var total = 0
+                if record.userLikes == 1 {
+                    total = record.likesCount - countFriends - 1
+                } else {
+                    total = record.likesCount - countFriends
+                }
+                if total > 0 {
+                    if total == 1 {
+                        info = "\(info) и еще 1 человеку"
+                    } else {
+                        info = "\(info) и еще \(total) людям"
+                    }
+                }
+            } else {
+                var count = 0
+                if record.userLikes == 1 {
+                    count = record.likesCount - 1
+                    if count == 0 {
+                        info = "Понравилось только Вам"
+                    } else if count == 1 {
+                        info = "Понравилось Вам и еще 1 человеку"
+                    } else {
+                        info = "Понравилось Вам и еще \(count) людям"
+                    }
+                } else {
+                    count = record.likesCount
+                    if count == 1 {
+                        info = "Понравилось 1 человеку"
+                    } else {
+                        info = "Понравилось \(count) людям"
+                    }
+                }
+                
+                if count > 0 {
+                    countFriends += 1
+                    if likes.count > 0 {
+                        let getCacheImage = GetCacheImage(url: likes[0].maxPhotoURL, lifeTime: .avatarImage)
+                        let setImageToRow = SetImageToRowOfTableView(cell: cell, imageView: infoAvatar1, indexPath: indexPath, tableView: tableView)
+                        setImageToRow.addDependency(getCacheImage)
+                        OperationQueue().addOperation(getCacheImage)
+                        OperationQueue.main.addOperation(setImageToRow)
+                        
+                        let tap = UITapGestureRecognizer()
+                        infoAvatar1.isUserInteractionEnabled = true
+                        infoAvatar1.addGestureRecognizer(tap)
+                        tap.add {
+                            if let id = Int(likes[0].uid) {
+                                self.delegate.openProfileController(id: id, name: "\(likes[0].firstName) \(likes[0].lastName)")
+                            }
+                        }
+                    }
+                }
+                if count > 1 {
+                    countFriends += 1
+                    if likes.count > 0 {
+                        let getCacheImage = GetCacheImage(url: likes[1].maxPhotoURL, lifeTime: .avatarImage)
+                        let setImageToRow = SetImageToRowOfTableView(cell: cell, imageView: infoAvatar2, indexPath: indexPath, tableView: tableView)
+                        setImageToRow.addDependency(getCacheImage)
+                        OperationQueue().addOperation(getCacheImage)
+                        OperationQueue.main.addOperation(setImageToRow)
+                        
+                        let tap = UITapGestureRecognizer()
+                        infoAvatar2.isUserInteractionEnabled = true
+                        infoAvatar2.addGestureRecognizer(tap)
+                        tap.add {
+                            if let id = Int(likes[1].uid) {
+                                self.delegate.openProfileController(id: id, name: "\(likes[1].firstName) \(likes[1].lastName)")
+                            }
+                        }
+                    }
+                }
+                if count > 2 {
+                    countFriends += 1
+                    if likes.count > 0 {
+                        let getCacheImage = GetCacheImage(url: likes[2].maxPhotoURL, lifeTime: .avatarImage)
+                        let setImageToRow = SetImageToRowOfTableView(cell: cell, imageView: infoAvatar3, indexPath: indexPath, tableView: tableView)
+                        setImageToRow.addDependency(getCacheImage)
+                        OperationQueue().addOperation(getCacheImage)
+                        OperationQueue.main.addOperation(setImageToRow)
+                        
+                        let tap = UITapGestureRecognizer()
+                        infoAvatar3.isUserInteractionEnabled = true
+                        infoAvatar3.addGestureRecognizer(tap)
+                        tap.add {
+                            if let id = Int(likes[2].uid) {
+                                self.delegate.openProfileController(id: id, name: "\(likes[2].firstName) \(likes[2].lastName)")
+                            }
+                        }
+                    }
+                }
+            }
+            
+            infoLikesLabel.text = info
+            infoLikesLabel.font = UIFont(name: "Verdana", size: 12)!
+            infoLikesLabel.numberOfLines = 2
+            infoLikesLabel.isEnabled = false
+            
+            let tap = UITapGestureRecognizer()
+            infoLikesLabel.isUserInteractionEnabled = true
+            infoLikesLabel.addGestureRecognizer(tap)
+            tap.add {
+                if let likes = self.likes, let reposts = self.reposts {
+                    self.delegate.openLikesUsersController(likes: likes, reposts: reposts)
+                }
+            }
+            
+            if countFriends == 0 {
+                infoLikesLabel.frame = CGRect(x: 10, y: topY, width: maxWidth - 20, height: infoPanelHeight)
+                
+                self.addSubview(infoLikesLabel)
+            }
+            
+            if countFriends == 1 {
+                infoAvatar1.frame = CGRect(x: 10, y: topY + (infoPanelHeight - infoAvatarHeight) / 2.0, width: infoAvatarHeight, height: infoAvatarHeight)
+                
+                infoLikesLabel.frame = CGRect(x: infoAvatar1.frame.maxX + 5, y: topY, width: maxWidth - 10 - infoAvatar1.frame.maxX - 5, height: infoPanelHeight)
+                
+                infoAvatar1.layer.cornerRadius = infoAvatarHeight/2
+                infoAvatar1.layer.borderColor = UIColor.white.cgColor
+                infoAvatar1.layer.borderWidth = 1.5
+                infoAvatar1.clipsToBounds = true
+                infoAvatar1.contentMode = .scaleAspectFit
+                
+                self.addSubview(infoAvatar1)
+                self.addSubview(infoLikesLabel)
+            }
+            
+            if countFriends == 2 {
+                infoAvatar1.frame = CGRect(x: 10, y: topY + (infoPanelHeight - infoAvatarHeight) / 2.0, width: infoAvatarHeight, height: infoAvatarHeight)
+                
+                infoAvatar2.frame = CGRect(x: infoAvatar1.frame.maxX + infoAvatarTrailing, y: topY + (infoPanelHeight - infoAvatarHeight) / 2.0, width: infoAvatarHeight, height: infoAvatarHeight)
+                
+                infoLikesLabel.frame = CGRect(x: infoAvatar2.frame.maxX + 5, y: topY, width: maxWidth - 10 - infoAvatar2.frame.maxX - 5, height: infoPanelHeight)
+                
+                infoAvatar1.layer.cornerRadius = infoAvatarHeight/2
+                infoAvatar1.layer.borderColor = UIColor.white.cgColor
+                infoAvatar1.layer.borderWidth = 1.5
+                infoAvatar1.clipsToBounds = true
+                infoAvatar1.contentMode = .scaleAspectFit
+                
+                infoAvatar2.layer.cornerRadius = infoAvatarHeight/2
+                infoAvatar2.layer.borderColor = UIColor.white.cgColor
+                infoAvatar2.layer.borderWidth = 1.5
+                infoAvatar2.clipsToBounds = true
+                infoAvatar2.contentMode = .scaleAspectFit
+                
+                self.addSubview(infoAvatar1)
+                self.addSubview(infoAvatar2)
+                self.addSubview(infoLikesLabel)
+            }
+            
+            if countFriends > 2 {
+                infoAvatar1.frame = CGRect(x: 10, y: topY + (infoPanelHeight - infoAvatarHeight) / 2.0, width: infoAvatarHeight, height: infoAvatarHeight)
+                
+                infoAvatar2.frame = CGRect(x: infoAvatar1.frame.maxX + infoAvatarTrailing, y: topY + (infoPanelHeight - infoAvatarHeight) / 2.0 , width: infoAvatarHeight, height: infoAvatarHeight)
+                
+                infoAvatar3.frame = CGRect(x: infoAvatar2.frame.maxX + infoAvatarTrailing, y: topY + (infoPanelHeight - infoAvatarHeight) / 2.0 , width: infoAvatarHeight, height: infoAvatarHeight)
+                
+                infoLikesLabel.frame = CGRect(x: infoAvatar3.frame.maxX + 5, y: topY, width: maxWidth - 10 - infoAvatar3.frame.maxX - 5, height: infoPanelHeight)
+                
+                infoAvatar1.layer.cornerRadius = infoAvatarHeight/2
+                infoAvatar1.layer.borderColor = UIColor.white.cgColor
+                infoAvatar1.layer.borderWidth = 1.5
+                infoAvatar1.clipsToBounds = true
+                infoAvatar1.contentMode = .scaleAspectFit
+                
+                infoAvatar2.layer.cornerRadius = infoAvatarHeight/2
+                infoAvatar2.layer.borderColor = UIColor.white.cgColor
+                infoAvatar2.layer.borderWidth = 1.5
+                infoAvatar2.clipsToBounds = true
+                infoAvatar2.contentMode = .scaleAspectFit
+                
+                infoAvatar3.layer.cornerRadius = infoAvatarHeight/2
+                infoAvatar3.layer.borderColor = UIColor.white.cgColor
+                infoAvatar3.layer.borderWidth = 1.5
+                infoAvatar3.clipsToBounds = true
+                infoAvatar3.contentMode = .scaleAspectFit
+                
+                self.addSubview(infoAvatar1)
+                self.addSubview(infoAvatar2)
+                self.addSubview(infoAvatar3)
+                self.addSubview(infoLikesLabel)
+            }
+        }
+        
+        return topY + infoPanelHeight
+    }
+    
     func setLikesPanel(topY: CGFloat) -> CGFloat {
         
         var topY = topY
@@ -1015,8 +1300,14 @@ extension RecordCell {
         
         height += 5
         
-        if showLikesPanel {
-            height += likesHeight
+        if (delegate as? RecordController) != nil && record.postType != "postpone" && record.postType != "suggest" {
+            height += infoPanelHeight
+        }
+        
+        if record.postType != "postpone" && record.postType != "suggest"{
+            if showLikesPanel {
+                height += likesHeight
+            }
         }
         
         return height

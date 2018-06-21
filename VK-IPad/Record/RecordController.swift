@@ -162,6 +162,9 @@ class RecordController: UITableViewController {
             cell.users = users
             cell.groups = groups
             
+            cell.likes = likes
+            cell.reposts = reposts
+            
             cell.cellWidth = self.tableView.frame.width
             
             cell.configureCell()
@@ -186,7 +189,7 @@ class RecordController: UITableViewController {
         
         if type == "post" {
             
-            var code = "var a = API.wall.getById({\"posts\":\"\(uid)_\(pid)\",\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"extended\":\"1\",\"copy_history_depth\":\"3\",\"fields\":\"id,first_name,last_name,photo_max,photo_100\",\"v\":\"\(vkSingleton.shared.version)\"}); \n"
+            var code = "var a = API.wall.getById({\"posts\":\"\(uid)_\(pid)\",\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"extended\":\"1\",\"copy_history_depth\":\"3\",\"fields\":\"id,first_name,first_name_gen,last_name,last_name_gen,photo_max,photo_100\",\"v\":\"\(vkSingleton.shared.version)\"}); \n"
             
             code = "\(code) var b = API.likes.getList({\"type\":\"post\",\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"owner_id\":\"\(uid)\",\"item_id\":\"\(pid)\",\"filter\":\"likes\",\"extended\":\"1\",\"fields\":\"id, first_name, last_name, sex, has_photo, last_seen, online, photo_max_orig, photo_max, photo_100, deactivated, first_name_dat, friend_status\",\"count\":\"1000\",\"skip_own\":\"0\",\"v\": \"\(vkSingleton.shared.version)\"}); \n"
             
@@ -249,7 +252,26 @@ class RecordController: UITableViewController {
                         }
                     }
                     
-                    self.title = "Запись"
+                    
+                    var title = "Запись"
+                    if self.record.count > 0 {
+                        let barButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(self.tapBarButtonItem(sender:)))
+                        self.navigationItem.rightBarButtonItem = barButton
+                        
+                        let record = self.record[0]
+                        if record.ownerID > 0 {
+                            let users = self.users.filter({ $0.uid == "\(record.ownerID)" })
+                            if users.count > 0 {
+                                title = "Запись со стены \(users[0].firstNameGen) \(users[0].lastNameGen)"
+                            }
+                        } else if record.ownerID < 0 {
+                            let groups = self.groups.filter({ $0.gid == abs(record.ownerID) })
+                            if groups.count > 0 {
+                                title = "Запись со стены сообщества «\(groups[0].name)»"
+                            }
+                        }
+                    }
+                    self.title = title
                     
                     /*if self.record.count > 0 {
                         if self.record[0].canComment == 0 {
@@ -319,5 +341,9 @@ class RecordController: UITableViewController {
             }
             queue.addOperation(getServerDataOperation)
         }
+    }
+    
+    @objc func tapBarButtonItem(sender: UIBarButtonItem) {
+        
     }
 }
