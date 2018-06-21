@@ -52,7 +52,7 @@ class Photo {
         self.photo2560 = json["photo_2560"].stringValue
         self.accessKey = json["access_key"].stringValue
         
-        self.canComment = json["comments"]["can_comment"].intValue
+        self.canComment = json["can_comment"].intValue
         self.commentsCount = json["comments"]["count"].intValue
         self.likesCount = json["likes"]["count"].intValue
         self.userLikes = json["likes"]["user_likes"].intValue

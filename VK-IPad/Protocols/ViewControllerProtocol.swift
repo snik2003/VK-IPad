@@ -90,7 +90,7 @@ extension UIViewController: ViewControllerProtocol {
         
         OperationQueue.main.addOperation {
             let appearance = SCLAlertView.SCLAppearance(
-                kWindowWidth: UIScreen.main.bounds.width - 40,
+                kWindowWidth: self.view.bounds.width/2 + 100,
                 kTitleFont: UIFont(name: "Verdana", size: 13)!,
                 kTextFont: UIFont(name: "Verdana", size: 12)!,
                 kButtonFont: UIFont(name: "Verdana-Bold", size: 12)!,
@@ -108,7 +108,7 @@ extension UIViewController: ViewControllerProtocol {
         
         OperationQueue.main.addOperation {
             let appearance = SCLAlertView.SCLAppearance(
-                kWindowWidth: UIScreen.main.bounds.width - 40,
+                kWindowWidth: self.view.bounds.width/2 + 100,
                 kTitleFont: UIFont(name: "Verdana", size: 13)!,
                 kTextFont: UIFont(name: "Verdana", size: 12)!,
                 kButtonFont: UIFont(name: "Verdana-Bold", size: 12)!,
@@ -126,7 +126,7 @@ extension UIViewController: ViewControllerProtocol {
         
         OperationQueue.main.addOperation {
             let appearance = SCLAlertView.SCLAppearance(
-                kWindowWidth: UIScreen.main.bounds.width - 40,
+                kWindowWidth: self.view.bounds.width/2 + 100,
                 kTitleFont: UIFont(name: "Verdana", size: 13)!,
                 kTextFont: UIFont(name: "Verdana", size: 12)!,
                 kButtonFont: UIFont(name: "Verdana-Bold", size: 12)!,

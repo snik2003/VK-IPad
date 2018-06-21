@@ -17,6 +17,7 @@ class Attachment {
     var doc: [Document] = []
     var link: [Link] = []
     var poll: [Poll] = []
+    var sticker: [Sticker] = []
     
     init(json: JSON) {
         self.type = json["type"].stringValue
@@ -153,6 +154,16 @@ class Attachment {
             }
             
             self.poll.append(poll)
+        }
+        
+        if self.type == "sticker" {
+            let sticker = Sticker(json: JSON.null)
+            sticker.productID = json["sticker"]["product_id"].intValue
+            sticker.stickerID = json["sticker"]["id"].intValue
+            sticker.url = json["sticker"]["photo_256"].stringValue
+            sticker.width = json["sticker"]["width"].intValue
+            sticker.height = json["sticker"]["height"].intValue
+            self.sticker.append(sticker)
         }
     }
 }

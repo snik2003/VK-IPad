@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import SwiftyJSON
+import WebKit
 
 class CommentCell: UITableViewCell {
 
@@ -18,9 +20,14 @@ class CommentCell: UITableViewCell {
     
     var cellWidth: CGFloat = 0
     
+    var indexPath: IndexPath!
+    var cell: UITableViewCell!
+    var tableView: UITableView!
+    
     let avatarHeight: CGFloat = 40
     let likesButtonHeight: CGFloat = 30
     let likesButtonWidth: CGFloat = 100
+    let stickerHeight: CGFloat = 200
     
     let textFont = UIFont(name: "Verdana", size: 12)!
     let nameFont = UIFont(name: "Verdana-Bold", size: 12)!
@@ -29,7 +36,7 @@ class CommentCell: UITableViewCell {
     var countButton = UIButton()
     var likesButton = UIButton()
     let commentLabel = UILabel()
-    
+    let dateLabel = UILabel()
     func configureCountCell(count: Int, total: Int) {
         
         self.removeAllSubviews()
@@ -68,6 +75,36 @@ class CommentCell: UITableViewCell {
             self.addSubview(aView)
             
             topY += 10 + aHeight
+            
+            for attach in comment.attachments {
+                if attach.type == "sticker", attach.sticker.count > 0 {
+                    topY = setSticker(attach.sticker[0], topY: topY)
+                }
+            }
+            
+            for attach in comment.attachments {
+                if attach.type == "doc", attach.doc.count > 0 {
+                    topY = setDoc(attach.doc[0], topY: topY)
+                }
+            }
+            
+            for attach in comment.attachments {
+                if attach.type == "video", attach.video.count > 0 {
+                    topY = setVideo(attach.video[0], topY: topY)
+                }
+            }
+            
+            for attach in comment.attachments {
+                if attach.type == "audio" && attach.audio.count > 0 {
+                    topY = attachAudio(attach.audio[0], topY: topY)
+                }
+            }
+            
+            for attach in comment.attachments {
+                if attach.type == "link" && attach.link.count > 0 {
+                    topY = attachLink(attach.link[0], topY: topY)
+                }
+            }
             
             topY = setInfoPanel(topY: topY)
         }
@@ -164,9 +201,303 @@ class CommentCell: UITableViewCell {
         self.addSubview(nameLabel)
     }
     
-    func setInfoPanel(topY: CGFloat) -> CGFloat {
+    func setSticker(_ sticker: Sticker, topY: CGFloat) -> CGFloat {
+        let photoImage = UIImageView()
+        photoImage.tag = 250
         
-        let dateLabel = UILabel()
+        let getCacheImage = GetCacheImage(url: sticker.url, lifeTime: .avatarImage)
+        let setImageToRow = SetImageToCommentRow(imageView: photoImage)
+        setImageToRow.addDependency(getCacheImage)
+        OperationQueue().addOperation(getCacheImage)
+        OperationQueue.main.addOperation(setImageToRow)
+        OperationQueue.main.addOperation {
+            photoImage.clipsToBounds = true
+        }
+        
+        photoImage.frame = CGRect(x: avatarHeight + 40, y: topY, width: stickerHeight, height: stickerHeight)
+        self.addSubview(photoImage)
+        
+        return topY + stickerHeight
+    }
+    
+    func setDoc(_ document: Document, topY: CGFloat) -> CGFloat {
+        var topY = topY
+        
+        let maxSize = cellWidth - avatarHeight - 40
+        
+        if document.width > 0 && document.height > 0 {
+            var photoWidth = CGFloat(document.width)
+            var photoHeight = CGFloat(document.height)
+            
+            if photoWidth > photoHeight {
+                photoWidth = maxSize - 40
+                photoHeight = photoWidth * CGFloat(document.height) / CGFloat(document.width)
+            } else {
+                photoHeight = maxSize - 40
+                photoWidth = photoHeight * CGFloat(document.width) / CGFloat(document.height)
+            }
+            
+            let doc = UIImageView()
+            doc.tag = 250
+            
+            if document.photoURL.count > 0 {
+                let url = document.photoURL[document.photoURL.count-1]
+                let getCacheImage = GetCacheImage(url: url, lifeTime: .userPhotoImage)
+                getCacheImage.completionBlock = {
+                    OperationQueue.main.addOperation {
+                        doc.image = getCacheImage.outputImage
+                        doc.clipsToBounds = true
+                        doc.contentMode = .scaleToFill
+                    }
+                }
+                OperationQueue().addOperation(getCacheImage)
+            }
+            
+            doc.frame = CGRect(x: avatarHeight + 20 + 20, y: topY, width: photoWidth, height: photoHeight)
+            self.addSubview(doc)
+            
+            if document.ext == "gif" && document.url != "" {
+                
+                let loadingView = UIView()
+                loadingView.frame = CGRect(x: 0, y: 0, width: 60, height: 60)
+                loadingView.center = CGPoint(x: doc.frame.width/2, y: doc.frame.height/2)
+                loadingView.backgroundColor = UIColor.darkGray.withAlphaComponent(0.7)
+                loadingView.clipsToBounds = true
+                loadingView.layer.cornerRadius = 8.5
+                doc.addSubview(loadingView)
+                
+                let activityIndicator = UIActivityIndicatorView()
+                activityIndicator.frame = CGRect(x: 0, y: 0, width: loadingView.frame.maxX, height: loadingView.frame.maxY);
+                activityIndicator.activityIndicatorViewStyle = .whiteLarge
+                activityIndicator.center = CGPoint(x: loadingView.frame.width/2, y: loadingView.frame.height/2)
+                loadingView.addSubview(activityIndicator)
+                activityIndicator.startAnimating()
+                
+                let gifSizeLabel = UILabel()
+                gifSizeLabel.text = "GIF: \(document.size.getFileSizeToString())"
+                gifSizeLabel.numberOfLines = 1
+                gifSizeLabel.font = UIFont(name: "Verdana-Bold", size: 11.0)!
+                gifSizeLabel.textAlignment = .center
+                gifSizeLabel.contentMode = .center
+                gifSizeLabel.textColor = UIColor.black
+                gifSizeLabel.backgroundColor = UIColor.lightText.withAlphaComponent(0.5)
+                gifSizeLabel.layer.cornerRadius = 5
+                gifSizeLabel.clipsToBounds = true
+                let gifSize = delegate.getTextSize(text: gifSizeLabel.text!, font: gifSizeLabel.font!, maxWidth: doc.frame.width)
+                gifSizeLabel.frame = CGRect(x: doc.frame.width - 10 - gifSize.width - 10, y: doc.frame.height - 10 - 20, width: gifSize.width + 10, height: 20)
+                doc.addSubview(gifSizeLabel)
+                
+                OperationQueue().addOperation {
+                    let url = URL(string: document.url)
+                    if let data = try? Data(contentsOf: url!) {
+                        let setAnimatedImageToRow = SetAnimatedImageToRow.init(data: data, imageView: doc, cell: self.cell, indexPath: self.indexPath, tableView: self.tableView)
+                        setAnimatedImageToRow.completionBlock = {
+                            OperationQueue.main.addOperation {
+                                gifSizeLabel.removeFromSuperview()
+                                activityIndicator.stopAnimating()
+                                loadingView.removeFromSuperview()
+                            }
+                        }
+                        OperationQueue.main.addOperation(setAnimatedImageToRow)
+                        
+                    }
+                }
+            }
+            
+            topY += photoHeight
+        }
+        
+        return topY
+    }
+    
+    func setVideo(_ video: Video, topY: CGFloat) -> CGFloat {
+        
+        var topY = topY
+        
+        let maxSize = cellWidth - avatarHeight - 20 - 20
+            
+        let videoWidth: CGFloat = maxSize - 40
+        let videoHeight: CGFloat = 240 * videoWidth / 320
+        
+        let view = UIView()
+        view.tag = 250
+        view.backgroundColor = UIColor.black
+        
+        view.frame = CGRect(x: avatarHeight + 20 + 20, y: topY, width: videoWidth, height: videoHeight)
+        self.addSubview(view)
+        
+        let loadingView = UIView()
+        loadingView.frame = CGRect(x: 0, y: 0, width: 60, height: 60)
+        loadingView.center = CGPoint(x: view.frame.width/2, y: view.frame.height/2)
+        loadingView.backgroundColor = UIColor.darkGray.withAlphaComponent(0.7)
+        loadingView.clipsToBounds = true
+        loadingView.layer.cornerRadius = 8.5
+        view.addSubview(loadingView)
+        
+        let activityIndicator = UIActivityIndicatorView()
+        activityIndicator.frame = CGRect(x: 0, y: 0, width: loadingView.frame.maxX, height: loadingView.frame.maxY);
+        activityIndicator.activityIndicatorViewStyle = .whiteLarge
+        activityIndicator.center = CGPoint(x: loadingView.frame.width/2, y: loadingView.frame.height/2)
+        loadingView.addSubview(activityIndicator)
+        activityIndicator.startAnimating()
+        
+        let webView = WKWebView()
+        webView.tag = 250
+        webView.isOpaque = false
+        webView.frame = CGRect(x: avatarHeight + 20 + 20, y: topY, width: videoWidth, height: videoHeight)
+        
+        if let controller = delegate as? WKNavigationDelegate {
+            webView.navigationDelegate = controller
+        }
+        
+        if video.player == "" {
+            let url = "/method/video.get"
+            let parameters = [
+                "access_token": vkSingleton.shared.accessToken,
+                "owner_id": "\(video.ownerID)",
+                "videos": "\(video.ownerID)_\(video.id)_\(video.accessKey)",
+                "v": vkSingleton.shared.version
+            ]
+            let getServerData = GetServerDataOperation(url: url, parameters: parameters)
+            getServerData.completionBlock = {
+                guard let data = getServerData.data else { return }
+                guard let json = try? JSON(data: data) else { print("json error"); return }
+                
+                let videos = json["response"]["items"].compactMap({ Video(json: $0.1) })
+                if videos.count > 0 {
+                    if let url = URL(string: videos[0].player) {
+                        let request = URLRequest(url: url)
+                        OperationQueue.main.addOperation {
+                            webView.load(request)
+                            self.addSubview(webView)
+                        }
+                    }
+                }
+            }
+            OperationQueue().addOperation(getServerData)
+        } else {
+            if let url = URL(string: video.player) {
+                let request = URLRequest(url: url)
+                webView.load(request)
+                self.addSubview(webView)
+            }
+        }
+        
+        let titleLabel = UILabel()
+        titleLabel.tag = 250
+        titleLabel.frame = CGRect(x: avatarHeight + 20 + 20, y: webView.frame.maxY, width: videoWidth-200, height: 20)
+        titleLabel.text = "\(video.title)"
+        titleLabel.textColor = titleLabel.tintColor
+        titleLabel.font = UIFont(name: "Verdana", size: 12)!
+        titleLabel.adjustsFontSizeToFitWidth = true
+        titleLabel.minimumScaleFactor = 0.8
+        
+        let viewsLabel = UILabel()
+        viewsLabel.tag = 250
+        viewsLabel.frame = CGRect(x: avatarHeight + 20 + 20 + videoWidth - 200, y: webView.frame.maxY, width: 200, height: 20)
+        viewsLabel.text = "Просмотров: \(video.views.getCounterToString())"
+        viewsLabel.textAlignment = .right
+        viewsLabel.isEnabled = false
+        viewsLabel.font = UIFont(name: "Verdana", size: 11)!
+        
+        self.addSubview(titleLabel)
+        self.addSubview(viewsLabel)
+        
+        topY += videoHeight + 25
+        
+        return topY
+    }
+    
+    func attachAudio(_ audio: Audio, topY: CGFloat) -> CGFloat {
+        
+        var topY = topY
+        
+        let maxSize = cellWidth - avatarHeight - 20 - 20
+        
+        let musicImage = UIImageView()
+        musicImage.tag = 250
+        
+        musicImage.frame = CGRect(x: avatarHeight + 40, y: topY, width: 40, height: 40)
+        musicImage.image = UIImage(named: "music")
+        
+        let artistLabel = UILabel()
+        artistLabel.tag = 250
+        artistLabel.frame = CGRect(x: avatarHeight + 40 + 50, y: musicImage.frame.midY - 16, width: maxSize - 50, height: 16)
+        artistLabel.text = audio.artist
+        artistLabel.font = UIFont(name: "Verdana", size: 12)!
+        
+        let titleLabel = UILabel()
+        titleLabel.tag = 250
+        titleLabel.frame = CGRect(x: avatarHeight + 40 + 50, y: musicImage.frame.midY, width: maxSize - 50, height: 16)
+        titleLabel.text = audio.title
+        titleLabel.textColor = titleLabel.tintColor
+        titleLabel.font = UIFont(name: "Verdana", size: 12)!
+        
+        self.addSubview(musicImage)
+        self.addSubview(artistLabel)
+        self.addSubview(titleLabel)
+        
+        topY += 40
+        
+        return topY
+    }
+    
+    func attachLink(_ link: Link, topY: CGFloat) -> CGFloat {
+        
+        var topY = topY
+        
+        let maxSize = cellWidth - avatarHeight - 20 - 20
+        
+        let linkImage = UIImageView()
+        linkImage.tag = 250
+        
+        linkImage.frame = CGRect(x: avatarHeight + 40, y: topY, width: 40, height: 40)
+        if link.url.containsIgnoringCase(find: "itunes.apple.com") {
+            linkImage.image = UIImage(named: "itunes")
+        } else {
+            linkImage.image = UIImage(named: "link")
+        }
+        
+        let titleLabel = UILabel()
+        titleLabel.tag = 250
+        titleLabel.frame = CGRect(x: avatarHeight + 40 + 50, y: linkImage.frame.midY - 16, width: maxSize - 50, height: 16)
+        if link.title != "" {
+            titleLabel.text = link.title
+        } else {
+            if link.caption != "" {
+                titleLabel.text = link.caption
+            } else {
+                if link.description != "" {
+                    titleLabel.text = link.description
+                } else {
+                    titleLabel.text = "Вложенная ссылка:"
+                    titleLabel.isEnabled = false
+                }
+            }
+        }
+        titleLabel.font = UIFont(name: "Verdana", size: 12)!
+        
+        let linkLabel = UILabel()
+        linkLabel.tag = 250
+        linkLabel.frame = CGRect(x: avatarHeight + 40 + 50, y: linkImage.frame.midY, width: maxSize - 50, height: 16)
+        if let url = URL(string: link.url), let host = url.host {
+            linkLabel.text = host
+        } else {
+            linkLabel.text = link.url
+        }
+        linkLabel.textColor = linkLabel.tintColor
+        linkLabel.font = UIFont(name: "Verdana", size: 12)!
+        
+        self.addSubview(linkImage)
+        self.addSubview(titleLabel)
+        self.addSubview(linkLabel)
+        
+        topY += 40
+        
+        return topY
+    }
+    
+    func setInfoPanel(topY: CGFloat) -> CGFloat {
         
         dateLabel.tag = 250
         
@@ -281,6 +612,48 @@ extension CommentCell {
         
         let aView = AttachmentsView()
         height += 10 + aView.configureAttachView(attaches: comment.attachments, maxSize: maxWidth - 40, getRow: true)
+        
+        for attach in comment.attachments {
+            if attach.type == "sticker", attach.sticker.count > 0 {
+                height += stickerHeight
+            }
+        }
+        
+        for attach in comment.attachments {
+            if attach.type == "doc" && attach.doc.count > 0 {
+                if attach.doc[0].width > 0 && attach.doc[0].height > 0 {
+                    let photoHeight = CGFloat(attach.doc[0].height)
+                    let maxSize = cellWidth - avatarHeight - 40
+                    
+                    if CGFloat(attach.doc[0].width) > photoHeight {
+                        height += (maxSize - 40) * CGFloat(attach.doc[0].height) / CGFloat(attach.doc[0].width)
+                    } else {
+                        height += maxSize - 40
+                    }
+                }
+            }
+        }
+        for attach in comment.attachments {
+            if attach.type == "video", attach.video.count > 0 {
+                let maxSize = cellWidth - avatarHeight - 20 - 20
+                let videoHeight = 240 * (maxSize - 40) / 320
+                height += videoHeight + 25
+            }
+        }
+        
+        for attach in comment.attachments {
+            if attach.type == "audio", attach.audio.count > 0 {
+                height += 5
+                height += 40
+            }
+        }
+        
+        for attach in comment.attachments {
+            if attach.type == "link" && attach.link.count > 0 {
+                height += 5
+                height += 40
+            }
+        }
         
         height += likesButtonHeight
         

@@ -58,6 +58,7 @@
 		1749130320D304DD00FCF9F9 /* ParseRequestList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1749130220D304DD00FCF9F9 /* ParseRequestList.swift */; };
 		1749130520D3050200FCF9F9 /* ParseRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1749130420D3050200FCF9F9 /* ParseRequest.swift */; };
 		1749130720D3055100FCF9F9 /* FriendRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1749130620D3055100FCF9F9 /* FriendRequest.swift */; };
+		179CFC4120DBE94900F2AB04 /* Sticker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179CFC4020DBE94900F2AB04 /* Sticker.swift */; };
 		17A1A5B720D8D31200D9CE00 /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A1A5B620D8D31200D9CE00 /* Button.swift */; };
 		17A1A5B920D8E37400D9CE00 /* GroupProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A1A5B820D8E37400D9CE00 /* GroupProfileViewController.swift */; };
 		17A1A5BB20D8E63000D9CE00 /* ParseGroupProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A1A5BA20D8E63000D9CE00 /* ParseGroupProfile.swift */; };
@@ -131,6 +132,7 @@
 		1749130220D304DD00FCF9F9 /* ParseRequestList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseRequestList.swift; sourceTree = "<group>"; };
 		1749130420D3050200FCF9F9 /* ParseRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseRequest.swift; sourceTree = "<group>"; };
 		1749130620D3055100FCF9F9 /* FriendRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendRequest.swift; sourceTree = "<group>"; };
+		179CFC4020DBE94900F2AB04 /* Sticker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sticker.swift; sourceTree = "<group>"; };
 		17A1A5B620D8D31200D9CE00 /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
 		17A1A5B820D8E37400D9CE00 /* GroupProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupProfileViewController.swift; sourceTree = "<group>"; };
 		17A1A5BA20D8E63000D9CE00 /* ParseGroupProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParseGroupProfile.swift; sourceTree = "<group>"; };
@@ -272,6 +274,7 @@
 				17424FF020D5A3C400F52C4C /* Poll.swift */,
 				17B134A620DACD110058E1A8 /* Likes.swift */,
 				17B134AA20DADDAE0058E1A8 /* Comment.swift */,
+				179CFC4020DBE94900F2AB04 /* Sticker.swift */,
 			);
 			path = Objects;
 			sourceTree = "<group>";
@@ -570,6 +573,7 @@
 				17A1A5BD20D8E6A700D9CE00 /* ParseWall.swift in Sources */,
 				174912F420D300DD00FCF9F9 /* MenuViewController.swift in Sources */,
 				174912EA20D300DD00FCF9F9 /* GetServerDataOperation.swift in Sources */,
+				179CFC4120DBE94900F2AB04 /* Sticker.swift in Sources */,
 				174912EE20D300DD00FCF9F9 /* UsersController.swift in Sources */,
 				17B134AD20DB8B070058E1A8 /* LikesUsersController.swift in Sources */,
 				174912F220D300DD00FCF9F9 /* ProfileView.swift in Sources */,

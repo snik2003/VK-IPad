@@ -12,7 +12,7 @@
 
 /**
  the send button was tapped.
- @param text that was entered in the comment view.
+ @param text text that was entered in the comment view.
  */
 -(void)didSendComment:(NSString*)text;
 
@@ -51,12 +51,25 @@
  */
 @property(nonatomic,assign)NSInteger charLimit;
 
+@property(nonatomic,assign)NSInteger attachCount;
+
+@property(nonatomic,assign)CGFloat tabHeight;
 /**
  add an image for your accessory button (e.g. the camera icon in the messages app).
  default is nil and no image will be displayed.
  */
-@property(nonatomic,strong)UIImage *accessoryImage;
+@property(nonatomic,strong)UIImage *fromGroupImage;
+@property(nonatomic,strong)UIButton *fromGroupButton;
 
+@property(nonatomic,strong)UIImage *accessoryImage;
+@property(nonatomic,strong)UIButton *accessoryButton;
+
+@property(nonatomic,strong)UIImage *stickerImage;
+@property(nonatomic,strong)UIButton *stickerButton;
+
+@property(nonatomic,strong)UIImage *sendImage;
+
+@property(nonatomic,strong)UITextView *textView;
 /**
  Create a new commentView with the scrollview you want to add as its child view 
  and the frame of the overall commentView (normally this is self.view.bounds).

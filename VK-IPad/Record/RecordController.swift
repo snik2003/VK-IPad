@@ -7,12 +7,18 @@
 //
 
 import UIKit
+import Alamofire
 import SwiftyJSON
+import WebKit
+import DCCommentView
 
-class RecordController: UITableViewController {
-
+class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSource, WKNavigationDelegate, DCCommentViewDelegate {
+    
     var delegate: UIViewController!
     var heights: [IndexPath: CGFloat] = [:]
+    
+    var tableView = UITableView()
+    var commentView: DCCommentView!
     
     var uid = 0
     var pid = 0
@@ -47,6 +53,8 @@ class RecordController: UITableViewController {
         super.viewDidLoad()
 
         OperationQueue.main.addOperation {
+            self.configureTableView()
+            
             self.tableView.separatorStyle = .none
             ViewControllerUtils().showActivityIndicator(uiView: self.view)
         }
@@ -54,15 +62,56 @@ class RecordController: UITableViewController {
         getRecord()
     }
 
+    func configureTableView() {
+        tableView.frame = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height)
+        
+        commentView = DCCommentView.init(scrollView: self.tableView, frame: self.tableView.bounds)
+        commentView.delegate = self
+        commentView.tintColor = UIColor.init(displayP3Red: 0/255, green: 84/255, blue: 147/255, alpha: 1)
+        
+        commentView.sendImage = UIImage(named: "send")
+        commentView.stickerImage = UIImage(named: "sticker")
+        commentView.stickerButton.addTarget(self, action: #selector(self.tapStickerButton(sender:)), for: .touchUpInside)
+        
+        commentView.accessoryImage = UIImage(named: "attachment")
+        commentView.accessoryButton.addTarget(self, action: #selector(self.tapAccessoryButton(sender:)), for: .touchUpInside)
+        
+        
+        tableView.delegate = self
+        tableView.dataSource = self
+        
+        tableView.allowsSelection = true
+        tableView.allowsMultipleSelection = false
+        
+        tableView.register(RecordCell.self, forCellReuseIdentifier: "recordCell")
+        tableView.register(CommentCell.self, forCellReuseIdentifier: "commentCell")
+        
+        //self.view.addSubview(tableView)
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
 
-    override func numberOfSections(in tableView: UITableView) -> Int {
+    @objc func tapAccessoryButton(sender: UIButton) {
+        
+        
+    }
+    
+    @objc func tapStickerButton(sender: UIButton) {
+        
+        commentView.endEditing(true)
+    }
+    
+    func didSendComment(_ text: String!) {
+        
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 2
     }
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
             if record.count > 0 {
                 return 1
@@ -80,7 +129,7 @@ class RecordController: UITableViewController {
         return 0
     }
 
-    override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.section == 0 {
             if let height = heights[indexPath] {
                 return height
@@ -102,7 +151,7 @@ class RecordController: UITableViewController {
         return 0
     }
     
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.section == 0 {
             if let height = heights[indexPath] {
                 return height
@@ -147,7 +196,7 @@ class RecordController: UITableViewController {
         return 0
     }
     
-    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if section == 0 {
             if record.count > 0 {
                 return 5
@@ -156,7 +205,7 @@ class RecordController: UITableViewController {
         return 0.001
     }
     
-    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         if section == 0 {
             if record.count > 0 {
                 return 5
@@ -170,21 +219,21 @@ class RecordController: UITableViewController {
         return 0.001
     }
     
-    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let viewHeader = UIView()
         viewHeader.backgroundColor = vkSingleton.shared.backColor
         
         return viewHeader
     }
     
-    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let viewFooter = UIView()
         viewFooter.backgroundColor = vkSingleton.shared.backColor
         
         return viewFooter
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         if indexPath.section == 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "recordCell", for: indexPath) as! RecordCell
@@ -205,6 +254,7 @@ class RecordController: UITableViewController {
             cell.cellWidth = self.tableView.frame.width
             
             cell.configureCell()
+            cell.selectionStyle = .none
             
             return cell
         }
@@ -219,14 +269,14 @@ class RecordController: UITableViewController {
                         count = totalComments - comments.count
                     }
                     cell.configureCountCell(count: count, total: totalComments - comments.count)
-                    cell.countButton.removeTarget(nil, action: nil, for: .allEvents)
-                    cell.countButton.add(for: .touchUpInside) {
-                        
-                    }
+                    cell.countButton.addTarget(self, action: #selector(loadMoreComments), for: .touchUpInside)
                 } else {
                     cell.removeAllSubviews()
                 }
                
+                cell.separatorInset = UIEdgeInsets(top: 0, left: 60, bottom: 0, right: 20)
+                cell.selectionStyle = .none
+
                 return cell
             } else {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "commentCell", for: indexPath) as! CommentCell
@@ -234,6 +284,9 @@ class RecordController: UITableViewController {
                 let comment = comments[comments.count - indexPath.row]
                 
                 cell.delegate = self
+                cell.indexPath = indexPath
+                cell.cell = cell
+                cell.tableView = self.tableView
                 cell.comment = comment
                 cell.users = commentsProfiles
                 cell.groups = commentsGroups
@@ -241,6 +294,14 @@ class RecordController: UITableViewController {
                 cell.cellWidth = self.tableView.frame.width
                 
                 cell.configureCell()
+                
+                if comment.replyComment != 0 {
+                    let tapReply = UITapGestureRecognizer(target: self, action: #selector(showReplyComment(sender:)))
+                    cell.dateLabel.isUserInteractionEnabled = true
+                    cell.dateLabel.addGestureRecognizer(tapReply)
+                }
+                
+                cell.selectionStyle = .none
                 
                 return cell
             }
@@ -323,15 +384,18 @@ class RecordController: UITableViewController {
                     
                     self.title = "Запись"
                     
-                    /*if self.record.count > 0 {
+                    if self.record.count > 0 {
                         if self.record[0].canComment == 0 {
-                            self.tableView.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height - 49)
+                            self.tableView.frame = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height)
                             self.view.addSubview(self.tableView)
                             self.commentView.removeFromSuperview()
                         } else {
                             self.view.addSubview(self.commentView)
                         }
-                    }*/
+                        
+                        let barButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(self.tapBarButtonItem(sender:)))
+                        self.navigationItem.rightBarButtonItem = barButton
+                    }
                     
                     self.offset += self.count
                     self.tableView.reloadData()
@@ -370,7 +434,7 @@ class RecordController: UITableViewController {
                 guard let data = getServerDataOperation.data else { return }
                 
                 guard let json = try? JSON(data: data) else { print("json error"); return }
-                //print(json)
+                //print(json["response"][0])
                 
                 let photos = json["response"][0].compactMap { Photo(json: $0.1) }
                 
@@ -447,15 +511,18 @@ class RecordController: UITableViewController {
                     }
                     self.title = "Фотография"
                     
-                    /*if self.record.count > 0 {
-                     if self.record[0].canComment == 0 {
-                     self.tableView.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height - 49)
-                     self.view.addSubview(self.tableView)
-                     self.commentView.removeFromSuperview()
-                     } else {
-                     self.view.addSubview(self.commentView)
-                     }
-                     }*/
+                    if self.record.count > 0 {
+                        if self.record[0].canComment == 0 {
+                            self.tableView.frame = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height)
+                            self.view.addSubview(self.tableView)
+                            self.commentView.removeFromSuperview()
+                        } else {
+                            self.view.addSubview(self.commentView)
+                        }
+                        
+                        let barButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(self.tapBarButtonItem(sender:)))
+                        self.navigationItem.rightBarButtonItem = barButton
+                    }
                     
                     self.offset += self.count
                     self.tableView.reloadData()
@@ -464,6 +531,204 @@ class RecordController: UITableViewController {
                 }
             }
             queue.addOperation(getServerDataOperation)
+        }
+    }
+    
+    @objc func loadMoreComments() {
+        
+        var url = ""
+        var parameters = ["":""]
+        
+        heights.removeAll(keepingCapacity: false)
+        
+        if type == "post" {
+            url = "/method/wall.getComments"
+            parameters = [
+                "access_token": vkSingleton.shared.accessToken,
+                "owner_id": "\(uid)",
+                "post_id": "\(pid)",
+                "need_likes": "1",
+                "offset": "\(offset)",
+                "count": "\(count)",
+                "sort": "desc",
+                "preview_length": "0",
+                "extended": "1",
+                "fields": "id, first_name, last_name, photo_max_orig, photo_100, first_name_dat, first_name_acc, sex",
+                "v": vkSingleton.shared.version
+            ]
+        } else if type == "photo" {
+            url = "/method/photos.getComments"
+            parameters = [
+                "access_token": vkSingleton.shared.accessToken,
+                "owner_id": "\(uid)",
+                "photo_id": "\(pid)",
+                "need_likes": "1",
+                "offset": "\(offset)",
+                "count": "\(count)",
+                "sort": "desc",
+                "extended": "1",
+                "fields": "id, first_name, last_name, photo_max_orig, photo_100, first_name_dat, first_name_acc, sex",
+                "v": vkSingleton.shared.version
+            ]
+        }
+        
+        let getServerDataOperation = GetServerDataOperation(url: url, parameters: parameters)
+        getServerDataOperation.completionBlock = {
+            guard let data = getServerDataOperation.data else { return }
+            
+            guard let json = try? JSON(data: data) else { print("json error"); return }
+            //print(json)
+            let comments = json["response"]["items"].compactMap { Comment(json: $0.1) }
+            let profiles = json["response"]["profiles"].compactMap { UserProfile(json: $0.1) }
+            let groups = json["response"]["groups"].compactMap { GroupProfile(json: $0.1) }
+            
+            self.offset += self.count
+            self.totalComments = json["response"]["count"].intValue
+            
+            for comment in comments {
+                self.comments.append(comment)
+            }
+            for profile in profiles {
+                self.commentsProfiles.append(profile)
+            }
+            for group in groups {
+                self.commentsGroups.append(group)
+            }
+            
+            OperationQueue.main.addOperation {
+                self.tableView.reloadData()
+                if self.comments.count > 0 {
+                    self.tableView.scrollToRow(at: IndexPath(row: 1, section: 1), at: .top, animated: true)
+                }
+            }
+        }
+        OperationQueue().addOperation(getServerDataOperation)
+    }
+    
+    @objc func showReplyComment(sender: UITapGestureRecognizer) {
+        if sender.state == .ended {
+            let buttonPosition: CGPoint = sender.location(in: self.tableView)
+            
+            if let indexPath = self.tableView.indexPathForRow(at: buttonPosition) {
+                
+                let index = comments.count - indexPath.row
+                let comment = comments[index]
+                
+                //self.commentView.endEditing(true)
+                
+                var url = "/method/wall.getComments"
+                var parameters = [
+                    "access_token": vkSingleton.shared.accessToken,
+                    "owner_id": "\(uid)",
+                    "post_id": "\(pid)",
+                    "start_comment_id": "\(comment.replyComment)",
+                    "count": "1",
+                    "preview_length": "0",
+                    "extended": "1",
+                    "fields": "id, first_name, last_name, photo_max_orig, photo_100, first_name_dat, first_name_acc, sex",
+                    "v": vkSingleton.shared.version
+                ]
+                
+                if self.type == "photo" {
+                    url = "/method/photos.getComments"
+                    parameters = [
+                        "access_token": vkSingleton.shared.accessToken,
+                        "owner_id": "\(uid)",
+                        "photo_id": "\(pid)",
+                        "start_comment_id": "\(comment.replyComment)",
+                        "count": "1",
+                        "preview_length": "0",
+                        "extended": "1",
+                        "fields": "id, first_name, last_name, photo_max_orig, photo_100, first_name_dat, first_name_acc, sex",
+                        "v": vkSingleton.shared.version
+                    ]
+                }
+                
+                let getServerDataOperation = GetServerDataOperation(url: url, parameters: parameters)
+                getServerDataOperation.completionBlock = {
+                    guard let data = getServerDataOperation.data else { return }
+                    
+                    guard let json = try? JSON(data: data) else { print("json error"); return }
+                    //print(json)
+                    
+                    let reply = json["response"]["items"].compactMap { Comment(json: $0.1) }
+                    let users = json["response"]["profiles"].compactMap { UserProfile(json: $0.1) }
+                    let groups = json["response"]["groups"].compactMap { GroupProfile(json: $0.1) }
+                    
+                    //let reply = parseComments.comments
+                    //let users = parseComments.profiles
+                    //let groups = parseComments.groups
+                    
+                    if reply.count > 0 {
+                        var name = ""
+                        if reply[0].fromID > 0 {
+                            let user = users.filter({ $0.uid == "\(reply[0].fromID)" })
+                            if user.count > 0 {
+                                if user[0].sex == 1 {
+                                    name = "\(user[0].firstName) \(user[0].lastName) написала"
+                                } else {
+                                    name = "\(user[0].firstName) \(user[0].lastName) написал"
+                                }
+                            }
+                        } else {
+                            let group = groups.filter({ $0.gid == abs(reply[0].fromID) })
+                            if group.count > 0 {
+                                name = "\(group[0].name) написал"
+                            }
+                        }
+                        
+                        var text = reply[0].text.prepareTextForPublic()
+                        if reply[0].attachments.count > 0 {
+                            if reply[0].attachments.count == 1 {
+                                let aType = reply[0].attachments[0].type
+                                if aType == "photo" {
+                                    if text != "" {
+                                        text = "\(text)\n[Фотография]"
+                                    } else {
+                                        text = "[Фотография]"
+                                    }
+                                } else if aType == "video" {
+                                    if text != "" {
+                                        text = "\(text)\n[Видеозапись]"
+                                    } else {
+                                        text = "[Видеозапись]"
+                                    }
+                                } else if aType == "sticker" {
+                                    if text != "" {
+                                        text = "\(text)\n[Стикер]"
+                                    } else {
+                                        text = "[Стикер]"
+                                    }
+                                } else if aType == "doc" {
+                                    if text != "" {
+                                        text = "\(text)\n[Документ]"
+                                    } else {
+                                        text = "[Документ]"
+                                    }
+                                } else if aType == "audio" {
+                                    if text != "" {
+                                        text = "\(text)\n[Аудиозапись]"
+                                    } else {
+                                        text = "[Аудиозапись]"
+                                    }
+                                }
+                            } else {
+                                if text != "" {
+                                    text = "\(text)\n[\(reply[0].attachments.count.attachAdder())]"
+                                } else {
+                                    text = "[\(reply[0].attachments.count.attachAdder())]"
+                                }
+                            }
+                        }
+                        
+                        self.showInfoMessage(title: "\(reply[0].date.toStringLastTime())\n\(name):", msg: "\n\(text)\n")
+                    } else {
+                        
+                        self.showErrorMessage(title: "Ошибка", msg: "Увы, комментарий, на который отвечали, уже удален.☹️")
+                    }
+                }
+                OperationQueue().addOperation(getServerDataOperation)
+            }
         }
     }
     

@@ -84,14 +84,15 @@
 @interface DCCommentView ()
 
 @property(nonatomic,strong)UIView *messageBarView;
-@property(nonatomic,strong)UITextView *textView;
+//@property(nonatomic,strong)UITextView *textView;
 @property(nonatomic,strong)UIButton *sendButton;
 @property(nonatomic,assign)CGFloat normalHeight;
 @property(nonatomic,assign)CGFloat oldSize;
 @property(nonatomic,strong)UIView *backView;
 @property(nonatomic,strong)UIToolbar *blurBar;
 @property(nonatomic,strong)UILabel *textLabel;
-@property(nonatomic,strong)UIButton *accessoryButton;
+@property(nonatomic,strong)UILabel *replyLabel;
+//@property(nonatomic,strong)UIButton *accessoryButton;
 @property(nonatomic,weak)UIScrollView *scrollView;
 @property(nonatomic,strong)UILabel *limitLabel;
 @property(nonatomic,strong)DCWatcherView *watcherView;
@@ -111,6 +112,12 @@
     {
         self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         self.scrollView = scrollView;
+        
+        UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideKeyboard:)];
+        [self.scrollView addGestureRecognizer:gestureRecognizer];
+        self.scrollView.userInteractionEnabled = YES;
+        gestureRecognizer.cancelsTouchesInView = NO;
+        
         self.scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         self.scrollView.keyboardDismissMode = UIScrollViewKeyboardDismissModeInteractive;
         [self addSubview:self.scrollView];
@@ -150,23 +157,34 @@
     self.textLabel = [[UILabel alloc] init];
     self.textLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     self.textLabel.backgroundColor = [UIColor clearColor];
-    self.textLabel.text = NSLocalizedString(@"Message", nil);
+    self.textLabel.text = NSLocalizedString(@"Введите текст", nil);
+    self.textLabel.font = [UIFont fontWithName:@"Verdana" size:14];
     self.textLabel.textColor = [UIColor colorWithWhite:0.8 alpha:1];
     [self.backView addSubview:self.textLabel];
     
+    self.replyLabel = [[UILabel alloc] init];
+    self.replyLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    self.replyLabel.backgroundColor = [UIColor clearColor];
+    self.replyLabel.text = NSLocalizedString(@"", nil);
+    self.replyLabel.font = [UIFont fontWithName:@"Verdana" size:13];
+    self.replyLabel.textColor = [UIColor blackColor];
+    [self.backView addSubview:self.replyLabel];
+    
     self.textView = [[UITextView alloc] init];
+    //self.textView.returnKeyType = UIReturnKeySend;
     self.textView.tintColor = color;
     self.textView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     self.textView.bounces = NO;
     self.textView.delegate = (id<UITextViewDelegate>)self;
-    self.textView.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
+    self.textView.font = [UIFont fontWithName:@"Verdana" size:14];
+    self.textView.contentMode = UIViewContentModeCenter;
     self.textView.backgroundColor = [UIColor clearColor];
     [self.backView addSubview:self.textView];
     
     self.sendButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.sendButton setTitleColor:color forState:UIControlStateNormal];
     [self.sendButton setTitleColor:[UIColor colorWithWhite:0.7 alpha:0.5] forState:UIControlStateDisabled];
-    [self.sendButton setTitle:NSLocalizedString(@"Send", nil) forState:UIControlStateNormal];
+    [self.sendButton setTitle:NSLocalizedString(@"Отпр.", nil) forState:UIControlStateNormal];
     self.sendButton.titleLabel.font = [UIFont boldSystemFontOfSize:17];
     self.sendButton.enabled = NO;
     [self.sendButton addTarget:self action:@selector(sendMessage) forControlEvents:UIControlEventTouchUpInside];
@@ -179,27 +197,56 @@
     CGFloat textH = self.messageBarView.frame.size.height;
     if(textH == 0) {
         textH = self.normalHeight;
-        self.scrollView.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height-textH);
+        self.scrollView.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height-textH-self.tabHeight);
         self.messageBarView.frame = CGRectMake(0, self.scrollView.frame.origin.y+self.scrollView.frame.size.height, self.frame.size.width, textH);
         self.maxScrollHeight = self.scrollView.frame.size.height;
     }
     self.blurBar.frame = CGRectMake(0, 0, self.messageBarView.frame.size.width, self.messageBarView.frame.size.height);
     CGFloat pad = 8;
-    CGFloat btnWidth = 50;
+    CGFloat btnWidth = 30;
     CGFloat left = pad;
     CGFloat tpad = 2;
-    if(self.accessoryImage)
+    
+    if(self.stickerImage)
     {
-        float imgWidth = 30;
-        self.accessoryButton.frame = CGRectMake(pad/2, 0, imgWidth+pad, self.messageBarView.frame.size.height);
-        left += self.accessoryButton.frame.size.width;
+        float pad1 = (self.messageBarView.frame.size.height - btnWidth)/2;
+        
+        if(self.accessoryImage)
+        {
+            self.accessoryButton.frame = CGRectMake(pad/2, pad1, btnWidth, btnWidth);
+            left += btnWidth;
+        }
+        
+        self.stickerButton.frame = CGRectMake(left, pad1, btnWidth, btnWidth);
+        left += btnWidth + pad/2;
+        
+    } else if(self.accessoryImage)
+    {
+        float pad1 = (self.messageBarView.frame.size.height - btnWidth)/2;
+        self.accessoryButton.frame = CGRectMake(pad/2, pad1, btnWidth, btnWidth);
+        left += btnWidth + pad/2;
     }
+
+    if (self.fromGroupImage)
+    {
+        float pad1 = (self.messageBarView.frame.size.height - btnWidth)/2;
+        self.fromGroupButton.frame = CGRectMake(left, pad1, btnWidth, btnWidth);
+        self.fromGroupButton.imageView.layer.cornerRadius = btnWidth/2;
+        [[self.fromGroupButton.imageView layer] setBorderColor:[UIColor grayColor].CGColor];
+        self.fromGroupButton.imageView.layer.borderWidth = 0.6;
+        self.fromGroupButton.imageView.clipsToBounds = YES;
+        left += btnWidth+pad/2;
+    }
+    
     self.backView.frame = CGRectMake(left, pad, self.messageBarView.frame.size.width-(left+btnWidth+pad), self.messageBarView.frame.size.height-(pad*2));
+    left += self.backView.frame.size.width + (pad/2);
+    
     self.textView.frame = CGRectMake(tpad, 0, self.backView.frame.size.width-(tpad*2), self.backView.frame.size.height);
     self.textLabel.frame = CGRectMake(pad, 0, self.backView.frame.size.width-(pad*2), self.backView.frame.size.height);
-    left += self.backView.frame.size.width + (pad/2);
-    self.sendButton.frame = CGRectMake(left, pad, btnWidth, self.messageBarView.frame.size.height-(pad*2));
-    if(self.sendButton.frame.size.height > 50 && self.charLimit > 0)
+    
+    float pad1 = (self.messageBarView.frame.size.height - btnWidth)/2;
+    self.sendButton.frame = CGRectMake(left, pad1, btnWidth, btnWidth);
+    if(self.sendButton.frame.size.height > btnWidth && self.charLimit > 0)
     {
         self.limitLabel.frame = CGRectMake(left-pad, (self.sendButton.frame.size.height/2)+pad, btnWidth, 18);
     }
@@ -215,6 +262,63 @@
     {
         self.textView.tintColor = tintColor;
         [self.sendButton setTitleColor:tintColor forState:UIControlStateNormal];
+        [self.accessoryButton setTitleColor:tintColor forState:UIControlStateNormal];
+        [self.stickerButton setTitleColor:tintColor forState:UIControlStateNormal];
+        [self.fromGroupButton setTitleColor:tintColor forState:UIControlStateNormal];
+    }
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////
+-(void)setStickerImage:(UIImage *)stickerImage
+{
+    _stickerImage = stickerImage;
+    if(stickerImage)
+    {
+        self.stickerButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [self.stickerButton setImage:stickerImage forState:UIControlStateNormal];
+        self.stickerButton.showsTouchWhenHighlighted = YES;
+        self.stickerButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
+        [self.messageBarView addSubview:self.stickerButton];
+    }
+    else
+    {
+        [self.stickerButton removeFromSuperview];
+        self.stickerButton = nil;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////
+-(void)setFromGroupImage:(UIImage *)fromGroupImage
+{
+    [self.fromGroupButton removeFromSuperview];
+    self.fromGroupButton = nil;
+    
+    _fromGroupImage = fromGroupImage;
+    if(fromGroupImage)
+    {
+        self.fromGroupButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        
+        [self.fromGroupButton setImage:fromGroupImage forState:UIControlStateNormal];
+        [self.fromGroupButton setImage:fromGroupImage forState:UIControlStateSelected];
+        self.fromGroupButton.showsTouchWhenHighlighted = YES;
+        self.fromGroupButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
+        [self.messageBarView addSubview:self.fromGroupButton];
+        [self layoutSubviews];
+    }
+    else
+    {
+        [self.fromGroupButton removeFromSuperview];
+        self.fromGroupButton = nil;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////
+-(void)setSendImage:(UIImage *)sendImage
+{
+    _sendImage = sendImage;
+    if(sendImage)
+    {
+        [self.sendButton setImage:sendImage forState:UIControlStateNormal];
+        self.sendButton.showsTouchWhenHighlighted = YES;
+        self.sendButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
+        [self.sendButton setTitle:NSLocalizedString(@"", nil) forState:UIControlStateNormal];
     }
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -226,8 +330,8 @@
         self.accessoryButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [self.accessoryButton setImage:accessoryImage forState:UIControlStateNormal];
         self.accessoryButton.showsTouchWhenHighlighted = YES;
-        //self.accessoryButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
-        [self addSubview:self.accessoryButton];
+        self.accessoryButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
+        [self.messageBarView addSubview:self.accessoryButton];
     }
     else
     {
@@ -250,6 +354,22 @@
     }
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+-(void)setTabHeight:(CGFloat)tabHeight
+{
+    _tabHeight = tabHeight;
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////
+-(void)setAttachCount:(NSInteger)attachCount
+{
+    _attachCount = attachCount;
+    BOOL enable = NO;
+    if(_attachCount > 0 || self.textView.text.length > 0)
+    {
+        enable = YES;
+    }
+    self.sendButton.enabled = enable;
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////
 -(void)sendMessage
 {
     [self.dummyField becomeFirstResponder];
@@ -257,6 +377,9 @@
     [self.textView becomeFirstResponder];
     [self.delegate didSendComment:self.textView.text];
     self.textView.text = @"";
+    CGRect frame = self.messageBarView.frame;
+    frame.size.height = 0;
+    self.messageBarView.frame = frame;
     [self textState:@""];
     self.hasStarted = NO;
     [self setNeedsDisplay];
@@ -296,7 +419,7 @@
         if([self.delegate respondsToSelector:@selector(didStopTypingComment)]) {
             [self.delegate didStopTypingComment];
         }
-    } else if(txtView.text.length > 0 && !self.hasStarted) {
+    } else if(txtView.text.length > 0 /*&& !self.hasStarted*/) {
         self.hasStarted = YES;
         if([self.delegate respondsToSelector:@selector(didStartTypingComment)]) {
             [self.delegate didStartTypingComment];
@@ -307,7 +430,7 @@
 -(void)textState:(NSString*)text
 {
     BOOL enable = NO;
-    if(text.length > 0)
+    if(text.length > 0 || _attachCount > 0)
     {
         enable = YES;
         if(self.charLimit > 0)
@@ -383,7 +506,7 @@
         if(h > self.maxScrollHeight+self.messageBarView.frame.size.height) {
             h = self.maxScrollHeight;
         } else {
-            h -= self.messageBarView.frame.size.height;
+            h -= self.messageBarView.frame.size.height+self.tabHeight;
         }
         CGRect frame = self.scrollView.frame;
         frame.size.height = h;
@@ -397,13 +520,44 @@
 #pragma keyboard handling
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void) hideKeyboard: (UITapGestureRecognizer *)gestureRecognizer
+{
+    [self.textView resignFirstResponder];
+    
+    UIEdgeInsets contentInsets = UIEdgeInsetsMake(0, 0, 0, 0);
+    
+    self.scrollView.contentInset = contentInsets;
+    self.scrollView.scrollIndicatorInsets = contentInsets;
+    
+    CGRect frame = self.messageBarView.frame;
+    frame.origin.y -= 0;
+    self.messageBarView.frame = frame;
+    
+    //[self.scrollView endEditing:YES];
+}
+
 - (void)keyboardDidShow:(NSNotification *)aNotification
 {
-    [self.scrollView scrollRectToVisible:CGRectMake(0.0,
-                                                    self.scrollView.contentSize.height - 1.0,
-                                                    1.0,
-                                                    1.0)
-                                animated:YES];
+    /*CGFloat kbSize = [aNotification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue].size.height;
+    
+    self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, self.scrollView.frame.size.height + kbSize + self.messageBarView.frame.size.height);
+    
+    UIEdgeInsets contentInsets = UIEdgeInsetsMake(0, 0, kbSize + self.messageBarView.frame.size.height, 0);
+    
+    self.scrollView.contentInset = contentInsets;
+    self.scrollView.scrollIndicatorInsets = contentInsets;
+    
+    //[self.scrollView scrollRectToVisible:CGRectMake(0.0, self.scrollView.contentSize.height - 1.0, 1.0, 1.0) animated:YES];*/
+    
+    CGRect frame = self.messageBarView.frame;
+    frame.origin.y += self.tabHeight;
+    self.messageBarView.frame = frame;
+    
+    frame = self.scrollView.frame;
+    frame.size.height += self.tabHeight;
+    self.scrollView.frame = frame;
+    
+    [self.scrollView setContentOffset:CGPointMake(0, self.scrollView.contentSize.height - self.scrollView.bounds.size.height)];
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 -(BOOL)isFirstResponder

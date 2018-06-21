@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SwiftyJSON
 
 class AttachmentsView: UIView {
 
@@ -21,6 +22,27 @@ class AttachmentsView: UIView {
             if attach.photo.count > 0 {
                 photos.append(attach.photo[0])
             }
+            
+            /*if attach.doc.count > 0 && attach.doc[0].ext == "png" {
+                let photo = Photo(json: JSON.null)
+                photo.id = attach.doc[0].id
+                photo.ownerID = attach.doc[0].ownerID
+                photo.userID = attach.doc[0].ownerID
+                photo.text = attach.doc[0].title
+                photo.date = attach.doc[0].date
+                photo.width = attach.doc[0].width
+                photo.height = attach.doc[0].height
+                photo.photo75 = attach.doc[0].photoURL[0]
+                if attach.doc[0].photoURL.count > 0 {
+                    photo.photo130 = attach.doc[0].photoURL[attach.doc[0].photoURL.count-1]
+                    photo.photo604 = photo.photo130
+                    photo.photo807 = photo.photo130
+                    photo.photo1280 = photo.photo130
+                    photo.photo2560 = photo.photo130
+                }
+                photo.accessKey = attach.doc[0].accessKey
+                photos.append(photo)
+            }*/
         }
         
         var topY: CGFloat = 0
@@ -28,57 +50,59 @@ class AttachmentsView: UIView {
         if photos.count > 0 {
             switch photos.count {
             case 1:
-                var width = CGFloat(photos[0].width)
-                var height = CGFloat(photos[0].height)
-                
-                if width > height {
-                    width = maxSize
-                    height = width * CGFloat(photos[0].height) / CGFloat(photos[0].width)
-                } else {
-                    height = maxSize
-                    width = height * CGFloat(photos[0].width) / CGFloat(photos[0].height)
-                }
-                
-                if !getRow {
-                    let photoImage = UIImageView()
-                    photoImage.tag = 250
+                if photos[0].width > 0, photos[0].height > 0 {
+                    var width = CGFloat(photos[0].width)
+                    var height = CGFloat(photos[0].height)
                     
-                    var url = photos[0].photo1280
-                    if url == "" {
-                        url = photos[0].photo807
-                        if url == "" {
-                            url = photos[0].photo604
-                        }
-                        if url == "" {
-                            url = photos[0].photo130
-                        }
+                    if width > height {
+                        width = maxSize
+                        height = width * CGFloat(photos[0].height) / CGFloat(photos[0].width)
+                    } else {
+                        height = maxSize
+                        width = height * CGFloat(photos[0].width) / CGFloat(photos[0].height)
                     }
-                    let getCacheImage = GetCacheImage(url: url, lifeTime: .userPhotoImage)
-                    getCacheImage.completionBlock = {
-                        OperationQueue.main.addOperation {
-                            photoImage.image = getCacheImage.outputImage
-                            photoImage.clipsToBounds = true
-                            if width > height {
-                                photoImage.contentMode = .scaleAspectFill
-                            } else {
-                                photoImage.contentMode = .scaleAspectFit
+                    
+                    if !getRow {
+                        let photoImage = UIImageView()
+                        photoImage.tag = 250
+                        
+                        var url = photos[0].photo1280
+                        if url == "" {
+                            url = photos[0].photo807
+                            if url == "" {
+                                url = photos[0].photo604
+                            }
+                            if url == "" {
+                                url = photos[0].photo130
                             }
                         }
+                        let getCacheImage = GetCacheImage(url: url, lifeTime: .userPhotoImage)
+                        getCacheImage.completionBlock = {
+                            OperationQueue.main.addOperation {
+                                photoImage.image = getCacheImage.outputImage
+                                photoImage.clipsToBounds = true
+                                if width > height {
+                                    photoImage.contentMode = .scaleAspectFill
+                                } else {
+                                    photoImage.contentMode = .scaleAspectFit
+                                }
+                            }
+                        }
+                        OperationQueue().addOperation(getCacheImage)
+                        
+                        photoImage.frame = CGRect(x: 0, y: topY + 2.5, width: width, height: height)
+                        photoImage.clipsToBounds = true
+                        self.addSubview(photoImage)
+                        
+                        let tap = UITapGestureRecognizer()
+                        photoImage.isUserInteractionEnabled = true
+                        photoImage.addGestureRecognizer(tap)
+                        tap.add {
+                            self.delegate.openPhotoViewController(numPhoto: 0, photos: self.photos)
+                        }
                     }
-                    OperationQueue().addOperation(getCacheImage)
-                    
-                    photoImage.frame = CGRect(x: 0, y: topY + 2.5, width: width, height: height)
-                    photoImage.clipsToBounds = true
-                    self.addSubview(photoImage)
-                    
-                    let tap = UITapGestureRecognizer()
-                    photoImage.isUserInteractionEnabled = true
-                    photoImage.addGestureRecognizer(tap)
-                    tap.add {
-                        self.delegate.openPhotoViewController(numPhoto: 0, photos: self.photos)
-                    }
+                    topY += height + 2.5
                 }
-                topY += height + 2.5
             case 3,5,7,9:
                 
                 var width = CGFloat(photos[0].width)
