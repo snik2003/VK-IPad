@@ -69,7 +69,15 @@ class RecordController: UITableViewController {
             }
             return 0
         }
-        return comments.count
+        
+        if section == 1 {
+            if comments.count > 0 {
+                return comments.count + 1
+            }
+            return 0
+        }
+        
+        return 0
     }
 
     override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -111,6 +119,29 @@ class RecordController: UITableViewController {
                 
                 return height
             }
+        } else if indexPath.section == 1 {
+            if indexPath.row == 0 {
+                if comments.count == totalComments {
+                    return 0
+                }
+                return 40
+            } else {
+                if let height = heights[indexPath] {
+                    return height
+                } else {
+                    let cell = tableView.dequeueReusableCell(withIdentifier: "commentCell") as! CommentCell
+                    
+                    cell.delegate = self
+                    cell.comment = comments[comments.count - indexPath.row]
+                    cell.cellWidth = self.tableView.frame.width
+                    
+                    
+                    let height = cell.getRowHeight()
+                    heights[indexPath] = height
+                    
+                    return height
+                }
+            }
         }
         
         return 0
@@ -118,19 +149,25 @@ class RecordController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if section == 0 {
-            return 10
+            if record.count > 0 {
+                return 5
+            }
         }
-        return 0
+        return 0.001
     }
     
     override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        if section == 0 {
+            if record.count > 0 {
+                return 5
+            }
+        }
         if section == 1 {
             if comments.count > 0 {
-                return 10
+                return 5
             }
-            return 0
         }
-        return 10
+        return 0.001
     }
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -151,7 +188,7 @@ class RecordController: UITableViewController {
         
         if indexPath.section == 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "recordCell", for: indexPath) as! RecordCell
-
+            
             cell.delegate = self
             cell.indexPath = indexPath
             cell.cell = cell
@@ -173,9 +210,40 @@ class RecordController: UITableViewController {
         }
         
         if indexPath.section == 1 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "commentCell", for: indexPath)
+            if indexPath.row == 0 {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "commentCell", for: indexPath) as! CommentCell
+                
+                if comments.count < totalComments {
+                    var count = self.count
+                    if count > totalComments - comments.count {
+                        count = totalComments - comments.count
+                    }
+                    cell.configureCountCell(count: count, total: totalComments - comments.count)
+                    cell.countButton.removeTarget(nil, action: nil, for: .allEvents)
+                    cell.countButton.add(for: .touchUpInside) {
+                        
+                    }
+                } else {
+                    cell.removeAllSubviews()
+                }
+               
+                return cell
+            } else {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "commentCell", for: indexPath) as! CommentCell
             
-            return cell
+                let comment = comments[comments.count - indexPath.row]
+                
+                cell.delegate = self
+                cell.comment = comment
+                cell.users = commentsProfiles
+                cell.groups = commentsGroups
+                
+                cell.cellWidth = self.tableView.frame.width
+                
+                cell.configureCell()
+                
+                return cell
+            }
         }
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
@@ -253,25 +321,7 @@ class RecordController: UITableViewController {
                     }
                     
                     
-                    var title = "Запись"
-                    if self.record.count > 0 {
-                        let barButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(self.tapBarButtonItem(sender:)))
-                        self.navigationItem.rightBarButtonItem = barButton
-                        
-                        let record = self.record[0]
-                        if record.ownerID > 0 {
-                            let users = self.users.filter({ $0.uid == "\(record.ownerID)" })
-                            if users.count > 0 {
-                                title = "Запись со стены \(users[0].firstNameGen) \(users[0].lastNameGen)"
-                            }
-                        } else if record.ownerID < 0 {
-                            let groups = self.groups.filter({ $0.gid == abs(record.ownerID) })
-                            if groups.count > 0 {
-                                title = "Запись со стены сообщества «\(groups[0].name)»"
-                            }
-                        }
-                    }
-                    self.title = title
+                    self.title = "Запись"
                     
                     /*if self.record.count > 0 {
                         if self.record[0].canComment == 0 {
@@ -294,14 +344,14 @@ class RecordController: UITableViewController {
             
             var code = "var a = API.photos.getById({\"photos\":\"\(uid)_\(pid)_\(accessKey)\",\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"extended\":\"1\",\"v\":\"\(vkSingleton.shared.version)\"}); \n"
             
-            code = "\(code) var b = API.likes.getList({\"type\":\"photo\",\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"owner_id\":\"\(uid)\",\"item_id\":\"\(pid)\",\"filter\":\"likes\",\"extended\":\"1\",\"fields\":\"id, first_name, last_name, sex, has_photo, last_seen, online, photo_max_orig, photo_max, deactivated, first_name_dat, friend_status\",\"count\":\"1000\",\"skip_own\":\"0\",\"v\": \"\(vkSingleton.shared.version)\"}); \n"
+            code = "\(code) var b = API.likes.getList({\"type\":\"photo\",\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"owner_id\":\"\(uid)\",\"item_id\":\"\(pid)\",\"filter\":\"likes\",\"extended\":\"1\",\"fields\":\"id, first_name, last_name, sex, has_photo, last_seen, online, photo_max_orig, photo_max, photo_100, deactivated, first_name_dat, friend_status\",\"count\":\"1000\",\"skip_own\":\"0\",\"v\": \"\(vkSingleton.shared.version)\"}); \n"
             
             code = "\(code) var c = API.photos.getComments({\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"owner_id\":\"\(uid)\",\"photo_id\":\"\(pid)\",\"need_likes\":\"1\",\"offset\":\"\(offset)\",\"count\":\"\(count)\",\"sort\":\"desc\",\"preview_length\":\"0\",\"extended\":\"1\",\"fields\":\"id, first_name, last_name, photo_max_orig, photo_100, first_name_dat, first_name_acc, sex\",\"v\":\"\(vkSingleton.shared.version)\"}); \n"
             
-            code = "\(code) var d = API.likes.getList({\"type\":\"photo\",\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"owner_id\":\"\(uid)\",\"item_id\":\"\(pid)\",\"filter\":\"copies\",\"extended\":\"1\",\"fields\":\"id, first_name, last_name, sex, has_photo, last_seen, online, photo_max_orig, photo_max, deactivated, first_name_dat, friend_status\",\"count\":\"1000\",\"skip_own\":\"0\",\"v\":\"\(vkSingleton.shared.version)\"}); \n"
+            code = "\(code) var d = API.likes.getList({\"type\":\"photo\",\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"owner_id\":\"\(uid)\",\"item_id\":\"\(pid)\",\"filter\":\"copies\",\"extended\":\"1\",\"fields\":\"id, first_name, last_name, sex, has_photo, last_seen, online, photo_max_orig, photo_max, photo_100, deactivated, first_name_dat, friend_status\",\"count\":\"1000\",\"skip_own\":\"0\",\"v\":\"\(vkSingleton.shared.version)\"}); \n"
             
             if self.uid > 0 {
-                code = "\(code) var e = API.users.get({\"user_id\":\"\(uid)\",\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"fields\":\"id, first_name, last_name, photo_max_orig, photo_max\",\"v\":\"\(vkSingleton.shared.version)\"}); \n"
+                code = "\(code) var e = API.users.get({\"user_id\":\"\(uid)\",\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"fields\":\"id, first_name, last_name, photo_max_orig, photo_max, photo_100\",\"v\":\"\(vkSingleton.shared.version)\"}); \n"
             } else if uid < 0{
                 code = "\(code) var e = API.groups.getById({\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"group_id\":\"\(abs(uid))\",\"fields\":\"activity,counters,cover,description,has_photo,member_status,site,status,members_count,is_hidden_from_feed\",\"v\": \"\(vkSingleton.shared.version)\"}); \n"
             }
@@ -322,9 +372,7 @@ class RecordController: UITableViewController {
                 guard let json = try? JSON(data: data) else { print("json error"); return }
                 //print(json)
                 
-                let record = json["response"][0]["items"].compactMap { Record(json: $0.1) }
-                let recordProfiles = json["response"][0]["profiles"].compactMap { UserProfile(json: $0.1) }
-                let recordGroups = json["response"][0]["groups"].compactMap { GroupProfile(json: $0.1) }
+                let photos = json["response"][0].compactMap { Photo(json: $0.1) }
                 
                 let likes = json["response"][1]["items"].compactMap { Likes(json: $0.1) }
                 
@@ -335,9 +383,85 @@ class RecordController: UITableViewController {
                 
                 let reposts = json["response"][3]["items"].compactMap { Likes(json: $0.1) }
                 
-                let photos = json["response"][0].compactMap { Photo(json: $0.1) }
+                if self.uid > 0 {
+                    let profiles = json["response"][4].compactMap { UserProfile(json: $0.1) }
+                    
+                    for user in profiles {
+                        self.users.append(user)
+                    }
+                } else if self.uid < 0{
+                    let profiles = json["response"][4].compactMap { GroupProfile(json: $0.1) }
+                    
+                    for group in profiles {
+                        self.groups.append(group)
+                    }
+                }
                 
-               
+                OperationQueue.main.addOperation {
+                    self.likes = likes
+                    self.reposts = reposts
+                    
+                    self.totalComments = commentsCount
+                    if self.offset == 0 {
+                        self.comments = comments
+                        self.commentsGroups = commentsGroups
+                        self.commentsProfiles = commentsProfiles
+                    } else {
+                        for comment in comments {
+                            self.comments.append(comment)
+                        }
+                        for profile in commentsProfiles {
+                            self.commentsProfiles.append(profile)
+                        }
+                        for group in commentsGroups {
+                            self.commentsGroups.append(group)
+                        }
+                    }
+                    self.totalComments = commentsCount
+                    
+                    if photos.count > 0 {
+                        let record = Record(json: JSON.null)
+                        let photo = photos[0]
+                        
+                        record.id = photo.id
+                        record.ownerID = photo.ownerID
+                        record.fromID = photo.ownerID
+                        record.createdBy = photo.userID
+                        record.date = photo.date
+                        record.commentsCount = photo.commentsCount
+                        record.canComment = photo.canComment
+                        record.likesCount = photo.likesCount
+                        record.userLikes = photo.userLikes
+                        record.userCanRepost = photo.userCanRepost
+                        record.repostCount = photo.repostCount
+                        record.userReposted = photo.userReposted
+                        
+                        record.text = photo.text
+                        record.postType = "post"
+                        
+                        let attach = Attachment(json: JSON.null)
+                        attach.photo.append(photo)
+                        record.attachments.append(attach)
+                        
+                        self.record.append(record)
+                    }
+                    self.title = "Фотография"
+                    
+                    /*if self.record.count > 0 {
+                     if self.record[0].canComment == 0 {
+                     self.tableView.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height - 49)
+                     self.view.addSubview(self.tableView)
+                     self.commentView.removeFromSuperview()
+                     } else {
+                     self.view.addSubview(self.commentView)
+                     }
+                     }*/
+                    
+                    self.offset += self.count
+                    self.tableView.reloadData()
+                    self.tableView.separatorStyle = .singleLine
+                    ViewControllerUtils().hideActivityIndicator()
+                }
             }
             queue.addOperation(getServerDataOperation)
         }

@@ -61,10 +61,6 @@ class PhotoViewCell: UITableViewCell {
         commentsButton.setTitle("\(photo.commentsCount)", for: UIControlState.selected)
         
         self.addSubview(commentsButton)
-        
-        commentsButton.add(for: .touchUpInside) {
-            self.commentsButton.smallButtonTouched()
-        }
     }
     
     func setLikesButton() {

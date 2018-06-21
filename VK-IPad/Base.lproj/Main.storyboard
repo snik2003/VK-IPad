@@ -864,13 +864,14 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="commentCell" id="Ltc-qo-6pp">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="commentCell" id="Ltc-qo-6pp" customClass="CommentCell" customModule="VK_IPad" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="80" width="1366" height="52"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Ltc-qo-6pp" id="yOu-tl-T4N">
                                     <rect key="frame" x="0.0" y="0.0" width="1366" height="52"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
+                                <inset key="separatorInset" minX="60" minY="0.0" maxX="20" maxY="0.0"/>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -976,7 +977,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Gdz-ka-yR2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2934.11420204978" y="2482.03125"/>
+            <point key="canvasLocation" x="2897" y="2483"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="JYs-9Z-W0q">

@@ -178,7 +178,17 @@ class PhotoViewController: UITableViewController {
                 cell.cellWidth = self.tableView.bounds.width
                 cell.configureLikesCell()
                 
-                cell.usersButton.addTarget(self, action: #selector(showLikes(sender:)), for: .touchUpInside)
+                cell.commentsButton.removeTarget(nil, action: nil, for: .allEvents)
+                cell.commentsButton.add(for: .touchUpInside) {
+                    cell.commentsButton.smallButtonTouched()
+                    self.openWallRecord(ownerID: cell.photo.ownerID, postID: cell.photo.id, accessKey: cell.photo.accessKey, type: "photo")
+                }
+
+                cell.usersButton.removeTarget(nil, action: nil, for: .allEvents)
+                cell.usersButton.add(for: .touchUpInside) {
+                    cell.usersButton.smallButtonTouched()
+                    self.openLikesUsersController(likes: self.likes, reposts: self.reposts)
+                }
             }
             
             return cell
@@ -187,10 +197,6 @@ class PhotoViewController: UITableViewController {
             
             return cell
         }
-    }
-    
-    @objc func showLikes(sender: UIButton) {
-        self.openLikesUsersController(likes: self.likes, reposts: self.reposts)
     }
     
     @objc func handleSwipes(sender: UISwipeGestureRecognizer) {

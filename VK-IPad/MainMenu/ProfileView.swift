@@ -26,6 +26,7 @@ class ProfileView: UIView {
     var newRecordButton = UIButton()
     var postponedButton = UIButton()
     var recordsCountLabel = UILabel()
+    let lastLabel = UILabel()
     
     var avatarHeight: CGFloat = 20
     let buttonHeight: CGFloat = 25
@@ -237,7 +238,7 @@ class ProfileView: UIView {
             nameLabel.minimumScaleFactor = 0.5
             userInfoView.addSubview(nameLabel)
             
-            let lastLabel = UILabel()
+            
             if profile.deactivated == "" {
                 if profile.onlineStatus == 1 {
                     lastLabel.text = " онлайн"

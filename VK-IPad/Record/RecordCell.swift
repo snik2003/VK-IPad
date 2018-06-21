@@ -1111,6 +1111,7 @@ class RecordCell: UITableViewCell {
             
             self.addSubview(commentsButton)
             
+            commentsButton.removeTarget(nil, action: nil, for: .allEvents)
             commentsButton.add(for: .touchUpInside) {
                 if (self.delegate as? RecordController) == nil {
                     self.commentsButton.smallButtonTouched()

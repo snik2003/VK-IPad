@@ -40,6 +40,7 @@ class ProfileViewController: UITableViewController, WKNavigationDelegate {
     var postponedWallGroups: [GroupProfile] = []
     
     var isRefresh = false
+    var viewFirstAppear = true
     
     var profileView: ProfileView!
     
@@ -58,6 +59,15 @@ class ProfileViewController: UITableViewController, WKNavigationDelegate {
         refreshExecute()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if !viewFirstAppear {
+            self.refreshUserInfo()
+        }
+        viewFirstAppear = false
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         
@@ -234,10 +244,15 @@ class ProfileViewController: UITableViewController, WKNavigationDelegate {
             OperationQueue.main.addOperation {
                 self.setProfileView()
                 self.tableView.reloadData()
+                
                 if self.userProfile.count > 0 {
                     let user = self.userProfile[0]
                     self.title = "\(user.firstName) \(user.lastName)"
+                    
+                    let barButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(self.tapBarButtonItem(sender:)))
+                    self.navigationItem.rightBarButtonItem = barButton
                 }
+                
                 self.refreshControl?.endRefreshing()
                 ViewControllerUtils().hideActivityIndicator()
             }
@@ -351,5 +366,53 @@ class ProfileViewController: UITableViewController, WKNavigationDelegate {
                 OperationQueue().addOperation(getServerDataOperation)
             }
         }
+    }
+    
+    func refreshUserInfo() {
+        let opq = OperationQueue()
+        
+        let url = "/method/users.get"
+        let parameters = [
+            "user_id": userID,
+            "access_token": vkSingleton.shared.accessToken,
+            "fields": "id,first_name,last_name,maiden_name,domain,sex,relation,bdate,home_town,has_photo,city,country,status,last_seen,online,photo_max_orig,photo_max,photo_id,followers_count,counters,deactivated,education,contacts,connections,site,about,interests,activities,books,games,movies,music,tv,quotes,first_name_abl,first_name_gen,first_name_acc,first_name_ins,can_post,can_send_friend_request,can_write_private_message,friend_status,is_favorite,blacklisted,blacklisted_by_me,crop_photo,is_hidden_from_feed,wall_default,personal,relatives,can_see_all_posts",
+            "name_case": "nom",
+            "v": vkSingleton.shared.version
+        ]
+        
+        let getServerDataOperation = GetServerDataOperation(url: url, parameters: parameters)
+        getServerDataOperation.completionBlock = {
+            guard let data = getServerDataOperation.data else { return }
+            
+            guard let json = try? JSON(data: data) else { print("json error"); return }
+            
+            self.userProfile = json["response"].compactMap { UserProfile(json: $0.1) }
+            if self.userProfile.count > 0 {
+                OperationQueue.main.addOperation {
+                    if self.userProfile[0].onlineStatus == 1 {
+                        self.profileView.lastLabel.text = " онлайн"
+                        self.profileView.lastLabel.textColor = UIColor.blue
+                        self.profileView.lastLabel.isEnabled = true
+                    } else {
+                        if self.userProfile[0].deactivated == "" {
+                            self.profileView.lastLabel.text = " заходил " + self.userProfile[0].lastSeen.toStringLastTime()
+                            if self.userProfile[0].sex == 1 {
+                                self.profileView.lastLabel.text = " заходила " + self.userProfile[0].lastSeen.toStringLastTime()
+                            }
+                        }
+                        self.profileView.lastLabel.isEnabled = false
+                    }
+                    
+                    if self.userProfile[0].platform > 0 && self.userProfile[0].platform != 7 {
+                        self.profileView.lastLabel.setPlatformStatus(text: "\(self.profileView.lastLabel.text!)", platform: self.userProfile[0].platform, online: self.userProfile[0].onlineStatus)
+                    }
+                }
+            }
+        }
+        opq.addOperation(getServerDataOperation)
+    }
+    
+    @objc func tapBarButtonItem(sender: UIBarButtonItem) {
+        
     }
 }
