@@ -308,6 +308,17 @@ extension UIViewController: ViewControllerProtocol {
         let detailVC = self.splitViewController!.viewControllers[self.splitViewController!.viewControllers.endIndex - 1]
         detailVC.childViewControllers[0].navigationController?.pushViewController(likesController, animated: true)
     }
+    
+    func openVideoListController(ownerID: String, title: String, type: String) {
+        let videoController = self.storyboard?.instantiateViewController(withIdentifier: "VideoListController") as! VideoListController
+        
+        videoController.ownerID = ownerID
+        videoController.type = type
+        videoController.title = title
+        
+        let detailVC = self.splitViewController!.viewControllers[self.splitViewController!.viewControllers.endIndex - 1]
+        detailVC.childViewControllers[0].navigationController?.pushViewController(videoController, animated: true)
+    }
 }
 
 

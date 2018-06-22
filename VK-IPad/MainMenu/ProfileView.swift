@@ -643,6 +643,19 @@ class ProfileView: UIView {
                         label2.frame = CGRect(x: leftX, y: topY + counterHeight/2, width: counterHeight, height: 20)
                         userInfoView.addSubview(label2)
                         
+                        let tap = UITapGestureRecognizer()
+                        tap.add {
+                            var title = "Мои видеозаписи"
+                            if self.delegate.userID != vkSingleton.shared.userID {
+                                title = "Видеозаписи \(profile.firstNameGen)"
+                            }
+                            
+                            self.delegate.openVideoListController(ownerID: self.delegate.userID, title: title, type: "")
+                        }
+                        tap.numberOfTapsRequired = 1
+                        label1.isUserInteractionEnabled = true
+                        label1.addGestureRecognizer(tap)
+                        
                         leftX += counterHeight + counterInterSpacing
                     }
                     topY += counterHeight

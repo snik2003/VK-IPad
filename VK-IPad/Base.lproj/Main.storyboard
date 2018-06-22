@@ -923,6 +923,22 @@
             </objects>
             <point key="canvasLocation" x="2897" y="2483"/>
         </scene>
+        <!--Video List Controller-->
+        <scene sceneID="Ede-bp-yMh">
+            <objects>
+                <viewController storyboardIdentifier="VideoListController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="QYg-ej-PsF" customClass="VideoListController" customModule="VK_IPad" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="3sa-Lk-e8Z">
+                        <rect key="frame" x="0.0" y="0.0" width="1366" height="1024"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="Rhe-rb-Trt"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="9gO-E2-srx"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dN9-cE-eYS" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2897" y="3199"/>
+        </scene>
         <!--Record Controller-->
         <scene sceneID="v9D-dV-PR7">
             <objects>
@@ -992,6 +1008,32 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iWJ-Hn-agN" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2233.9677891654464" y="1787.6953124999998"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="TUi-Pd-6ag">
+            <objects>
+                <navigationController storyboardIdentifier="VideoListNavigation" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="VPF-lA-rb7" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="qoN-Nq-Dcu">
+                        <rect key="frame" x="0.0" y="20" width="1366" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="barTintColor" red="0.019607843140000001" green="0.4039215686" blue="0.64313725489999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <textAttributes key="titleTextAttributes">
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </textAttributes>
+                        <textAttributes key="largeTitleTextAttributes">
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </textAttributes>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="QYg-ej-PsF" kind="relationship" relationship="rootViewController" id="1uV-er-7jG"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="uvw-jO-XXg" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2240.9956076134699" y="3198.6328125"/>
         </scene>
     </scenes>
     <resources>

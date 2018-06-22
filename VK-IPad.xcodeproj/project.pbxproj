@@ -58,6 +58,10 @@
 		1749130320D304DD00FCF9F9 /* ParseRequestList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1749130220D304DD00FCF9F9 /* ParseRequestList.swift */; };
 		1749130520D3050200FCF9F9 /* ParseRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1749130420D3050200FCF9F9 /* ParseRequest.swift */; };
 		1749130720D3055100FCF9F9 /* FriendRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1749130620D3055100FCF9F9 /* FriendRequest.swift */; };
+		17996B4D20DCD77F003DA26B /* VideoListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17996B4C20DCD77F003DA26B /* VideoListController.swift */; };
+		17996B4F20DCD8C1003DA26B /* VideoListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17996B4E20DCD8C1003DA26B /* VideoListCell.swift */; };
+		17996B5120DCDBC0003DA26B /* ParseVideos.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17996B5020DCDBC0003DA26B /* ParseVideos.swift */; };
+		17996B5320DCDC6F003DA26B /* ReloadVideoListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17996B5220DCDC6F003DA26B /* ReloadVideoListController.swift */; };
 		179CFC4120DBE94900F2AB04 /* Sticker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179CFC4020DBE94900F2AB04 /* Sticker.swift */; };
 		17A1A5B720D8D31200D9CE00 /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A1A5B620D8D31200D9CE00 /* Button.swift */; };
 		17A1A5B920D8E37400D9CE00 /* GroupProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A1A5B820D8E37400D9CE00 /* GroupProfileViewController.swift */; };
@@ -132,6 +136,10 @@
 		1749130220D304DD00FCF9F9 /* ParseRequestList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseRequestList.swift; sourceTree = "<group>"; };
 		1749130420D3050200FCF9F9 /* ParseRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseRequest.swift; sourceTree = "<group>"; };
 		1749130620D3055100FCF9F9 /* FriendRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendRequest.swift; sourceTree = "<group>"; };
+		17996B4C20DCD77F003DA26B /* VideoListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListController.swift; sourceTree = "<group>"; };
+		17996B4E20DCD8C1003DA26B /* VideoListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListCell.swift; sourceTree = "<group>"; };
+		17996B5020DCDBC0003DA26B /* ParseVideos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParseVideos.swift; sourceTree = "<group>"; };
+		17996B5220DCDC6F003DA26B /* ReloadVideoListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReloadVideoListController.swift; sourceTree = "<group>"; };
 		179CFC4020DBE94900F2AB04 /* Sticker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sticker.swift; sourceTree = "<group>"; };
 		17A1A5B620D8D31200D9CE00 /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
 		17A1A5B820D8E37400D9CE00 /* GroupProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupProfileViewController.swift; sourceTree = "<group>"; };
@@ -189,6 +197,7 @@
 			children = (
 				173D666A20D3CAD100EEBF46 /* ReloadGroupsListController.swift */,
 				17A1A5C020D8EA4C00D9CE00 /* ReloadGroupProfileController.swift */,
+				17996B5220DCDC6F003DA26B /* ReloadVideoListController.swift */,
 			);
 			path = ReloadInterface;
 			sourceTree = "<group>";
@@ -219,6 +228,7 @@
 		174912AE20D300DC00FCF9F9 /* VK-IPad */ = {
 			isa = PBXGroup;
 			children = (
+				17996B4B20DCD5B3003DA26B /* Video */,
 				17A1A5C220DA7EE800D9CE00 /* Photos */,
 				173D667D20D40FD900EEBF46 /* AdditionalFunction */,
 				173D667020D3F54600EEBF46 /* Record */,
@@ -349,8 +359,18 @@
 				173D666720D3C9DB00EEBF46 /* ParseGroupList.swift */,
 				17A1A5BA20D8E63000D9CE00 /* ParseGroupProfile.swift */,
 				17A1A5BC20D8E6A700D9CE00 /* ParseWall.swift */,
+				17996B5020DCDBC0003DA26B /* ParseVideos.swift */,
 			);
 			path = ParseServerData;
+			sourceTree = "<group>";
+		};
+		17996B4B20DCD5B3003DA26B /* Video */ = {
+			isa = PBXGroup;
+			children = (
+				17996B4C20DCD77F003DA26B /* VideoListController.swift */,
+				17996B4E20DCD8C1003DA26B /* VideoListCell.swift */,
+			);
+			path = Video;
 			sourceTree = "<group>";
 		};
 		17A1A5C220DA7EE800D9CE00 /* Photos */ = {
@@ -531,6 +551,7 @@
 			files = (
 				17424FF120D5A3C400F52C4C /* Poll.swift in Sources */,
 				174912EC20D300DD00FCF9F9 /* vkSingleton.swift in Sources */,
+				17996B5320DCDC6F003DA26B /* ReloadVideoListController.swift in Sources */,
 				17A1A5BF20D8E7FD00D9CE00 /* GroupProfileView.swift in Sources */,
 				174912DD20D300DD00FCF9F9 /* Photos.swift in Sources */,
 				174912E920D300DD00FCF9F9 /* StartViewController.swift in Sources */,
@@ -560,6 +581,7 @@
 				17A1A5C120D8EA4C00D9CE00 /* ReloadGroupProfileController.swift in Sources */,
 				173D666620D3C94500EEBF46 /* Groups.swift in Sources */,
 				174912ED20D300DD00FCF9F9 /* AppConfig.swift in Sources */,
+				17996B4D20DCD77F003DA26B /* VideoListController.swift in Sources */,
 				17EBC3A120D51A46009130FC /* Attachment.swift in Sources */,
 				173D667A20D40FCE00EEBF46 /* StoreReviewHelper.swift in Sources */,
 				174912E520D300DD00FCF9F9 /* TableViewCell.swift in Sources */,
@@ -569,6 +591,7 @@
 				173D666120D3C07900EEBF46 /* Control.swift in Sources */,
 				174912E420D300DD00FCF9F9 /* Label.swift in Sources */,
 				173D667920D40FCE00EEBF46 /* UITextViewPlaceholder.swift in Sources */,
+				17996B5120DCDBC0003DA26B /* ParseVideos.swift in Sources */,
 				173D666420D3C91300EEBF46 /* GroupsListController.swift in Sources */,
 				17A1A5BD20D8E6A700D9CE00 /* ParseWall.swift in Sources */,
 				174912F420D300DD00FCF9F9 /* MenuViewController.swift in Sources */,
@@ -590,6 +613,7 @@
 				173D667220D3F56600EEBF46 /* RecordCell.swift in Sources */,
 				1749130520D3050200FCF9F9 /* ParseRequest.swift in Sources */,
 				174912E620D300DD00FCF9F9 /* Image.swift in Sources */,
+				17996B4F20DCD8C1003DA26B /* VideoListCell.swift in Sources */,
 				174912EB20D300DD00FCF9F9 /* AsyncOperation.swift in Sources */,
 				174912DA20D300DD00FCF9F9 /* SetAnimatedImageToRow.swift in Sources */,
 				173D666820D3C9DB00EEBF46 /* ParseGroupList.swift in Sources */,

@@ -68,7 +68,7 @@ class MenuViewController: UITableViewController {
         
         // Мои видеозаписи
         if indexPath.section == 1 && indexPath.row == 3 {
-            
+            self.openVideoListController(ownerID: vkSingleton.shared.userID, title: "Мои видеозаписи", type: "")
         }
         
         // Мои закладки
