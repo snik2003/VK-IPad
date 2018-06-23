@@ -33,6 +33,12 @@ class Video {
     var live = 0
     var upcoming = 0
 
+    var userLikes = 0
+    var countLikes = 0
+    var canComment = 0
+    var userReposted = 0
+    var countReposts = 0
+    
     init(json: JSON) {
         self.id = json["id"].intValue
         self.ownerID = json["owner_id"].intValue
@@ -56,5 +62,11 @@ class Video {
         self.processing = json["processing"].intValue
         self.live = json["live"].intValue
         self.upcoming = json["upcoming"].intValue
+        
+        self.canComment = json["can_comment"].intValue
+        self.userLikes = json["likes"]["user_likes"].intValue
+        self.countLikes = json["likes"]["count"].intValue
+        self.userReposted = json["reposts"]["user_reposted"].intValue
+        self.countReposts = json["reposts"]["count"].intValue
     }
 }

@@ -103,13 +103,20 @@ class VideoListCell: UITableViewCell {
         titleLabel = UILabel()
         titleLabel.tag = 250
         titleLabel.text = video.title
-        titleLabel.prepareTextForPublish2(self.delegate)
         titleLabel.font = UIFont(name: "Verdana-Bold", size: 12)!
         titleLabel.textColor = UIColor.black
         titleLabel.textAlignment = .center
         titleLabel.contentMode = .center
         titleLabel.numberOfLines = 0
         titleLabel.clipsToBounds = true
+        titleLabel.prepareTextForPublish2(self.delegate)
+        
+        let tap1 = UITapGestureRecognizer()
+        titleLabel.isUserInteractionEnabled = true
+        titleLabel.addGestureRecognizer(tap1)
+        tap1.add {
+            self.delegate.openVideoController(ownerID: "\(video.ownerID)", vid: "\(video.id)", accessKey: video.accessKey, title: "Видеозапись")
+        }
         
         let titleSize = delegate.getTextSize(text: titleLabel.text!, font: titleLabel.font, maxWidth: maxWidth)
         titleLabel.frame = CGRect(x: leftX, y: topInsets + 10, width: maxWidth, height: titleSize.height + 10)
@@ -126,13 +133,21 @@ class VideoListCell: UITableViewCell {
             descriptionLabel.text = "Описание к видео отсутствует"
             descriptionLabel.isEnabled = false
         }
-        descriptionLabel.prepareTextForPublish2(self.delegate)
         descriptionLabel.font = UIFont(name: "Verdana", size: 12)!
+        descriptionLabel.numberOfLines = 0
         descriptionLabel.textColor = UIColor.black
         descriptionLabel.textAlignment = .center
         descriptionLabel.contentMode = .center
-        descriptionLabel.numberOfLines = 0
+        descriptionLabel.prepareTextForPublish2(self.delegate)
+        
         descriptionLabel.clipsToBounds = true
+        
+        let tap2 = UITapGestureRecognizer()
+        descriptionLabel.isUserInteractionEnabled = true
+        descriptionLabel.addGestureRecognizer(tap2)
+        tap2.add {
+            self.delegate.openVideoController(ownerID: "\(video.ownerID)", vid: "\(video.id)", accessKey: video.accessKey, title: "Видеозапись")
+        }
         
         descSize = delegate.getTextSize(text: descriptionLabel.text!, font: descriptionLabel.font, maxWidth: maxWidth)
         descSize.height = topInsets + videoHeight - 40 - titleSize.height - 30
@@ -142,8 +157,8 @@ class VideoListCell: UITableViewCell {
         viewsLabel = UILabel()
         viewsLabel.tag = 250
         viewsLabel.text = "Количество просмотров: \(video.views.getCounterToString())"
-        viewsLabel.font = UIFont(name: "Verdana", size: 12)!
-        viewsLabel.textColor = viewsLabel.tintColor
+        viewsLabel.font = UIFont(name: "Verdana", size: 11)!
+        viewsLabel.textColor = UIColor.black //viewsLabel.tintColor
         //viewsLabel.isEnabled = false
         viewsLabel.textAlignment = .center
         viewsLabel.contentMode = .center
@@ -156,8 +171,8 @@ class VideoListCell: UITableViewCell {
         durationLabel = UILabel()
         durationLabel.tag = 250
         durationLabel.text = "Длительность видео: \(video.duration.getVideoDurationToString())"
-        durationLabel.font = UIFont(name: "Verdana", size: 12)!
-        durationLabel.textColor = durationLabel.tintColor
+        durationLabel.font = UIFont(name: "Verdana", size: 11)!
+        durationLabel.textColor = UIColor.black //durationLabel.tintColor
         //durationLabel.isEnabled = false
         durationLabel.textAlignment = .center
         durationLabel.contentMode = .center

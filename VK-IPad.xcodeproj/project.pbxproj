@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1700D24B20DE4104003C50A1 /* VideoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1700D24A20DE4104003C50A1 /* VideoCell.swift */; };
+		1700D24D20DE4156003C50A1 /* VideoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1700D24C20DE4156003C50A1 /* VideoController.swift */; };
 		173D666120D3C07900EEBF46 /* Control.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173D666020D3C07900EEBF46 /* Control.swift */; };
 		173D666420D3C91300EEBF46 /* GroupsListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173D666320D3C91300EEBF46 /* GroupsListController.swift */; };
 		173D666620D3C94500EEBF46 /* Groups.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173D666520D3C94500EEBF46 /* Groups.swift */; };
@@ -84,6 +86,8 @@
 
 /* Begin PBXFileReference section */
 		1380E5F9747FC22A8E1480B7 /* Pods-VK-IPad.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VK-IPad.release.xcconfig"; path = "Pods/Target Support Files/Pods-VK-IPad/Pods-VK-IPad.release.xcconfig"; sourceTree = "<group>"; };
+		1700D24A20DE4104003C50A1 /* VideoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCell.swift; sourceTree = "<group>"; };
+		1700D24C20DE4156003C50A1 /* VideoController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoController.swift; sourceTree = "<group>"; };
 		173D666020D3C07900EEBF46 /* Control.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Control.swift; sourceTree = "<group>"; };
 		173D666320D3C91300EEBF46 /* GroupsListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupsListController.swift; sourceTree = "<group>"; };
 		173D666520D3C94500EEBF46 /* Groups.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Groups.swift; sourceTree = "<group>"; };
@@ -368,7 +372,9 @@
 			isa = PBXGroup;
 			children = (
 				17996B4C20DCD77F003DA26B /* VideoListController.swift */,
+				1700D24C20DE4156003C50A1 /* VideoController.swift */,
 				17996B4E20DCD8C1003DA26B /* VideoListCell.swift */,
+				1700D24A20DE4104003C50A1 /* VideoCell.swift */,
 			);
 			path = Video;
 			sourceTree = "<group>";
@@ -564,6 +570,7 @@
 				174912DF20D300DD00FCF9F9 /* ErrorJson.swift in Sources */,
 				174912F320D300DD00FCF9F9 /* ProfileViewController.swift in Sources */,
 				17A1A5B720D8D31200D9CE00 /* Button.swift in Sources */,
+				1700D24B20DE4104003C50A1 /* VideoCell.swift in Sources */,
 				174912E720D300DD00FCF9F9 /* Int.swift in Sources */,
 				174912F520D300DD00FCF9F9 /* AppDelegate.swift in Sources */,
 				174912E320D300DD00FCF9F9 /* Date.swift in Sources */,
@@ -592,6 +599,7 @@
 				174912E420D300DD00FCF9F9 /* Label.swift in Sources */,
 				173D667920D40FCE00EEBF46 /* UITextViewPlaceholder.swift in Sources */,
 				17996B5120DCDBC0003DA26B /* ParseVideos.swift in Sources */,
+				1700D24D20DE4156003C50A1 /* VideoController.swift in Sources */,
 				173D666420D3C91300EEBF46 /* GroupsListController.swift in Sources */,
 				17A1A5BD20D8E6A700D9CE00 /* ParseWall.swift in Sources */,
 				174912F420D300DD00FCF9F9 /* MenuViewController.swift in Sources */,

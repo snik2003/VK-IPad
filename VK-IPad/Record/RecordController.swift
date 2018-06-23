@@ -76,17 +76,11 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
         commentView.accessoryImage = UIImage(named: "attachment")
         commentView.accessoryButton.addTarget(self, action: #selector(self.tapAccessoryButton(sender:)), for: .touchUpInside)
         
-        
         tableView.delegate = self
         tableView.dataSource = self
         
-        tableView.allowsSelection = true
-        tableView.allowsMultipleSelection = false
-        
         tableView.register(RecordCell.self, forCellReuseIdentifier: "recordCell")
         tableView.register(CommentCell.self, forCellReuseIdentifier: "commentCell")
-        
-        //self.view.addSubview(tableView)
     }
     
     override func didReceiveMemoryWarning() {
@@ -654,10 +648,6 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
                     let reply = json["response"]["items"].compactMap { Comment(json: $0.1) }
                     let users = json["response"]["profiles"].compactMap { UserProfile(json: $0.1) }
                     let groups = json["response"]["groups"].compactMap { GroupProfile(json: $0.1) }
-                    
-                    //let reply = parseComments.comments
-                    //let users = parseComments.profiles
-                    //let groups = parseComments.groups
                     
                     if reply.count > 0 {
                         var name = ""

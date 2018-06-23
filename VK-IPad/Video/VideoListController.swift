@@ -84,7 +84,7 @@ class VideoListController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     func createSearchBar() {
-        searchBar = UISearchBar(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: 56))
+        searchBar = UISearchBar(frame: CGRect(x: 0, y: 64, width: self.view.bounds.width, height: 56))
         
         self.view.addSubview(searchBar)
     }
@@ -358,7 +358,7 @@ class VideoListController: UIViewController, UITableViewDelegate, UITableViewDat
         if let cell = tableView.cellForRow(at: indexPath) as? VideoListCell {
             let video = videos[indexPath.section]
             
-            /*if source != "" {
+            if source != "" {
                 if markPhotos[video.id] != nil {
                     markPhotos[video.id] = nil
                 } else {
@@ -375,7 +375,7 @@ class VideoListController: UIViewController, UITableViewDelegate, UITableViewDat
                 }
             } else {
                 self.openVideoController(ownerID: "\(video.ownerID)", vid: "\(video.id)", accessKey: video.accessKey, title: "Видеозапись")
-            }*/
+            }
         }
     }
     

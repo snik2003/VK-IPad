@@ -27,7 +27,7 @@ class CommentCell: UITableViewCell {
     let avatarHeight: CGFloat = 40
     let likesButtonHeight: CGFloat = 30
     let likesButtonWidth: CGFloat = 100
-    let stickerHeight: CGFloat = 200
+    let stickerHeight: CGFloat = 150
     
     let textFont = UIFont(name: "Verdana", size: 12)!
     let nameFont = UIFont(name: "Verdana-Bold", size: 12)!
@@ -37,6 +37,7 @@ class CommentCell: UITableViewCell {
     var likesButton = UIButton()
     let commentLabel = UILabel()
     let dateLabel = UILabel()
+    
     func configureCountCell(count: Int, total: Int) {
         
         self.removeAllSubviews()

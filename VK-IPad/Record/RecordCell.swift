@@ -264,16 +264,14 @@ class RecordCell: UITableViewCell {
         nameLabel.text = name
         if record.isPinned == 1 {
             nameLabel.text = "📌 \(name)"
+        } else if record.postType == "postpone" {
+            nameLabel.text = "⏰ \(name)"
         }
         nameLabel.font = nameFont
         
-        if record.postType == "postpone" {
-            dateLabel.text = "⏱ \(record.date.toStringLastTime())"
-        } else {
-            dateLabel.text = record.date.toStringLastTime()
-            if record.sourcePlatform != "" {
-                dateLabel.setSourceOfRecord(text: " \(dateLabel.text!)", source: record.sourcePlatform, delegate: delegate)
-            }
+        dateLabel.text = record.date.toStringLastTime()
+        if record.sourcePlatform != "" {
+            dateLabel.setSourceOfRecord(text: " \(dateLabel.text!)", source: record.sourcePlatform, delegate: delegate)
         }
         dateLabel.font = UIFont(name: "Verdana", size: 11)!
         dateLabel.isEnabled = false
@@ -525,16 +523,31 @@ class RecordCell: UITableViewCell {
             titleLabel.adjustsFontSizeToFitWidth = true
             titleLabel.minimumScaleFactor = 0.8
             
-            let viewsLabel = UILabel()
-            viewsLabel.tag = 250
-            viewsLabel.frame = CGRect(x: leftX + 20 + videoWidth - 200, y: webView.frame.maxY, width: 200, height: 20)
-            viewsLabel.text = "Просмотров: \(attach.video[0].views.getCounterToString())"
-            viewsLabel.textAlignment = .right
-            viewsLabel.isEnabled = false
-            viewsLabel.font = UIFont(name: "Verdana", size: 11)!
+            let tap = UITapGestureRecognizer()
+            titleLabel.isUserInteractionEnabled = true
+            titleLabel.addGestureRecognizer(tap)
+            tap.add {
+                self.delegate.openVideoController(ownerID: "\(attach.video[0].ownerID)", vid: "\(attach.video[0].id)", accessKey: attach.video[0].accessKey, title: "Видеозапись")
+            }
             
             self.addSubview(titleLabel)
-            self.addSubview(viewsLabel)
+            
+            let durationLabel = UILabel()
+            durationLabel.tag = 250
+            durationLabel.frame = CGRect(x: titleLabel.frame.maxX, y: webView.frame.maxY, width: 200, height: 20)
+            if attach.video[0].duration != 0 {
+                durationLabel.text = "Просмотров: \(attach.video[0].views.getCounterToString())"
+                durationLabel.isEnabled = false
+            } else {
+                durationLabel.text = "🔴 Прямая трансляция"
+                durationLabel.isEnabled = true
+                durationLabel.textColor = UIColor.red
+            }
+            
+            durationLabel.textAlignment = .right
+            durationLabel.font = UIFont(name: "Verdana", size: 12)!
+            
+            self.addSubview(durationLabel)
             
             topY += videoHeight + 25
         }

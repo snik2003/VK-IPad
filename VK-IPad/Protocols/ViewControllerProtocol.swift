@@ -319,6 +319,18 @@ extension UIViewController: ViewControllerProtocol {
         let detailVC = self.splitViewController!.viewControllers[self.splitViewController!.viewControllers.endIndex - 1]
         detailVC.childViewControllers[0].navigationController?.pushViewController(videoController, animated: true)
     }
+    
+    func openVideoController(ownerID: String, vid: String, accessKey: String, title: String) {
+        let videoController = self.storyboard?.instantiateViewController(withIdentifier: "VideoController") as! VideoController
+        
+        videoController.ownerID = ownerID
+        videoController.vid = vid
+        videoController.accessKey = accessKey
+        videoController.title = title
+        
+        let detailVC = self.splitViewController!.viewControllers[self.splitViewController!.viewControllers.endIndex - 1]
+        detailVC.childViewControllers[0].navigationController?.pushViewController(videoController, animated: true)
+    }
 }
 
 
