@@ -8,13 +8,26 @@
 
 import UIKit
 import WebKit
+import Popover
+import RealmSwift
 
 class LoginViewController: UIViewController {
 
     var webview: WKWebView!
     
+    var accounts: [vkAccount] = []
+    
+    var changeAccount = false
+    var exitAccount = false
+    
     let userDefaults = UserDefaults.standard
 
+    fileprivate var popover: Popover!
+    fileprivate var popoverOptions: [PopoverOption] = [
+        .type(.up),
+        .blackOverlayColor(UIColor(white: 0.0, alpha: 0.6))
+    ]
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -24,21 +37,47 @@ class LoginViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        if let userID = userDefaults.string(forKey: "vkUserID") {
-            vkSingleton.shared.userID = userID
-        
-            if let userID = Int(vkSingleton.shared.userID) {
-                vkSingleton.shared.accessToken = getAccessTokenFromRealm(userID: userID)
-            }
-    
-            if vkSingleton.shared.accessToken != "" {
-                performSegue(withIdentifier: "goProfile", sender: nil)
+        if exitAccount {
+            if self.getNumberOfAccounts() > 0 {
+                changeAccountForm()
             } else {
                 vkAutorize()
             }
         } else {
-            vkAutorize()
+            if changeAccount {
+                if vkSingleton.shared.userID == "" {
+                    vkAutorize()
+                } else {
+                    vkSingleton.shared.accessToken = getAccessTokenFromRealm(userID: Int(vkSingleton.shared.userID)!)
+                    
+                    
+                    if vkSingleton.shared.accessToken != "" {
+                        performSegue(withIdentifier: "goProfile", sender: nil)
+                    } else {
+                        vkAutorize()
+                    }
+                }
+            } else {
+                if let userID = userDefaults.string(forKey: "vkUserID") {
+                    vkSingleton.shared.userID = userID
+                
+                    if let userID = Int(vkSingleton.shared.userID) {
+                        vkSingleton.shared.accessToken = getAccessTokenFromRealm(userID: userID)
+                    }
+            
+                    if vkSingleton.shared.accessToken != "" {
+                        performSegue(withIdentifier: "goProfile", sender: nil)
+                    } else {
+                        vkAutorize()
+                    }
+                } else {
+                    vkAutorize()
+                }
+            }
         }
+        
+        exitAccount = false
+        changeAccount = false
     }
     
     override func didReceiveMemoryWarning() {
@@ -78,6 +117,8 @@ class LoginViewController: UIViewController {
     func vkLogout() {
         cleanCookies()
         
+        deleteAccountFromRealm(userID: Int(vkSingleton.shared.userID)!)
+        
         vkSingleton.shared.accessToken = ""
         vkSingleton.shared.userID = ""
         vkSingleton.shared.userAppID = 0
@@ -91,6 +132,58 @@ class LoginViewController: UIViewController {
                 WKWebsiteDataStore.default().removeData(ofTypes: record.dataTypes, for: [record], completionHandler: {})
             }
         }
+    }
+    
+    @IBAction func logoutVKsegue(unwindSegue: UIStoryboardSegue) {
+        if unwindSegue.identifier == "logoutVK" {
+            
+            vkLogout()
+            var webview_new = WKWebView() {
+                didSet{
+                    webview_new.navigationDelegate = self
+                }
+            }
+            vkSingleton.shared.accessToken = ""
+            vkSingleton.shared.userID = ""
+            exitAccount = true
+        }
+        
+        if unwindSegue.identifier == "addAccountVK" {
+            cleanCookies()
+            var webview_new = WKWebView() {
+                didSet{
+                    webview_new.navigationDelegate = self
+                }
+            }
+            vkSingleton.shared.accessToken = ""
+            vkSingleton.shared.userID = ""
+            changeAccount = true
+        }
+    }
+    
+    func readAccountsFromRealm() {
+        do {
+            var config = Realm.Configuration.defaultConfiguration
+            config.deleteRealmIfMigrationNeeded = false
+            
+            let realm = try Realm(configuration: config)
+            let accounts = realm.objects(vkAccount.self)
+            
+            self.accounts = Array(accounts)
+        } catch {
+            print(error)
+        }
+    }
+    
+    func changeAccountForm() {
+        
+        readAccountsFromRealm()
+        
+        vkSingleton.shared.accessToken = accounts[0].token
+        vkSingleton.shared.userID = "\(accounts[0].userID)"
+        userDefaults.set(vkSingleton.shared.userID, forKey: "vkUserID")
+        
+        performSegue(withIdentifier: "goProfile", sender: nil)
     }
 }
 

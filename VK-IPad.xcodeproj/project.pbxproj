@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		1700D24B20DE4104003C50A1 /* VideoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1700D24A20DE4104003C50A1 /* VideoCell.swift */; };
 		1700D24D20DE4156003C50A1 /* VideoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1700D24C20DE4156003C50A1 /* VideoController.swift */; };
+		1700D24F20DEAFF3003C50A1 /* ChangeAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1700D24E20DEAFF3003C50A1 /* ChangeAccountView.swift */; };
 		173D666120D3C07900EEBF46 /* Control.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173D666020D3C07900EEBF46 /* Control.swift */; };
 		173D666420D3C91300EEBF46 /* GroupsListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173D666320D3C91300EEBF46 /* GroupsListController.swift */; };
 		173D666620D3C94500EEBF46 /* Groups.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173D666520D3C94500EEBF46 /* Groups.swift */; };
@@ -88,6 +89,7 @@
 		1380E5F9747FC22A8E1480B7 /* Pods-VK-IPad.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VK-IPad.release.xcconfig"; path = "Pods/Target Support Files/Pods-VK-IPad/Pods-VK-IPad.release.xcconfig"; sourceTree = "<group>"; };
 		1700D24A20DE4104003C50A1 /* VideoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCell.swift; sourceTree = "<group>"; };
 		1700D24C20DE4156003C50A1 /* VideoController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoController.swift; sourceTree = "<group>"; };
+		1700D24E20DEAFF3003C50A1 /* ChangeAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeAccountView.swift; sourceTree = "<group>"; };
 		173D666020D3C07900EEBF46 /* Control.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Control.swift; sourceTree = "<group>"; };
 		173D666320D3C91300EEBF46 /* GroupsListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupsListController.swift; sourceTree = "<group>"; };
 		173D666520D3C94500EEBF46 /* Groups.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Groups.swift; sourceTree = "<group>"; };
@@ -341,6 +343,7 @@
 				174912D120D300DC00FCF9F9 /* ProfileView.swift */,
 				174912D220D300DC00FCF9F9 /* ProfileViewController.swift */,
 				174912D320D300DC00FCF9F9 /* MenuViewController.swift */,
+				1700D24E20DEAFF3003C50A1 /* ChangeAccountView.swift */,
 			);
 			path = MainMenu;
 			sourceTree = "<group>";
@@ -619,6 +622,7 @@
 				174912FD20D303F400FCF9F9 /* ReloadUsersController.swift in Sources */,
 				174912E020D300DD00FCF9F9 /* vkAccount.swift in Sources */,
 				173D667220D3F56600EEBF46 /* RecordCell.swift in Sources */,
+				1700D24F20DEAFF3003C50A1 /* ChangeAccountView.swift in Sources */,
 				1749130520D3050200FCF9F9 /* ParseRequest.swift in Sources */,
 				174912E620D300DD00FCF9F9 /* Image.swift in Sources */,
 				17996B4F20DCD8C1003DA26B /* VideoListCell.swift in Sources */,

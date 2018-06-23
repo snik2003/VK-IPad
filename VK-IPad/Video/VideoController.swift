@@ -284,7 +284,7 @@ class VideoController: UIViewController, UITableViewDelegate, UITableViewDataSou
             guard let data = getServerDataOperation.data else { return }
             
             guard let json = try? JSON(data: data) else { print("json error"); return }
-            print(json["response"][0]["items"])
+            //print(json["response"][0]["items"])
             
             let video = json["response"][0]["items"].compactMap { Video(json: $0.1) }
             let videoProfiles = json["response"][0]["profiles"].compactMap { UserProfile(json: $0.1) }

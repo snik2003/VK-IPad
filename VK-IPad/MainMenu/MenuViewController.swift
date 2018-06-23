@@ -9,6 +9,7 @@
 import UIKit
 import RealmSwift
 import SwiftyJSON
+import Popover
 
 class MenuViewController: UITableViewController {
 
@@ -17,6 +18,18 @@ class MenuViewController: UITableViewController {
     @IBOutlet weak var messagesCell: UITableViewCell!
     @IBOutlet weak var friendsCell: UITableViewCell!
     @IBOutlet weak var groupsCell: UITableViewCell!
+    @IBOutlet weak var changeAccountCell: UITableViewCell!
+    
+    var accounts: [vkAccount] = []
+    let userDefaults = UserDefaults.standard
+    
+    var changeAccount = false
+    
+    fileprivate var popover: Popover!
+    fileprivate var popoverOptions: [PopoverOption] = [
+        .type(.up),
+        .blackOverlayColor(UIColor(white: 0.0, alpha: 0.6))
+    ]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -84,6 +97,16 @@ class MenuViewController: UITableViewController {
         // Моя музыка ITunes
         if indexPath.section == 1 && indexPath.row == 6 {
             
+        }
+        
+        // сменить учетную запись
+        if indexPath.section == 2 && indexPath.row == 1 {
+            self.showChangeAccountForm()
+        }
+        
+        // выйти из учетной записи
+        if indexPath.section == 2 && indexPath.row == 4 {
+            self.exitAccountFunc()
         }
         
         tableView.deselectRow(at: indexPath, animated: false)
@@ -197,6 +220,62 @@ class MenuViewController: UITableViewController {
         account.avatarURL = user.maxPhotoOrigURL
         account.appID = vkSingleton.shared.userAppID
         self.updateAccountInRealm(account: account)
+    }
+    
+    func readAccountsFromRealm() {
+        do {
+            var config = Realm.Configuration.defaultConfiguration
+            config.deleteRealmIfMigrationNeeded = false
+            
+            let realm = try Realm(configuration: config)
+            let accounts = realm.objects(vkAccount.self)
+            
+            self.accounts = Array(accounts)
+        } catch {
+            print(error)
+        }
+    }
+    
+    func showChangeAccountForm() {
+        
+        readAccountsFromRealm()
+        
+        let aView = ChangeAccountView()
+        aView.delegate = self
+        
+        self.popover = Popover(options: self.popoverOptions)
+        aView.popover = self.popover
+        aView.configureView(accounts: accounts, addNewAccount: true)
+        
+        self.popover.show(aView, fromView: self.changeAccountCell)
+    }
+    
+    func exitAccountFunc() {
+        let alertController = UIAlertController(title: nil, message: "Вы действительно хотите выйти из текущей учетной записи?", preferredStyle: .alert)
+        
+        let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
+        alertController.addAction(cancelAction)
+        
+        let action = UIAlertAction(title: "Да, хочу", style: .destructive) { action in
+            /*self.unregisterDeviceOnPush()
+            if let request = vkUserLongPoll.shared.request {
+                request.cancel()
+            }
+            vkUserLongPoll.shared.firstLaunch = true
+            
+            for id in vkGroupLongPoll.shared.request.keys {
+                if let request = vkGroupLongPoll.shared.request[id] {
+                    request.cancel()
+                    vkGroupLongPoll.shared.firstLaunch[id] = true
+                    vkSingleton.shared.groupToken[id] = nil
+                }
+            }*/
+            
+            self.performSegue(withIdentifier: "logoutVK", sender: nil)
+        }
+        alertController.addAction(action)
+        
+        self.present(alertController, animated: true)
     }
 }
 

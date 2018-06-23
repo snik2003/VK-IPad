@@ -31,7 +31,7 @@
         <!--Login View Controller-->
         <scene sceneID="8tY-h9-MAT">
             <objects>
-                <viewController id="wP3-IL-CHV" customClass="LoginViewController" customModule="VK_IPad" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="LoginViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="wP3-IL-CHV" customClass="LoginViewController" customModule="VK_IPad" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="M0D-PA-EwQ">
                         <rect key="frame" x="0.0" y="0.0" width="1366" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -689,14 +689,18 @@
                     </tableView>
                     <navigationItem key="navigationItem" id="Tp6-JZ-Gna"/>
                     <connections>
+                        <outlet property="changeAccountCell" destination="RLa-Fu-fqS" id="Ctb-v4-vSe"/>
                         <outlet property="friendsCell" destination="YTE-TZ-obP" id="fJW-Od-V9q"/>
                         <outlet property="groupsCell" destination="Qoq-sO-xVa" id="JOv-Gq-hwt"/>
                         <outlet property="messagesCell" destination="VTF-aU-mBd" id="RLz-Iy-y19"/>
                         <outlet property="notificationsCell" destination="QUd-h3-9yh" id="gxG-dD-Lur"/>
                         <outlet property="profileCell" destination="fTx-WU-2fH" id="kSn-Kd-Z8g"/>
+                        <segue destination="qOt-pm-Nx5" kind="unwind" identifier="addAccountVK" unwindAction="logoutVKsegueWithUnwindSegue:" id="Cmt-OU-7RO"/>
+                        <segue destination="qOt-pm-Nx5" kind="unwind" identifier="logoutVK" unwindAction="logoutVKsegueWithUnwindSegue:" id="35E-dN-vGR"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="T6F-8B-QlX" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="qOt-pm-Nx5" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="1583" y="344"/>
         </scene>
