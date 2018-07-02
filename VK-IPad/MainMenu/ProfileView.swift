@@ -133,8 +133,10 @@ class ProfileView: UIView {
                 userInfoView.frame = CGRect(x: avatarView.frame.maxX + 10, y: 10, width: delegate.tableView.frame.width - 30 - avatarView.frame.width, height: avatarViewHeight)
             }
             
+            topY += 10
+            
             if profile.deactivated == "" && photos.count > 0 {
-                topY += 20
+                topY += 10
                 
                 let photosView = UIView()
                 photosView.backgroundColor = UIColor.white

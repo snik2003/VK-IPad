@@ -83,6 +83,28 @@ class ReloadUsersController: Operation {
                 }
             }
             controller.segmentedControl.setTitle("Онлайн: \(onlineCount)", forSegmentAt: 1)
+        }   else if type == "members" {
+            guard let parseFriends = dependencies.first as? ParseFriendList else { return }
+            
+            if controller.offset == 0 {
+                controller.friends = parseFriends.outputData
+            } else {
+                for friend in parseFriends.outputData {
+                    controller.friends.append(friend)
+                }
+            }
+            controller.sortedFriends = controller.friends
+            controller.users = controller.sortedFriends
+            
+            controller.segmentedControl.setTitle("Участники: \(controller.users.count)", forSegmentAt: 0)
+            var onlineCount = 0
+            for user in controller.users {
+                if user.onlineStatus == 1 {
+                    onlineCount += 1
+                }
+            }
+            controller.segmentedControl.setTitle("Онлайн: \(onlineCount)", forSegmentAt: 1)
+            controller.offset += controller.count
         }
 
         controller.tableView.separatorStyle = .singleLine

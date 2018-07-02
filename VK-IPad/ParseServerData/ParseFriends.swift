@@ -19,6 +19,7 @@ class ParseFriendList: Operation {
         
         guard let json = try? JSON(data: data) else { print("json error"); return }
         //print(json)
+        
         let users = json["response"]["items"].compactMap { Friends(json: $0.1) }
         count = json["response"]["count"].intValue
         outputData = users

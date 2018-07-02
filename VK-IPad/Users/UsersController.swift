@@ -47,6 +47,11 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
     var chatMarkCheck: [IndexPath: BEMCheckBox] = [:]
     var chatAdminID = ""
     
+    var count = 1000
+    var offset = 0
+    var filters = ""
+    var isRefresh = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -62,10 +67,9 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
             self.searchBar.placeholder = ""
             
             self.tableView.separatorStyle = .none
-            ViewControllerUtils().showActivityIndicator(uiView: self.view)
             
             if self.type == "requests" {
-                let deleteButton = UIBarButtonItem(image: UIImage(named: "three-dots"), style: .plain, target: self, action: #selector(self.tapDeleteAllRequests(sender:)))
+                let deleteButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(self.tapDeleteAllRequests(sender:)))
                 self.navigationItem.rightBarButtonItem = deleteButton
             }
             
@@ -93,6 +97,11 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
     
     func refresh() {
         let opq = OperationQueue()
+        isRefresh = true
+        
+        OperationQueue.main.addOperation {
+            ViewControllerUtils().showActivityIndicator(uiView: self.view)
+        }
         
         var url: String = ""
         var parameters: Parameters = [:]
@@ -239,6 +248,29 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
                 }
             }
             opq.addOperation(parseRequest)
+        } else if type == "members" {
+            let url = "/method/groups.getMembers"
+            let parameters = [
+                "access_token": vkSingleton.shared.accessToken,
+                "group_id": "\(userID)",
+                "sort": "id_desc",
+                "offset": "\(offset)",
+                "count": "\(count)",
+                "fields": "online,photo_max,last_seen,sex,is_friend",
+                "filter": filters,
+                "v": vkSingleton.shared.version
+            ]
+            
+            let getServerDataOperation = GetServerDataOperation(url: url, parameters: parameters)
+            opq.addOperation(getServerDataOperation)
+            
+            let parseFriends = ParseFriendList()
+            parseFriends.addDependency(getServerDataOperation)
+            opq.addOperation(parseFriends)
+            
+            let reloadTableController = ReloadUsersController(controller: self, type: type)
+            reloadTableController.addDependency(parseFriends)
+            OperationQueue.main.addOperation(reloadTableController)
         } else if type == "chat_users" {
             OperationQueue.main.addOperation {
                 self.sortedFriends = self.friends
@@ -330,7 +362,7 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
                 segmentedControl.setTitle("Подписки: \(self.sortedFriends.count)", forSegmentAt: 0)
             } else if type == "requests" {
                 segmentedControl.setTitle("Заявки: \(self.sortedFriends.count)", forSegmentAt: 0)
-            } else if type == "chat_users" {
+            } else if type == "chat_users" || type == "members" {
                 segmentedControl.setTitle("Участники: \(self.sortedFriends.count)", forSegmentAt: 0)
             }
             segmentedControl.setTitle("Онлайн: \(self.sortedFriends.filter({ $0.onlineStatus == 1 }).count)", forSegmentAt: 1)
@@ -351,7 +383,7 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
                 segmentedControl.setTitle("Подписки: \(self.searchUsers.count)", forSegmentAt: 0)
             } else if type == "requests" {
                 segmentedControl.setTitle("Заявки: \(self.searchUsers.count)", forSegmentAt: 0)
-            } else if type == "chat_users" {
+            } else if type == "chat_users" || type == "members" {
                 segmentedControl.setTitle("Участники: \(self.searchUsers.count)", forSegmentAt: 0)
             }
             segmentedControl.setTitle("Онлайн: \(self.searchUsers.filter({ $0.onlineStatus == 1 }).count)", forSegmentAt: 1)
@@ -391,7 +423,7 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
                 sender.setTitle("Подписки: \(self.users.count)", forSegmentAt: 0)
             } else if type == "requests" {
                 sender.setTitle("Заявки: \(self.users.count)", forSegmentAt: 0)
-            } else if type == "chat_users" {
+            } else if type == "chat_users" || type == "members" {
                 sender.setTitle("Участники: \(self.users.count)", forSegmentAt: 0)
             }
         case 1:
@@ -405,7 +437,7 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
                     sender.setTitle("Подписки: \(self.searchUsers.count)", forSegmentAt: 0)
                 } else if type == "requests" {
                     sender.setTitle("Заявки: \(self.searchUsers.count)", forSegmentAt: 0)
-                } else if type == "chat_users" {
+                } else if type == "chat_users" || type == "members" {
                     sender.setTitle("Участники: \(self.searchUsers.count)", forSegmentAt: 0)
                 }
             } else {
@@ -418,7 +450,7 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
                     sender.setTitle("Подписки: \(self.sortedFriends.count)", forSegmentAt: 0)
                 } else if type == "requests" {
                     sender.setTitle("Заявки: \(self.sortedFriends.count)", forSegmentAt: 0)
-                } else if type == "chat_users" {
+                } else if type == "chat_users" || type == "members" {
                     sender.setTitle("Участники: \(self.sortedFriends.count)", forSegmentAt: 0)
                 }
             }
@@ -457,6 +489,8 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
         case "requests":
             return sections[section].countRows
         case "chat_users":
+            return sections[section].countRows
+        case "members":
             return sections[section].countRows
         default:
             return 0
@@ -672,37 +706,72 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
         }
         
         switch type {
-        case "friends","commonFriends","followers","subscript","requests","chat_users":
+        case "friends","commonFriends","followers","subscript","requests","chat_users","members":
             
             let user = sections[indexPath.section].users[indexPath.row]
             
-            cell.textLabel?.text = "\(user.firstName) \(user.lastName)"
-            
-            if user.deactivated != "" {
-                if user.deactivated == "banned" {
-                    cell.detailTextLabel?.text = "страница заблокирована"
-                }
-                if user.deactivated == "deleted" {
-                    cell.detailTextLabel?.text = "страница удалена"
-                }
-                cell.detailTextLabel?.textColor = UIColor.black
-                cell.detailTextLabel?.isEnabled = false
-            } else {
+            if filters == "managers" {
+                cell.textLabel?.text = "\(user.firstName) \(user.lastName) "
+                
                 if user.onlineStatus == 1 {
-                    cell.detailTextLabel?.text = "онлайн"
                     if user.onlineMobile == 1 {
-                        cell.detailTextLabel?.text = "онлайн (моб.)"
-                    }
-                    cell.detailTextLabel?.textColor = UIColor.blue
-                    cell.detailTextLabel?.isEnabled = true
-                } else {
-                    if user.sex == 1 {
-                        cell.detailTextLabel?.text = "заходила \(user.lastSeen.toStringLastTime())"
+                        let fullString = "\(user.firstName) \(user.lastName) "
+                        cell.textLabel?.setOnlineMobileStatus(text: "\(fullString)", platform: user.platform)
                     } else {
-                        cell.detailTextLabel?.text = "заходил \(user.lastSeen.toStringLastTime())"
+                        let fullString = "\(user.firstName) \(user.lastName) ●"
+                        let rangeOfColoredString = (fullString as NSString).range(of: "●")
+                        let attributedString = NSMutableAttributedString(string: fullString)
+                        
+                        if let color = cell.textLabel?.tintColor {
+                            attributedString.setAttributes([NSAttributedStringKey.foregroundColor:  color], range: rangeOfColoredString)
+                        }
+                        cell.textLabel?.attributedText = attributedString
+                    }
+                }
+                
+                if user.role == "moderator" {
+                    cell.detailTextLabel?.text = "модератор"
+                    cell.detailTextLabel?.textColor = UIColor.brown
+                } else if user.role == "editor" {
+                    cell.detailTextLabel?.text = "редактор"
+                    cell.detailTextLabel?.textColor = UIColor.blue
+                } else if user.role == "creator" {
+                    cell.detailTextLabel?.text = "создатель сообщества"
+                    cell.detailTextLabel?.textColor = UIColor.red
+                } else {
+                    cell.detailTextLabel?.text = "администратор"
+                    cell.detailTextLabel?.textColor = UIColor.purple
+                }
+                cell.detailTextLabel?.isEnabled = true
+            } else {
+                cell.textLabel?.text = "\(user.firstName) \(user.lastName)"
+                
+                if user.deactivated != "" {
+                    if user.deactivated == "banned" {
+                        cell.detailTextLabel?.text = "страница заблокирована"
+                    }
+                    if user.deactivated == "deleted" {
+                        cell.detailTextLabel?.text = "страница удалена"
                     }
                     cell.detailTextLabel?.textColor = UIColor.black
                     cell.detailTextLabel?.isEnabled = false
+                } else {
+                    if user.onlineStatus == 1 {
+                        cell.detailTextLabel?.text = "онлайн"
+                        if user.onlineMobile == 1 {
+                            cell.detailTextLabel?.text = "онлайн (моб.)"
+                        }
+                        cell.detailTextLabel?.textColor = UIColor.blue
+                        cell.detailTextLabel?.isEnabled = true
+                    } else {
+                        if user.sex == 1 {
+                            cell.detailTextLabel?.text = "заходила \(user.lastSeen.toStringLastTime())"
+                        } else {
+                            cell.detailTextLabel?.text = "заходил \(user.lastSeen.toStringLastTime())"
+                        }
+                        cell.detailTextLabel?.textColor = UIColor.black
+                        cell.detailTextLabel?.isEnabled = false
+                    }
                 }
             }
             
@@ -758,6 +827,21 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
         return cell
     }
     
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        
+        
+        if indexPath.row == tableView.numberOfRows(inSection: 0) - 1 && indexPath.row == offset - 1 && segmentedControl.selectedSegmentIndex == 0 {
+            isRefresh = false
+        }
+    }
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        
+        if isRefresh == false && type == "members" {
+            refresh()
+        }
+    }
+    
     func getNumberOfSection() -> Int {
         
         sections.removeAll(keepingCapacity: false)
@@ -782,7 +866,7 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
             sections.append(section)
         }
         
-        if type == "followers" || type == "subscript" {
+        if type == "followers" || type == "subscript" || type == "members"{
             num = 1
             let section = Sections(num: num - 1, letter: "", count: users.count, users: users)
             sections.append(section)

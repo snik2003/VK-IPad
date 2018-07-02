@@ -188,7 +188,13 @@ class GroupProfileView: UIView {
                 
                 let tap = UITapGestureRecognizer()
                 tap.add {
+                    var title = "Видеозаписи сообщества «\(self.profile.name)»"
                     
+                    if self.profile.name.length > 30 {
+                        title = "Видеозаписи сообщества «\(self.profile.name.prefix(30))...»"
+                    }
+                    
+                    self.delegate.openVideoListController(ownerID: "-\(self.delegate.groupID)", title: title, type: "")
                 }
                 tap.numberOfTapsRequired = 1
                 label1.isUserInteractionEnabled = true
@@ -509,6 +515,69 @@ class GroupProfileView: UIView {
         
         countButton.add(for: .touchUpInside) {
             countButton.smallButtonTouched()
+            
+            let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+            
+            let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
+            alertController.addAction(cancelAction)
+            
+            let action1 = UIAlertAction(title: "Все участники", style: .default) { action in
+                let usersController = self.delegate.storyboard?.instantiateViewController(withIdentifier: "UsersController") as! UsersController
+                
+                usersController.userID = "\(self.profile.gid)"
+                usersController.type = "members"
+                usersController.filters = ""
+                usersController.title = "Все участники сообщества «\(self.profile.name)»"
+                if self.profile.name.length > 30 {
+                    usersController.title = "Все участники сообщества «\(self.profile.name.prefix(30))...»"
+                }
+                
+                let detailVC = self.delegate.splitViewController!.viewControllers[self.delegate.splitViewController!.viewControllers.endIndex - 1]
+                detailVC.childViewControllers[0].navigationController?.pushViewController(usersController, animated: true)
+            }
+            alertController.addAction(action1)
+            
+            let action2 = UIAlertAction(title: "Только друзья", style: .default) { action in
+                let usersController = self.delegate.storyboard?.instantiateViewController(withIdentifier: "UsersController") as! UsersController
+                
+                usersController.userID = "\(self.profile.gid)"
+                usersController.type = "members"
+                usersController.filters = "friends"
+                usersController.title = "Ваши друзья в сообществе «\(self.profile.name)»"
+                if self.profile.name.length > 30 {
+                    usersController.title = "Ваши друзья в сообществе «\(self.profile.name.prefix(30))...»"
+                }
+                
+                let detailVC = self.delegate.splitViewController!.viewControllers[self.delegate.splitViewController!.viewControllers.endIndex - 1]
+                detailVC.childViewControllers[0].navigationController?.pushViewController(usersController, animated: true)
+            }
+            alertController.addAction(action2)
+            
+            if self.profile.isAdmin == 1 {
+                let action3 = UIAlertAction(title: "Руководители сообщества", style: .default) { action in
+                    let usersController = self.delegate.storyboard?.instantiateViewController(withIdentifier: "UsersController") as! UsersController
+                    
+                    usersController.userID = "\(self.profile.gid)"
+                    usersController.type = "members"
+                    usersController.filters = "managers"
+                    usersController.title = "Руководители сообщества «\(self.profile.name)»"
+                    if self.profile.name.length > 30 {
+                        usersController.title = "Руководители сообщества «\(self.profile.name.prefix(30))...»"
+                    }
+                    
+                    let detailVC = self.delegate.splitViewController!.viewControllers[self.delegate.splitViewController!.viewControllers.endIndex - 1]
+                    detailVC.childViewControllers[0].navigationController?.pushViewController(usersController, animated: true)
+                }
+                alertController.addAction(action3)
+            }
+            
+            if let popoverController = alertController.popoverPresentationController {
+                popoverController.sourceView = countButton
+                popoverController.sourceRect = CGRect(x: countButton.bounds.minX, y: countButton.bounds.midY, width: 0, height: 0)
+                popoverController.permittedArrowDirections = [.right]
+            }
+            
+            self.delegate.present(alertController, animated: true)
         }
         
         var height: CGFloat = 40
