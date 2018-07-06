@@ -577,8 +577,19 @@ class CommentCell: UITableViewCell {
         
         setLikesButton(comment: comment)
         
+        
         likesButton.frame = CGRect(x: cellWidth - likesButtonWidth - 20, y: topY, width: likesButtonWidth, height: likesButtonHeight)
         self.addSubview(likesButton)
+        
+        let tapLike = UILongPressGestureRecognizer()
+        likesButton.isUserInteractionEnabled = true
+        likesButton.addGestureRecognizer(tapLike)
+        tapLike.add {
+            self.likesButton.smallButtonTouched()
+            
+            self.likesButton.isEnabled = false
+            self.tapLikesButton(sender: tapLike)
+        }
         
         return topY + likesButtonHeight
     }
@@ -593,6 +604,103 @@ class CommentCell: UITableViewCell {
         } else {
             likesButton.setTitleColor(UIColor.darkGray, for: .normal)
             likesButton.setImage(UIImage(named: "like-comment")?.tint(tintColor:  UIColor.darkGray), for: .normal)
+        }
+    }
+    
+    func tapLikesButton(sender: UILongPressGestureRecognizer) {
+        if sender.state == .ended {
+            var type = "comment"
+            var owner = 0
+            if let vc = self.delegate as? RecordController {
+                type = "comment"
+                if vc.record.count > 0 {
+                    owner = vc.record[0].ownerID
+                }
+                
+                if let photo = vc.photo {
+                    type = "photo_comment"
+                    owner = photo.ownerID
+                }
+            } else if let vc = self.delegate as? VideoController {
+                type = "video_comment"
+                if vc.video.count > 0 {
+                    owner = vc.video[0].ownerID
+                }
+            }
+            
+            if comment.userLikes == 0 {
+                let url = "/method/likes.add"
+                let parameters = [
+                    "access_token": vkSingleton.shared.accessToken,
+                    "type": type,
+                    "owner_id": "\(owner)",
+                    "item_id": "\(comment.id)",
+                    "v": vkSingleton.shared.version
+                ]
+                
+                let request = GetServerDataOperation(url: url, parameters: parameters)
+                
+                request.completionBlock = {
+                    guard let data = request.data else { return }
+                    
+                    guard let json = try? JSON(data: data) else { print("json error"); return }
+                    
+                    let error = ErrorJson(json: JSON.null)
+                    error.errorCode = json["error"]["error_code"].intValue
+                    error.errorMsg = json["error"]["error_msg"].stringValue
+                    
+                    if error.errorCode == 0 {
+                        OperationQueue.main.addOperation {
+                            self.comment.countLikes += 1
+                            self.comment.userLikes = 1
+                            self.setLikesButton(comment: self.comment)
+                            self.likesButton.isEnabled = true
+                        }
+                    } else {
+                        OperationQueue.main.addOperation {
+                            self.delegate.showErrorMessage(title: "Ошибка #\(error.errorCode)", msg: "\n\(error.errorMsg)\n")
+                            self.likesButton.isEnabled = true
+                        }
+                    }
+                }
+                OperationQueue().addOperation(request)
+            } else {
+                let url = "/method/likes.delete"
+                let parameters = [
+                    "access_token": vkSingleton.shared.accessToken,
+                    "type": type,
+                    "owner_id": "\(owner)",
+                    "item_id": "\(comment.id)",
+                    "v": vkSingleton.shared.version
+                ]
+                
+                let request = GetServerDataOperation(url: url, parameters: parameters)
+                
+                request.completionBlock = {
+                    guard let data = request.data else { return }
+                    
+                    guard let json = try? JSON(data: data) else { print("json error"); return }
+                    
+                    let error = ErrorJson(json: JSON.null)
+                    error.errorCode = json["error"]["error_code"].intValue
+                    error.errorMsg = json["error"]["error_msg"].stringValue
+                    
+                    if error.errorCode == 0 {
+                        OperationQueue.main.addOperation {
+                            self.comment.countLikes -= 1
+                            self.comment.userLikes = 0
+                            self.setLikesButton(comment: self.comment)
+                            self.likesButton.isEnabled = true
+                        }
+                    } else {
+                        OperationQueue.main.addOperation {
+                            self.delegate.showErrorMessage(title: "Ошибка #\(error.errorCode)", msg: "\n\(error.errorMsg)\n")
+                            self.likesButton.isEnabled = true
+                        }
+                    }
+                }
+                OperationQueue().addOperation(request)
+            }
         }
     }
 }

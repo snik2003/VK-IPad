@@ -1086,6 +1086,9 @@ class RecordCell: UITableViewCell {
             
             likesButton.add(for: .touchUpInside) {
                 self.likesButton.smallButtonTouched()
+                
+                self.likesButton.isEnabled = false
+                self.tapLikesButton()
             }
             
             repostsButton.tag = 250
@@ -1161,6 +1164,95 @@ class RecordCell: UITableViewCell {
         } else {
             likesButton.setTitleColor(UIColor.darkGray, for: .normal)
             likesButton.setImage(UIImage(named: "like")?.tint(tintColor:  UIColor.darkGray), for: .normal)
+        }
+    }
+    
+    func tapLikesButton() {
+        var type = "post"
+        var accessKey = ""
+        if let vc = self.delegate as? RecordController {
+            type = vc.type
+            if type == "photo", let photo = vc.photo {
+                accessKey = photo.accessKey
+            }
+        }
+        
+        if record.userLikes == 0 {
+            let url = "/method/likes.add"
+            var parameters = [
+                "access_token": vkSingleton.shared.accessToken,
+                "type": type,
+                "owner_id": "\(record.ownerID)",
+                "item_id": "\(record.id)",
+                "v": vkSingleton.shared.version
+            ]
+            
+            if type == "photo" && accessKey != "" {
+                parameters["access_key"] = accessKey
+            }
+
+            let request = GetServerDataOperation(url: url, parameters: parameters)
+            
+            request.completionBlock = {
+                guard let data = request.data else { return }
+                
+                guard let json = try? JSON(data: data) else { print("json error"); return }
+                
+                let error = ErrorJson(json: JSON.null)
+                error.errorCode = json["error"]["error_code"].intValue
+                error.errorMsg = json["error"]["error_msg"].stringValue
+                
+                if error.errorCode == 0 {
+                    OperationQueue.main.addOperation {
+                        self.record.likesCount += 1
+                        self.record.userLikes = 1
+                        self.setLikesButton()
+                        self.likesButton.isEnabled = true
+                    }
+                } else {
+                    OperationQueue.main.addOperation {
+                        self.delegate.showErrorMessage(title: "Ошибка #\(error.errorCode)", msg: "\n\(error.errorMsg)\n")
+                        self.likesButton.isEnabled = true
+                    }
+                }
+            }
+            OperationQueue().addOperation(request)
+        } else {
+            let url = "/method/likes.delete"
+            let parameters = [
+                "access_token": vkSingleton.shared.accessToken,
+                "type": type,
+                "owner_id": "\(record.ownerID)",
+                "item_id": "\(record.id)",
+                "v": vkSingleton.shared.version
+            ]
+            
+            let request = GetServerDataOperation(url: url, parameters: parameters)
+            
+            request.completionBlock = {
+                guard let data = request.data else { return }
+                
+                guard let json = try? JSON(data: data) else { print("json error"); return }
+                
+                let error = ErrorJson(json: JSON.null)
+                error.errorCode = json["error"]["error_code"].intValue
+                error.errorMsg = json["error"]["error_msg"].stringValue
+                
+                if error.errorCode == 0 {
+                    OperationQueue.main.addOperation {
+                        self.record.likesCount -= 1
+                        self.record.userLikes = 0
+                        self.setLikesButton()
+                        self.likesButton.isEnabled = true
+                    }
+                } else {
+                    OperationQueue.main.addOperation {
+                        self.delegate.showErrorMessage(title: "Ошибка #\(error.errorCode)", msg: "\n\(error.errorMsg)\n")
+                        self.likesButton.isEnabled = true
+                    }
+                }
+            }
+            OperationQueue().addOperation(request)
         }
     }
 }

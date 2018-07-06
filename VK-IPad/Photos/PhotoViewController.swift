@@ -173,6 +173,7 @@ class PhotoViewController: UITableViewController {
             cell.backgroundColor = UIColor(displayP3Red: 245/255, green: 245/255, blue: 245/255, alpha: 1)
             
             if photo.count > 0 {
+                cell.delegate = self
                 cell.photo = photo[0]
                 
                 cell.cellWidth = self.tableView.bounds.width
