@@ -111,6 +111,8 @@ class ProfileView: UIView {
                 
                 additionalButton.add(for: .touchUpInside) {
                     self.additionalButton.buttonTouched()
+                    
+                    self.tapAdditionalButton()
                 }
                 
                 if delegate.userID == vkSingleton.shared.userID {
@@ -232,6 +234,7 @@ class ProfileView: UIView {
     func tapFriendButton() {
         
         var title = "Отправить \(user.firstNameDat) заявку в друзья"
+        var style: UIAlertActionStyle = .default
         
         var url = "/method/friends.add"
         var parameters = [
@@ -242,6 +245,7 @@ class ProfileView: UIView {
         
         if user.friendStatus == 1 {
             title = "Отозвать заявку \(user.firstNameAbl) в друзья"
+            style = .destructive
             
             url = "/method/friends.delete"
             parameters = [
@@ -251,6 +255,7 @@ class ProfileView: UIView {
             ]
         } else if user.friendStatus == 2 {
             title = "Одобрить заявку \(user.firstNameGen) в друзья"
+            style = .default
             
             url = "/method/friends.add"
             parameters = [
@@ -260,6 +265,7 @@ class ProfileView: UIView {
             ]
         } else if user.friendStatus == 3 {
             title = "Удалить \(user.firstNameAcc) из друзей"
+            style = .destructive
             
             url = "/method/friends.delete"
             parameters = [
@@ -274,7 +280,7 @@ class ProfileView: UIView {
         let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
         alertController.addAction(cancelAction)
         
-        let OKAction = UIAlertAction(title: title, style: .destructive) { action in
+        let OKAction = UIAlertAction(title: title, style: style) { action in
             let request = GetServerDataOperation(url: url, parameters: parameters)
             
             request.completionBlock = {
@@ -316,6 +322,80 @@ class ProfileView: UIView {
         if let popoverController = alertController.popoverPresentationController {
             popoverController.sourceView = self.friendButton
             popoverController.sourceRect = CGRect(x: self.friendButton.bounds.midX, y: self.friendButton.bounds.maxY + 10, width: 0, height: 0)
+            popoverController.permittedArrowDirections = [.up]
+        }
+        
+        self.delegate.present(alertController, animated: true)
+    }
+    
+    func tapAdditionalButton() {
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        
+        let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
+        alertController.addAction(cancelAction)
+        
+        if delegate.userID != vkSingleton.shared.userID {
+            if user.isFavorite == 1 {
+                let action1 = UIAlertAction(title: "Удалить \(user.firstNameAcc) из Закладок", style: .destructive) { action in
+                    
+                }
+                alertController.addAction(action1)
+            } else {
+                let action1 = UIAlertAction(title: "Добавить \(user.firstNameAcc) в Закладки", style: .default) { action in
+                    
+                }
+                alertController.addAction(action1)
+            }
+        }
+        
+        let action2 = UIAlertAction(title: "Скопировать ссылку", style: .default) { action in
+            
+            let link = "https://vk.com/\(self.user.domain)"
+            var title = "Ссылка на профиль \(self.user.firstNameGen) скопирована в буфер обмена:"
+            if self.delegate.userID == vkSingleton.shared.userID {
+                title = "Ссылка на ваш профиль скопирована в буфер обмена:"
+            }
+            UIPasteboard.general.string = link
+            if let string = UIPasteboard.general.string {
+                self.delegate.showInfoMessage(title: title, msg: "\(string)")
+            }
+        }
+        alertController.addAction(action2)
+        
+        if self.delegate.userID != vkSingleton.shared.userID {
+            if user.isHiddenFromFeed == 0 {
+                let action3 = UIAlertAction(title: "Скрывать новости в ленте", style: .destructive) { action in
+                    
+                }
+                alertController.addAction(action3)
+            } else {
+                let action3 = UIAlertAction(title: "Показывать новости в ленте", style: .default) { action in
+                    
+                }
+                alertController.addAction(action3)
+            }
+            
+            if user.blacklistedByMe == 1 {
+                let action4 = UIAlertAction(title: "Удалить из черного списка", style: .default) { action in
+                    
+                }
+                alertController.addAction(action4)
+            } else {
+                let action4 = UIAlertAction(title: "Добавить в черный список", style: .destructive) { action in
+                    
+                }
+                alertController.addAction(action4)
+            }
+        }
+        
+        let action5 = UIAlertAction(title: "Пожаловаться", style: .destructive) { action in
+            
+        }
+        alertController.addAction(action5)
+        
+        if let popoverController = alertController.popoverPresentationController {
+            popoverController.sourceView = self.additionalButton
+            popoverController.sourceRect = CGRect(x: self.additionalButton.bounds.midX, y: self.additionalButton.bounds.maxY + 10, width: 0, height: 0)
             popoverController.permittedArrowDirections = [.up]
         }
         
