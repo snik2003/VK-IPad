@@ -421,6 +421,8 @@ class GroupProfileView: UIView {
             
             isMemberButton.add(for: .touchUpInside) {
                 self.isMemberButton.buttonTouched()
+                
+                self.joinGroup()
             }
             
             isMemberButton.frame = CGRect(x: startX + 10, y: topY + startY, width: width / 3 - 60, height: buttonHeight)
@@ -492,6 +494,185 @@ class GroupProfileView: UIView {
         self.addSubview(coverView)
         
         return topY + 20
+    }
+    
+    func joinGroup() {
+        if profile.isAdmin == 1 {
+            let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+            
+            let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
+            alertController.addAction(cancelAction)
+            
+            let action1 = UIAlertAction(title: "Пригласить друзей", style: .default) { action in
+                
+            }
+            alertController.addAction(action1)
+            
+            let action2 = UIAlertAction(title: "Покинуть сообщество", style: .destructive) { action in
+                
+                let url = "/method/groups.leave"
+                let parameters = [
+                    "access_token": vkSingleton.shared.accessToken,
+                    "group_id": "\(self.profile.gid)",
+                    "v": vkSingleton.shared.version
+                ]
+                
+                let request = GetServerDataOperation(url: url, parameters: parameters)
+                
+                request.completionBlock = {
+                    guard let data = request.data else { return }
+                    
+                    guard let json = try? JSON(data: data) else { print("json error"); return }
+                    
+                    let error = ErrorJson(json: JSON.null)
+                    error.errorCode = json["error"]["error_code"].intValue
+                    error.errorMsg = json["error"]["error_msg"].stringValue
+                    
+                    if error.errorCode == 0 {
+                        self.profile.isMember = 0
+                        self.profile.isAdmin = 0
+                        self.profile.membersCounter -= 1
+                        
+                        OperationQueue.main.addOperation {
+                            self.isMemberButton.setTitle(self.profile.memberButtonText(), for: .normal)
+                            self.isMemberButton.setTitleColor(UIColor.white, for: .normal)
+                            self.isMemberButton.backgroundColor = vkSingleton.shared.mainColor
+                            
+                            self.dopButton.setTitleColor(UIColor.white, for: .normal)
+                            self.dopButton.backgroundColor = vkSingleton.shared.mainColor
+                        }
+                    } else {
+                        self.delegate.showErrorMessage(title: "Ошибка #\(error.errorCode)", msg: "\n\(error.errorMsg)\n")
+                    }
+                }
+                
+                OperationQueue().addOperation(request)
+            }
+            alertController.addAction(action2)
+            
+            if let popoverController = alertController.popoverPresentationController {
+                popoverController.sourceView = self.isMemberButton
+                popoverController.sourceRect = CGRect(x: self.isMemberButton.bounds.midX, y: self.isMemberButton.bounds.maxY + 10, width: 0, height: 0)
+                popoverController.permittedArrowDirections = [.up]
+            }
+            
+            self.delegate.present(alertController, animated: true)
+        } else {
+            if profile.isMember == 0 {
+                let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+                
+                let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
+                alertController.addAction(cancelAction)
+                
+                let OKAction = UIAlertAction(title: profile.memberButtonText(), style: .destructive) { action in
+                    
+                    let joinQueue = OperationQueue()
+                    joinQueue.qualityOfService = .userInitiated
+                    
+                    let url = "/method/groups.join"
+                    
+                    let parameters = [
+                        "access_token": vkSingleton.shared.accessToken,
+                        "group_id": "\(self.profile.gid)",
+                        "v": vkSingleton.shared.version
+                    ]
+                    
+                    let request = GetServerDataOperation(url: url, parameters: parameters)
+                    
+                    request.completionBlock = {
+                        guard let data = request.data else { return }
+                        
+                        guard let json = try? JSON(data: data) else { print("json error"); return }
+                        
+                        let error = ErrorJson(json: JSON.null)
+                        error.errorCode = json["error"]["error_code"].intValue
+                        error.errorMsg = json["error"]["error_msg"].stringValue
+                        
+                        if error.errorCode == 0 {
+                            self.profile.isMember = 1
+                            self.profile.membersCounter += 1
+                            OperationQueue.main.addOperation {
+                                self.isMemberButton.setTitle(self.profile.memberButtonText(), for: .normal)
+                                self.isMemberButton.setTitleColor(UIColor.black, for: .normal)
+                                self.isMemberButton.backgroundColor = vkSingleton.shared.backColor
+                                
+                                self.dopButton.setTitleColor(UIColor.black, for: .normal)
+                                self.dopButton.backgroundColor = vkSingleton.shared.backColor
+                            }
+                        } else {
+                            self.delegate.showErrorMessage(title: "Ошибка #\(error.errorCode)", msg: "\n\(error.errorMsg)\n")
+                        }
+                    }
+                    
+                    OperationQueue().addOperation(request)
+                }
+                alertController.addAction(OKAction)
+                
+                if let popoverController = alertController.popoverPresentationController {
+                    popoverController.sourceView = self.isMemberButton
+                    popoverController.sourceRect = CGRect(x: self.isMemberButton.bounds.midX, y: self.isMemberButton.bounds.maxY + 10, width: 0, height: 0)
+                    popoverController.permittedArrowDirections = [.up]
+                }
+                
+                self.delegate.present(alertController, animated: true)
+            } else if profile.isMember == 1 {
+                let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+                
+                let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
+                alertController.addAction(cancelAction)
+                
+                let OKAction = UIAlertAction(title: "Отписаться", style: .destructive) { action in
+                    
+                    let leaveQueue = OperationQueue()
+                    leaveQueue.qualityOfService = .userInitiated
+                    
+                    let url = "/method/groups.leave"
+                    
+                    let parameters = [
+                        "access_token": vkSingleton.shared.accessToken,
+                        "group_id": "\(self.profile.gid)",
+                        "v": vkSingleton.shared.version
+                    ]
+                    
+                    let request = GetServerDataOperation(url: url, parameters: parameters)
+                    
+                    request.completionBlock = {
+                        guard let data = request.data else { return }
+                        
+                        guard let json = try? JSON(data: data) else { print("json error"); return }
+                        
+                        let error = ErrorJson(json: JSON.null)
+                        error.errorCode = json["error"]["error_code"].intValue
+                        error.errorMsg = json["error"]["error_msg"].stringValue
+                        
+                        if error.errorCode == 0 {
+                            self.profile.isMember = 0
+                            self.profile.membersCounter -= 1
+                            OperationQueue.main.addOperation {
+                                self.isMemberButton.setTitle(self.profile.memberButtonText(), for: .normal)
+                                self.isMemberButton.setTitleColor(UIColor.white, for: .normal)
+                                self.isMemberButton.backgroundColor = vkSingleton.shared.mainColor
+                                
+                                self.dopButton.setTitleColor(UIColor.white, for: .normal)
+                                self.dopButton.backgroundColor = vkSingleton.shared.mainColor
+                            }
+                        } else {
+                            self.delegate.showErrorMessage(title: "Ошибка #\(error.errorCode)", msg: "\n\(error.errorMsg)\n")
+                        }
+                    }
+                    OperationQueue().addOperation(request)
+                }
+                alertController.addAction(OKAction)
+                
+                if let popoverController = alertController.popoverPresentationController {
+                    popoverController.sourceView = self.isMemberButton
+                    popoverController.sourceRect = CGRect(x: self.isMemberButton.bounds.midX, y: self.isMemberButton.bounds.maxY + 10, width: 0, height: 0)
+                    popoverController.permittedArrowDirections = [.up]
+                }
+                
+                self.delegate.present(alertController, animated: true)
+            }
+        }
     }
     
     func getMembersView(width: CGFloat, leftX: CGFloat, topY: CGFloat, maxHeight: CGFloat) {
