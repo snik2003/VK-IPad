@@ -76,6 +76,8 @@ class ProfileView: UIView {
                     
                     friendButton.add(for: .touchUpInside) {
                         self.friendButton.buttonTouched()
+                        
+                        self.tapFriendButton()
                     }
                     
                     if profile.canWritePrivateMessage == 1 {
@@ -225,6 +227,99 @@ class ProfileView: UIView {
         }
         
         return topY + 10
+    }
+    
+    func tapFriendButton() {
+        
+        var title = "Отправить \(user.firstNameDat) заявку в друзья"
+        
+        var url = "/method/friends.add"
+        var parameters = [
+            "access_token": vkSingleton.shared.accessToken,
+            "user_id": "\(self.delegate.userID)",
+            "v": vkSingleton.shared.version
+        ]
+        
+        if user.friendStatus == 1 {
+            title = "Отозвать заявку \(user.firstNameAbl) в друзья"
+            
+            url = "/method/friends.delete"
+            parameters = [
+                "access_token": vkSingleton.shared.accessToken,
+                "user_id": "\(self.delegate.userID)",
+                "v": vkSingleton.shared.version
+            ]
+        } else if user.friendStatus == 2 {
+            title = "Одобрить заявку \(user.firstNameGen) в друзья"
+            
+            url = "/method/friends.add"
+            parameters = [
+                "access_token": vkSingleton.shared.accessToken,
+                "user_id": "\(self.delegate.userID)",
+                "v": vkSingleton.shared.version
+            ]
+        } else if user.friendStatus == 3 {
+            title = "Удалить \(user.firstNameAcc) из друзей"
+            
+            url = "/method/friends.delete"
+            parameters = [
+                "access_token": vkSingleton.shared.accessToken,
+                "user_id": "\(self.delegate.userID)",
+                "v": vkSingleton.shared.version
+            ]
+        }
+        
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        
+        let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
+        alertController.addAction(cancelAction)
+        
+        let OKAction = UIAlertAction(title: title, style: .destructive) { action in
+            let request = GetServerDataOperation(url: url, parameters: parameters)
+            
+            request.completionBlock = {
+                guard let data = request.data else { return }
+                
+                guard let json = try? JSON(data: data) else { print("json error"); return }
+                
+                let error = ErrorJson(json: JSON.null)
+                error.errorCode = json["error"]["error_code"].intValue
+                error.errorMsg = json["error"]["error_msg"].stringValue
+                
+                if error.errorCode == 0 {
+                    if self.user.friendStatus == 0 {
+                        self.user.friendStatus = 1
+                        self.user.followersCount += 1
+                    } else if self.user.friendStatus == 1 {
+                        self.user.friendStatus = 0
+                        self.user.followersCount -= 1
+                    } else if self.user.friendStatus == 2 {
+                        self.user.friendStatus = 3
+                        self.user.friendsCount += 1
+                    } else if self.user.friendStatus == 3 {
+                        self.user.friendStatus = 2
+                        self.user.friendsCount -= 1
+                    }
+                    
+                    OperationQueue.main.addOperation {
+                        self.updateFriendButton()
+                        
+                    }
+                } else {
+                    self.delegate.showErrorMessage(title: "Ошибка #\(error.errorCode)", msg: "\n\(error.errorMsg)\n")
+                }
+            }
+            OperationQueue().addOperation(request)
+        }
+        alertController.addAction(OKAction)
+        
+        if let popoverController = alertController.popoverPresentationController {
+            popoverController.sourceView = self.friendButton
+            popoverController.sourceRect = CGRect(x: self.friendButton.bounds.midX, y: self.friendButton.bounds.maxY + 10, width: 0, height: 0)
+            popoverController.permittedArrowDirections = [.up]
+        }
+        
+        self.delegate.present(alertController, animated: true)
     }
     
     func setUserInfoView() -> CGFloat {
