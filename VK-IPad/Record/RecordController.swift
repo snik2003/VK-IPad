@@ -60,6 +60,7 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
         }
         
         getRecord()
+        StoreReviewHelper.checkAndAskForReview()
     }
 
     func configureTableView() {

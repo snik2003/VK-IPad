@@ -79,6 +79,7 @@ class PhotoViewController: UITableViewController {
             }
         }
         OperationQueue.main.addOperation(getServerDataOperation)
+        StoreReviewHelper.checkAndAskForReview()
     }
 
     override func didReceiveMemoryWarning() {

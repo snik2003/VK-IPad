@@ -31,7 +31,6 @@ struct StoreReviewHelper {
         case _ where appOpenCount % 50 == 0:
             StoreReviewHelper().requestReview()
         default:
-            print("App run count is : \(appOpenCount)")
             break;
         }
         

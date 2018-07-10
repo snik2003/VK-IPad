@@ -20,11 +20,6 @@ class ProfileViewController: UITableViewController, WKNavigationDelegate {
     var heights: [IndexPath: CGFloat] = [:]
     var recordsCount: Int = 0
     
-//    var userID = "76632752" // заблокирована
-//    var userID = "176257230"
-//    var userID = "46616527" // Юра
-//    var userID = "330060597" // мама
-//    var userID = "34051891" // я осн.
     var userID = vkSingleton.shared.userID
     
     var offset = 0
@@ -57,6 +52,7 @@ class ProfileViewController: UITableViewController, WKNavigationDelegate {
         
         self.view.layoutIfNeeded()
         refreshExecute()
+        StoreReviewHelper.checkAndAskForReview()
     }
 
     override func viewWillAppear(_ animated: Bool) {

@@ -83,6 +83,7 @@ class VideoController: UIViewController, UITableViewDelegate, UITableViewDataSou
         }
         
         getVideo()
+        StoreReviewHelper.checkAndAskForReview()
     }
     
     override func didReceiveMemoryWarning() {
