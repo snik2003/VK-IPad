@@ -53,8 +53,6 @@ class VideoCell: UITableViewCell {
             
             var topY: CGFloat = 0
             
-            let maxWidth = cellWidth - 40
-            
             topY = setHeader(topY: topY)
             
             topY = setVideo(topY: topY)

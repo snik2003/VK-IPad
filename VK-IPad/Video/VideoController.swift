@@ -215,9 +215,9 @@ class VideoController: UIViewController, UITableViewDelegate, UITableViewDataSou
         
         configureStickerView(sView: stickerView, product: product1, numProd: 1, width: width)
         
-        let point = CGPoint(x: self.commentView.stickerButton.frame.midX, y: self.tableView.frame.maxY - 35 - self.commentView.stickerButton.frame.height)
+        let point = CGPoint(x: self.commentView.stickerButton.frame.midX, y: self.view.frame.height - 10 - self.commentView.stickerButton.frame.height)
         self.popover = Popover(options: self.popoverOptions)
-        self.popover.show(stickerView, point: point, inView: self.tableView)
+        self.popover.show(stickerView, point: point, inView: self.view)
     }
     
     @objc func tapAccessoryButton(sender: UIButton) {
