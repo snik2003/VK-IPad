@@ -239,6 +239,13 @@ extension UIViewController: ViewControllerProtocol {
         detailVC.childViewControllers[0].navigationController?.pushViewController(usersController, animated: true)
     }
     
+    func openNotificationController() {
+        let controller = self.storyboard?.instantiateViewController(withIdentifier: "NotificationController") as! NotificationController
+        
+        let detailVC = self.splitViewController!.viewControllers[self.splitViewController!.viewControllers.endIndex - 1]
+        detailVC.childViewControllers[0].navigationController?.pushViewController(controller, animated: true)
+    }
+    
     func openProfileController(id: Int, name: String) {
         if id > 0 {
             let profileController = self.storyboard?.instantiateViewController(withIdentifier: "ProfileViewController") as! ProfileViewController

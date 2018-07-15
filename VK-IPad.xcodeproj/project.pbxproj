@@ -79,6 +79,9 @@
 		17B134AB20DADDAE0058E1A8 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B134AA20DADDAE0058E1A8 /* Comment.swift */; };
 		17B134AD20DB8B070058E1A8 /* LikesUsersController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B134AC20DB8B070058E1A8 /* LikesUsersController.swift */; };
 		17B134AF20DBBEAE0058E1A8 /* CommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B134AE20DBBEAE0058E1A8 /* CommentCell.swift */; };
+		17CCB7F920F4E89A0051947A /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CCB7F820F4E89A0051947A /* Notification.swift */; };
+		17CCB7FB20F63AB30051947A /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CCB7FA20F63AB30051947A /* NotificationController.swift */; };
+		17CCB7FD20F75D1F0051947A /* NotificationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CCB7FC20F75D1F0051947A /* NotificationCell.swift */; };
 		17DD5DB820D7CBE20019938D /* AttachmentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17DD5DB720D7CBE20019938D /* AttachmentsView.swift */; };
 		17EBC3A120D51A46009130FC /* Attachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17EBC3A020D51A46009130FC /* Attachment.swift */; };
 		17EBC3A320D52C5D009130FC /* Video.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17EBC3A220D52C5D009130FC /* Video.swift */; };
@@ -161,6 +164,9 @@
 		17B134AA20DADDAE0058E1A8 /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
 		17B134AC20DB8B070058E1A8 /* LikesUsersController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikesUsersController.swift; sourceTree = "<group>"; };
 		17B134AE20DBBEAE0058E1A8 /* CommentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentCell.swift; sourceTree = "<group>"; };
+		17CCB7F820F4E89A0051947A /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
+		17CCB7FA20F63AB30051947A /* NotificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationController.swift; sourceTree = "<group>"; };
+		17CCB7FC20F75D1F0051947A /* NotificationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCell.swift; sourceTree = "<group>"; };
 		17DD5DB720D7CBE20019938D /* AttachmentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentsView.swift; sourceTree = "<group>"; };
 		17EBC3A020D51A46009130FC /* Attachment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Attachment.swift; sourceTree = "<group>"; };
 		17EBC3A220D52C5D009130FC /* Video.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Video.swift; sourceTree = "<group>"; };
@@ -291,6 +297,7 @@
 				17B134A620DACD110058E1A8 /* Likes.swift */,
 				17B134AA20DADDAE0058E1A8 /* Comment.swift */,
 				179CFC4020DBE94900F2AB04 /* Sticker.swift */,
+				17CCB7F820F4E89A0051947A /* Notification.swift */,
 			);
 			path = Objects;
 			sourceTree = "<group>";
@@ -344,6 +351,8 @@
 				174912D220D300DC00FCF9F9 /* ProfileViewController.swift */,
 				174912D320D300DC00FCF9F9 /* MenuViewController.swift */,
 				1700D24E20DEAFF3003C50A1 /* ChangeAccountView.swift */,
+				17CCB7FA20F63AB30051947A /* NotificationController.swift */,
+				17CCB7FC20F75D1F0051947A /* NotificationCell.swift */,
 			);
 			path = MainMenu;
 			sourceTree = "<group>";
@@ -581,6 +590,7 @@
 				174912DE20D300DD00FCF9F9 /* UserProfile.swift in Sources */,
 				17B134A320DA8B720058E1A8 /* PhotoViewCell.swift in Sources */,
 				173D667B20D40FCE00EEBF46 /* URLsInLabels.swift in Sources */,
+				17CCB7F920F4E89A0051947A /* Notification.swift in Sources */,
 				173D667C20D40FCE00EEBF46 /* KGCopyableLabel.swift in Sources */,
 				17424FEB20D53C2100F52C4C /* Audio.swift in Sources */,
 				173D666F20D3EAC800EEBF46 /* GroupProfile.swift in Sources */,
@@ -617,6 +627,7 @@
 				17EBC3A320D52C5D009130FC /* Video.swift in Sources */,
 				174912FE20D303F400FCF9F9 /* ParseFriends.swift in Sources */,
 				17A1A5B920D8E37400D9CE00 /* GroupProfileViewController.swift in Sources */,
+				17CCB7FB20F63AB30051947A /* NotificationController.swift in Sources */,
 				173D666D20D3E4BE00EEBF46 /* Record.swift in Sources */,
 				17A1A5BB20D8E63000D9CE00 /* ParseGroupProfile.swift in Sources */,
 				174912FD20D303F400FCF9F9 /* ReloadUsersController.swift in Sources */,
@@ -629,6 +640,7 @@
 				174912EB20D300DD00FCF9F9 /* AsyncOperation.swift in Sources */,
 				174912DA20D300DD00FCF9F9 /* SetAnimatedImageToRow.swift in Sources */,
 				173D666820D3C9DB00EEBF46 /* ParseGroupList.swift in Sources */,
+				17CCB7FD20F75D1F0051947A /* NotificationCell.swift in Sources */,
 				17B134AF20DBBEAE0058E1A8 /* CommentCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

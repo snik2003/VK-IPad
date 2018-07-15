@@ -51,7 +51,7 @@ class MenuViewController: UITableViewController {
         
         // Ответы
         if indexPath.section == 0 && indexPath.row == 1 {
-            
+            self.openNotificationController()
         }
         
         // Мои сообщения
@@ -111,6 +111,16 @@ class MenuViewController: UITableViewController {
         
         tableView.deselectRow(at: indexPath, animated: false)
     }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        
+        if indexPath.section == 2 && indexPath.row == 3 {
+            return 0
+        }
+        
+        return 40
+    }
+    
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let view = UIView()
         view.backgroundColor = UIColor.white
@@ -155,7 +165,7 @@ class MenuViewController: UITableViewController {
             guard let data = getServerDataOperation.data else { return }
             
             guard let json = try? JSON(data: data) else { print("json error"); return }
-            //print(json)
+            //print(json["response"][1]["items"])
             
             let userProfile = json["response"][4].compactMap { UserProfile(json: $0.1) }
             
@@ -178,21 +188,21 @@ class MenuViewController: UITableViewController {
                 self.friendsCell.setBadgeValue(value: friends)
             }
             
-            //let notData = json["response"][1]["items"].compactMap { Notifications(json: $0.1) }
+            let notData = json["response"][1]["items"].compactMap { Notification(json: $0.1) }
             
             var countNewNots = 0
-            /*let lastViewed = json["response"][1]["last_viewed"].intValue
+            let lastViewed = json["response"][1]["last_viewed"].intValue
             for not in notData {
                 if not.date > lastViewed {
-                    countNewNots += not.feedback.count
+                    countNewNots += not.feedbackCount
                 }
             }
             
-            let groups = json["response"][2]["items"].compactMap { Groups(json: $0.1) }*/
+            let groups = json["response"][2]["items"].compactMap { Groups(json: $0.1) }
             
             OperationQueue.main.addOperation {
                 self.notificationsCell.setBadgeValue(value: countNewNots)
-                //self.groupsCell.setBadgeValue(value: groups.count)
+                self.groupsCell.setBadgeValue(value: groups.count)
             }
             
             let count = json["response"][3]["count"].intValue
