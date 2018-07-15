@@ -842,6 +842,10 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
         }
     }
     
+    @objc func showRequests(sender: UIBarButtonItem) {
+        self.openUsersController(uid: vkSingleton.shared.userID, title: "Непринятые заявки в друзья", type: "requests")
+    }
+    
     func getNumberOfSection() -> Int {
         
         sections.removeAll(keepingCapacity: false)

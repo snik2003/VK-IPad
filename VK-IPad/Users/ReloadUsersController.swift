@@ -6,7 +6,7 @@
 //  Copyright © 2018 Sergey Nikitin. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 class ReloadUsersController: Operation {
     var controller: UsersController
@@ -23,6 +23,10 @@ class ReloadUsersController: Operation {
             
             if type == "friends" {
                 controller.friends = parseFriends.outputData
+                if controller.userID == vkSingleton.shared.userID {
+                    let barButton = UIBarButtonItem(title: "Заявки", style: .done, target: controller, action: #selector(controller.showRequests(sender:)))
+                    controller.navigationItem.rightBarButtonItem = barButton
+                }
             } else {
                 controller.friends = parseFriends.outputData.filter({ $0.isFriend == 1 })
             }
