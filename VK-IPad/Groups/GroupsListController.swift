@@ -43,13 +43,8 @@ class GroupsListController: UIViewController, UITableViewDelegate, UITableViewDa
             
             if self.userID == vkSingleton.shared.userID && self.type == "" && self.source == "" {
                 
-                if vkSingleton.shared.adminGroupID.count == 0 {
-                    let actionButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(self.tapSearchButton(sender:)))
-                    self.navigationItem.rightBarButtonItem = actionButton
-                } else {
-                    let actionButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(self.tapActionButton(sender:)))
-                    self.navigationItem.rightBarButtonItem = actionButton
-                }
+                let actionButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(self.tapActionButton(sender:)))
+                self.navigationItem.rightBarButtonItem = actionButton
             }
             
             self.tableView.separatorStyle = .none
@@ -72,7 +67,7 @@ class GroupsListController: UIViewController, UITableViewDelegate, UITableViewDa
         
         if type != "search" {
             
-            let url = "/method/groups.get"
+            var url = "/method/groups.get"
             var parameters = [
                 "user_id": userID,
                 "access_token": vkSingleton.shared.accessToken,
@@ -114,6 +109,17 @@ class GroupsListController: UIViewController, UITableViewDelegate, UITableViewDa
                 ]
             }
             
+            if type == "invites" {
+                url = "/method/groups.getInvites"
+                parameters = [
+                    "count": "100",
+                    "extended": "1",
+                    "fields": "name,cover,members_count,type,is_closed,deactivated,invited_by",
+                    "access_token": vkSingleton.shared.accessToken,
+                    "v": vkSingleton.shared.version
+                ]
+            }
+            
             let getServerDataOperation = GetServerDataOperation(url: url, parameters: parameters)
             opq.addOperation(getServerDataOperation)
             
@@ -130,6 +136,10 @@ class GroupsListController: UIViewController, UITableViewDelegate, UITableViewDa
     @objc func tapCancelButton(sender: UIBarButtonItem) {
         
         self.navigationController?.popViewController(animated: true)
+    }
+    
+    @objc func showInvites(sender: UIBarButtonItem) {
+        
     }
     
     func refreshSearch() {
@@ -275,10 +285,6 @@ class GroupsListController: UIViewController, UITableViewDelegate, UITableViewDa
         }
     }
     
-    @objc func tapSearchButton(sender: UIBarButtonItem) {
-        self.openGroupsListController(uid: vkSingleton.shared.userID, title: "Поиск", type: "search")
-    }
-    
     @objc func tapActionButton(sender: UIBarButtonItem) {
         
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
@@ -286,11 +292,13 @@ class GroupsListController: UIViewController, UITableViewDelegate, UITableViewDa
         let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
         alertController.addAction(cancelAction)
         
-        let action1 = UIAlertAction(title: "Поиск нового сообщества", style: .default) { action in
-            
-            self.openGroupsListController(uid: vkSingleton.shared.userID, title: "Поиск сообщества", type: "search")
+        if vkSingleton.shared.adminGroupID.count > 0 {
+            let action1 = UIAlertAction(title: "Поиск нового сообщества", style: .default) { action in
+                
+                self.openGroupsListController(uid: vkSingleton.shared.userID, title: "Поиск сообщества", type: "search")
+            }
+            alertController.addAction(action1)
         }
-        alertController.addAction(action1)
         
         if vkSingleton.shared.adminGroupID.count > 0 {
             let action2 = UIAlertAction(title: "Управление сообществами", style: .default) { action in
@@ -299,6 +307,12 @@ class GroupsListController: UIViewController, UITableViewDelegate, UITableViewDa
             }
             alertController.addAction(action2)
         }
+        
+        let action3 = UIAlertAction(title: "Входящие приглашения", style: .default) { action in
+                
+            self.openGroupsListController(uid: vkSingleton.shared.userID, title: "Новые приглашения в сообщества", type: "invites")
+        }
+        alertController.addAction(action3)
         
         if let popoverController = alertController.popoverPresentationController {
             popoverController.barButtonItem = sender
