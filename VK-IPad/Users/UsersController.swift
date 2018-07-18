@@ -10,6 +10,7 @@ import UIKit
 import Alamofire
 import SCLAlertView
 import BEMCheckBox
+import SwiftyJSON
 
 class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
 
@@ -52,6 +53,8 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
     var filters = ""
     var isRefresh = false
     
+    var deleteButton = UIBarButtonItem()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -69,8 +72,8 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
             self.tableView.separatorStyle = .none
             
             if self.type == "requests" {
-                let deleteButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(self.tapDeleteAllRequests(sender:)))
-                self.navigationItem.rightBarButtonItem = deleteButton
+                self.deleteButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(self.tapDeleteAllRequests(sender:)))
+                self.navigationItem.rightBarButtonItem = self.deleteButton
             }
             
             if self.source == "create_chat" {
@@ -81,13 +84,11 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
         }
         
         refresh()
-        //StoreReviewHelper.checkAndAskForReview()
+        StoreReviewHelper.checkAndAskForReview()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        //self.showMessageNotification(title: "Новое сообщение", text: "Всем привет! 😉", userID: 46616527, chatID: 0, groupID: 0, startID: -1)
     }
     
     override func didReceiveMemoryWarning() {
@@ -297,11 +298,47 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
         let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
         alertController.addAction(cancelAction)
         
-        let action = UIAlertAction(title: "Пометить всё как просмотренные", style: .destructive){ action in
+        let action = UIAlertAction(title: "Оставить все заявки в подписчиках", style: .default){ action in
             
-            //self.deleteAllRequests(controller: self)
+            let url = "/method/friends.deleteAllRequests"
+            
+            let parameters = [
+                "access_token": vkSingleton.shared.accessToken,
+                "v": vkSingleton.shared.version
+            ]
+            
+            let request = GetServerDataOperation(url: url, parameters: parameters)
+            
+            request.completionBlock = {
+                guard let data = request.data else { return }
+                
+                guard let json = try? JSON(data: data) else { print("json error"); return }
+                
+                let error = ErrorJson(json: JSON.null)
+                error.errorCode = json["error"]["error_code"].intValue
+                error.errorMsg = json["error"]["error_msg"].stringValue
+                
+                if error.errorCode == 0 {
+                    OperationQueue.main.addOperation {
+                        self.sections[0].users.removeAll(keepingCapacity: false)
+                        self.tableView.reloadData()
+                        
+                        if let splitVC = self.navigationController?.splitViewController, let detailVC = splitVC.viewControllers[0].childViewControllers[0] as? MenuViewController {
+                            detailVC.friendsCell.setBadgeValue(value: 0)
+                        }
+                    }
+                } else {
+                    self.delegate.showErrorMessage(title: "Ошибка #\(error.errorCode)", msg: "\n\(error.errorMsg)\n")
+                }
+            }
+            OperationQueue().addOperation(request)
         }
         alertController.addAction(action)
+        
+        if let popoverController = alertController.popoverPresentationController {
+            popoverController.barButtonItem = self.deleteButton
+            popoverController.permittedArrowDirections = [.up]
+        }
         
         self.present(alertController, animated: true)
     }
@@ -612,6 +649,7 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
             }
         }
     }
+    
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         if type == "requests" {
             return true
@@ -625,24 +663,46 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
         return false
     }
     
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        
-        if editingStyle == .delete {
-            
-        }
-        
-        if editingStyle == .insert {
-            
-        }
-    }
-
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         
         if type == "requests" {
             let deleteAction = UITableViewRowAction(style: .destructive, title: "Оставить в\nподписчиках") { (rowAction, indexPath) in
                 
-                //let user = self.sections[indexPath.section].users[indexPath.row]
-                //self.deleteRequest(userID: user.userID, controller: self)
+                let user = self.sections[indexPath.section].users[indexPath.row]
+                
+                let url = "/method/friends.delete"
+                
+                let parameters = [
+                    "access_token": vkSingleton.shared.accessToken,
+                    "user_id": user.uid,
+                    "v": vkSingleton.shared.version
+                ]
+                
+                let request = GetServerDataOperation(url: url, parameters: parameters)
+                
+                request.completionBlock = {
+                    guard let data = request.data else { return }
+                    
+                    guard let json = try? JSON(data: data) else { print("json error"); return }
+                    
+                    let error = ErrorJson(json: JSON.null)
+                    error.errorCode = json["error"]["error_code"].intValue
+                    error.errorMsg = json["error"]["error_msg"].stringValue
+                    
+                    if error.errorCode == 0 {
+                        OperationQueue.main.addOperation {
+                            self.sections[indexPath.section].users.remove(at: indexPath.row)
+                            self.tableView.reloadData()
+                            
+                            if let splitVC = self.navigationController?.splitViewController, let detailVC = splitVC.viewControllers[0].childViewControllers[0] as? MenuViewController {
+                                detailVC.friendsCell.setBadgeValue(value: self.sections[indexPath.section].users.count)
+                            }
+                        }
+                    } else {
+                        self.delegate.showErrorMessage(title: "Ошибка #\(error.errorCode)", msg: "\n\(error.errorMsg)\n")
+                    }
+                }
+                OperationQueue().addOperation(request)
             }
             deleteAction.backgroundColor = .red
             

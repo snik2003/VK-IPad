@@ -565,7 +565,7 @@ class GroupProfileView: UIView {
                 alertController.addAction(cancelAction)
                 
                 if profile.type != "event" {
-                    let OKAction = UIAlertAction(title: profile.memberButtonText(), style: .destructive) { action in
+                    let OKAction = UIAlertAction(title: profile.memberButtonText(), style: .default) { action in
                         
                         let url = "/method/groups.join"
                         
@@ -684,6 +684,44 @@ class GroupProfileView: UIView {
                         OperationQueue().addOperation(request)
                     }
                     alertController.addAction(action2)
+                    
+                    let action3 = UIAlertAction(title: "Отклонить приглашение", style: .destructive) { action in
+                        let url = "/method/groups.leave"
+                        
+                        let parameters = [
+                            "access_token": vkSingleton.shared.accessToken,
+                            "group_id": "\(self.profile.gid)",
+                            "v": vkSingleton.shared.version
+                        ]
+                        
+                        let request = GetServerDataOperation(url: url, parameters: parameters)
+                        
+                        request.completionBlock = {
+                            guard let data = request.data else { return }
+                            
+                            guard let json = try? JSON(data: data) else { print("json error"); return }
+                            
+                            let error = ErrorJson(json: JSON.null)
+                            error.errorCode = json["error"]["error_code"].intValue
+                            error.errorMsg = json["error"]["error_msg"].stringValue
+                            
+                            if error.errorCode == 0 {
+                                self.profile.isMember = 0
+                                OperationQueue.main.addOperation {
+                                    self.isMemberButton.setTitle(self.profile.memberButtonText(), for: .normal)
+                                    self.isMemberButton.setTitleColor(UIColor.black, for: .normal)
+                                    self.isMemberButton.backgroundColor = vkSingleton.shared.backColor
+                                    
+                                    self.dopButton.setTitleColor(UIColor.black, for: .normal)
+                                    self.dopButton.backgroundColor = vkSingleton.shared.backColor
+                                }
+                            } else {
+                                self.delegate.showErrorMessage(title: "Ошибка #\(error.errorCode)", msg: "\n\(error.errorMsg)\n")
+                            }
+                        }
+                        OperationQueue().addOperation(request)
+                    }
+                    alertController.addAction(action3)
                 }
                     
                 if let popoverController = alertController.popoverPresentationController {

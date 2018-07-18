@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SwiftyJSON
 
 class GroupsListController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
     
@@ -285,6 +286,103 @@ class GroupsListController: UIViewController, UITableViewDelegate, UITableViewDa
         }
     }
     
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        if type == "invites" {
+            return true
+        }
+        
+        return false
+    }
+    
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        
+        if type == "invites" {
+            let deleteAction = UITableViewRowAction(style: .destructive, title: "Отклонить\nприглашение") { (rowAction, indexPath) in
+                
+                let group = self.groupsList[indexPath.row]
+                
+                let url = "/method/groups.leave"
+                
+                let parameters = [
+                    "access_token": vkSingleton.shared.accessToken,
+                    "group_id": group.gid,
+                    "v": vkSingleton.shared.version
+                ]
+                
+                let request = GetServerDataOperation(url: url, parameters: parameters)
+                
+                request.completionBlock = {
+                    guard let data = request.data else { return }
+                    
+                    guard let json = try? JSON(data: data) else { print("json error"); return }
+                    
+                    let error = ErrorJson(json: JSON.null)
+                    error.errorCode = json["error"]["error_code"].intValue
+                    error.errorMsg = json["error"]["error_msg"].stringValue
+                    
+                    if error.errorCode == 0 {
+                        OperationQueue.main.addOperation {
+                            self.groupsList.remove(at: indexPath.row)
+                            self.tableView.reloadData()
+                            
+                            if let splitVC = self.navigationController?.splitViewController, let detailVC = splitVC.viewControllers[0].childViewControllers[0] as? MenuViewController {
+                                detailVC.groupsCell.setBadgeValue(value: self.groupsList.count)
+                            }
+                        }
+                    } else {
+                        self.delegate.showErrorMessage(title: "Ошибка #\(error.errorCode)", msg: "\n\(error.errorMsg)\n")
+                    }
+                }
+                OperationQueue().addOperation(request)
+            }
+            deleteAction.backgroundColor = .red
+            
+            let joinAction = UITableViewRowAction(style: .normal, title: "Принять\nприглашение") { (rowAction, indexPath) in
+                
+                let group = self.groupsList[indexPath.row]
+                
+                let url = "/method/groups.join"
+                
+                let parameters = [
+                    "access_token": vkSingleton.shared.accessToken,
+                    "group_id": group.gid,
+                    "v": vkSingleton.shared.version
+                ]
+                
+                let request = GetServerDataOperation(url: url, parameters: parameters)
+                
+                request.completionBlock = {
+                    guard let data = request.data else { return }
+                    
+                    guard let json = try? JSON(data: data) else { print("json error"); return }
+                    
+                    let error = ErrorJson(json: JSON.null)
+                    error.errorCode = json["error"]["error_code"].intValue
+                    error.errorMsg = json["error"]["error_msg"].stringValue
+                    
+                    if error.errorCode == 0 {
+                        OperationQueue.main.addOperation {
+                            self.groupsList.remove(at: indexPath.row)
+                            self.tableView.reloadData()
+                            
+                            if let splitVC = self.navigationController?.splitViewController, let detailVC = splitVC.viewControllers[0].childViewControllers[0] as? MenuViewController {
+                                detailVC.groupsCell.setBadgeValue(value: self.groupsList.count)
+                            }
+                        }
+                    } else {
+                        self.delegate.showErrorMessage(title: "Ошибка #\(error.errorCode)", msg: "\n\(error.errorMsg)\n")
+                    }
+                }
+                OperationQueue().addOperation(request)
+            }
+            joinAction.backgroundColor = .blue
+            
+            return [joinAction, deleteAction]
+        }
+        
+        return []
+    }
+
     @objc func tapActionButton(sender: UIBarButtonItem) {
         
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
