@@ -21,10 +21,16 @@ class Notification {
         self.type = json["type"].stringValue
         self.date = json["date"].intValue
         self.feedbackCount = json["feedback"]["count"].intValue
+        if self.feedbackCount == 0 {
+            self.feedbackCount = 1
+        }
         
-        if self.feedbackCount > 0 {
-            for index in 0...self.feedbackCount-1 {
+        for index in 0...self.feedbackCount-1 {
+            let typ = self.type
+            if typ.hasPrefix("follow") || typ.hasPrefix("friend") || typ.hasPrefix("like") || typ.hasPrefix("copy") {
                 self.feedback.append(NotificationFeedback(json: json["feedback"]["items"][index]))
+            } else {
+                self.feedback.append(NotificationFeedback(json: json["feedback"]))
             }
         }
         
@@ -78,6 +84,22 @@ class NotificationParent {
         
         if type == "reply_comment" || type == "reply_comment_photo" || type == "reply_comment_video" || type == "like_comment" || type == "like_comment_photo" || type == "like_comment_video" || type == "like_comment_topic" {
             self.comment = Comment(json: json)
+            
+            if type == "reply_comment" || type == "like_comment" {
+                self.post = Record(json: json["post"])
+            }
+            
+            if type == "reply_comment_photo" || type == "like_comment_photo" {
+                self.photo = Photo(json: json["photo"])
+            }
+            
+            if type == "reply_comment_video" || type == "like_comment_video" {
+                self.video = Video(json: json["video"])
+            }
+            
+            if type == "like_comment_topic" {
+    
+            }
         }
     }
 }

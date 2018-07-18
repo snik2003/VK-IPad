@@ -17,6 +17,7 @@ class NotificationController: UITableViewController {
     var groups: [GroupProfile] = []
     
     var newCount = 0
+    var lastViewed = 0
     
     var readButton: UIButton!
     
@@ -62,7 +63,7 @@ class NotificationController: UITableViewController {
         getServerDataOperation.completionBlock = {
             guard let data = getServerDataOperation.data else { return }
             guard let json = try? JSON(data: data) else { print("json error"); return }
-            print(json)
+            //print(json)
             
             self.notifications = json["response"]["items"].compactMap { Notification(json: $0.1) }
             
@@ -71,9 +72,9 @@ class NotificationController: UITableViewController {
             
             self.newCount = 0
             var totalCount = 0
-            let lastViewed = json["response"]["last_viewed"].intValue
+            self.lastViewed = json["response"]["last_viewed"].intValue
             for not in self.notifications {
-                if not.date > lastViewed {
+                if not.date > self.lastViewed {
                     self.newCount += not.feedbackCount
                 }
                 if not.feedbackCount > 0 {
@@ -86,10 +87,8 @@ class NotificationController: UITableViewController {
             OperationQueue.main.addOperation {
                 if totalCount > 0 {
                     self.navigationItem.title = "Ответы (\(totalCount))"
-                    self.tableView.separatorStyle = .singleLine
                 } else {
                     self.navigationItem.title = "Ответы отсутствуют"
-                    self.tableView.separatorStyle = .none
                 }
                 
                 if self.newCount > 0 {
@@ -115,6 +114,7 @@ class NotificationController: UITableViewController {
                     self.tableView.tableHeaderView = nil
                 }
                 
+                self.tableView.separatorStyle = .none
                 self.tableView.reloadData()
                 self.refreshControl?.endRefreshing()
                 ViewControllerUtils().hideActivityIndicator()
@@ -139,7 +139,6 @@ class NotificationController: UITableViewController {
             let label = UILabel()
             label.text = "Непросмотренные уведомления (\(newCount))"
             label.textAlignment = .center
-            label.contentMode = .center
             label.font = UIFont(name: "Verdana", size: 12.0)!
             label.frame = CGRect(x: 0, y: 0, width: tableView.frame.width, height: 15)
             view.addSubview(label)
@@ -149,7 +148,7 @@ class NotificationController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if section == 0 && newCount > 0 {
-            return 15
+            return 25
         }
         
         return 0
@@ -161,7 +160,7 @@ class NotificationController: UITableViewController {
             count += notifications[index1].feedbackCount
         }
         if count == newCount && newCount > 0 {
-            return 10
+            return 0.01 //10
         }
         if section == tableView.numberOfSections - 1 {
             return 0.01
@@ -179,9 +178,11 @@ class NotificationController: UITableViewController {
         cell.groups = groups
         
         cell.indexPath = indexPath
+        cell.cell = cell
+        cell.tableView = self.tableView
         cell.cellWidth = self.tableView.bounds.width
         
-        let height = cell.getRowHeight()
+        let height = cell.configureCell(calc: true)
         
         return height
     }
@@ -201,8 +202,13 @@ class NotificationController: UITableViewController {
         cell.tableView = self.tableView
         cell.cellWidth = self.tableView.bounds.width
         
-        cell.configureCell()
+        let _ = cell.configureCell(calc: false)
         
+        if cell.not.date > lastViewed {
+            cell.backgroundColor = vkSingleton.shared.backColor.withAlphaComponent(0.5)
+        } else {
+            cell.backgroundColor = UIColor.white
+        }
         return cell
     }
     

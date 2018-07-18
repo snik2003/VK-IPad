@@ -24,7 +24,7 @@ extension UITableViewCell {
             view.layer.borderWidth = 0.5
             view.layer.borderColor = UIColor.lightGray.cgColor
             view.layer.cornerRadius = 12
-            view.frame = CGRect(x: frame.width-80, y: frame.height/2-12, width: 40, height: 24)
+            view.frame = CGRect(x: frame.width-70, y: frame.height/2-12, width: 40, height: 24)
             self.addSubview(view)
             
             let label = UILabel()
@@ -36,8 +36,8 @@ extension UITableViewCell {
             }
             label.textColor = UIColor.gray
             label.textAlignment = .center
-            label.font = UIFont(name: "Verdana-Bold", size: 12)
-            label.frame = CGRect(x: frame.width-80, y: frame.height/2-10, width: 40, height: 20)
+            label.font = UIFont(name: "Verdana-Bold", size: 13)
+            label.frame = CGRect(x: frame.width-70, y: frame.height/2-10, width: 40, height: 20)
             self.addSubview(label)
         }
     }

@@ -61,6 +61,7 @@
 		1749130320D304DD00FCF9F9 /* ParseRequestList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1749130220D304DD00FCF9F9 /* ParseRequestList.swift */; };
 		1749130520D3050200FCF9F9 /* ParseRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1749130420D3050200FCF9F9 /* ParseRequest.swift */; };
 		1749130720D3055100FCF9F9 /* FriendRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1749130620D3055100FCF9F9 /* FriendRequest.swift */; };
+		178D83C020FF707900AFB7EB /* TapGesture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178D83BF20FF707900AFB7EB /* TapGesture.swift */; };
 		17996B4D20DCD77F003DA26B /* VideoListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17996B4C20DCD77F003DA26B /* VideoListController.swift */; };
 		17996B4F20DCD8C1003DA26B /* VideoListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17996B4E20DCD8C1003DA26B /* VideoListCell.swift */; };
 		17996B5120DCDBC0003DA26B /* ParseVideos.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17996B5020DCDBC0003DA26B /* ParseVideos.swift */; };
@@ -145,6 +146,7 @@
 		1749130220D304DD00FCF9F9 /* ParseRequestList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseRequestList.swift; sourceTree = "<group>"; };
 		1749130420D3050200FCF9F9 /* ParseRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseRequest.swift; sourceTree = "<group>"; };
 		1749130620D3055100FCF9F9 /* FriendRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendRequest.swift; sourceTree = "<group>"; };
+		178D83BF20FF707900AFB7EB /* TapGesture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TapGesture.swift; sourceTree = "<group>"; };
 		17996B4C20DCD77F003DA26B /* VideoListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListController.swift; sourceTree = "<group>"; };
 		17996B4E20DCD8C1003DA26B /* VideoListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListCell.swift; sourceTree = "<group>"; };
 		17996B5020DCDBC0003DA26B /* ParseVideos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParseVideos.swift; sourceTree = "<group>"; };
@@ -313,6 +315,7 @@
 				174912C320D300DC00FCF9F9 /* String.swift */,
 				173D666020D3C07900EEBF46 /* Control.swift */,
 				17A1A5B620D8D31200D9CE00 /* Button.swift */,
+				178D83BF20FF707900AFB7EB /* TapGesture.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -594,6 +597,7 @@
 				173D667C20D40FCE00EEBF46 /* KGCopyableLabel.swift in Sources */,
 				17424FEB20D53C2100F52C4C /* Audio.swift in Sources */,
 				173D666F20D3EAC800EEBF46 /* GroupProfile.swift in Sources */,
+				178D83C020FF707900AFB7EB /* TapGesture.swift in Sources */,
 				174912F120D300DD00FCF9F9 /* LoginViewController.swift in Sources */,
 				17B134AB20DADDAE0058E1A8 /* Comment.swift in Sources */,
 				1749130320D304DD00FCF9F9 /* ParseRequestList.swift in Sources */,
