@@ -666,37 +666,24 @@ class NotificationCell: UITableViewCell {
         attributedString.addAttributes([NSAttributedStringKey.foregroundColor: feedbackColor, NSAttributedStringKey.font: textFont], range: range3)
         
         let tapRecognizer = UITapGestureRecognizer()
-        tapRecognizer.addTarget(self, action: #selector(tapLabel(sender:)))
-        tapRecognizer.numberOfTapsRequired = 1
+        tapRecognizer.add {
+            if self.postString.hasPrefix("запис") {
+                if let post = self.not.parent.post {
+                    self.delegate.openWallRecord(ownerID: post.fromID, postID: post.id, accessKey: "", type: "post")
+                }
+            } else if self.postString.hasPrefix("фото") {
+                if let photo = self.not.parent.photo {
+                    self.delegate.openPhotoViewController(numPhoto: 0, photos: [photo])
+                }
+            } else if self.postString.hasPrefix("видео") {
+                if let video = self.not.parent.video {
+                    self.delegate.openVideoController(ownerID: "\(video.ownerID)", vid: "\(video.id)", accessKey: video.accessKey, title: "Видеозапись")
+                }
+            }
+        }
         
         label.attributedText = attributedString
         label.addGestureRecognizer(tapRecognizer)
         label.isUserInteractionEnabled = true
-        
-        //range1 = rangeOfAvatarString
-        //range2 = rangeOfPostString
-    }
-    
-    @objc func tapLabel(sender: UITapGestureRecognizer) {
-        
-        let range = (notText as NSString).range(of: postString)
-        if sender.didTapAttributedTextInLabel(label: notLabel, inRange: range) {
-            if postString.hasPrefix("запис") {
-                if let post = not.parent.post {
-                    print("\(post.fromID) - \(post.id)")
-                    self.delegate.openWallRecord(ownerID: post.fromID, postID: post.id, accessKey: "", type: "post")
-                }
-            } else if postString.hasPrefix("фото") {
-                if let photo = not.parent.photo {
-                    self.delegate.openPhotoViewController(numPhoto: 0, photos: [photo])
-                }
-            } else if postString.hasPrefix("видео") {
-                if let video = not.parent.video {
-                    self.delegate.openVideoController(ownerID: "\(video.ownerID)", vid: "\(video.id)", accessKey: video.accessKey, title: "Видеозапись")
-                }
-            }
-        } else {
-            print("tap nothing")
-        }
     }
 }
