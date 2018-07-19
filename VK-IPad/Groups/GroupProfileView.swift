@@ -124,7 +124,7 @@ class GroupProfileView: UIView {
                 
                 let tap = UITapGestureRecognizer()
                 tap.add {
-                    
+                    self.delegate.openPhotosListController(ownerID: "-\(self.profile.gid)", title: "Фотографии cообщества \"\(self.profile.name)\"", type: "photos")
                 }
                 tap.numberOfTapsRequired = 1
                 label1.isUserInteractionEnabled = true
@@ -156,7 +156,7 @@ class GroupProfileView: UIView {
                 
                 let tap = UITapGestureRecognizer()
                 tap.add {
-                    
+                    self.delegate.openPhotosListController(ownerID: "-\(self.profile.gid)", title: "Фотографии cообщества «\(self.profile.name)»", type: "albums")
                 }
                 tap.numberOfTapsRequired = 1
                 label1.isUserInteractionEnabled = true

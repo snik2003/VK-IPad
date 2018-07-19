@@ -76,7 +76,7 @@ class MenuViewController: UITableViewController {
         
         // Мои фотографии
         if indexPath.section == 1 && indexPath.row == 2 {
-            
+            self.openPhotosListController(ownerID: vkSingleton.shared.userID, title: "Мои фотографии", type: "photos")
         }
         
         // Мои видеозаписи

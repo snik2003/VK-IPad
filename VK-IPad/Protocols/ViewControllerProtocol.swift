@@ -338,6 +338,35 @@ extension UIViewController: ViewControllerProtocol {
         let detailVC = self.splitViewController!.viewControllers[self.splitViewController!.viewControllers.endIndex - 1]
         detailVC.childViewControllers[0].navigationController?.pushViewController(videoController, animated: true)
     }
+    
+    func openPhotosListController(ownerID: String, title: String, type: String) {
+        let controller = self.storyboard?.instantiateViewController(withIdentifier: "PhotosListController") as! PhotosListController
+        
+        controller.ownerID = ownerID
+        controller.type = type
+        controller.title = title
+        
+        if type == "photos" {
+            controller.selectIndex = 0
+        } else if type == "albums" {
+            controller.selectIndex = 1
+        }
+        
+        let detailVC = self.splitViewController!.viewControllers[self.splitViewController!.viewControllers.endIndex - 1]
+        detailVC.childViewControllers[0].navigationController?.pushViewController(controller, animated: true)
+    }
+    
+    func openAlbumController(ownerID: String, albumID: String, title: String) {
+        let controller = self.storyboard?.instantiateViewController(withIdentifier: "PhotosListController") as! PhotosListController
+        
+        controller.ownerID = ownerID
+        controller.albumID = albumID
+        controller.type = "album"
+        controller.title = title
+        
+        let detailVC = self.splitViewController!.viewControllers[self.splitViewController!.viewControllers.endIndex - 1]
+        detailVC.childViewControllers[0].navigationController?.pushViewController(controller, animated: true)
+    }
 }
 
 

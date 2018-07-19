@@ -91,4 +91,12 @@ extension String {
             .matches(in: self, range: nsRange)
             .compactMap{$0.date}
     }
+    
+    func replacingFirstOccurrence(of target: String, with replaceString: String) -> String
+    {
+        if let range = self.range(of: target) {
+            return self.replacingCharacters(in: range, with: replaceString)
+        }
+        return self
+    }
 }

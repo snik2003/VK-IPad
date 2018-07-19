@@ -914,11 +914,11 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
         if userID == vkSingleton.shared.userID && isSearch == false && friends.count > 0 && segmentedControl.selectedSegmentIndex == 0 && type == "friends" && source != "create_chat"{
             var users = [Friends]()
             var count = 0
-            if friends.count >= 3 {
-                for index in 0...2 {
+            if friends.count >= 5 {
+                for index in 0...4 {
                     users.append(friends[index])
                 }
-                count = 3
+                count = 5
             } else {
                 for index in 0...friends.count - 1 {
                     users.append(friends[index])

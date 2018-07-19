@@ -167,6 +167,19 @@ class ProfileView: UIView {
                 label2.frame = CGRect(x: 10 + size1.width, y: 10, width: width - 20 - size1.width, height: 20)
                 photosView.addSubview(label2)
                 
+                let tap = UITapGestureRecognizer()
+                tap.add {
+                    var title = "Мои фотографии"
+                    if self.delegate.userID != vkSingleton.shared.userID {
+                        title = "Фотографии \(profile.firstNameGen) \(profile.lastNameGen)"
+                    }
+                    
+                    self.delegate.openPhotosListController(ownerID: self.delegate.userID, title: title, type: "photos")
+                }
+                tap.numberOfTapsRequired = 1
+                label1.isUserInteractionEnabled = true
+                label1.addGestureRecognizer(tap)
+                
                 var leftX: CGFloat = 10
                 for index in 0...min(4, photos.count-1) {
                     let photo = UIImageView()
@@ -630,7 +643,12 @@ class ProfileView: UIView {
                         
                         let tap = UITapGestureRecognizer()
                         tap.add {
-                            self.delegate.openUsersController(uid: self.delegate.userID, title: "Друзья \(profile.firstNameGen)", type: "friends")
+                            var title = "Мои друзья"
+                            if self.delegate.userID != vkSingleton.shared.userID {
+                                title = "Друзья \(profile.firstNameGen) \(profile.lastNameGen)"
+                            }
+                            
+                            self.delegate.openUsersController(uid: self.delegate.userID, title: title, type: "friends")
                         }
                         tap.numberOfTapsRequired = 1
                         label1.isUserInteractionEnabled = true
@@ -662,7 +680,7 @@ class ProfileView: UIView {
                         
                         let tap = UITapGestureRecognizer()
                         tap.add {
-                            self.delegate.openUsersController(uid: self.delegate.userID, title: "Общие друзья c \(profile.firstNameIns)", type: "commonFriends")
+                            self.delegate.openUsersController(uid: self.delegate.userID, title: "Общие друзья c \(profile.firstNameIns) \(profile.lastNameIns)", type: "commonFriends")
                         }
                         tap.numberOfTapsRequired = 1
                         label1.isUserInteractionEnabled = true
@@ -694,7 +712,12 @@ class ProfileView: UIView {
                         
                         let tap = UITapGestureRecognizer()
                         tap.add {
-                            self.delegate.openUsersController(uid: self.delegate.userID, title: "Подписчики \(profile.firstNameGen)", type: "followers")
+                            var title = "Мои подписчики"
+                            if self.delegate.userID != vkSingleton.shared.userID {
+                                title = "Подписчики \(profile.firstNameGen) \(profile.lastNameGen)"
+                            }
+                            
+                            self.delegate.openUsersController(uid: self.delegate.userID, title: title, type: "followers")
                         }
                         tap.numberOfTapsRequired = 1
                         label1.isUserInteractionEnabled = true
@@ -728,7 +751,7 @@ class ProfileView: UIView {
                         tap.add {
                             var title = "Мои группы"
                             if self.delegate.userID != vkSingleton.shared.userID {
-                                title = "Группы \(profile.firstNameGen)"
+                                title = "Группы \(profile.firstNameGen) \(profile.lastNameGen)"
                             }
                             
                             self.delegate.openGroupsListController(uid: self.delegate.userID, title: title, type: "groups")
@@ -765,7 +788,7 @@ class ProfileView: UIView {
                         tap.add {
                             var title = "Мои страницы"
                             if self.delegate.userID != vkSingleton.shared.userID {
-                                title = "Страницы \(profile.firstNameGen)"
+                                title = "Страницы \(profile.firstNameGen) \(profile.lastNameGen)"
                             }
                             
                             self.delegate.openGroupsListController(uid: self.delegate.userID, title: title, type: "pages")
@@ -797,6 +820,19 @@ class ProfileView: UIView {
                         label2.frame = CGRect(x: leftX, y: topY + counterHeight/2, width: counterHeight, height: 20)
                         userInfoView.addSubview(label2)
                         
+                        let tap = UITapGestureRecognizer()
+                        tap.add {
+                            var title = "Мои фотографии"
+                            if self.delegate.userID != vkSingleton.shared.userID {
+                                title = "Фотографии \(profile.firstNameGen) \(profile.lastNameGen)"
+                            }
+                            
+                            self.delegate.openPhotosListController(ownerID: self.delegate.userID, title: title, type: "photos")
+                        }
+                        tap.numberOfTapsRequired = 1
+                        label1.isUserInteractionEnabled = true
+                        label1.addGestureRecognizer(tap)
+                        
                         leftX += counterHeight + counterInterSpacing
                     }
                     
@@ -824,7 +860,7 @@ class ProfileView: UIView {
                         tap.add {
                             var title = "Мои видеозаписи"
                             if self.delegate.userID != vkSingleton.shared.userID {
-                                title = "Видеозаписи \(profile.firstNameGen)"
+                                title = "Видеозаписи \(profile.firstNameGen) \(profile.lastNameGen)"
                             }
                             
                             self.delegate.openVideoListController(ownerID: self.delegate.userID, title: title, type: "")

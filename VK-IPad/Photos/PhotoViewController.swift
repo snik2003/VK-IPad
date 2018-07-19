@@ -66,7 +66,6 @@ class PhotoViewController: UITableViewController {
                     self.title = "Фотография \(self.numPhoto + 1)/\(self.photos.count)"
                 }
                 self.tableView.reloadData()
-                ViewControllerUtils().hideActivityIndicator()
                 
                 let leftSwipe = UISwipeGestureRecognizer(target: self, action: #selector(self.handleSwipes(sender:)))
                 let rightSwipe = UISwipeGestureRecognizer(target: self, action: #selector(self.handleSwipes(sender:)))
@@ -76,6 +75,8 @@ class PhotoViewController: UITableViewController {
                 
                 self.view.addGestureRecognizer(leftSwipe)
                 self.view.addGestureRecognizer(rightSwipe)
+                
+                ViewControllerUtils().hideActivityIndicator()
             }
         }
         OperationQueue.main.addOperation(getServerDataOperation)
@@ -131,6 +132,7 @@ class PhotoViewController: UITableViewController {
         case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: "photoCell", for: indexPath) as! PhotoViewCell
             
+            ViewControllerUtils().showActivityIndicator(uiView: cell.photoImage)
             cell.backgroundColor = UIColor(displayP3Red: 205/255, green: 205/255, blue: 205/255, alpha: 1)
             let photo = photos[numPhoto]
             
@@ -208,7 +210,6 @@ class PhotoViewController: UITableViewController {
             if numPhoto > 0 {
                 numPhoto -= 1
                 start = true
-                ViewControllerUtils().showActivityIndicator(uiView: self.view)
             }
         }
         
@@ -216,13 +217,11 @@ class PhotoViewController: UITableViewController {
             if numPhoto < photos.count-1 {
                 numPhoto += 1
                 start = true
-                ViewControllerUtils().showActivityIndicator(uiView: self.tableView.superview!)
+                
             }
         }
         
         if start {
-            ViewControllerUtils().showActivityIndicator(uiView: self.view)
-            
             if let cell = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? PhotoViewCell {
                 cell.photoImage.image = nil
             }

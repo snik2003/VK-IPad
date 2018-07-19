@@ -62,6 +62,13 @@
 		1749130520D3050200FCF9F9 /* ParseRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1749130420D3050200FCF9F9 /* ParseRequest.swift */; };
 		1749130720D3055100FCF9F9 /* FriendRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1749130620D3055100FCF9F9 /* FriendRequest.swift */; };
 		178D83C020FF707900AFB7EB /* TapGesture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178D83BF20FF707900AFB7EB /* TapGesture.swift */; };
+		178D83C2210097BB00AFB7EB /* PhotosListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178D83C1210097BB00AFB7EB /* PhotosListController.swift */; };
+		178D83C42100991000AFB7EB /* PhotoAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178D83C32100991000AFB7EB /* PhotoAlbum.swift */; };
+		178D83C621009F7B00AFB7EB /* ParsePhotosList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178D83C521009F7B00AFB7EB /* ParsePhotosList.swift */; };
+		178D83C821009FBF00AFB7EB /* ParsePhotoAlbums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178D83C721009FBF00AFB7EB /* ParsePhotoAlbums.swift */; };
+		178D83CA2100A04000AFB7EB /* ReloadPhotosListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178D83C92100A04000AFB7EB /* ReloadPhotosListController.swift */; };
+		178D83CC2100A32900AFB7EB /* PhotosListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178D83CB2100A32900AFB7EB /* PhotosListCell.swift */; };
+		178D83CE2100AC2C00AFB7EB /* PhotoAlbumsListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178D83CD2100AC2C00AFB7EB /* PhotoAlbumsListCell.swift */; };
 		17996B4D20DCD77F003DA26B /* VideoListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17996B4C20DCD77F003DA26B /* VideoListController.swift */; };
 		17996B4F20DCD8C1003DA26B /* VideoListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17996B4E20DCD8C1003DA26B /* VideoListCell.swift */; };
 		17996B5120DCDBC0003DA26B /* ParseVideos.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17996B5020DCDBC0003DA26B /* ParseVideos.swift */; };
@@ -147,6 +154,13 @@
 		1749130420D3050200FCF9F9 /* ParseRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseRequest.swift; sourceTree = "<group>"; };
 		1749130620D3055100FCF9F9 /* FriendRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendRequest.swift; sourceTree = "<group>"; };
 		178D83BF20FF707900AFB7EB /* TapGesture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TapGesture.swift; sourceTree = "<group>"; };
+		178D83C1210097BB00AFB7EB /* PhotosListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosListController.swift; sourceTree = "<group>"; };
+		178D83C32100991000AFB7EB /* PhotoAlbum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAlbum.swift; sourceTree = "<group>"; };
+		178D83C521009F7B00AFB7EB /* ParsePhotosList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParsePhotosList.swift; sourceTree = "<group>"; };
+		178D83C721009FBF00AFB7EB /* ParsePhotoAlbums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParsePhotoAlbums.swift; sourceTree = "<group>"; };
+		178D83C92100A04000AFB7EB /* ReloadPhotosListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReloadPhotosListController.swift; sourceTree = "<group>"; };
+		178D83CB2100A32900AFB7EB /* PhotosListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosListCell.swift; sourceTree = "<group>"; };
+		178D83CD2100AC2C00AFB7EB /* PhotoAlbumsListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAlbumsListCell.swift; sourceTree = "<group>"; };
 		17996B4C20DCD77F003DA26B /* VideoListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListController.swift; sourceTree = "<group>"; };
 		17996B4E20DCD8C1003DA26B /* VideoListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListCell.swift; sourceTree = "<group>"; };
 		17996B5020DCDBC0003DA26B /* ParseVideos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParseVideos.swift; sourceTree = "<group>"; };
@@ -212,6 +226,7 @@
 				173D666A20D3CAD100EEBF46 /* ReloadGroupsListController.swift */,
 				17A1A5C020D8EA4C00D9CE00 /* ReloadGroupProfileController.swift */,
 				17996B5220DCDC6F003DA26B /* ReloadVideoListController.swift */,
+				178D83C92100A04000AFB7EB /* ReloadPhotosListController.swift */,
 			);
 			path = ReloadInterface;
 			sourceTree = "<group>";
@@ -283,6 +298,7 @@
 			children = (
 				1749130620D3055100FCF9F9 /* FriendRequest.swift */,
 				174912B520D300DC00FCF9F9 /* Photos.swift */,
+				178D83C32100991000AFB7EB /* PhotoAlbum.swift */,
 				174912B620D300DC00FCF9F9 /* UserProfile.swift */,
 				174912B720D300DC00FCF9F9 /* ErrorJson.swift */,
 				174912B820D300DC00FCF9F9 /* vkAccount.swift */,
@@ -379,6 +395,8 @@
 				17A1A5BA20D8E63000D9CE00 /* ParseGroupProfile.swift */,
 				17A1A5BC20D8E6A700D9CE00 /* ParseWall.swift */,
 				17996B5020DCDBC0003DA26B /* ParseVideos.swift */,
+				178D83C521009F7B00AFB7EB /* ParsePhotosList.swift */,
+				178D83C721009FBF00AFB7EB /* ParsePhotoAlbums.swift */,
 			);
 			path = ParseServerData;
 			sourceTree = "<group>";
@@ -399,6 +417,9 @@
 			children = (
 				17B134A420DA8B840058E1A8 /* PhotoViewController.swift */,
 				17B134A220DA8B720058E1A8 /* PhotoViewCell.swift */,
+				178D83C1210097BB00AFB7EB /* PhotosListController.swift */,
+				178D83CB2100A32900AFB7EB /* PhotosListCell.swift */,
+				178D83CD2100AC2C00AFB7EB /* PhotoAlbumsListCell.swift */,
 			);
 			path = Photos;
 			sourceTree = "<group>";
@@ -584,6 +605,7 @@
 				174912D920D300DD00FCF9F9 /* SetImageToRow.swift in Sources */,
 				174912DF20D300DD00FCF9F9 /* ErrorJson.swift in Sources */,
 				174912F320D300DD00FCF9F9 /* ProfileViewController.swift in Sources */,
+				178D83CE2100AC2C00AFB7EB /* PhotoAlbumsListCell.swift in Sources */,
 				17A1A5B720D8D31200D9CE00 /* Button.swift in Sources */,
 				1700D24B20DE4104003C50A1 /* VideoCell.swift in Sources */,
 				174912E720D300DD00FCF9F9 /* Int.swift in Sources */,
@@ -612,17 +634,21 @@
 				1749130720D3055100FCF9F9 /* FriendRequest.swift in Sources */,
 				174912F720D300DD00FCF9F9 /* ViewControllerUtils.swift in Sources */,
 				17B134A720DACD110058E1A8 /* Likes.swift in Sources */,
+				178D83C821009FBF00AFB7EB /* ParsePhotoAlbums.swift in Sources */,
 				173D666120D3C07900EEBF46 /* Control.swift in Sources */,
 				174912E420D300DD00FCF9F9 /* Label.swift in Sources */,
 				173D667920D40FCE00EEBF46 /* UITextViewPlaceholder.swift in Sources */,
 				17996B5120DCDBC0003DA26B /* ParseVideos.swift in Sources */,
 				1700D24D20DE4156003C50A1 /* VideoController.swift in Sources */,
+				178D83CC2100A32900AFB7EB /* PhotosListCell.swift in Sources */,
 				173D666420D3C91300EEBF46 /* GroupsListController.swift in Sources */,
 				17A1A5BD20D8E6A700D9CE00 /* ParseWall.swift in Sources */,
 				174912F420D300DD00FCF9F9 /* MenuViewController.swift in Sources */,
+				178D83C42100991000AFB7EB /* PhotoAlbum.swift in Sources */,
 				174912EA20D300DD00FCF9F9 /* GetServerDataOperation.swift in Sources */,
 				179CFC4120DBE94900F2AB04 /* Sticker.swift in Sources */,
 				174912EE20D300DD00FCF9F9 /* UsersController.swift in Sources */,
+				178D83C2210097BB00AFB7EB /* PhotosListController.swift in Sources */,
 				17B134AD20DB8B070058E1A8 /* LikesUsersController.swift in Sources */,
 				174912F220D300DD00FCF9F9 /* ProfileView.swift in Sources */,
 				174912F620D300DD00FCF9F9 /* ViewControllerProtocol.swift in Sources */,
@@ -639,10 +665,12 @@
 				173D667220D3F56600EEBF46 /* RecordCell.swift in Sources */,
 				1700D24F20DEAFF3003C50A1 /* ChangeAccountView.swift in Sources */,
 				1749130520D3050200FCF9F9 /* ParseRequest.swift in Sources */,
+				178D83C621009F7B00AFB7EB /* ParsePhotosList.swift in Sources */,
 				174912E620D300DD00FCF9F9 /* Image.swift in Sources */,
 				17996B4F20DCD8C1003DA26B /* VideoListCell.swift in Sources */,
 				174912EB20D300DD00FCF9F9 /* AsyncOperation.swift in Sources */,
 				174912DA20D300DD00FCF9F9 /* SetAnimatedImageToRow.swift in Sources */,
+				178D83CA2100A04000AFB7EB /* ReloadPhotosListController.swift in Sources */,
 				173D666820D3C9DB00EEBF46 /* ParseGroupList.swift in Sources */,
 				17CCB7FD20F75D1F0051947A /* NotificationCell.swift in Sources */,
 				17B134AF20DBBEAE0058E1A8 /* CommentCell.swift in Sources */,

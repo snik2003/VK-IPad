@@ -159,25 +159,25 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="5Nv-P8-t0Z"/>
                                 </constraints>
-                                <color key="barTintColor" red="0.0" green="0.43137254899999999" blue="0.76470588240000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="barTintColor" red="0.058823529409999999" green="0.44705882349999998" blue="0.65098039220000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <textInputTraits key="textInputTraits"/>
                             </searchBar>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bordered" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="4SR-Fo-tLn">
-                                <rect key="frame" x="100" y="964" width="1166" height="41"/>
+                                <rect key="frame" x="100" y="976" width="1166" height="29"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="Hox-zz-ks1"/>
+                                    <constraint firstAttribute="height" constant="28" id="poG-gZ-WXb"/>
                                 </constraints>
                                 <segments>
                                     <segment title="Все друзья: 0"/>
                                     <segment title="Онлайн: 0"/>
                                 </segments>
-                                <color key="tintColor" red="0.0" green="0.43137254899999999" blue="0.76470588240000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="tintColor" red="0.058823529409999999" green="0.44705882349999998" blue="0.65098039220000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <connections>
                                     <action selector="indexChangedWithSender:" destination="aLQ-L1-lfV" eventType="valueChanged" id="QbI-Rw-KAy"/>
                                 </connections>
                             </segmentedControl>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="cai-zt-Qyp">
-                                <rect key="frame" x="0.0" y="114" width="1366" height="850"/>
+                                <rect key="frame" x="0.0" y="114" width="1366" height="842"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="usersCell" textLabel="HrU-xt-dIo" detailTextLabel="1k7-Nh-lIf" imageView="C04-8y-r5h" style="IBUITableViewCellStyleSubtitle" id="6pz-x3-XLb">
@@ -217,7 +217,7 @@
                             <constraint firstItem="SUo-wn-PEG" firstAttribute="centerX" secondItem="wE3-39-r2E" secondAttribute="centerX" id="8HF-XG-3GN"/>
                             <constraint firstItem="SUo-wn-PEG" firstAttribute="width" secondItem="qv8-Rj-zjK" secondAttribute="width" id="F5j-zl-BP3"/>
                             <constraint firstItem="SUo-wn-PEG" firstAttribute="top" secondItem="wE3-39-r2E" secondAttribute="top" id="H3g-6O-zob"/>
-                            <constraint firstItem="4SR-Fo-tLn" firstAttribute="top" secondItem="cai-zt-Qyp" secondAttribute="bottom" id="Kxy-Ws-R27"/>
+                            <constraint firstItem="4SR-Fo-tLn" firstAttribute="top" secondItem="cai-zt-Qyp" secondAttribute="bottom" constant="20" id="Kxy-Ws-R27"/>
                             <constraint firstItem="4SR-Fo-tLn" firstAttribute="width" secondItem="qv8-Rj-zjK" secondAttribute="width" constant="-200" id="e4U-gM-zaT"/>
                             <constraint firstItem="4SR-Fo-tLn" firstAttribute="centerX" secondItem="wE3-39-r2E" secondAttribute="centerX" id="fe5-We-kVI"/>
                             <constraint firstItem="cai-zt-Qyp" firstAttribute="top" secondItem="SUo-wn-PEG" secondAttribute="bottom" id="hGo-m8-qyN"/>
@@ -876,51 +876,13 @@
                         <barButtonItem key="backBarButtonItem" title="Назад" id="eV0-ZW-DkT"/>
                     </navigationItem>
                     <refreshControl key="refreshControl" opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="ccc-h4-Zco">
+                        <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <attributedString key="attributedTitle">
                             <fragment content="Обновляем данные...">
                                 <attributes>
                                     <font key="NSFont" size="10" name="Verdana"/>
-                                    <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
-                                        <tabStops>
-                                            <textTab alignment="left" location="28">
-                                                <options/>
-                                            </textTab>
-                                            <textTab alignment="left" location="56">
-                                                <options/>
-                                            </textTab>
-                                            <textTab alignment="left" location="84">
-                                                <options/>
-                                            </textTab>
-                                            <textTab alignment="left" location="112">
-                                                <options/>
-                                            </textTab>
-                                            <textTab alignment="left" location="140">
-                                                <options/>
-                                            </textTab>
-                                            <textTab alignment="left" location="168">
-                                                <options/>
-                                            </textTab>
-                                            <textTab alignment="left" location="196">
-                                                <options/>
-                                            </textTab>
-                                            <textTab alignment="left" location="224">
-                                                <options/>
-                                            </textTab>
-                                            <textTab alignment="left" location="252">
-                                                <options/>
-                                            </textTab>
-                                            <textTab alignment="left" location="280">
-                                                <options/>
-                                            </textTab>
-                                            <textTab alignment="left" location="308">
-                                                <options/>
-                                            </textTab>
-                                            <textTab alignment="left" location="336">
-                                                <options/>
-                                            </textTab>
-                                        </tabStops>
-                                    </paragraphStyle>
+                                    <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
                                 </attributes>
                             </fragment>
                         </attributedString>
@@ -1189,6 +1151,67 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UZ6-nT-PcL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3545" y="343"/>
+        </scene>
+        <!--Photos List Controller-->
+        <scene sceneID="nlC-u1-bG6">
+            <objects>
+                <viewController storyboardIdentifier="PhotosListController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="19x-sq-W6f" customClass="PhotosListController" customModule="VK_IPad" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="JSI-FO-u27">
+                        <rect key="frame" x="0.0" y="0.0" width="1366" height="1024"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="8AI-rE-KW9">
+                                <rect key="frame" x="100" y="84" width="1166" height="29"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="28" id="1Aa-O1-k9a"/>
+                                </constraints>
+                                <segments>
+                                    <segment title="Все фотографии"/>
+                                    <segment title="Альбомы"/>
+                                </segments>
+                                <color key="tintColor" red="0.058823529409999999" green="0.44705882349999998" blue="0.65098039220000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <connections>
+                                    <action selector="indexChangedWithSender:" destination="19x-sq-W6f" eventType="valueChanged" id="Rpl-uz-4Qa"/>
+                                </connections>
+                            </segmentedControl>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="8AI-rE-KW9" firstAttribute="leading" secondItem="7m1-lw-7JU" secondAttribute="leading" constant="100" id="M77-5w-QXA"/>
+                            <constraint firstItem="8AI-rE-KW9" firstAttribute="top" secondItem="7m1-lw-7JU" secondAttribute="top" constant="20" id="OjE-mD-AtU"/>
+                            <constraint firstItem="7m1-lw-7JU" firstAttribute="trailing" secondItem="8AI-rE-KW9" secondAttribute="trailing" constant="100" id="g3S-HG-9rR"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="7m1-lw-7JU"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="qAJ-TH-ngj"/>
+                    <connections>
+                        <outlet property="segmentedControl" destination="8AI-rE-KW9" id="JU7-Ge-gao"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="k6O-B2-s2m" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4187" y="1079"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="zJ7-tM-QSq">
+            <objects>
+                <navigationController storyboardIdentifier="PhotosListNavigation" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="ddo-mD-6lj" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="efU-4C-aHG">
+                        <rect key="frame" x="0.0" y="20" width="1366" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" red="0.019607843140000001" green="0.4039215686" blue="0.64313725489999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="barTintColor" red="0.019607843140000001" green="0.4039215686" blue="0.64313725489999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="19x-sq-W6f" kind="relationship" relationship="rootViewController" id="YY9-KJ-qAk"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Sgz-Kg-b2l" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3545" y="1079"/>
         </scene>
     </scenes>
     <resources>
