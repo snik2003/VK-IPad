@@ -9,7 +9,6 @@ target 'VK-IPad' do
 pod 'Alamofire', '~> 4.5'
   pod 'SwiftyJSON', '~> 4.0'
   pod 'RealmSwift', '~> 3.0'
-  pod 'BTNavigationDropdownMenu', '~> 0.4'
   pod 'FLAnimatedImage', '~> 1.0'
   pod 'SWRevealViewController', '~> 2.3'
   pod 'BEMCheckBox'

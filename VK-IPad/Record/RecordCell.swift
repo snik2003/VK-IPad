@@ -217,7 +217,7 @@ class RecordCell: UITableViewCell {
                 friendsOnlyLabel.font = UIFont(name: "Verdana", size: 11)!
                 friendsOnlyLabel.textColor = UIColor.red
                 
-                friendsOnlyLabel.frame = CGRect(x: cellWidth - 170, y: 2, width: 150, height: 18)
+                friendsOnlyLabel.frame = CGRect(x: cellWidth - 270, y: 2, width: 250, height: 18)
                 
                 self.addSubview(friendsOnlyLabel)
             }

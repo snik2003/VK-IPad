@@ -145,7 +145,6 @@ strip_invalid_archs() {
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/BEMCheckBox/BEMCheckBox.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/BTNavigationDropdownMenu/BTNavigationDropdownMenu.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/CMPhotoCropEditor/CMPhotoCropEditor.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/DCCommentView/DCCommentView.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/DropDown/DropDown.framework"
@@ -162,7 +161,6 @@ fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/BEMCheckBox/BEMCheckBox.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/BTNavigationDropdownMenu/BTNavigationDropdownMenu.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/CMPhotoCropEditor/CMPhotoCropEditor.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/DCCommentView/DCCommentView.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/DropDown/DropDown.framework"

@@ -69,6 +69,7 @@
 		178D83CA2100A04000AFB7EB /* ReloadPhotosListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178D83C92100A04000AFB7EB /* ReloadPhotosListController.swift */; };
 		178D83CC2100A32900AFB7EB /* PhotosListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178D83CB2100A32900AFB7EB /* PhotosListCell.swift */; };
 		178D83CE2100AC2C00AFB7EB /* PhotoAlbumsListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178D83CD2100AC2C00AFB7EB /* PhotoAlbumsListCell.swift */; };
+		178D83D12101F26000AFB7EB /* NewsfeedController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178D83D02101F26000AFB7EB /* NewsfeedController.swift */; };
 		17996B4D20DCD77F003DA26B /* VideoListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17996B4C20DCD77F003DA26B /* VideoListController.swift */; };
 		17996B4F20DCD8C1003DA26B /* VideoListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17996B4E20DCD8C1003DA26B /* VideoListCell.swift */; };
 		17996B5120DCDBC0003DA26B /* ParseVideos.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17996B5020DCDBC0003DA26B /* ParseVideos.swift */; };
@@ -161,6 +162,7 @@
 		178D83C92100A04000AFB7EB /* ReloadPhotosListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReloadPhotosListController.swift; sourceTree = "<group>"; };
 		178D83CB2100A32900AFB7EB /* PhotosListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosListCell.swift; sourceTree = "<group>"; };
 		178D83CD2100AC2C00AFB7EB /* PhotoAlbumsListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAlbumsListCell.swift; sourceTree = "<group>"; };
+		178D83D02101F26000AFB7EB /* NewsfeedController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsfeedController.swift; sourceTree = "<group>"; };
 		17996B4C20DCD77F003DA26B /* VideoListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListController.swift; sourceTree = "<group>"; };
 		17996B4E20DCD8C1003DA26B /* VideoListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListCell.swift; sourceTree = "<group>"; };
 		17996B5020DCDBC0003DA26B /* ParseVideos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParseVideos.swift; sourceTree = "<group>"; };
@@ -257,6 +259,7 @@
 		174912AE20D300DC00FCF9F9 /* VK-IPad */ = {
 			isa = PBXGroup;
 			children = (
+				178D83CF2101F20500AFB7EB /* Newsfeed */,
 				17996B4B20DCD5B3003DA26B /* Video */,
 				17A1A5C220DA7EE800D9CE00 /* Photos */,
 				173D667D20D40FD900EEBF46 /* AdditionalFunction */,
@@ -401,6 +404,14 @@
 			path = ParseServerData;
 			sourceTree = "<group>";
 		};
+		178D83CF2101F20500AFB7EB /* Newsfeed */ = {
+			isa = PBXGroup;
+			children = (
+				178D83D02101F26000AFB7EB /* NewsfeedController.swift */,
+			);
+			path = Newsfeed;
+			sourceTree = "<group>";
+		};
 		17996B4B20DCD5B3003DA26B /* Video */ = {
 			isa = PBXGroup;
 			children = (
@@ -529,7 +540,6 @@
 				"${SRCROOT}/Pods/Target Support Files/Pods-VK-IPad/Pods-VK-IPad-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/BEMCheckBox/BEMCheckBox.framework",
-				"${BUILT_PRODUCTS_DIR}/BTNavigationDropdownMenu/BTNavigationDropdownMenu.framework",
 				"${BUILT_PRODUCTS_DIR}/CMPhotoCropEditor/CMPhotoCropEditor.framework",
 				"${BUILT_PRODUCTS_DIR}/DCCommentView/DCCommentView.framework",
 				"${BUILT_PRODUCTS_DIR}/DropDown/DropDown.framework",
@@ -547,7 +557,6 @@
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BEMCheckBox.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BTNavigationDropdownMenu.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CMPhotoCropEditor.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DCCommentView.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DropDown.framework",
@@ -655,6 +664,7 @@
 				174912DB20D300DD00FCF9F9 /* GetCacheImage.swift in Sources */,
 				174912FA20D302B700FCF9F9 /* Friends.swift in Sources */,
 				17EBC3A320D52C5D009130FC /* Video.swift in Sources */,
+				178D83D12101F26000AFB7EB /* NewsfeedController.swift in Sources */,
 				174912FE20D303F400FCF9F9 /* ParseFriends.swift in Sources */,
 				17A1A5B920D8E37400D9CE00 /* GroupProfileViewController.swift in Sources */,
 				17CCB7FB20F63AB30051947A /* NotificationController.swift in Sources */,
@@ -822,10 +832,7 @@
 				DEVELOPMENT_TEAM = WML363H532;
 				INFOPLIST_FILE = "VK-IPad/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "Snik2003.VK-IPad";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -842,10 +849,7 @@
 				DEVELOPMENT_TEAM = WML363H532;
 				INFOPLIST_FILE = "VK-IPad/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "Snik2003.VK-IPad";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;

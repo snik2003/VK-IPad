@@ -61,7 +61,10 @@ class MenuViewController: UITableViewController {
         
         // Новости
         if indexPath.section == 0 && indexPath.row == 3 {
+            let controller = self.storyboard?.instantiateViewController(withIdentifier: "NewsfeedController") as! NewsfeedController
             
+            let detailVC = self.splitViewController!.viewControllers[self.splitViewController!.viewControllers.endIndex - 1]
+            detailVC.childViewControllers[0].navigationController?.pushViewController(controller, animated: true)
         }
         
         // Мои друзья

@@ -74,6 +74,17 @@ class Record {
         self.attachments = json["attachments"].compactMap({ Attachment(json: $0.1) })
         self.copy = json["copy_history"].compactMap({ Record(json: $0.1) })
         
+        if self.fromID == 0 {
+            self.fromID = json["source_id"].intValue
+        }
+        if self.ownerID == 0 {
+            self.ownerID = json["source_id"].intValue
+        }
+        
+        if self.id == 0 {
+            self.id = json["post_id"].intValue
+        }
+        
         for attach in self.attachments {
             if attach.photo.count > 0 {
                 self.attachCount += 1
