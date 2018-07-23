@@ -54,6 +54,8 @@ class NotificationCell: UITableViewCell {
         var url = ""
         var sex = -1
         var smallAvatarName = "error"
+        var typeGroup = "в группу"
+        var nameGroup = ""
         
         if not.feedback.count > 0, let row = indexPath?.row {
             notID = not.feedback[row].fromID
@@ -64,6 +66,16 @@ class NotificationCell: UITableViewCell {
                     sex = user[0].sex
                     name = "\(user[0].firstName) \(user[0].lastName)"
                 }
+                
+                if not.type == "group_invite" {
+                    if not.feedback[row].type == "page" {
+                        typeGroup = "в сообщество"
+                    } else if not.feedback[indexPath.row].type == "event" {
+                        typeGroup = "на мероприятие"
+                    }
+                    
+                    nameGroup = "«\(not.feedback[row].text)»"
+                }
             } else {
                 let group = groups.filter({ $0.gid == abs(notID) })
                 if group.count > 0 {
@@ -71,6 +83,20 @@ class NotificationCell: UITableViewCell {
                     name = group[0].name
                 }
             }
+        }
+        
+        if not.type == "group_invite" {
+            smallAvatarName = "not_invite"
+                
+            if sex == 1 {
+                notText = "\(name) пригласила вас \(typeGroup) \(nameGroup)"
+            } else {
+                notText = "\(name) пригласил вас \(typeGroup) \(nameGroup)"
+            }
+        
+            postString = typeGroup
+            parentString = nameGroup
+            feedbackString = ""
         }
         
         if not.type == "follow" || not.type == "friend_accepted" {
@@ -498,6 +524,10 @@ class NotificationCell: UITableViewCell {
             topInsets = 10
         }
         
+        if not.type == "group_invite" {
+            topY = topInsets
+        }
+        
         let maxWidth = cellWidth - 3 * leftInsets - avatarHeight - leftX
         
         var size = self.delegate.getTextSize(text: notText, font: textFont, maxWidth: maxWidth)
@@ -555,7 +585,7 @@ class NotificationCell: UITableViewCell {
             self.addSubview(avatarImage)
             self.addSubview(smallImage)
             
-            if indexPath.row == 0 {
+            if indexPath.row == 0 && not.type != "group_invite" {
                 let dateLabel = UILabel()
                 dateLabel.tag = 250
                 dateLabel.font = dateFont
@@ -679,6 +709,8 @@ class NotificationCell: UITableViewCell {
                 if let video = self.not.parent.video {
                     self.delegate.openVideoController(ownerID: "\(video.ownerID)", vid: "\(video.id)", accessKey: video.accessKey, title: "Видеозапись")
                 }
+            } else if self.not.type == "group_invite" {
+                self.delegate.openProfileController(id: -1 * self.not.feedback[0].id, name: "")
             }
         }
         

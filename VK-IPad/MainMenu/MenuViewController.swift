@@ -192,8 +192,9 @@ class MenuViewController: UITableViewController {
             }
             
             let notData = json["response"][1]["items"].compactMap { Notification(json: $0.1) }
+            let groups = json["response"][2]["items"].compactMap { Groups(json: $0.1) }
             
-            var countNewNots = 0
+            var countNewNots = groups.count
             let lastViewed = json["response"][1]["last_viewed"].intValue
             for not in notData {
                 if not.date > lastViewed {
@@ -201,7 +202,7 @@ class MenuViewController: UITableViewController {
                 }
             }
             
-            let groups = json["response"][2]["items"].compactMap { Groups(json: $0.1) }
+            
             
             OperationQueue.main.addOperation {
                 self.notificationsCell.setBadgeValue(value: countNewNots)

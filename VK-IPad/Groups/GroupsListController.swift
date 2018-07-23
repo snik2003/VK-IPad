@@ -52,6 +52,12 @@ class GroupsListController: UIViewController, UITableViewDelegate, UITableViewDa
             if self.type != "search" {
                 ViewControllerUtils().showActivityIndicator(uiView: self.view)
             }
+            
+            if self.type == "invites" {
+                self.tableView.isEditing = true
+            } else {
+                self.tableView.isEditing = false
+            }
         }
         
         refresh()
@@ -325,9 +331,7 @@ class GroupsListController: UIViewController, UITableViewDelegate, UITableViewDa
                             self.groupsList.remove(at: indexPath.row)
                             self.tableView.reloadData()
                             
-                            if let splitVC = self.navigationController?.splitViewController, let detailVC = splitVC.viewControllers[0].childViewControllers[0] as? MenuViewController {
-                                detailVC.groupsCell.setBadgeValue(value: self.groupsList.count)
-                            }
+                            self.updateAppCounters()
                         }
                     } else {
                         self.delegate.showErrorMessage(title: "Ошибка #\(error.errorCode)", msg: "\n\(error.errorMsg)\n")
@@ -365,9 +369,7 @@ class GroupsListController: UIViewController, UITableViewDelegate, UITableViewDa
                             self.groupsList.remove(at: indexPath.row)
                             self.tableView.reloadData()
                             
-                            if let splitVC = self.navigationController?.splitViewController, let detailVC = splitVC.viewControllers[0].childViewControllers[0] as? MenuViewController {
-                                detailVC.groupsCell.setBadgeValue(value: self.groupsList.count)
-                            }
+                            self.updateAppCounters()
                         }
                     } else {
                         self.delegate.showErrorMessage(title: "Ошибка #\(error.errorCode)", msg: "\n\(error.errorMsg)\n")
@@ -414,8 +416,6 @@ class GroupsListController: UIViewController, UITableViewDelegate, UITableViewDa
         
         if let popoverController = alertController.popoverPresentationController {
             popoverController.barButtonItem = sender
-            //popoverController.sourceView = self.view
-            //popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
             popoverController.permittedArrowDirections = []
         }
         

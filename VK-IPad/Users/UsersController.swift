@@ -323,9 +323,7 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
                         self.sections[0].users.removeAll(keepingCapacity: false)
                         self.tableView.reloadData()
                         
-                        if let splitVC = self.navigationController?.splitViewController, let detailVC = splitVC.viewControllers[0].childViewControllers[0] as? MenuViewController {
-                            detailVC.friendsCell.setBadgeValue(value: 0)
-                        }
+                        self.updateAppCounters()
                     }
                 } else {
                     self.delegate.showErrorMessage(title: "Ошибка #\(error.errorCode)", msg: "\n\(error.errorMsg)\n")
@@ -694,9 +692,7 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
                             self.sections[indexPath.section].users.remove(at: indexPath.row)
                             self.tableView.reloadData()
                             
-                            if let splitVC = self.navigationController?.splitViewController, let detailVC = splitVC.viewControllers[0].childViewControllers[0] as? MenuViewController {
-                                detailVC.friendsCell.setBadgeValue(value: self.sections[indexPath.section].users.count)
-                            }
+                            self.updateAppCounters()
                         }
                     } else {
                         self.delegate.showErrorMessage(title: "Ошибка #\(error.errorCode)", msg: "\n\(error.errorMsg)\n")

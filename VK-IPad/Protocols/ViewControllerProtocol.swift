@@ -367,6 +367,12 @@ extension UIViewController: ViewControllerProtocol {
         let detailVC = self.splitViewController!.viewControllers[self.splitViewController!.viewControllers.endIndex - 1]
         detailVC.childViewControllers[0].navigationController?.pushViewController(controller, animated: true)
     }
+    
+    func updateAppCounters() {
+        if let splitVC = self.navigationController?.splitViewController, let detailVC = splitVC.viewControllers[0].childViewControllers[0] as? MenuViewController {
+            detailVC.getUserInfo()
+        }
+    }
 }
 
 

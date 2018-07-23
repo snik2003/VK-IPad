@@ -636,6 +636,8 @@ class GroupProfileView: UIView {
                                     
                                     self.dopButton.setTitleColor(UIColor.black, for: .normal)
                                     self.dopButton.backgroundColor = vkSingleton.shared.backColor
+                                    
+                                    self.delegate.updateAppCounters()
                                 }
                             } else {
                                 self.delegate.showErrorMessage(title: "Ошибка #\(error.errorCode)", msg: "\n\(error.errorMsg)\n")
@@ -676,6 +678,8 @@ class GroupProfileView: UIView {
                                     
                                     self.dopButton.setTitleColor(UIColor.black, for: .normal)
                                     self.dopButton.backgroundColor = vkSingleton.shared.backColor
+                                    
+                                    self.delegate.updateAppCounters()
                                 }
                             } else {
                                 self.delegate.showErrorMessage(title: "Ошибка #\(error.errorCode)", msg: "\n\(error.errorMsg)\n")
@@ -714,6 +718,8 @@ class GroupProfileView: UIView {
                                     
                                     self.dopButton.setTitleColor(UIColor.black, for: .normal)
                                     self.dopButton.backgroundColor = vkSingleton.shared.backColor
+                                    
+                                    self.delegate.updateAppCounters()
                                 }
                             } else {
                                 self.delegate.showErrorMessage(title: "Ошибка #\(error.errorCode)", msg: "\n\(error.errorMsg)\n")

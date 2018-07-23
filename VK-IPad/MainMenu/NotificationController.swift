@@ -15,6 +15,7 @@ class NotificationController: UITableViewController {
     
     var profiles: [UserProfile] = []
     var groups: [GroupProfile] = []
+    var groupsInvite: [Groups] = []
     
     var newCount = 0
     var lastViewed = 0
@@ -51,6 +52,8 @@ class NotificationController: UITableViewController {
 
     func getNotifications() {
         
+        notifications.removeAll(keepingCapacity: false)
+        
         let url = "/method/notifications.get"
         let parameters = [
             "count": "100",
@@ -60,15 +63,55 @@ class NotificationController: UITableViewController {
         ]
         
         let getServerDataOperation = GetServerDataOperation(url: url, parameters: parameters)
-        getServerDataOperation.completionBlock = {
+        OperationQueue().addOperation(getServerDataOperation)
+        
+        let url2 = "/method/groups.getInvites"
+        let parameters2 = [
+            "count": "100",
+            "extended": "1",
+            "fields": "id, first_name, last_name, photo_100, sex",
+            "access_token": vkSingleton.shared.accessToken,
+            "v": vkSingleton.shared.version
+        ]
+        
+        let getServerDataOperation2 = GetServerDataOperation(url: url2, parameters: parameters2)
+        getServerDataOperation2.addDependency(getServerDataOperation)
+        getServerDataOperation2.completionBlock = {
             guard let data = getServerDataOperation.data else { return }
             guard let json = try? JSON(data: data) else { print("json error"); return }
             //print(json)
             
-            self.notifications = json["response"]["items"].compactMap { Notification(json: $0.1) }
+            let nots = json["response"]["items"].compactMap { Notification(json: $0.1) }
             
             self.profiles = json["response"]["profiles"].compactMap { UserProfile(json: $0.1) }
             self.groups = json["response"]["groups"].compactMap { GroupProfile(json: $0.1) }
+            
+            guard let data2 = getServerDataOperation2.data else { return }
+            guard let json2 = try? JSON(data: data2) else { print("json error"); return }
+            //print(json2)
+            
+            self.groupsInvite = json2["response"]["items"].compactMap { Groups(json: $0.1) }
+            let profiles2 = json2["response"]["profiles"].compactMap { UserProfile(json: $0.1) }
+            
+            for profile in profiles2 {
+                self.profiles.append(profile)
+            }
+            
+            for invite in self.groupsInvite {
+                let not = Notification(json: JSON.null)
+                not.type = "group_invite"
+                not.feedbackCount = 1
+                not.feedback[0].fromID = invite.invitedBy
+                not.feedback[0].id = Int(invite.gid)!
+                not.feedback[0].text = invite.name
+                not.feedback[0].type = invite.typeGroup
+                not.date = Int(Date().timeIntervalSince1970)
+                self.notifications.append(not)
+            }
+            
+            for not in nots {
+                self.notifications.append(not)
+            }
             
             self.newCount = 0
             var totalCount = 0
@@ -120,7 +163,7 @@ class NotificationController: UITableViewController {
                 ViewControllerUtils().hideActivityIndicator()
             }
         }
-        OperationQueue().addOperation(getServerDataOperation)
+        OperationQueue().addOperation(getServerDataOperation2)
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -171,48 +214,108 @@ class NotificationController: UITableViewController {
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let cell = tableView.dequeueReusableCell(withIdentifier: "notCell") as! NotificationCell
         
-        cell.delegate = self
+        if notifications.count > 0 {
+            cell.delegate = self
+            
+            cell.not = notifications[indexPath.section]
+            cell.users = profiles
+            cell.groups = groups
+            
+            cell.indexPath = indexPath
+            cell.cell = cell
+            cell.tableView = self.tableView
+            cell.cellWidth = self.tableView.bounds.width
+            
+            let height = cell.configureCell(calc: true)
         
-        cell.not = notifications[indexPath.section]
-        cell.users = profiles
-        cell.groups = groups
+            return height
+        }
         
-        cell.indexPath = indexPath
-        cell.cell = cell
-        cell.tableView = self.tableView
-        cell.cellWidth = self.tableView.bounds.width
-        
-        let height = cell.configureCell(calc: true)
-        
-        return height
+        return 0
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "notCell", for: indexPath) as! NotificationCell
         
-        cell.delegate = self
-        
-        cell.not = notifications[indexPath.section]
-        cell.users = profiles
-        cell.groups = groups
-        
-        cell.indexPath = indexPath
-        cell.cell = cell
-        cell.tableView = self.tableView
-        cell.cellWidth = self.tableView.bounds.width
-        
-        let _ = cell.configureCell(calc: false)
-        
-        if cell.not.date > lastViewed {
-            cell.backgroundColor = vkSingleton.shared.backColor.withAlphaComponent(0.5)
-        } else {
-            cell.backgroundColor = UIColor.white
+        if notifications.count > 0 {
+            cell.delegate = self
+            
+            cell.not = notifications[indexPath.section]
+            cell.users = profiles
+            cell.groups = groups
+            
+            cell.indexPath = indexPath
+            cell.cell = cell
+            cell.tableView = self.tableView
+            cell.cellWidth = self.tableView.bounds.width
+            
+            let _ = cell.configureCell(calc: false)
+            
+            if cell.not.date > lastViewed {
+                cell.backgroundColor = vkSingleton.shared.backColor.withAlphaComponent(0.5)
+            } else {
+                cell.backgroundColor = UIColor.white
+            }
         }
+        
         return cell
     }
     
     @objc func readButtonClick(sender: UIButton!) {
         sender.buttonTouched()
+        
+        let alertController = UIAlertController(title: nil, message: "Пометить все новые уведомления как просмотренные?", preferredStyle: .alert)
+        
+        let cancelAction = UIAlertAction(title: "Нет", style: .cancel)
+        alertController.addAction(cancelAction)
+        
+        let OKAction = UIAlertAction(title: "Да", style: .destructive) { action in
+            
+            let url = "/method/notifications.markAsViewed"
+            let parameters = [
+                "access_token": vkSingleton.shared.accessToken,
+                "v": vkSingleton.shared.version
+            ]
+            let request = GetServerDataOperation(url: url, parameters: parameters)
+            
+            for group in self.groupsInvite {
+                let url2 = "/method/groups.leave"
+                let parameters2 = [
+                    "group_id": group.gid,
+                    "access_token": vkSingleton.shared.accessToken,
+                    "v": vkSingleton.shared.version
+                ]
+                let request2 = GetServerDataOperation(url: url2, parameters: parameters2)
+                request.addDependency(request2)
+                OperationQueue().addOperation(request2)
+            }
+            
+            request.completionBlock = {
+                guard let data = request.data else { return }
+                
+                guard let json = try? JSON(data: data) else { print("json error"); return }
+                
+                let error = ErrorJson(json: JSON.null)
+                error.errorCode = json["error"]["error_code"].intValue
+                error.errorMsg = json["error"]["error_msg"].stringValue
+                
+                if error.errorCode == 0 {
+                    self.newCount = 0
+                    self.notifications = self.notifications.filter({ $0.type != "group_invite" })
+                    
+                    OperationQueue.main.addOperation {
+                        self.updateAppCounters()
+                        self.getNotifications()
+                    }
+                } else {
+                    self.showErrorMessage(title: "Ошибка #\(error.errorCode)", msg: "\n\(error.errorMsg)\n")
+                }
+            }
+            OperationQueue().addOperation(request)
+        }
+        alertController.addAction(OKAction)
+        
+        present(alertController, animated: true)
     }
 }

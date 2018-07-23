@@ -49,6 +49,7 @@ class NotificationFeedback {
     var userLikes = 0
     var canLike = 0
     var canPost = 0
+    var type = ""
     
     init(json: JSON) {
         self.count = json["count"].intValue
