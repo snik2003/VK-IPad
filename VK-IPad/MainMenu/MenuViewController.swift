@@ -89,7 +89,10 @@ class MenuViewController: UITableViewController {
         
         // Мои закладки
         if indexPath.section == 1 && indexPath.row == 4 {
+            let controller = self.storyboard?.instantiateViewController(withIdentifier: "FavePostsController") as! FavePostsController
             
+            let detailVC = self.splitViewController!.viewControllers[self.splitViewController!.viewControllers.endIndex - 1]
+            detailVC.childViewControllers[0].navigationController?.pushViewController(controller, animated: true)
         }
         
         // Мои подписки

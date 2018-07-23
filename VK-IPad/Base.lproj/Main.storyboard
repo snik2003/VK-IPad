@@ -1283,6 +1283,50 @@
             </objects>
             <point key="canvasLocation" x="3545" y="1788"/>
         </scene>
+        <!--Fave Posts Controller-->
+        <scene sceneID="sTv-sf-ANC">
+            <objects>
+                <viewController storyboardIdentifier="FavePostsController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="fxK-UK-eRe" customClass="FavePostsController" customModule="VK_IPad" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="HDR-Xk-y2p">
+                        <rect key="frame" x="0.0" y="0.0" width="1366" height="1024"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="m7z-ws-Ezs"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="6m0-fk-A44">
+                        <barButtonItem key="backBarButtonItem" title="Назад" id="VCK-cZ-OZK"/>
+                    </navigationItem>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Raa-Um-7HL" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4187" y="2483"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="XdH-BN-la4">
+            <objects>
+                <navigationController storyboardIdentifier="FavesNavigation" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="RgU-QL-3oa" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="067-oN-itw">
+                        <rect key="frame" x="0.0" y="20" width="1366" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="barTintColor" red="0.058823529409999999" green="0.44705882349999998" blue="0.65098039220000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <textAttributes key="titleTextAttributes">
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </textAttributes>
+                        <textAttributes key="largeTitleTextAttributes">
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </textAttributes>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="fxK-UK-eRe" kind="relationship" relationship="rootViewController" id="faw-PB-w7M"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="NRe-Tm-gqU" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3543.7774524158121" y="2480.859375"/>
+        </scene>
     </scenes>
     <resources>
         <image name="nophoto" width="100" height="100"/>

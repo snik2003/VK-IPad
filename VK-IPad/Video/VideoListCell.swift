@@ -21,7 +21,7 @@ class VideoListCell: UITableViewCell {
     
     var markCheck: BEMCheckBox!
     
-    var delegate: VideoListController!
+    var delegate: UIViewController! //VideoListController!
     var cellWidth: CGFloat = 0
     
     let leftInsets: CGFloat = 10
@@ -62,7 +62,9 @@ class VideoListCell: UITableViewCell {
         webView.isOpaque = false
         webView.frame = CGRect(x: leftInsets, y: topInsets, width: videoWidth, height: videoHeight)
         
-        webView.navigationDelegate = delegate
+        if let controller = delegate as? WKNavigationDelegate {
+            webView.navigationDelegate = controller
+        }
         
         if video.player == "" {
             let url = "/method/video.get"
@@ -84,7 +86,11 @@ class VideoListCell: UITableViewCell {
                         OperationQueue.main.addOperation {
                             webView.load(request)
                             self.addSubview(webView)
-                            self.delegate.videos[indexPath.section].player = videos[0].player
+                            if let controller = self.delegate as? VideoListController {
+                                controller.videos[indexPath.section].player = videos[0].player
+                            } else if let controller = self.delegate as? FavePostsController {
+                                    controller.videos[indexPath.section].player = videos[0].player
+                            }
                         }
                     }
                 }
