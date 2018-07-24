@@ -109,7 +109,7 @@ extension UILabel {
         return NSLocationInRange(indexOfCharacter, targetRange)
     }
     
-    func prepareTextForPublish2(_ delegate: UIViewController) {
+    func prepareTextForPublish2(_ delegate: UIViewController, cell: UITableViewCell?) {
         if var text = self.text {
             
             text = text.replacingOccurrences(of: "<br>", with: "\n")
@@ -182,7 +182,7 @@ extension UILabel {
                         if self.didTapAttributedTextInLabel2(tap: tap, inRange: range) {
                             isTap = true
                             //delegate.popoverHideAll()
-                            //delegate.openBrowserController(url: "https://vk.com/\(match.getIdFromLink())")
+                            delegate.openBrowserController(url: "https://vk.com/\(match.getIdFromLink())")
                         }
                     }
                 }
@@ -192,7 +192,13 @@ extension UILabel {
                         if self.didTapAttributedTextInLabel2(tap: tap, inRange: range) {
                             isTap = true
                             //delegate.popoverHideAll()
-                            //delegate.openNewsfeedSearchController(ownerID: Int(vkSingleton.shared.userID)!, hash: match)
+                            
+                            let controller = delegate.storyboard?.instantiateViewController(withIdentifier: "NewsfeedController") as! NewsfeedController
+                            
+                            controller.hashTag = match
+                            
+                            let detailVC = delegate.splitViewController!.viewControllers[delegate.splitViewController!.viewControllers.endIndex - 1]
+                            detailVC.childViewControllers[0].navigationController?.pushViewController(controller, animated: true)
                         }
                     }
                 }
@@ -202,13 +208,32 @@ extension UILabel {
                         if self.didTapAttributedTextInLabel2(tap: tap, inRange: range) {
                             isTap = true
                             //delegate.popoverHideAll()
-                            //delegate.openBrowserController(url: match)
+                            delegate.openBrowserController(url: match)
                         }
                     }
                 }
                 
                 if isTap == false {
                     print("tap nithing")
+                    
+                    if let cell = cell as? RecordCell {
+                        
+                        if let controller = delegate as? RecordController {
+                            if let record = cell.record, record.copy.count > 0 {
+                                controller.openWallRecord(ownerID: record.copy[0].ownerID, postID: record.copy[0].id, accessKey: "", type: "post")
+                            }
+                        } else {
+                            if let record = cell.record {
+                                delegate.openWallRecord(ownerID: record.ownerID, postID: record.id, accessKey: "", type: "post")
+                            }
+                        }
+                    }
+                    
+                    if let cell = cell as? VideoListCell {
+                        if let video = cell.video {
+                            delegate.openVideoController(ownerID: "\(video.ownerID)", vid: "\(video.id)", accessKey: video.accessKey, title: "Видеозапись")
+                        }
+                    }
                     
                     /*if let vc = delegate as? RecordController {
                         
@@ -219,13 +244,45 @@ extension UILabel {
                                 if indexPath.section == 0 {
                                     let record = vc.record[0]
                                     if let cell = vc.tableView.cellForRow(at: indexPath) as? RecordCell {
-                                        if self == cell.repostTextLabel {
-                                            vc.openWallRecord(ownerID: record.repostOwnerID, postID: record.repostID, accessKey: "", type: "post")
+                                        if record.copy.count > 0 {
+                                            vc.openWallRecord(ownerID: record.copy[0].ownerID, postID: record.copy[0].id, accessKey: "", type: "post")
                                         }
                                     }
                                 } else {
-                                    vc.selectComment(sender: tap)
+                                    
                                 }
+                            }
+                        }
+                    } else if let vc = delegate as? ProfileViewController {
+                        
+                        if tap.state == .ended {
+                            let buttonPosition: CGPoint = tap.location(in: vc.tableView)
+                            
+                            if let indexPath = vc.tableView.indexPathForRow(at: buttonPosition) {
+                                let record = vc.wall[indexPath.section]
+                                vc.openWallRecord(ownerID: record.ownerID, postID: record.id, accessKey: "", type: "post")
+                            }
+                        }
+                        
+                    } else if let vc = delegate as? GroupProfileViewController {
+                        
+                        if tap.state == .ended {
+                            let buttonPosition: CGPoint = tap.location(in: vc.tableView)
+                            
+                            if let indexPath = vc.tableView.indexPathForRow(at: buttonPosition) {
+                                let record = vc.wall[indexPath.section]
+                                vc.openWallRecord(ownerID: record.ownerID, postID: record.id, accessKey: "", type: "post")
+                            }
+                        }
+                        
+                    } else if let vc = delegate as? NewsfeedController {
+                        
+                        if tap.state == .ended {
+                            let buttonPosition: CGPoint = tap.location(in: vc.tableView)
+                            
+                            if let indexPath = vc.tableView.indexPathForRow(at: buttonPosition) {
+                                let record = vc.wall[indexPath.section]
+                                vc.openWallRecord(ownerID: record.ownerID, postID: record.id, accessKey: "", type: "post")
                             }
                         }
                         
@@ -267,28 +324,6 @@ extension UILabel {
                             }
                         }
                         
-                    } else if let vc = delegate as? ProfileController2 {
-                        
-                        if tap.state == .ended {
-                            let buttonPosition: CGPoint = tap.location(in: vc.tableView)
-                            
-                            if let indexPath = vc.tableView.indexPathForRow(at: buttonPosition) {
-                                let record = vc.wall[indexPath.section]
-                                vc.openWallRecord(ownerID: record.ownerID, postID: record.id, accessKey: "", type: "post")
-                            }
-                        }
-                        
-                    } else if let vc = delegate as? GroupProfileController2 {
-                        
-                        if tap.state == .ended {
-                            let buttonPosition: CGPoint = tap.location(in: vc.tableView)
-                            
-                            if let indexPath = vc.tableView.indexPathForRow(at: buttonPosition) {
-                                let record = vc.wall[indexPath.section]
-                                vc.openWallRecord(ownerID: record.ownerID, postID: record.id, accessKey: "", type: "post")
-                            }
-                        }
-        
                     } else if let vc = delegate as? PostponedWallController {
                         
                         if tap.state == .ended {

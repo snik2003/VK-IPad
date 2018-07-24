@@ -91,6 +91,7 @@
 		17B409E72105EF0C004CED46 /* FavePostsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B409E62105EF0C004CED46 /* FavePostsController.swift */; };
 		17B409E92106114A004CED46 /* FaveLinks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B409E82106114A004CED46 /* FaveLinks.swift */; };
 		17B409EB210612FE004CED46 /* FavePostsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B409EA210612FE004CED46 /* FavePostsCell.swift */; };
+		17B409ED2106306F004CED46 /* BrowserController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B409EC2106306F004CED46 /* BrowserController.swift */; };
 		17CCB7F920F4E89A0051947A /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CCB7F820F4E89A0051947A /* Notification.swift */; };
 		17CCB7FB20F63AB30051947A /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CCB7FA20F63AB30051947A /* NotificationController.swift */; };
 		17CCB7FD20F75D1F0051947A /* NotificationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CCB7FC20F75D1F0051947A /* NotificationCell.swift */; };
@@ -188,6 +189,7 @@
 		17B409E62105EF0C004CED46 /* FavePostsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavePostsController.swift; sourceTree = "<group>"; };
 		17B409E82106114A004CED46 /* FaveLinks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaveLinks.swift; sourceTree = "<group>"; };
 		17B409EA210612FE004CED46 /* FavePostsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavePostsCell.swift; sourceTree = "<group>"; };
+		17B409EC2106306F004CED46 /* BrowserController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserController.swift; sourceTree = "<group>"; };
 		17CCB7F820F4E89A0051947A /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
 		17CCB7FA20F63AB30051947A /* NotificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationController.swift; sourceTree = "<group>"; };
 		17CCB7FC20F75D1F0051947A /* NotificationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCell.swift; sourceTree = "<group>"; };
@@ -393,6 +395,7 @@
 			children = (
 				174912D620D300DC00FCF9F9 /* ViewControllerProtocol.swift */,
 				174912D720D300DC00FCF9F9 /* ViewControllerUtils.swift */,
+				17B409EC2106306F004CED46 /* BrowserController.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -651,6 +654,7 @@
 				17EBC3A120D51A46009130FC /* Attachment.swift in Sources */,
 				173D667A20D40FCE00EEBF46 /* StoreReviewHelper.swift in Sources */,
 				174912E520D300DD00FCF9F9 /* TableViewCell.swift in Sources */,
+				17B409ED2106306F004CED46 /* BrowserController.swift in Sources */,
 				1749130720D3055100FCF9F9 /* FriendRequest.swift in Sources */,
 				174912F720D300DD00FCF9F9 /* ViewControllerUtils.swift in Sources */,
 				17B134A720DACD110058E1A8 /* Likes.swift in Sources */,

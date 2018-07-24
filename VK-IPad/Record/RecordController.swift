@@ -251,14 +251,12 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
             if record.count > 0 {
                 return 1
             }
-            return 0
         }
         
         if section == 1 {
             if comments.count > 0 {
                 return comments.count + 1
             }
-            return 0
         }
         
         return 0
@@ -675,6 +673,7 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
         var parameters = ["":""]
         
         heights.removeAll(keepingCapacity: false)
+        ViewControllerUtils().showActivityIndicator(uiView: self.view)
         
         if type == "post" {
             url = "/method/wall.getComments"
@@ -732,9 +731,7 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
             
             OperationQueue.main.addOperation {
                 self.tableView.reloadData()
-                if self.comments.count > 0 {
-                    self.tableView.scrollToRow(at: IndexPath(row: 1, section: 1), at: .top, animated: true)
-                }
+                ViewControllerUtils().hideActivityIndicator()
             }
         }
         OperationQueue().addOperation(getServerDataOperation)

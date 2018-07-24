@@ -316,7 +316,7 @@ class RecordCell: UITableViewCell {
         label.text = record.text
         label.font = textFont
         label.numberOfLines = 0
-        label.prepareTextForPublish2(delegate)
+        label.prepareTextForPublish2(delegate, cell: self)
         
         let maxWidth = cellWidth - leftX - 20
         var size = delegate.getTextSize(text: label.text!, font: textFont, maxWidth: maxWidth)
@@ -330,7 +330,7 @@ class RecordCell: UITableViewCell {
         
         let tap = UITapGestureRecognizer()
         label.isUserInteractionEnabled = true
-        label.addGestureRecognizer(tap)
+        //label.addGestureRecognizer(tap)
         tap.add {
             if let controller = self.delegate as? RecordController {
                 if let index = numCopy {
@@ -638,6 +638,28 @@ class RecordCell: UITableViewCell {
         self.addSubview(linkImage)
         self.addSubview(titleLabel)
         self.addSubview(linkLabel)
+        
+        let tap1 = UITapGestureRecognizer()
+        linkImage.isUserInteractionEnabled = true
+        linkImage.addGestureRecognizer(tap1)
+        
+        let tap2 = UITapGestureRecognizer()
+        titleLabel.isUserInteractionEnabled = true
+        titleLabel.addGestureRecognizer(tap2)
+        
+        let tap3 = UITapGestureRecognizer()
+        linkLabel.isUserInteractionEnabled = true
+        linkLabel.addGestureRecognizer(tap3)
+        
+        tap1.add {
+            self.delegate.openBrowserController(url: attach.link[0].url)
+        }
+        tap2.add {
+            self.delegate.openBrowserController(url: attach.link[0].url)
+        }
+        tap3.add {
+            self.delegate.openBrowserController(url: attach.link[0].url)
+        }
         
         topY += 40
         

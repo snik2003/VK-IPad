@@ -52,7 +52,7 @@ class GroupProfileView: UIView {
         siteLabel.adjustsFontSizeToFitWidth = true
         siteLabel.minimumScaleFactor = 0.8
         siteLabel.textAlignment = .center
-        siteLabel.prepareTextForPublish2(delegate)
+        siteLabel.prepareTextForPublish2(delegate, cell: nil)
         siteLabel.frame = CGRect(x: 10, y: 10, width: width1 - 20, height: 20)
         infoView.addSubview(siteLabel)
         var height1: CGFloat = 30
@@ -67,7 +67,7 @@ class GroupProfileView: UIView {
             actLabel.textAlignment = .center
             actLabel.numberOfLines = 0
             actLabel.isEnabled = false
-            actLabel.prepareTextForPublish2(delegate)
+            actLabel.prepareTextForPublish2(delegate, cell: nil)
             
             let size = delegate.getTextSize(text: actLabel.text!, font: actLabel.font, maxWidth: width1 - 20)
             actLabel.frame = CGRect(x: 10, y: height1, width: width1 - 20, height: size.height + 10)
@@ -80,7 +80,7 @@ class GroupProfileView: UIView {
             descLabel.text = profile.description
             descLabel.font = UIFont(name: "Verdana", size: 13)!
             descLabel.numberOfLines = 0
-            descLabel.prepareTextForPublish2(delegate)
+            descLabel.prepareTextForPublish2(delegate, cell: nil)
             
             let size = delegate.getTextSize(text: descLabel.text!, font: descLabel.font, maxWidth: width1 - 20)
             descLabel.frame = CGRect(x: 10, y: height1, width: width1 - 20, height: size.height + 10)
@@ -374,7 +374,7 @@ class GroupProfileView: UIView {
         
         let statusLabel = UILabel()
         statusLabel.text = profile.status
-        statusLabel.prepareTextForPublish2(delegate)
+        statusLabel.prepareTextForPublish2(delegate, cell: nil)
         statusLabel.font = UIFont(name: "Verdana", size: 13)!
         statusLabel.numberOfLines = 0
         let size2 = delegate.getTextSize(text: statusLabel.text!, font: statusLabel.font, maxWidth: nameZoneWidth)

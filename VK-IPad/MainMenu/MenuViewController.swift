@@ -91,8 +91,8 @@ class MenuViewController: UITableViewController {
         if indexPath.section == 1 && indexPath.row == 4 {
             let controller = self.storyboard?.instantiateViewController(withIdentifier: "FavePostsController") as! FavePostsController
             
-            let detailVC = self.splitViewController!.viewControllers[self.splitViewController!.viewControllers.endIndex - 1]
-            detailVC.childViewControllers[0].navigationController?.pushViewController(controller, animated: true)
+            let dvc = self.splitViewController!.viewControllers[self.splitViewController!.viewControllers.endIndex - 1]
+            dvc.childViewControllers[0].navigationController?.pushViewController(controller, animated: true)
         }
         
         // Мои подписки
@@ -102,7 +102,7 @@ class MenuViewController: UITableViewController {
         
         // Моя музыка ITunes
         if indexPath.section == 1 && indexPath.row == 6 {
-            
+            self.openBrowserController(url: "http://matchtv.ru/")
         }
         
         // сменить учетную запись

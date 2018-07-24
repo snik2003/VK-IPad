@@ -25,6 +25,8 @@ class NewsfeedController: UITableViewController {
     var profiles: [UserProfile] = []
     var groups: [GroupProfile] = []
     
+    var hashTag = ""
+    
     var filters = "post"
     var sourceIDs = "recommend"
     var startFrom = ""
@@ -74,7 +76,17 @@ class NewsfeedController: UITableViewController {
             tableView.reloadData()
         }
         
-        if sourceIDs == "recommend" {
+        if hashTag != "" {
+            url = "/method/newsfeed.search"
+            parameters = [
+                "access_token": vkSingleton.shared.accessToken,
+                "q": hashTag,
+                "extended": "1",
+                "count": "200",
+                "fields": "id,first_name,last_name,photo_100,photo_200,first_name_gen",
+                "v": vkSingleton.shared.version
+            ]
+        } else if sourceIDs == "recommend" {
             url = "/method/newsfeed.getRecommended"
             
             parameters = [
@@ -294,20 +306,24 @@ class NewsfeedController: UITableViewController {
     }
     
     func setTitleView() {
-        menuButton.frame = CGRect(x: 0, y: 0, width: 300, height: 40)
-        menuButton.backgroundColor = UIColor.clear
-        
-        menuButton.setTitle(itemsMenu[0], for: .normal)
-        menuButton.setTitleColor(UIColor.white, for: .normal)
-        menuButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-        
-        menuButton.setImage(UIImage(named: "arrow-down"), for: .normal)
-        menuButton.imageView?.tintColor = UIColor.white
-        menuButton.imageView?.contentMode = .scaleAspectFit
-        menuButton.imageView?.clipsToBounds = true
-        
-        menuButton.addTarget(self, action: #selector(self.clickTitle(sender:)), for: .touchUpInside)
-        self.navigationItem.titleView = menuButton
+        if hashTag == "" {
+            menuButton.frame = CGRect(x: 0, y: 0, width: 300, height: 40)
+            menuButton.backgroundColor = UIColor.clear
+            
+            menuButton.setTitle(itemsMenu[0], for: .normal)
+            menuButton.setTitleColor(UIColor.white, for: .normal)
+            menuButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+            
+            menuButton.setImage(UIImage(named: "arrow-down"), for: .normal)
+            menuButton.imageView?.tintColor = UIColor.white
+            menuButton.imageView?.contentMode = .scaleAspectFit
+            menuButton.imageView?.clipsToBounds = true
+            
+            menuButton.addTarget(self, action: #selector(self.clickTitle(sender:)), for: .touchUpInside)
+            self.navigationItem.titleView = menuButton
+        } else {
+            self.title = hashTag
+        }
     }
     
     @objc func clickTitle(sender: UIButton) {

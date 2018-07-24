@@ -592,6 +592,14 @@ class ProfileView: UIView {
                     label2.frame = CGRect(x: userInfoView.frame.width * 0.4, y: topY + 10, width: userInfoView.frame.width * 0.6 - 20, height: 20)
                     userInfoView.addSubview(label2)
                     
+                    let tap = UITapGestureRecognizer()
+                    label2.isUserInteractionEnabled = true
+                    label2.addGestureRecognizer(tap)
+                    tap.add {
+                        if let url = URL(string: profile.site) {
+                            self.delegate.openBrowserController(url: url.absoluteString)
+                        }
+                    }
                     topY += 30
                 }
                 

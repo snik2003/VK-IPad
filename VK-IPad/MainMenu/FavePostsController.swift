@@ -458,10 +458,14 @@ class FavePostsController: UIViewController, UITableViewDelegate, UITableViewDat
             let cell = tableView.dequeueReusableCell(withIdentifier: "videoCell", for: indexPath) as! VideoListCell
             
             cell.delegate = self
+            
+            cell.video = videos[indexPath.section]
+            cell.indexPath = indexPath
+            cell.cell = cell
+            cell.tableView = tableView
             cell.cellWidth = self.view.bounds.width
             
-            cell.configureCell(video: videos[indexPath.section], indexPath: indexPath, cell: cell, tableView: tableView)
-            
+            cell.configureCell()
             
             cell.selectionStyle = .none
             

@@ -22,13 +22,20 @@ class VideoListCell: UITableViewCell {
     var markCheck: BEMCheckBox!
     
     var delegate: UIViewController! //VideoListController!
+    
+    var video: Video!
+    
+    var indexPath: IndexPath!
+    var cell: UITableViewCell!
+    var tableView: UITableView!
+    
     var cellWidth: CGFloat = 0
     
     let leftInsets: CGFloat = 10
     let topInsets: CGFloat = 0
     
     
-    func configureCell(video: Video, indexPath: IndexPath, cell: UITableViewCell, tableView: UITableView) {
+    func configureCell() {
         
         self.removeAllSubviews()
         
@@ -87,9 +94,9 @@ class VideoListCell: UITableViewCell {
                             webView.load(request)
                             self.addSubview(webView)
                             if let controller = self.delegate as? VideoListController {
-                                controller.videos[indexPath.section].player = videos[0].player
+                                controller.videos[self.indexPath.section].player = videos[0].player
                             } else if let controller = self.delegate as? FavePostsController {
-                                    controller.videos[indexPath.section].player = videos[0].player
+                                controller.videos[self.indexPath.section].player = videos[0].player
                             }
                         }
                     }
@@ -115,14 +122,7 @@ class VideoListCell: UITableViewCell {
         titleLabel.contentMode = .center
         titleLabel.numberOfLines = 0
         titleLabel.clipsToBounds = true
-        titleLabel.prepareTextForPublish2(self.delegate)
-        
-        let tap1 = UITapGestureRecognizer()
-        titleLabel.isUserInteractionEnabled = true
-        titleLabel.addGestureRecognizer(tap1)
-        tap1.add {
-            self.delegate.openVideoController(ownerID: "\(video.ownerID)", vid: "\(video.id)", accessKey: video.accessKey, title: "Видеозапись")
-        }
+        titleLabel.prepareTextForPublish2(self.delegate, cell: self)
         
         let titleSize = delegate.getTextSize(text: titleLabel.text!, font: titleLabel.font, maxWidth: maxWidth)
         titleLabel.frame = CGRect(x: leftX, y: topInsets + 10, width: maxWidth, height: titleSize.height + 10)
@@ -144,16 +144,9 @@ class VideoListCell: UITableViewCell {
         descriptionLabel.textColor = UIColor.black
         descriptionLabel.textAlignment = .center
         descriptionLabel.contentMode = .center
-        descriptionLabel.prepareTextForPublish2(self.delegate)
+        descriptionLabel.prepareTextForPublish2(self.delegate, cell: self)
         
         descriptionLabel.clipsToBounds = true
-        
-        let tap2 = UITapGestureRecognizer()
-        descriptionLabel.isUserInteractionEnabled = true
-        descriptionLabel.addGestureRecognizer(tap2)
-        tap2.add {
-            self.delegate.openVideoController(ownerID: "\(video.ownerID)", vid: "\(video.id)", accessKey: video.accessKey, title: "Видеозапись")
-        }
         
         descSize = delegate.getTextSize(text: descriptionLabel.text!, font: descriptionLabel.font, maxWidth: maxWidth)
         descSize.height = topInsets + videoHeight - 40 - titleSize.height - 30

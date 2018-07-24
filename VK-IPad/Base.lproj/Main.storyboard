@@ -1327,6 +1327,113 @@
             </objects>
             <point key="canvasLocation" x="3543.7774524158121" y="2480.859375"/>
         </scene>
+        <!--Browser Controller-->
+        <scene sceneID="53X-1t-Wwm">
+            <objects>
+                <viewController storyboardIdentifier="BrowserController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Dab-cI-81K" customClass="BrowserController" customModule="VK_IPad" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="RzW-5j-1IL">
+                        <rect key="frame" x="0.0" y="0.0" width="1366" height="1024"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textField opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="http://geekbrains.ru" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="vgv-rC-KHy">
+                                <rect key="frame" x="10" y="74" width="1346" height="30"/>
+                                <color key="backgroundColor" red="0.90588235289999997" green="0.90196078430000004" blue="0.90196078430000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="0s4-p2-vqd"/>
+                                </constraints>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" name="Verdana" family="Verdana" pointSize="13"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JoN-2O-2QY">
+                                <rect key="frame" x="0.0" y="980" width="1366" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="CON-kf-ZHv"/>
+                                </constraints>
+                                <items>
+                                    <barButtonItem systemItem="rewind" id="qDj-wb-aVL">
+                                        <connections>
+                                            <action selector="backWithSender:" destination="Dab-cI-81K" id="ESc-OU-d0w"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem width="30" style="plain" systemItem="fixedSpace" id="5J4-2B-LFR"/>
+                                    <barButtonItem systemItem="fastForward" id="ch6-tY-sie">
+                                        <connections>
+                                            <action selector="forwardWithSender:" destination="Dab-cI-81K" id="G4d-VH-VY6"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="53v-sd-hbg"/>
+                                    <barButtonItem systemItem="refresh" id="koC-sD-CoX">
+                                        <connections>
+                                            <action selector="reloadWithSender:" destination="Dab-cI-81K" id="t7h-6c-5Me"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="barTintColor" red="0.019607843140000001" green="0.4039215686" blue="0.64313725489999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </toolbar>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progressViewStyle="bar" translatesAutoresizingMaskIntoConstraints="NO" id="koW-1M-Xu8">
+                                <rect key="frame" x="10" y="110" width="1346" height="2.5"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="2" id="OEf-cR-CbE"/>
+                                </constraints>
+                            </progressView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="JoN-2O-2QY" firstAttribute="leading" secondItem="yHT-Ga-R3B" secondAttribute="leading" id="NUm-fF-1XC"/>
+                            <constraint firstItem="vgv-rC-KHy" firstAttribute="leading" secondItem="yHT-Ga-R3B" secondAttribute="leading" constant="10" id="Nz2-4z-ET9"/>
+                            <constraint firstItem="yHT-Ga-R3B" firstAttribute="trailing" secondItem="vgv-rC-KHy" secondAttribute="trailing" constant="10" id="Wgm-bu-pAv"/>
+                            <constraint firstItem="yHT-Ga-R3B" firstAttribute="trailing" secondItem="koW-1M-Xu8" secondAttribute="trailing" constant="10" id="m7j-g2-CWn"/>
+                            <constraint firstItem="koW-1M-Xu8" firstAttribute="leading" secondItem="yHT-Ga-R3B" secondAttribute="leading" constant="10" id="nt4-aV-XHi"/>
+                            <constraint firstItem="koW-1M-Xu8" firstAttribute="top" secondItem="vgv-rC-KHy" secondAttribute="bottom" constant="6" id="qY7-iA-0f2"/>
+                            <constraint firstItem="yHT-Ga-R3B" firstAttribute="bottom" secondItem="JoN-2O-2QY" secondAttribute="bottom" id="rTC-gC-waH"/>
+                            <constraint firstItem="vgv-rC-KHy" firstAttribute="top" secondItem="yHT-Ga-R3B" secondAttribute="top" constant="10" id="ucR-c0-gxJ"/>
+                            <constraint firstItem="JoN-2O-2QY" firstAttribute="trailing" secondItem="yHT-Ga-R3B" secondAttribute="trailing" id="yTx-Hx-mYI"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="yHT-Ga-R3B"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="c42-EN-Z3P">
+                        <barButtonItem key="backBarButtonItem" title="Назад" id="q1e-hu-wqd"/>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="backButton" destination="qDj-wb-aVL" id="BUk-x3-4rR"/>
+                        <outlet property="forwardButton" destination="ch6-tY-sie" id="kjK-8M-xsq"/>
+                        <outlet property="progress" destination="koW-1M-Xu8" id="DD6-xM-bh9"/>
+                        <outlet property="reloadButton" destination="koC-sD-CoX" id="g3Q-kQ-gJ1"/>
+                        <outlet property="urlTextField" destination="vgv-rC-KHy" id="j76-0u-h9x"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="178-aL-OzJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4239.0922401171301" y="3195.703125"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="joi-C7-4JX">
+            <objects>
+                <navigationController storyboardIdentifier="BrowserNavigation" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="chL-Qf-F3a" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="36S-02-hO4">
+                        <rect key="frame" x="0.0" y="20" width="1366" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="barTintColor" red="0.019607843140000001" green="0.4039215686" blue="0.64313725489999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <textAttributes key="titleTextAttributes">
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </textAttributes>
+                        <textAttributes key="largeTitleTextAttributes">
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </textAttributes>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="Dab-cI-81K" kind="relationship" relationship="rootViewController" id="VzF-td-jMb"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="DRe-fD-6cu" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3545.9736456808196" y="3195.703125"/>
+        </scene>
     </scenes>
     <resources>
         <image name="nophoto" width="100" height="100"/>

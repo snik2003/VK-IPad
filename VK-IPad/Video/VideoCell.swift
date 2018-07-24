@@ -259,7 +259,7 @@ class VideoCell: UITableViewCell {
         titleLabel.font = titleFont
         titleLabel.textAlignment = .center
         titleLabel.numberOfLines = 0
-        titleLabel.prepareTextForPublish2(delegate)
+        titleLabel.prepareTextForPublish2(delegate, cell: self)
         
         let titleSize = delegate.getTextSize(text: titleLabel.text!, font: titleLabel.font, maxWidth: maxSize)
         titleLabel.frame = CGRect(x: 20, y: topY, width: maxSize, height: titleSize.height + 10)
@@ -277,7 +277,7 @@ class VideoCell: UITableViewCell {
         descLabel.font = descFont
         descLabel.textAlignment = .center
         descLabel.numberOfLines = 0
-        descLabel.prepareTextForPublish2(delegate)
+        descLabel.prepareTextForPublish2(delegate, cell: self)
         
         let descSize = delegate.getTextSize(text: descLabel.text!, font: descLabel.font, maxWidth: maxSize)
         descLabel.frame = CGRect(x: 20, y: topY, width: maxSize, height: descSize.height + 10)

@@ -24,14 +24,21 @@ class CommentCell: UITableViewCell {
     var cell: UITableViewCell!
     var tableView: UITableView!
     
+    let avatarImage = UIImageView()
+    let nameLabel = UILabel()
+    
     let avatarHeight: CGFloat = 40
     let likesButtonHeight: CGFloat = 30
     let likesButtonWidth: CGFloat = 100
+    let menuButtonHeight: CGFloat = 20
+    let menuButtonWidth: CGFloat = 100
+    
     let stickerHeight: CGFloat = 150
     
-    let textFont = UIFont(name: "Verdana", size: 12)!
-    let nameFont = UIFont(name: "Verdana-Bold", size: 12)!
+    let textFont = UIFont(name: "Verdana", size: 14)!
+    let nameFont = UIFont(name: "Verdana-Bold", size: 13)!
     let dateFont = UIFont(name: "Verdana", size: 11)!
+    let menuFont = UIFont(name: "Verdana", size: 12)!
     
     var countButton = UIButton()
     var likesButton = UIButton()
@@ -108,6 +115,8 @@ class CommentCell: UITableViewCell {
             }
             
             topY = setInfoPanel(topY: topY)
+            
+            setMenuComment(topY: topY)
         }
         
     }
@@ -120,20 +129,13 @@ class CommentCell: UITableViewCell {
         commentLabel.text = comment.text
         commentLabel.font = textFont
         commentLabel.numberOfLines = 0
-        commentLabel.prepareTextForPublish2(delegate)
+        commentLabel.prepareTextForPublish2(delegate, cell: self)
         
         let maxWidth = cellWidth - avatarHeight - 40
         let size = delegate.getTextSize(text: commentLabel.text!, font: textFont, maxWidth: maxWidth)
         
         commentLabel.frame = CGRect(x: avatarHeight + 20, y: topY, width: maxWidth, height: size.height)
         self.addSubview(commentLabel)
-        
-        let tap = UITapGestureRecognizer()
-        commentLabel.isUserInteractionEnabled = true
-        commentLabel.addGestureRecognizer(tap)
-        tap.add {
-            
-        }
         
         topY += size.height
         
@@ -162,8 +164,7 @@ class CommentCell: UITableViewCell {
             }
         }
         
-        let avatarImage = UIImageView()
-        let nameLabel = UILabel()
+        
         
         avatarImage.tag = 250
         nameLabel.tag = 250
@@ -171,9 +172,9 @@ class CommentCell: UITableViewCell {
         let getCacheImage = GetCacheImage(url: url, lifeTime: .avatarImage)
         getCacheImage.completionBlock = {
             OperationQueue.main.addOperation {
-                avatarImage.image = getCacheImage.outputImage
-                avatarImage.layer.cornerRadius = self.avatarHeight/2
-                avatarImage.clipsToBounds = true
+                self.avatarImage.image = getCacheImage.outputImage
+                self.avatarImage.layer.cornerRadius = self.avatarHeight/2
+                self.avatarImage.clipsToBounds = true
             }
         }
         OperationQueue().addOperation(getCacheImage)
@@ -393,6 +394,13 @@ class CommentCell: UITableViewCell {
         titleLabel.adjustsFontSizeToFitWidth = true
         titleLabel.minimumScaleFactor = 0.8
         
+        let tap = UITapGestureRecognizer()
+        titleLabel.isUserInteractionEnabled = true
+        titleLabel.addGestureRecognizer(tap)
+        tap.add {
+            self.delegate.openVideoController(ownerID: "\(video.ownerID)", vid: "\(video.id)", accessKey: video.accessKey, title: "Видеозапись")
+        }
+        
         let viewsLabel = UILabel()
         viewsLabel.tag = 250
         viewsLabel.frame = CGRect(x: avatarHeight + 20 + 20 + videoWidth - 200, y: webView.frame.maxY, width: 200, height: 20)
@@ -492,6 +500,28 @@ class CommentCell: UITableViewCell {
         self.addSubview(linkImage)
         self.addSubview(titleLabel)
         self.addSubview(linkLabel)
+        
+        let tap1 = UITapGestureRecognizer()
+        linkImage.isUserInteractionEnabled = true
+        linkImage.addGestureRecognizer(tap1)
+        
+        let tap2 = UITapGestureRecognizer()
+        titleLabel.isUserInteractionEnabled = true
+        titleLabel.addGestureRecognizer(tap2)
+        
+        let tap3 = UITapGestureRecognizer()
+        linkLabel.isUserInteractionEnabled = true
+        linkLabel.addGestureRecognizer(tap3)
+        
+        tap1.add {
+            self.delegate.openBrowserController(url: link.url)
+        }
+        tap2.add {
+            self.delegate.openBrowserController(url: link.url)
+        }
+        tap3.add {
+            self.delegate.openBrowserController(url: link.url)
+        }
         
         topY += 40
         
@@ -703,6 +733,141 @@ class CommentCell: UITableViewCell {
             }
         }
     }
+    
+    func setMenuComment(topY: CGFloat) {
+        
+        var leftX = avatarHeight + 20
+        
+        if "\(comment.fromID)" != vkSingleton.shared.userID {
+            let button1 = UIButton()
+            button1.tag = 250
+            button1.setTitle("Ответить", for: .normal)
+            button1.setTitleColor(button1.tintColor, for: .normal)
+            button1.titleLabel?.font = menuFont
+            button1.titleLabel?.textAlignment = .left
+            button1.add(for: .touchUpInside) {
+                button1.buttonTouched()
+                
+            }
+            let size = delegate.getTextSize(text: button1.titleLabel!.text!, font: menuFont, maxWidth: cellWidth)
+            button1.frame = CGRect(x: leftX, y: topY, width: size.width, height: menuButtonHeight)
+            self.addSubview(button1)
+            leftX += size.width + 20
+        }
+        
+        if comment.countLikes > 0 {
+            let button1 = UIButton()
+            button1.tag = 250
+            button1.setTitle("Кому понравилось", for: .normal)
+            button1.setTitleColor(button1.tintColor, for: .normal)
+            button1.titleLabel?.font = menuFont
+            button1.add(for: .touchUpInside) {
+                button1.buttonTouched()
+                
+                var type = ""
+                var ownerID = ""
+                
+                if let controller = self.delegate as? RecordController {
+                    ownerID = "\(controller.uid)"
+                    
+                    if controller.type == "post" {
+                        type = "comment"
+                    } else {
+                        type = "photo_comment"
+                    }
+                } else if let controller = self.delegate as? VideoController {
+                    ownerID = controller.ownerID
+                    
+                    type = "video_comment"
+                }
+                
+                let url = "/method/likes.getList"
+                let parameters = [
+                    "access_token": vkSingleton.shared.accessToken,
+                    "type": type,
+                    "owner_id": ownerID,
+                    "item_id": "\(self.comment.id)",
+                    "extended": "1",
+                    "fields": "id, first_name, last_name, sex, has_photo, last_seen, online, photo_max_orig, photo_max, deactivated, first_name_dat, friend_status",
+                    "count": "1000",
+                    "skip_own": "0",
+                    "v": vkSingleton.shared.version
+                ]
+                
+                let getServerDataOperation = GetServerDataOperation(url: url, parameters: parameters)
+                getServerDataOperation.completionBlock = {
+                    guard let data = getServerDataOperation.data else { return }
+                    
+                    guard let json = try? JSON(data: data) else { print("json error"); return }
+                    //print(json)
+                    
+                    let likes = json["response"]["items"].compactMap { Likes(json: $0.1) }
+                    
+                    OperationQueue.main.addOperation {
+                        let likesController = self.delegate.storyboard?.instantiateViewController(withIdentifier: "LikesUsersController") as! LikesUsersController
+                        
+                        likesController.likes = likes
+                        likesController.title = "Оценили"
+                        
+                        if let split = self.delegate.splitViewController {
+                            let detailVC = split.viewControllers[split.viewControllers.endIndex - 1]
+                            detailVC.childViewControllers[0].navigationController?.pushViewController(likesController, animated: true)
+                        }
+                    }
+                }
+                OperationQueue().addOperation(getServerDataOperation)
+            }
+            let size = delegate.getTextSize(text: button1.titleLabel!.text!, font: menuFont, maxWidth: cellWidth)
+            button1.frame = CGRect(x: leftX, y: topY, width: size.width, height: menuButtonHeight)
+            self.addSubview(button1)
+            leftX += size.width + 20
+        }
+        
+        if "\(comment.fromID)" == vkSingleton.shared.userID {
+            if Int(Date().timeIntervalSince1970) - comment.date <= 24 * 60 * 60 {
+                let button1 = UIButton()
+                button1.tag = 250
+                button1.setTitle("Редактировать", for: .normal)
+                button1.setTitleColor(button1.tintColor, for: .normal)
+                button1.titleLabel?.font = menuFont
+                button1.add(for: .touchUpInside) {
+                    button1.buttonTouched()
+                    
+                }
+                button1.frame = CGRect(x: leftX, y: topY, width: menuButtonWidth, height: menuButtonHeight)
+                self.addSubview(button1)
+                leftX += menuButtonWidth
+            }
+            
+            let button1 = UIButton()
+            button1.tag = 250
+            button1.setTitle("Удалить", for: .normal)
+            button1.setTitleColor(UIColor.red, for: .normal)
+            button1.titleLabel?.font = menuFont
+            button1.add(for: .touchUpInside) {
+                button1.buttonTouched()
+                
+            }
+            let size = delegate.getTextSize(text: button1.titleLabel!.text!, font: menuFont, maxWidth: cellWidth)
+            button1.frame = CGRect(x: leftX, y: topY, width: size.width, height: menuButtonHeight)
+            self.addSubview(button1)
+            leftX += size.width + 20
+        }
+        
+        
+        let button1 = UIButton()
+        button1.tag = 250
+        button1.setTitle("Пожаловаться", for: .normal)
+        button1.setTitleColor(UIColor.red, for: .normal)
+        button1.titleLabel?.font = menuFont
+        button1.add(for: .touchUpInside) {
+            button1.buttonTouched()
+            
+        }
+        let size = delegate.getTextSize(text: button1.titleLabel!.text!, font: menuFont, maxWidth: cellWidth)
+        button1.frame = CGRect(x: leftX, y: topY, width: size.width, height: menuButtonHeight)
+        self.addSubview(button1)
+    }
 }
 
 
@@ -764,7 +929,7 @@ extension CommentCell {
             }
         }
         
-        height += likesButtonHeight
+        height += likesButtonHeight + menuButtonHeight
         
         if height1 > height {
             return height1

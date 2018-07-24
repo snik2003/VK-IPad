@@ -373,6 +373,304 @@ extension UIViewController: ViewControllerProtocol {
             detailVC.getUserInfo()
         }
     }
+    
+    func openBrowserController(url: String) {
+        
+        let res = checkVKLink(url: url)
+        
+        switch res {
+        case 0:
+            break
+        case 1:
+            self.openBrowserControllerNoCheck(url: url)
+        case 2:
+            let alertController = UIAlertController(title: "внутренняя ссылка ВКонтакте:", message: url, preferredStyle: .actionSheet)
+            
+            let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
+            alertController.addAction(cancelAction)
+            
+            let action1 = UIAlertAction(title: "Открыть ссылку", style: .destructive){ action in
+                
+                self.openBrowserControllerNoCheck(url: url)
+            }
+            alertController.addAction(action1)
+            
+            if let popoverController = alertController.popoverPresentationController {
+                popoverController.sourceView = self.view
+                popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.maxY - 100, width: 0, height: 0)
+                popoverController.permittedArrowDirections = []
+            }
+            
+            present(alertController, animated: true)
+        case 3:
+            if let stringURL = url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed), let validURL = URL(string: stringURL) {
+                
+                UIApplication.shared.open(validURL, options: [:])
+            }
+        default:
+            break
+        }
+    }
+    
+    func openBrowserControllerNoCheck(url: String) {
+        
+        if let url1 = url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+            guard URL(string: url1) != nil else {
+                showErrorMessage(title: "Ошибка!", msg: "Некорректная ссылка:\n\(url1)")
+                return
+            }
+            
+            var validURL = url1
+            if !url1.containsIgnoringCase(find: "http") && !url1.containsIgnoringCase(find: "https") {
+                validURL = "http://\(url1)"
+            }
+            
+            let controller = self.storyboard?.instantiateViewController(withIdentifier: "BrowserController") as! BrowserController
+            
+            controller.path = "\(validURL)"
+            
+            let detailVC = self.splitViewController!.viewControllers[self.splitViewController!.viewControllers.endIndex - 1]
+            detailVC.childViewControllers[0].navigationController?.pushViewController(controller, animated: true)
+        } else {
+            showErrorMessage(title: "Ошибка!", msg: "Некорректная ссылка:\n\(url)")
+        }
+    }
+    
+    func checkVKLink(url: String) -> Int {
+        
+        if url.containsIgnoringCase(find: "vk.com") || url.containsIgnoringCase(find: "vk.cc") {
+            
+            var res = 1
+            
+            var str1 = url.replacingOccurrences(of: "https://vk.com/", with: "")
+            str1 = str1.replacingOccurrences(of: "https://m.vk.com/", with: "")
+            str1 = str1.replacingOccurrences(of: "http://vk.com/", with: "")
+            str1 = str1.replacingOccurrences(of: "http://m.vk.com/", with: "")
+            str1 = str1.replacingOccurrences(of: "m.vk.com/", with: "")
+            str1 = str1.replacingOccurrences(of: "vk.com/", with: "")
+            let str2 = str1.components(separatedBy: "=")
+            if str2.count > 1 {
+                str1 = str2[1]
+            }
+            
+            var type = str1.replacingOccurrences(of: "[0-9]", with: "", options: .regularExpression, range: nil)
+            type = type.replacingOccurrences(of: "_", with: "", options: .regularExpression, range: nil)
+            type = type.replacingOccurrences(of: "-", with: "", options: .regularExpression, range: nil)
+            
+            
+            
+            if type == "id" {
+                
+                var accs = str1.components(separatedBy: "_")
+                for index in 0...accs.count-1 {
+                    accs[index] = accs[index].replacingOccurrences(of: "[A-Z,a-z,А-Я,а-я]", with: "", options: .regularExpression, range: nil)
+                }
+                if accs.count == 1 {
+                    if let ownerID = Int(accs[0]) {
+                        openProfileController(id: ownerID, name: "")
+                    }
+                }
+                
+                res = 0
+            } else if type == "club" || type == "event" || type == "public" {
+                
+                var accs = str1.components(separatedBy: "_")
+                for index in 0...accs.count-1 {
+                    accs[index] = accs[index].replacingOccurrences(of: "[A-Z,a-z,А-Я,а-я]", with: "", options: .regularExpression, range: nil)
+                }
+                if accs.count == 1 {
+                    if let ownerID = Int(accs[0]) {
+                        openProfileController(id: -1 * abs(ownerID), name: "")
+                    }
+                }
+                
+                res = 0
+            } else if type == "wall" {
+                
+                var accs = str1.components(separatedBy: "_")
+                for index in 0...accs.count-1 {
+                    accs[index] = accs[index].replacingOccurrences(of: "[A-Z,a-z,А-Я,а-я]", with: "", options: .regularExpression, range: nil)
+                }
+                if accs.count == 2 {
+                    if let ownerID = Int(accs[0]), let postID = Int(accs[1]) {
+                        openWallRecord(ownerID: ownerID, postID: postID, accessKey: "", type: "post")
+                    }
+                }
+                
+                res = 0
+            } else if type == "photo" {
+                
+                var accs = str1.components(separatedBy: "_")
+                for index in 0...accs.count-1 {
+                    accs[index] = accs[index].replacingOccurrences(of: "[A-Z,a-z,А-Я,а-я]", with: "", options: .regularExpression, range: nil)
+                }
+                if accs.count == 2 {
+                    if let ownerID = Int(accs[0]), let photoID = Int(accs[1]) {
+                        openWallRecord(ownerID: ownerID, postID: photoID, accessKey: "", type: "photo")
+                    }
+                }
+                
+                res = 0
+            } else if type == "video" {
+                
+                var accs = str1.components(separatedBy: "_")
+                for index in 0...accs.count-1 {
+                    accs[index] = accs[index].replacingOccurrences(of: "[A-Z,a-z,А-Я,а-я]", with: "", options: .regularExpression, range: nil)
+                }
+                if accs.count == 2 {
+                    if let ownerID = Int(accs[0]), let videoID = Int(accs[1]) {
+                        openVideoController(ownerID: "\(ownerID)", vid: "\(videoID)", accessKey: "", title: "")
+                    }
+                }
+                
+                res = 0
+            } /*else if type == "myownlinkchat" {
+                
+                var accs = str1.components(separatedBy: "_")
+                for index in 0...accs.count-1 {
+                    accs[index] = accs[index].replacingOccurrences(of: "[A-Z,a-z,А-Я,а-я]", with: "", options: .regularExpression, range: nil)
+                }
+                if accs.count == 3 {
+                    if let chatID = Int(accs[2]) {
+                        let url = "/method/messages.getHistory"
+                        let parameters = [
+                            "access_token": vkSingleton.shared.accessToken,
+                            "offset": "0",
+                            "count": "1",
+                            "user_id": "\(2000000000 + chatID)",
+                            "start_message_id": "-1",
+                            "v": vkSingleton.shared.version
+                        ]
+                        
+                        let getServerDataOperation = GetServerDataOperation(url: url, parameters: parameters)
+                        OperationQueue().addOperation(getServerDataOperation)
+                        
+                        let parseDialog = ParseDialogHistory()
+                        parseDialog.completionBlock = {
+                            var startID = parseDialog.inRead
+                            if parseDialog.outRead > startID {
+                                startID = parseDialog.outRead
+                            }
+                            OperationQueue.main.addOperation {
+                                self.openDialogController(userID: "\(2000000000 + chatID)", chatID: "\(chatID)", startID: startID, attachment: "", messIDs: [], image: nil)
+                            }
+                        }
+                        parseDialog.addDependency(getServerDataOperation)
+                        OperationQueue().addOperation(parseDialog)
+                    }
+                }
+                
+                res = 0
+            }*/ else if type == "topic" {
+                
+                var accs = str1.components(separatedBy: "_")
+                for index in 0...accs.count-1 {
+                    accs[index] = accs[index].replacingOccurrences(of: "[A-Z,a-z,А-Я,а-я]", with: "", options: .regularExpression, range: nil)
+                }
+                if accs.count == 2 {
+                    //if let groupID = Int(accs[0]), let topicID = Int(accs[1]) {
+                        //openTopicController(groupID: "\(abs(groupID))", topicID: "\(topicID)", title: "", delegate: self)
+                    //}
+                }
+                
+                res = 0
+            } else if type == "album" {
+                
+                var accs = str1.components(separatedBy: "_")
+                for index in 0...accs.count-1 {
+                    accs[index] = accs[index].replacingOccurrences(of: "[A-Z,a-z,А-Я,а-я]", with: "", options: .regularExpression, range: nil)
+                }
+                if accs.count == 2 {
+                    if let ownerID = Int(accs[0]), let albumID = Int(accs[1]) {
+                        openAlbumController(ownerID: "\(ownerID)", albumID: "\(albumID)", title: "")
+                    }
+                }
+                
+                res = 0
+            } else if type == "albums" {
+                
+                var accs = str1.components(separatedBy: "_")
+                for index in 0...accs.count-1 {
+                    accs[index] = accs[index].replacingOccurrences(of: "[A-Z,a-z,А-Я,а-я]", with: "", options: .regularExpression, range: nil)
+                }
+                if accs.count == 1 {
+                    if let ownerID = Int(accs[0]) {
+                        openPhotosListController(ownerID: "\(ownerID)", title: "", type: "albums")
+                    }
+                }
+                
+                res = 0
+                /*} else if str1.hasPrefix("@") {
+                 var accs = str1.components(separatedBy: "-")
+                 
+                 if accs.count > 0 {
+                 if let ownerID = Int(accs[0].replacingOccurrences(of: "@", with: "")), ownerID > 0 {
+                 openProfileController(id: ownerID, name: "")
+                 }
+                 }
+                 
+                 res = 0*/
+            } else if str2.count == 1 {
+                let url1 = "/method/utils.resolveScreenName"
+                let parameters1 = [
+                    "access_token": vkSingleton.shared.accessToken,
+                    "screen_name": "\(str2[0])",
+                    "v": vkSingleton.shared.version
+                ]
+                
+                let request = GetServerDataOperation(url: url1, parameters: parameters1)
+                
+                res = 0
+                request.completionBlock = {
+                    guard let data = request.data else { return }
+                    
+                    let json = try! JSON(data: data)
+                    
+                    let error = ErrorJson(json: JSON.null)
+                    error.errorCode = json["error"]["error_code"].intValue
+                    error.errorMsg = json["error"]["error_msg"].stringValue
+                    
+                    if error.errorCode == 0 {
+                        let typeObj = json["response"]["type"].stringValue
+                        let ownerID = json["response"]["object_id"].intValue
+                        
+                        if typeObj == "user" {
+                            OperationQueue.main.addOperation {
+                                self.openProfileController(id: ownerID, name: "")
+                            }
+                        }
+                        
+                        if typeObj == "group" {
+                            OperationQueue.main.addOperation {
+                                self.openProfileController(id: -1 * ownerID, name: "")
+                            }
+                        }
+                        
+                        if typeObj == "application" || typeObj == "" {
+                            if AppConfig.shared.setOfflineStatus {
+                                res = 2
+                            } else {
+                                res = 1
+                            }
+                        }
+                    }
+                }
+                OperationQueue().addOperation(request)
+            }
+            
+            
+            if res == 1 && AppConfig.shared.setOfflineStatus {
+                res = 2
+            }
+            
+            return res
+        } else if url.containsIgnoringCase(find: "itunes.apple.com") {
+            
+            return 3
+        }
+        
+        return 1
+    }
 }
 
 

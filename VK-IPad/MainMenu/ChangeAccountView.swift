@@ -78,7 +78,7 @@ class ChangeAccountView: UIView {
                     let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
                     alertController.addAction(cancelAction)
                     
-                    let action = UIAlertAction(title: "Да, хочу", style: .default) { action in
+                    let action = UIAlertAction(title: "Да, хочу", style: .destructive) { action in
                         
                         vkSingleton.shared.userID = "\(account.userID)"
                         vkSingleton.shared.avatarURL = ""
