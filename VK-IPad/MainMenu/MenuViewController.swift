@@ -294,6 +294,35 @@ class MenuViewController: UITableViewController {
         
         self.present(alertController, animated: true)
     }
+    
+    func refreshUserInfo() {
+        let url = "/method/users.get"
+        let parameters = [
+            "user_id": vkSingleton.shared.userID, //"357365563" 
+            "access_token": vkSingleton.shared.accessToken,
+            "fields": "id,first_name,last_name,maiden_name,domain,sex,relation,bdate,home_town,has_photo,city,country,status,last_seen,online,photo_max_orig,photo_max,photo_id,followers_count,counters,deactivated,education,contacts,connections,site,about,interests,activities,books,games,movies,music,tv,quotes,first_name_abl,first_name_gen,first_name_acc,can_post,can_send_friend_request,can_write_private_message,friend_status,is_favorite,blacklisted,blacklisted_by_me,crop_photo,is_hidden_from_feed,personal,relatives",
+            "name_case": "nom",
+            "v": vkSingleton.shared.version
+        ]
+        
+        let getServerDataOperation = GetServerDataOperation(url: url, parameters: parameters)
+        getServerDataOperation.completionBlock = {
+            guard let data = getServerDataOperation.data else { return }
+            
+            guard let json = try? JSON(data: data) else { print("json error"); return }
+            //print(json)
+            
+            let userProfile = json["response"].compactMap { UserProfile(json: $0.1) }
+            
+            if userProfile.count > 0 {
+                OperationQueue.main.addOperation {
+                    let user = userProfile[0]
+                    self.navigationController?.navigationBar.setupUserProfileView(user: user)
+                }
+            }
+        }
+        OperationQueue().addOperation(getServerDataOperation)
+    }
 }
 
 extension UINavigationBar {

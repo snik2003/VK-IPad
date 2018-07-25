@@ -585,21 +585,23 @@ class ProfileView: UIView {
                     
                     let label2 = UILabel()
                     label2.text = profile.site
-                    label2.textColor = label2.tintColor
+                    //label2.textColor = label2.tintColor
                     label2.font = UIFont(name: "Verdana", size: 13)
                     label2.adjustsFontSizeToFitWidth = true
                     label2.minimumScaleFactor = 0.5
                     label2.frame = CGRect(x: userInfoView.frame.width * 0.4, y: topY + 10, width: userInfoView.frame.width * 0.6 - 20, height: 20)
+                    label2.prepareTextForPublish2(delegate, cell: nil)
                     userInfoView.addSubview(label2)
                     
-                    let tap = UITapGestureRecognizer()
-                    label2.isUserInteractionEnabled = true
-                    label2.addGestureRecognizer(tap)
-                    tap.add {
-                        if let url = URL(string: profile.site) {
-                            self.delegate.openBrowserController(url: url.absoluteString)
-                        }
-                    }
+//                    let tap = UITapGestureRecognizer()
+//                    label2.isUserInteractionEnabled = true
+//                    label2.addGestureRecognizer(tap)
+//                    tap.add {
+//                        if let url = URL(string: profile.site) {
+//                            self.delegate.openBrowserController(url: url.absoluteString)
+//                        }
+//                    }
+                    
                     topY += 30
                 }
                 

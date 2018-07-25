@@ -39,7 +39,7 @@ class RecordCell: UITableViewCell {
     
     let friendsOnlyLabel = UILabel()
     
-    let textFont = UIFont(name: "Verdana", size: 13)!
+    let textFont = UIFont(name: "Verdana", size: 14)!
     let nameFont = UIFont(name: "Verdana-Bold", size: 13)!
     let qLabelFont = UIFont(name: "Verdana-Bold", size: 13)!
     let aLabelFont = UIFont(name: "Verdana", size: 12)!

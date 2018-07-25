@@ -50,6 +50,9 @@ extension UIViewController: ViewControllerProtocol {
                 
                 if result == 1 {
                     print("offline: succesful")
+                    OperationQueue.main.addOperation {
+                        self.refreshOwnerStatus()
+                    }
                 } else {
                     let error = ErrorJson(json: JSON.null)
                     error.errorCode = json["error"]["error_code"].intValue
@@ -75,6 +78,9 @@ extension UIViewController: ViewControllerProtocol {
                 
                 if result == 1 {
                     print("online: succesful")
+                    OperationQueue.main.addOperation {
+                        self.refreshOwnerStatus()
+                    }
                 } else {
                     let error = ErrorJson(json: JSON.null)
                     error.errorCode = json["error"]["error_code"].intValue
@@ -371,6 +377,12 @@ extension UIViewController: ViewControllerProtocol {
     func updateAppCounters() {
         if let splitVC = self.navigationController?.splitViewController, let detailVC = splitVC.viewControllers[0].childViewControllers[0] as? MenuViewController {
             detailVC.getUserInfo()
+        }
+    }
+    
+    func refreshOwnerStatus() {
+        if let splitVC = self.navigationController?.splitViewController, let detailVC = splitVC.viewControllers[0].childViewControllers[0] as? MenuViewController {
+            detailVC.refreshUserInfo()
         }
     }
     

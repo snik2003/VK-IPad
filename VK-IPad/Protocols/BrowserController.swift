@@ -65,6 +65,12 @@ class BrowserController: UIViewController, WKNavigationDelegate {
         }
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        webView.removeObserver(self, forKeyPath: "estimatedProgress")
+    }
+    
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == "estimatedProgress" {
             //print(webView.estimatedProgress)

@@ -28,10 +28,9 @@ class VideoCell: UITableViewCell {
     
     let avatarHeight: CGFloat = 50
     
-    let textFont = UIFont(name: "Verdana", size: 13)!
     let nameFont = UIFont(name: "Verdana-Bold", size: 13)!
-    let titleFont = UIFont(name: "Verdana-Bold", size: 12)!
-    let descFont = UIFont(name: "Verdana", size: 12)!
+    let titleFont = UIFont(name: "Verdana-Bold", size: 13)!
+    let descFont = UIFont(name: "Verdana", size: 14)!
     
     let likesHeight: CGFloat = 35
     

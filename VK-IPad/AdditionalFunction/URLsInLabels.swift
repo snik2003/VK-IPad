@@ -131,6 +131,7 @@ extension UILabel {
             for match in allMatches1 {
                 let range = (fullString as NSString).range(of: match.getNameFromLink())
                 
+                attributedString.addAttributes([NSAttributedStringKey.baselineOffset: 0], range: range)
                 attributedString.addAttributes([NSAttributedStringKey.foregroundColor: self.tintColor], range: range)
                 
                 ranges1[match] = range
@@ -151,6 +152,7 @@ extension UILabel {
             let allMatches22 = regex22.matches(in: fullString, options:[], range:NSMakeRange(0, fullString.length))
             
             for match in allMatches22 {
+                attributedString.addAttributes([NSAttributedStringKey.baselineOffset: 0], range: match.range)
                 attributedString.addAttributes([NSAttributedStringKey.foregroundColor: self.tintColor], range: match.range)
             }
             
@@ -160,6 +162,7 @@ extension UILabel {
             var ranges3: [String:NSRange] = [:]
             
             for match in allMatches3 {
+                attributedString.addAttributes([NSAttributedStringKey.baselineOffset: 0], range: match.range)
                 attributedString.addAttributes([NSAttributedStringKey.foregroundColor: self.tintColor], range: match.range)
                 
                 if let url = match.url {
