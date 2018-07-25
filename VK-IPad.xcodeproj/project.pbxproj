@@ -92,6 +92,8 @@
 		17B409E92106114A004CED46 /* FaveLinks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B409E82106114A004CED46 /* FaveLinks.swift */; };
 		17B409EB210612FE004CED46 /* FavePostsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B409EA210612FE004CED46 /* FavePostsCell.swift */; };
 		17B409ED2106306F004CED46 /* BrowserController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B409EC2106306F004CED46 /* BrowserController.swift */; };
+		17B409F02108822E004CED46 /* UserInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B409EF2108822E004CED46 /* UserInfoController.swift */; };
+		17B409F2210889C7004CED46 /* RelativeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B409F1210889C7004CED46 /* RelativeCell.swift */; };
 		17CCB7F920F4E89A0051947A /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CCB7F820F4E89A0051947A /* Notification.swift */; };
 		17CCB7FB20F63AB30051947A /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CCB7FA20F63AB30051947A /* NotificationController.swift */; };
 		17CCB7FD20F75D1F0051947A /* NotificationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CCB7FC20F75D1F0051947A /* NotificationCell.swift */; };
@@ -190,6 +192,8 @@
 		17B409E82106114A004CED46 /* FaveLinks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaveLinks.swift; sourceTree = "<group>"; };
 		17B409EA210612FE004CED46 /* FavePostsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavePostsCell.swift; sourceTree = "<group>"; };
 		17B409EC2106306F004CED46 /* BrowserController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserController.swift; sourceTree = "<group>"; };
+		17B409EF2108822E004CED46 /* UserInfoController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoController.swift; sourceTree = "<group>"; };
+		17B409F1210889C7004CED46 /* RelativeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelativeCell.swift; sourceTree = "<group>"; };
 		17CCB7F820F4E89A0051947A /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
 		17CCB7FA20F63AB30051947A /* NotificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationController.swift; sourceTree = "<group>"; };
 		17CCB7FC20F75D1F0051947A /* NotificationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCell.swift; sourceTree = "<group>"; };
@@ -267,6 +271,7 @@
 		174912AE20D300DC00FCF9F9 /* VK-IPad */ = {
 			isa = PBXGroup;
 			children = (
+				17B409EE210881E5004CED46 /* Profile */,
 				178D83CF2101F20500AFB7EB /* Newsfeed */,
 				17996B4B20DCD5B3003DA26B /* Video */,
 				17A1A5C220DA7EE800D9CE00 /* Photos */,
@@ -378,14 +383,10 @@
 		174912D020D300DC00FCF9F9 /* MainMenu */ = {
 			isa = PBXGroup;
 			children = (
-				174912D120D300DC00FCF9F9 /* ProfileView.swift */,
-				174912D220D300DC00FCF9F9 /* ProfileViewController.swift */,
 				174912D320D300DC00FCF9F9 /* MenuViewController.swift */,
 				1700D24E20DEAFF3003C50A1 /* ChangeAccountView.swift */,
 				17CCB7FA20F63AB30051947A /* NotificationController.swift */,
 				17CCB7FC20F75D1F0051947A /* NotificationCell.swift */,
-				17B409E62105EF0C004CED46 /* FavePostsController.swift */,
-				17B409EA210612FE004CED46 /* FavePostsCell.swift */,
 			);
 			path = MainMenu;
 			sourceTree = "<group>";
@@ -420,6 +421,8 @@
 			isa = PBXGroup;
 			children = (
 				178D83D02101F26000AFB7EB /* NewsfeedController.swift */,
+				17B409E62105EF0C004CED46 /* FavePostsController.swift */,
+				17B409EA210612FE004CED46 /* FavePostsCell.swift */,
 			);
 			path = Newsfeed;
 			sourceTree = "<group>";
@@ -463,6 +466,17 @@
 				17AF810F20D11D1F00FF1913 /* VK-IPad.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		17B409EE210881E5004CED46 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				174912D120D300DC00FCF9F9 /* ProfileView.swift */,
+				174912D220D300DC00FCF9F9 /* ProfileViewController.swift */,
+				17B409EF2108822E004CED46 /* UserInfoController.swift */,
+				17B409F1210889C7004CED46 /* RelativeCell.swift */,
+			);
+			path = Profile;
 			sourceTree = "<group>";
 		};
 		AB08445BDD0DEE9723EB655C /* Pods */ = {
@@ -657,6 +671,7 @@
 				17B409ED2106306F004CED46 /* BrowserController.swift in Sources */,
 				1749130720D3055100FCF9F9 /* FriendRequest.swift in Sources */,
 				174912F720D300DD00FCF9F9 /* ViewControllerUtils.swift in Sources */,
+				17B409F02108822E004CED46 /* UserInfoController.swift in Sources */,
 				17B134A720DACD110058E1A8 /* Likes.swift in Sources */,
 				178D83C821009FBF00AFB7EB /* ParsePhotoAlbums.swift in Sources */,
 				173D666120D3C07900EEBF46 /* Control.swift in Sources */,
@@ -668,6 +683,7 @@
 				173D666420D3C91300EEBF46 /* GroupsListController.swift in Sources */,
 				17A1A5BD20D8E6A700D9CE00 /* ParseWall.swift in Sources */,
 				174912F420D300DD00FCF9F9 /* MenuViewController.swift in Sources */,
+				17B409F2210889C7004CED46 /* RelativeCell.swift in Sources */,
 				178D83C42100991000AFB7EB /* PhotoAlbum.swift in Sources */,
 				174912EA20D300DD00FCF9F9 /* GetServerDataOperation.swift in Sources */,
 				179CFC4120DBE94900F2AB04 /* Sticker.swift in Sources */,

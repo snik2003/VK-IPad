@@ -468,9 +468,10 @@ class ProfileView: UIView {
                 let statusLabel = UILabel()
                 statusLabel.text = profile.status
                 statusLabel.numberOfLines = 0
-                statusLabel.font = UIFont(name: "Verdana", size: 13)
+                statusLabel.font = UIFont(name: "Verdana", size: 14)
                 let size = delegate.getTextSize(text: statusLabel.text!, font: statusLabel.font!, maxWidth: userInfoView.frame.width - 40)
                 statusLabel.frame = CGRect(x: 20, y: topY, width: size.width, height: size.height)
+                statusLabel.prepareTextForPublish2(self.delegate, cell: nil)
                 userInfoView.addSubview(statusLabel)
                 topY += size.height + 9
                 
@@ -612,6 +613,18 @@ class ProfileView: UIView {
                 moreInfoButton.frame = CGRect(x: 40, y: topY + 10, width: userInfoView.frame.width - 80, height: 30)
                 userInfoView.addSubview(moreInfoButton)
                 
+                moreInfoButton.add(for: .touchUpInside) {
+                    moreInfoButton.buttonTouched()
+                    
+                    let controller = self.delegate.storyboard?.instantiateViewController(withIdentifier: "UserInfoController") as! UserInfoController
+                    
+                    controller.user = profile
+                    controller.width = self.delegate.view.bounds.width
+                    if let split = self.delegate.splitViewController {
+                        let detail = split.viewControllers[split.viewControllers.endIndex - 1]
+                        detail.childViewControllers[0].navigationController?.pushViewController(controller, animated: true)
+                    }
+                }
                 topY += 40
                 
                 let number = getNumberOfCounters()

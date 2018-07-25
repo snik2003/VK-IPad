@@ -212,6 +212,195 @@ class UserProfile {
             }
         }
     }
+    
+    var familyStatus: String {
+        switch relation {
+        case 1:
+            if sex == 1 {
+                return "не замужем"
+            } else {
+                return "не женат"
+            }
+        case 2:
+            if sex == 1 {
+                return "есть друг"
+            } else {
+                return "есть подруга"
+            }
+        case 3:
+            if sex == 1 {
+                return "помолвлена"
+            } else {
+                return "помолвлен"
+            }
+        case 4:
+            if sex == 1 {
+                return "замужем"
+            } else {
+                return "женат"
+            }
+        case 5:
+            return "всё сложно"
+        case 6:
+            return "в активном поиске"
+        case 7:
+            if sex == 1 {
+                return "влюблена"
+            } else {
+                return "влюблен"
+            }
+        case 8:
+            return "в гражданском браке"
+        default:
+            return ""
+        }
+    }
+    
+    var politicalConviction: String {
+        switch persPolitical {
+        case 1:
+            return "коммунистические"
+        case 2:
+            return "социалистические"
+        case 3:
+            return "умеренные"
+        case 4:
+            return "либеральные"
+        case 5:
+            return "консервативные"
+        case 6:
+            return "монархические"
+        case 7:
+            return "ультраконсервативные"
+        case 8:
+            return "индифферентные"
+        case 9:
+            return "либертарианские"
+        default:
+            return ""
+        }
+    }
+    
+    var mainInPeople: String {
+        switch persPeopleMain {
+        case 1:
+            return "ум и креативность"
+        case 2:
+            return "доброта и честность"
+        case 3:
+            return "красота и здоровье"
+        case 4:
+            return "власть и богатство"
+        case 5:
+            return "смелость и упорство"
+        case 6:
+            return "юмор и жизнелюбие"
+        default:
+            return ""
+        }
+    }
+    
+    var mainInLife: String {
+        switch persLifeMain {
+        case 1:
+            return "семья и дети"
+        case 2:
+            return "карьера и деньги"
+        case 3:
+            return "развлечения и отдых"
+        case 4:
+            return "наука и исследования"
+        case 5:
+            return "совершенствование мира"
+        case 6:
+            return "саморазвитие"
+        case 7:
+            return "красота и искусство"
+        case 8:
+            return "слава и влияние"
+        default:
+            return ""
+        }
+    }
+    
+    var smokingRelation: String {
+        switch persSmoking {
+        case 1:
+            return "резко негативное"
+        case 2:
+            return "негативное"
+        case 3:
+            return "компромиссное"
+        case 4:
+            return "нейтральное"
+        case 5:
+            return "положительное"
+        default:
+            return ""
+        }
+    }
+    
+    var alcoholRelation: String {
+        switch persAlcohol {
+        case 1:
+            return "резко негативное"
+        case 2:
+            return "негативное"
+        case 3:
+            return "компромиссное"
+        case 4:
+            return "нейтральное"
+        case 5:
+            return "положительное"
+        default:
+            return ""
+        }
+    }
+    
+    func familyConnection(relative: Relatives) -> String {
+        switch relative.type {
+        case "child":
+            if sex == 1 {
+                return "дочь"
+            }
+            return "сын"
+        case "sibling":
+            if sex == 1 {
+                return "сестра"
+            }
+            return "брат"
+        case "parent":
+            if sex == 1 {
+                return "мама"
+            }
+            return "папа"
+        case "grandparent":
+            if sex == 1 {
+                return "бабушка"
+            }
+            return "дедушка"
+        case "grandchild":
+            if sex == 1 {
+                return "внучка"
+            }
+            return "внук"
+        default:
+            return ""
+        }
+    }
+    
+    var relativesList: String {
+        var list = ""
+        for rel in relatives {
+            if rel.id != 0 {
+                if list != "" {
+                    list = "\(list),"
+                }
+                list = "\(list)\(rel.id)"
+            }
+        }
+        return list
+    }
 }
 
 struct Relatives {
