@@ -547,8 +547,9 @@ class FavePostsController: UIViewController, UITableViewDelegate, UITableViewDat
         }
         
         if source == "groups" || source == "links" {
-            //let link = links[indexPath.row]
+            let link = links[indexPath.row]
             
+            self.openBrowserController(url: link.url)
         }
     }
     
