@@ -63,8 +63,10 @@ class MenuViewController: UITableViewController {
         if indexPath.section == 0 && indexPath.row == 3 {
             let controller = self.storyboard?.instantiateViewController(withIdentifier: "NewsfeedController") as! NewsfeedController
             
-            let detailVC = self.splitViewController!.viewControllers[self.splitViewController!.viewControllers.endIndex - 1]
-            detailVC.childViewControllers[0].navigationController?.pushViewController(controller, animated: true)
+            if let split = self.splitViewController {
+                let detail = split.viewControllers[split.viewControllers.endIndex - 1]
+                detail.childViewControllers[0].navigationController?.pushViewController(controller, animated: true)
+            }
         }
         
         // Мои друзья
@@ -91,8 +93,10 @@ class MenuViewController: UITableViewController {
         if indexPath.section == 1 && indexPath.row == 4 {
             let controller = self.storyboard?.instantiateViewController(withIdentifier: "FavePostsController") as! FavePostsController
             
-            let dvc = self.splitViewController!.viewControllers[self.splitViewController!.viewControllers.endIndex - 1]
-            dvc.childViewControllers[0].navigationController?.pushViewController(controller, animated: true)
+            if let split = self.splitViewController {
+                let detail = split.viewControllers[split.viewControllers.endIndex - 1]
+                detail.childViewControllers[0].navigationController?.pushViewController(controller, animated: true)
+            }
         }
         
         // Мои подписки
@@ -102,7 +106,18 @@ class MenuViewController: UITableViewController {
         
         // Моя музыка ITunes
         if indexPath.section == 1 && indexPath.row == 6 {
-            self.openBrowserController(url: "http://matchtv.ru/")
+            
+        }
+        
+        // настройки приложения
+        if indexPath.section == 2 && indexPath.row == 0 {
+            let controller = self.storyboard?.instantiateViewController(withIdentifier: "OptionsController") as! OptionsController
+            
+            if let split = self.splitViewController {
+                let detail = split.viewControllers[split.viewControllers.endIndex - 1]
+                controller.width = detail.view.bounds.width
+                detail.childViewControllers[0].navigationController?.pushViewController(controller, animated: true)
+            }
         }
         
         // сменить учетную запись
@@ -119,6 +134,10 @@ class MenuViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        
+        if indexPath.section == 1 && indexPath.row == 6 {
+            return 0
+        }
         
         if indexPath.section == 2 && indexPath.row == 3 {
             return 0

@@ -578,8 +578,6 @@ class ProfileView: UIView {
                     let label1 = UILabel()
                     label1.text = "Веб-сайт:"
                     label1.font = UIFont(name: "Verdana", size: 13)
-                    label1.adjustsFontSizeToFitWidth = true
-                    label1.minimumScaleFactor = 0.5
                     label1.isEnabled = false
                     label1.frame = CGRect(x: 20, y: topY + 10, width: userInfoView.frame.width * 0.4 - 20, height: 20)
                     userInfoView.addSubview(label1)
@@ -588,8 +586,6 @@ class ProfileView: UIView {
                     label2.text = profile.site
                     //label2.textColor = label2.tintColor
                     label2.font = UIFont(name: "Verdana", size: 13)
-                    label2.adjustsFontSizeToFitWidth = true
-                    label2.minimumScaleFactor = 0.5
                     label2.frame = CGRect(x: userInfoView.frame.width * 0.4, y: topY + 10, width: userInfoView.frame.width * 0.6 - 20, height: 20)
                     label2.prepareTextForPublish2(delegate, cell: nil)
                     userInfoView.addSubview(label2)
@@ -930,7 +926,7 @@ class ProfileView: UIView {
                 OperationQueue().addOperation(getCacheImage)
             } else if hasCropPhoto == 0 {
                 let ids = profile.avatarID.components(separatedBy: "_")
-                if ids.count > 0 {
+                if ids.count > 1 {
                     let ownerID = ids[0]
                     let photoID = ids[1]
                     
@@ -1043,7 +1039,9 @@ class ProfileView: UIView {
                     }
                 }
                 
-                self.delegate.openPhotoViewController(numPhoto: numPhoto, photos: photos)
+                if numPhoto >= 0 && photos.count > 0 {
+                    self.delegate.openPhotoViewController(numPhoto: numPhoto, photos: photos)
+                }
             }
         }
     }

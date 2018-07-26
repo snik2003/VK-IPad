@@ -564,7 +564,7 @@
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="menuCell" textLabel="a2W-mr-dsR" style="IBUITableViewCellStyleDefault" id="qNP-Uz-flM">
                                         <rect key="frame" x="0.0" y="410" width="375" height="40"/>
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="qNP-Uz-flM" id="sz6-iP-vgR">
+                                        <tableViewCellContentView key="contentView" hidden="YES" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="qNP-Uz-flM" id="sz6-iP-vgR">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="39.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
@@ -1184,6 +1184,27 @@
             </objects>
             <point key="canvasLocation" x="2240.9956076134699" y="3198.6328125"/>
         </scene>
+        <!--Настройки приложения-->
+        <scene sceneID="mMa-lZ-H2b">
+            <objects>
+                <tableViewController storyboardIdentifier="OptionsController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="eM8-qY-nRL" customClass="OptionsController" customModule="VK_IPad" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="lRK-P5-D9Y">
+                        <rect key="frame" x="0.0" y="0.0" width="1366" height="1024"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <connections>
+                            <outlet property="dataSource" destination="eM8-qY-nRL" id="W3v-GD-2o5"/>
+                            <outlet property="delegate" destination="eM8-qY-nRL" id="dxx-N5-SfB"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Настройки приложения" id="H7C-rN-GTQ">
+                        <barButtonItem key="backBarButtonItem" title="Назад" id="Jr3-NO-TWY"/>
+                    </navigationItem>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="hef-Dp-VYn" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2897" y="3887"/>
+        </scene>
         <!--Navigation Controller-->
         <scene sceneID="AlF-zE-Uja">
             <objects>
@@ -1544,6 +1565,32 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="o32-nA-eId" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="885.94436310395304" y="3886.5234374999995"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="wol-uN-XO2">
+            <objects>
+                <navigationController storyboardIdentifier="OptionsNavigation" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Hvb-OE-buD" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="ScH-JL-p2t">
+                        <rect key="frame" x="0.0" y="20" width="1366" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="barTintColor" red="0.019607843140000001" green="0.4039215686" blue="0.64313725489999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <textAttributes key="titleTextAttributes">
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </textAttributes>
+                        <textAttributes key="largeTitleTextAttributes">
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </textAttributes>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="eM8-qY-nRL" kind="relationship" relationship="rootViewController" id="3nm-YS-05T"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="VCY-o8-vty" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2240.9956076134699" y="3886.5234374999995"/>
         </scene>
     </scenes>
     <resources>

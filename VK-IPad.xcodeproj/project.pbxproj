@@ -61,6 +61,11 @@
 		1749130320D304DD00FCF9F9 /* ParseRequestList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1749130220D304DD00FCF9F9 /* ParseRequestList.swift */; };
 		1749130520D3050200FCF9F9 /* ParseRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1749130420D3050200FCF9F9 /* ParseRequest.swift */; };
 		1749130720D3055100FCF9F9 /* FriendRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1749130620D3055100FCF9F9 /* FriendRequest.swift */; };
+		177251292109FEF700B4C6FA /* SwitchOptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 177251282109FEF700B4C6FA /* SwitchOptionCell.swift */; };
+		1772512B210A110300B4C6FA /* CheckOptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1772512A210A110300B4C6FA /* CheckOptionCell.swift */; };
+		1772512D210A1D5C00B4C6FA /* vkOperationProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1772512C210A1D5C00B4C6FA /* vkOperationProtocol.swift */; };
+		1772512F210A1E0C00B4C6FA /* PushSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1772512E210A1E0C00B4C6FA /* PushSettings.swift */; };
+		17725131210A1E4300B4C6FA /* ParsePushSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17725130210A1E4300B4C6FA /* ParsePushSettings.swift */; };
 		178D83C020FF707900AFB7EB /* TapGesture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178D83BF20FF707900AFB7EB /* TapGesture.swift */; };
 		178D83C2210097BB00AFB7EB /* PhotosListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178D83C1210097BB00AFB7EB /* PhotosListController.swift */; };
 		178D83C42100991000AFB7EB /* PhotoAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178D83C32100991000AFB7EB /* PhotoAlbum.swift */; };
@@ -95,6 +100,7 @@
 		17B409F02108822E004CED46 /* UserInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B409EF2108822E004CED46 /* UserInfoController.swift */; };
 		17B409F2210889C7004CED46 /* RelativeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B409F1210889C7004CED46 /* RelativeCell.swift */; };
 		17B409F42109CE47004CED46 /* PersonalInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B409F32109CE47004CED46 /* PersonalInfoCell.swift */; };
+		17B409F62109F961004CED46 /* OptionsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B409F52109F961004CED46 /* OptionsController.swift */; };
 		17CCB7F920F4E89A0051947A /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CCB7F820F4E89A0051947A /* Notification.swift */; };
 		17CCB7FB20F63AB30051947A /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CCB7FA20F63AB30051947A /* NotificationController.swift */; };
 		17CCB7FD20F75D1F0051947A /* NotificationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CCB7FC20F75D1F0051947A /* NotificationCell.swift */; };
@@ -161,6 +167,11 @@
 		1749130220D304DD00FCF9F9 /* ParseRequestList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseRequestList.swift; sourceTree = "<group>"; };
 		1749130420D3050200FCF9F9 /* ParseRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseRequest.swift; sourceTree = "<group>"; };
 		1749130620D3055100FCF9F9 /* FriendRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendRequest.swift; sourceTree = "<group>"; };
+		177251282109FEF700B4C6FA /* SwitchOptionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchOptionCell.swift; sourceTree = "<group>"; };
+		1772512A210A110300B4C6FA /* CheckOptionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckOptionCell.swift; sourceTree = "<group>"; };
+		1772512C210A1D5C00B4C6FA /* vkOperationProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = vkOperationProtocol.swift; sourceTree = "<group>"; };
+		1772512E210A1E0C00B4C6FA /* PushSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushSettings.swift; sourceTree = "<group>"; };
+		17725130210A1E4300B4C6FA /* ParsePushSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParsePushSettings.swift; sourceTree = "<group>"; };
 		178D83BF20FF707900AFB7EB /* TapGesture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TapGesture.swift; sourceTree = "<group>"; };
 		178D83C1210097BB00AFB7EB /* PhotosListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosListController.swift; sourceTree = "<group>"; };
 		178D83C32100991000AFB7EB /* PhotoAlbum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAlbum.swift; sourceTree = "<group>"; };
@@ -196,6 +207,7 @@
 		17B409EF2108822E004CED46 /* UserInfoController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoController.swift; sourceTree = "<group>"; };
 		17B409F1210889C7004CED46 /* RelativeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelativeCell.swift; sourceTree = "<group>"; };
 		17B409F32109CE47004CED46 /* PersonalInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalInfoCell.swift; sourceTree = "<group>"; };
+		17B409F52109F961004CED46 /* OptionsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsController.swift; sourceTree = "<group>"; };
 		17CCB7F820F4E89A0051947A /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
 		17CCB7FA20F63AB30051947A /* NotificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationController.swift; sourceTree = "<group>"; };
 		17CCB7FC20F75D1F0051947A /* NotificationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCell.swift; sourceTree = "<group>"; };
@@ -335,6 +347,7 @@
 				179CFC4020DBE94900F2AB04 /* Sticker.swift */,
 				17CCB7F820F4E89A0051947A /* Notification.swift */,
 				17B409E82106114A004CED46 /* FaveLinks.swift */,
+				1772512E210A1E0C00B4C6FA /* PushSettings.swift */,
 			);
 			path = Objects;
 			sourceTree = "<group>";
@@ -389,6 +402,9 @@
 				1700D24E20DEAFF3003C50A1 /* ChangeAccountView.swift */,
 				17CCB7FA20F63AB30051947A /* NotificationController.swift */,
 				17CCB7FC20F75D1F0051947A /* NotificationCell.swift */,
+				17B409F52109F961004CED46 /* OptionsController.swift */,
+				177251282109FEF700B4C6FA /* SwitchOptionCell.swift */,
+				1772512A210A110300B4C6FA /* CheckOptionCell.swift */,
 			);
 			path = MainMenu;
 			sourceTree = "<group>";
@@ -399,6 +415,7 @@
 				174912D620D300DC00FCF9F9 /* ViewControllerProtocol.swift */,
 				174912D720D300DC00FCF9F9 /* ViewControllerUtils.swift */,
 				17B409EC2106306F004CED46 /* BrowserController.swift */,
+				1772512C210A1D5C00B4C6FA /* vkOperationProtocol.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -415,6 +432,7 @@
 				17996B5020DCDBC0003DA26B /* ParseVideos.swift */,
 				178D83C521009F7B00AFB7EB /* ParsePhotosList.swift */,
 				178D83C721009FBF00AFB7EB /* ParsePhotoAlbums.swift */,
+				17725130210A1E4300B4C6FA /* ParsePushSettings.swift */,
 			);
 			path = ParseServerData;
 			sourceTree = "<group>";
@@ -649,14 +667,18 @@
 				1700D24B20DE4104003C50A1 /* VideoCell.swift in Sources */,
 				174912E720D300DD00FCF9F9 /* Int.swift in Sources */,
 				174912F520D300DD00FCF9F9 /* AppDelegate.swift in Sources */,
+				17B409F62109F961004CED46 /* OptionsController.swift in Sources */,
 				174912E320D300DD00FCF9F9 /* Date.swift in Sources */,
 				17B134A920DAD7090058E1A8 /* RecordController.swift in Sources */,
 				174912DE20D300DD00FCF9F9 /* UserProfile.swift in Sources */,
 				17B134A320DA8B720058E1A8 /* PhotoViewCell.swift in Sources */,
 				173D667B20D40FCE00EEBF46 /* URLsInLabels.swift in Sources */,
 				17CCB7F920F4E89A0051947A /* Notification.swift in Sources */,
+				1772512B210A110300B4C6FA /* CheckOptionCell.swift in Sources */,
 				17B409E92106114A004CED46 /* FaveLinks.swift in Sources */,
+				17725131210A1E4300B4C6FA /* ParsePushSettings.swift in Sources */,
 				173D667C20D40FCE00EEBF46 /* KGCopyableLabel.swift in Sources */,
+				1772512F210A1E0C00B4C6FA /* PushSettings.swift in Sources */,
 				17424FEB20D53C2100F52C4C /* Audio.swift in Sources */,
 				173D666F20D3EAC800EEBF46 /* GroupProfile.swift in Sources */,
 				178D83C020FF707900AFB7EB /* TapGesture.swift in Sources */,
@@ -698,6 +720,7 @@
 				174912F620D300DD00FCF9F9 /* ViewControllerProtocol.swift in Sources */,
 				174912DB20D300DD00FCF9F9 /* GetCacheImage.swift in Sources */,
 				174912FA20D302B700FCF9F9 /* Friends.swift in Sources */,
+				1772512D210A1D5C00B4C6FA /* vkOperationProtocol.swift in Sources */,
 				17EBC3A320D52C5D009130FC /* Video.swift in Sources */,
 				178D83D12101F26000AFB7EB /* NewsfeedController.swift in Sources */,
 				174912FE20D303F400FCF9F9 /* ParseFriends.swift in Sources */,
@@ -718,6 +741,7 @@
 				174912DA20D300DD00FCF9F9 /* SetAnimatedImageToRow.swift in Sources */,
 				178D83CA2100A04000AFB7EB /* ReloadPhotosListController.swift in Sources */,
 				173D666820D3C9DB00EEBF46 /* ParseGroupList.swift in Sources */,
+				177251292109FEF700B4C6FA /* SwitchOptionCell.swift in Sources */,
 				17CCB7FD20F75D1F0051947A /* NotificationCell.swift in Sources */,
 				17B134AF20DBBEAE0058E1A8 /* CommentCell.swift in Sources */,
 			);

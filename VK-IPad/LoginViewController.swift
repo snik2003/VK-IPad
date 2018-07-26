@@ -32,6 +32,7 @@ class LoginViewController: UIViewController {
         super.viewDidLoad()
         
         cleanCookies()
+        AppConfig.shared.readConfig()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -61,6 +62,8 @@ class LoginViewController: UIViewController {
                 if let userID = userDefaults.string(forKey: "vkUserID") {
                     vkSingleton.shared.userID = userID
                 
+                    AppConfig.shared.readConfig()
+                    
                     if let userID = Int(vkSingleton.shared.userID) {
                         vkSingleton.shared.accessToken = getAccessTokenFromRealm(userID: userID)
                     }
