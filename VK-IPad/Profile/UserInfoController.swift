@@ -39,6 +39,7 @@ class UserInfoController: UITableViewController {
         super.viewDidLoad()
         
         tableView.register(RelativeCell.self, forCellReuseIdentifier: "relativeCell")
+        tableView.register(PersonalInfoCell.self, forCellReuseIdentifier: "personalInfoCell")
         
         var title = ""
         if user.uid == vkSingleton.shared.userID {
@@ -121,6 +122,26 @@ class UserInfoController: UITableViewController {
             let cell = tableView.dequeueReusableCell(withIdentifier: "relativeCell") as! RelativeCell
             
             return cell.getRowHeight(user: user)
+        }
+        
+        if indexPath.section == 3 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "personalInfoCell") as! PersonalInfoCell
+            
+            cell.delegate = self
+            cell.inform = lifePositionSection[indexPath.row]
+            cell.cellWidth = self.width
+            
+            return cell.getRowHeight()
+        }
+        
+        if indexPath.section == 4 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "personalInfoCell") as! PersonalInfoCell
+            
+            cell.delegate = self
+            cell.inform = personalInfoSection[indexPath.row]
+            cell.cellWidth = self.width
+            
+            return cell.getRowHeight()
         }
         
         return UITableViewAutomaticDimension
@@ -215,28 +236,29 @@ class UserInfoController: UITableViewController {
             
             return cell
         case 3:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "personalInfoCell", for: indexPath)
+            let cell = tableView.dequeueReusableCell(withIdentifier: "personalInfoCell", for: indexPath) as! PersonalInfoCell
             
-            if countLifePositionSection > 0 {
-                cell.textLabel?.numberOfLines = 1
-                cell.textLabel?.textColor = UIColor.init(displayP3Red: 0/255, green: 84/255, blue: 147/255, alpha: 1)
-                cell.textLabel?.text = lifePositionSection[indexPath.row].image
-                cell.detailTextLabel?.numberOfLines = 0
-                cell.detailTextLabel?.text = "\(lifePositionSection[indexPath.row].value)"
-            }
+            cell.delegate = self
+            cell.inform = lifePositionSection[indexPath.row]
+            cell.cellWidth = self.width
+            
+            cell.configureCell()
+            
+            cell.selectionStyle = .none
+            cell.separatorInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
             
             return cell
         case 4:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "personalInfoCell", for: indexPath)
+            let cell = tableView.dequeueReusableCell(withIdentifier: "personalInfoCell", for: indexPath) as! PersonalInfoCell
             
-            if countPersonalInfoSection > 0 {
-                cell.textLabel?.numberOfLines = 1
-                cell.textLabel?.textColor = UIColor.init(displayP3Red: 0/255, green: 84/255, blue: 147/255, alpha: 1)
-                cell.textLabel?.text = personalInfoSection[indexPath.row].image
-                cell.detailTextLabel?.numberOfLines = 0
-                cell.detailTextLabel?.text = "\(personalInfoSection[indexPath.row].value)"
-                //print(personalInfoSection[indexPath.row].comment)
-            }
+            cell.delegate = self
+            cell.inform = personalInfoSection[indexPath.row]
+            cell.cellWidth = self.width
+            
+            cell.configureCell()
+            
+            cell.selectionStyle = .none
+            cell.separatorInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
             
             return cell
         default:

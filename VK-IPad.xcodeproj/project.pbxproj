@@ -94,6 +94,7 @@
 		17B409ED2106306F004CED46 /* BrowserController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B409EC2106306F004CED46 /* BrowserController.swift */; };
 		17B409F02108822E004CED46 /* UserInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B409EF2108822E004CED46 /* UserInfoController.swift */; };
 		17B409F2210889C7004CED46 /* RelativeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B409F1210889C7004CED46 /* RelativeCell.swift */; };
+		17B409F42109CE47004CED46 /* PersonalInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B409F32109CE47004CED46 /* PersonalInfoCell.swift */; };
 		17CCB7F920F4E89A0051947A /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CCB7F820F4E89A0051947A /* Notification.swift */; };
 		17CCB7FB20F63AB30051947A /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CCB7FA20F63AB30051947A /* NotificationController.swift */; };
 		17CCB7FD20F75D1F0051947A /* NotificationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CCB7FC20F75D1F0051947A /* NotificationCell.swift */; };
@@ -194,6 +195,7 @@
 		17B409EC2106306F004CED46 /* BrowserController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserController.swift; sourceTree = "<group>"; };
 		17B409EF2108822E004CED46 /* UserInfoController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoController.swift; sourceTree = "<group>"; };
 		17B409F1210889C7004CED46 /* RelativeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelativeCell.swift; sourceTree = "<group>"; };
+		17B409F32109CE47004CED46 /* PersonalInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalInfoCell.swift; sourceTree = "<group>"; };
 		17CCB7F820F4E89A0051947A /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
 		17CCB7FA20F63AB30051947A /* NotificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationController.swift; sourceTree = "<group>"; };
 		17CCB7FC20F75D1F0051947A /* NotificationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCell.swift; sourceTree = "<group>"; };
@@ -474,6 +476,7 @@
 				174912D120D300DC00FCF9F9 /* ProfileView.swift */,
 				174912D220D300DC00FCF9F9 /* ProfileViewController.swift */,
 				17B409EF2108822E004CED46 /* UserInfoController.swift */,
+				17B409F32109CE47004CED46 /* PersonalInfoCell.swift */,
 				17B409F1210889C7004CED46 /* RelativeCell.swift */,
 			);
 			path = Profile;
@@ -689,6 +692,7 @@
 				179CFC4120DBE94900F2AB04 /* Sticker.swift in Sources */,
 				174912EE20D300DD00FCF9F9 /* UsersController.swift in Sources */,
 				178D83C2210097BB00AFB7EB /* PhotosListController.swift in Sources */,
+				17B409F42109CE47004CED46 /* PersonalInfoCell.swift in Sources */,
 				17B134AD20DB8B070058E1A8 /* LikesUsersController.swift in Sources */,
 				174912F220D300DD00FCF9F9 /* ProfileView.swift in Sources */,
 				174912F620D300DD00FCF9F9 /* ViewControllerProtocol.swift in Sources */,
