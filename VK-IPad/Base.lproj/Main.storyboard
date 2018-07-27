@@ -741,6 +741,48 @@
             </objects>
             <point key="canvasLocation" x="25" y="778"/>
         </scene>
+        <!--Password Controller-->
+        <scene sceneID="j1T-t7-yh1">
+            <objects>
+                <viewController storyboardIdentifier="PasswordController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="gby-TD-fmV" customClass="PasswordController" customModule="VK_IPad" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="vwN-dM-KNU">
+                        <rect key="frame" x="0.0" y="0.0" width="1366" height="1024"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Введите пароль:" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zjJ-wv-w2R">
+                                <rect key="frame" x="100" y="50" width="1166" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="abT-La-tFW"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Verdana-Bold" family="Verdana" pointSize="28"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="7Xs-bc-QZO">
+                                <rect key="frame" x="150" y="100" width="1066" height="894"/>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="zjJ-wv-w2R" firstAttribute="leading" secondItem="KXL-kJ-UJT" secondAttribute="leading" constant="100" id="3M7-Le-ohY"/>
+                            <constraint firstItem="zjJ-wv-w2R" firstAttribute="top" secondItem="KXL-kJ-UJT" secondAttribute="top" constant="30" id="Nol-Wg-VgH"/>
+                            <constraint firstItem="7Xs-bc-QZO" firstAttribute="leading" secondItem="KXL-kJ-UJT" secondAttribute="leading" constant="150" id="Wjg-Oo-awo"/>
+                            <constraint firstItem="KXL-kJ-UJT" firstAttribute="trailing" secondItem="zjJ-wv-w2R" secondAttribute="trailing" constant="100" id="adA-oZ-rNu"/>
+                            <constraint firstItem="KXL-kJ-UJT" firstAttribute="trailing" secondItem="7Xs-bc-QZO" secondAttribute="trailing" constant="150" id="kan-yv-sie"/>
+                            <constraint firstItem="7Xs-bc-QZO" firstAttribute="top" secondItem="zjJ-wv-w2R" secondAttribute="bottom" constant="20" id="mtR-Rp-abu"/>
+                            <constraint firstItem="KXL-kJ-UJT" firstAttribute="bottom" secondItem="7Xs-bc-QZO" secondAttribute="bottom" constant="30" id="rus-4l-KkO"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="KXL-kJ-UJT"/>
+                    </view>
+                    <connections>
+                        <outlet property="passwordStackView" destination="7Xs-bc-QZO" id="ylc-PE-aTt"/>
+                        <outlet property="titleLabel" destination="zjJ-wv-w2R" id="Yzg-f5-dFb"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="YcY-Gf-q0m" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="25" y="1471"/>
+        </scene>
         <!--Navigation Controller-->
         <scene sceneID="d00-Ri-mQz">
             <objects>

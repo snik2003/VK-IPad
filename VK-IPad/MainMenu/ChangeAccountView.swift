@@ -100,7 +100,7 @@ class ChangeAccountView: UIView {
                          }*/
                         
                         let controller = self.delegate.storyboard?.instantiateViewController(withIdentifier: "LoginViewController") as! LoginViewController
-                        //controller.changeAccount = true
+                        controller.changeAccount = true
                         
                         UIApplication.shared.keyWindow?.rootViewController = controller
                     }

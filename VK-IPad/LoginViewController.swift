@@ -19,6 +19,7 @@ class LoginViewController: UIViewController {
     
     var changeAccount = false
     var exitAccount = false
+    var checkPassword = false
     
     let userDefaults = UserDefaults.standard
 
@@ -63,6 +64,13 @@ class LoginViewController: UIViewController {
                     vkSingleton.shared.userID = userID
                 
                     AppConfig.shared.readConfig()
+                    
+                    if AppConfig.shared.passwordOn && !checkPassword {
+                        let vc = self.storyboard?.instantiateViewController(withIdentifier: "PasswordController") as! PasswordController
+                        vc.state = "login"
+                        present(vc, animated: true)
+                        checkPassword = true
+                    }
                     
                     if let userID = Int(vkSingleton.shared.userID) {
                         vkSingleton.shared.accessToken = getAccessTokenFromRealm(userID: userID)

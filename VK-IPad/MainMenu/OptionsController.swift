@@ -77,16 +77,20 @@ class OptionsController: UITableViewController {
     
     @objc func tapBarButtonItem(sender: UIBarButtonItem) {
         
-        AppConfig.shared.passwordOn = passwordOn
-        AppConfig.shared.passwordDigits = passDigits
-        AppConfig.shared.touchID = touchID
-        
-        AppConfig.shared.saveConfig()
-        if vkSingleton.shared.deviceToken != "" {
-            if AppConfig.shared.pushNotificationsOn {
-                registerDeviceOnPush()
-            } else {
-                unregisterDeviceOnPush()
+        if !AppConfig.shared.passwordOn && passwordOn {
+            changePassword()
+        } else {
+            AppConfig.shared.passwordOn = passwordOn
+            AppConfig.shared.passwordDigits = passDigits
+            AppConfig.shared.touchID = touchID
+            
+            AppConfig.shared.saveConfig()
+            if vkSingleton.shared.deviceToken != "" {
+                if AppConfig.shared.pushNotificationsOn {
+                    registerDeviceOnPush()
+                } else {
+                    unregisterDeviceOnPush()
+                }
             }
         }
         
@@ -363,5 +367,12 @@ class OptionsController: UITableViewController {
             
             tableView.reloadData()
         }
+    }
+    
+    func changePassword() {
+        let vc = self.storyboard?.instantiateViewController(withIdentifier: "PasswordController") as! PasswordController
+        vc.state = "change"
+        vc.delegate = self
+        self.present(vc, animated: true)
     }
 }

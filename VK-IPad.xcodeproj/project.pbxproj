@@ -66,6 +66,7 @@
 		1772512D210A1D5C00B4C6FA /* vkOperationProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1772512C210A1D5C00B4C6FA /* vkOperationProtocol.swift */; };
 		1772512F210A1E0C00B4C6FA /* PushSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1772512E210A1E0C00B4C6FA /* PushSettings.swift */; };
 		17725131210A1E4300B4C6FA /* ParsePushSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17725130210A1E4300B4C6FA /* ParsePushSettings.swift */; };
+		17725133210B2D8100B4C6FA /* PasswordController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17725132210B2D8100B4C6FA /* PasswordController.swift */; };
 		178D83C020FF707900AFB7EB /* TapGesture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178D83BF20FF707900AFB7EB /* TapGesture.swift */; };
 		178D83C2210097BB00AFB7EB /* PhotosListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178D83C1210097BB00AFB7EB /* PhotosListController.swift */; };
 		178D83C42100991000AFB7EB /* PhotoAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178D83C32100991000AFB7EB /* PhotoAlbum.swift */; };
@@ -172,6 +173,7 @@
 		1772512C210A1D5C00B4C6FA /* vkOperationProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = vkOperationProtocol.swift; sourceTree = "<group>"; };
 		1772512E210A1E0C00B4C6FA /* PushSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushSettings.swift; sourceTree = "<group>"; };
 		17725130210A1E4300B4C6FA /* ParsePushSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParsePushSettings.swift; sourceTree = "<group>"; };
+		17725132210B2D8100B4C6FA /* PasswordController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordController.swift; sourceTree = "<group>"; };
 		178D83BF20FF707900AFB7EB /* TapGesture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TapGesture.swift; sourceTree = "<group>"; };
 		178D83C1210097BB00AFB7EB /* PhotosListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosListController.swift; sourceTree = "<group>"; };
 		178D83C32100991000AFB7EB /* PhotoAlbum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAlbum.swift; sourceTree = "<group>"; };
@@ -305,6 +307,7 @@
 				174912D420D300DC00FCF9F9 /* AppDelegate.swift */,
 				174912C420D300DC00FCF9F9 /* StartViewController.swift */,
 				174912CF20D300DC00FCF9F9 /* LoginViewController.swift */,
+				17725132210B2D8100B4C6FA /* PasswordController.swift */,
 				174912B920D300DC00FCF9F9 /* LaunchScreen.storyboard */,
 				174912BB20D300DC00FCF9F9 /* Main.storyboard */,
 				174912D820D300DC00FCF9F9 /* Info.plist */,
@@ -717,6 +720,7 @@
 				17B409F42109CE47004CED46 /* PersonalInfoCell.swift in Sources */,
 				17B134AD20DB8B070058E1A8 /* LikesUsersController.swift in Sources */,
 				174912F220D300DD00FCF9F9 /* ProfileView.swift in Sources */,
+				17725133210B2D8100B4C6FA /* PasswordController.swift in Sources */,
 				174912F620D300DD00FCF9F9 /* ViewControllerProtocol.swift in Sources */,
 				174912DB20D300DD00FCF9F9 /* GetCacheImage.swift in Sources */,
 				174912FA20D302B700FCF9F9 /* Friends.swift in Sources */,

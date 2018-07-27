@@ -22,6 +22,8 @@ class BrowserController: UIViewController, WKNavigationDelegate {
     
     var path: String = "https://geekbrains.ru/login"
     
+    var isObserving = false
+    
     var type = ""
     var artistID = 0
     var songID = 0
@@ -59,7 +61,11 @@ class BrowserController: UIViewController, WKNavigationDelegate {
             let request = URLRequest(url: url)
             urlTextField.text = path
             webView.load(request)
-            webView.addObserver(self, forKeyPath: "estimatedProgress", options: .new, context: nil)
+            
+            if !isObserving {
+                isObserving = true
+                webView.addObserver(self, forKeyPath: "estimatedProgress", options: .new, context: nil)
+            }
         } else {
             showErrorMessage(title: "Ошибка", msg: "Некорректная ссылка:\n\(path)")
         }
@@ -68,7 +74,9 @@ class BrowserController: UIViewController, WKNavigationDelegate {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        webView.removeObserver(self, forKeyPath: "estimatedProgress")
+        if isObserving {
+            webView.removeObserver(self, forKeyPath: "estimatedProgress")
+        }
     }
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {

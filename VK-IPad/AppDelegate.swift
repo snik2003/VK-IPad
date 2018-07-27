@@ -31,8 +31,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidEnterBackground(_ application: UIApplication) {
-        // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
-        // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+        if AppConfig.shared.passwordOn {
+            if let currentVC = topViewControllerWithRootViewController(rootViewController: window?.rootViewController), !(currentVC is PasswordController) {
+                let vc = currentVC.storyboard?.instantiateViewController(withIdentifier: "PasswordController") as! PasswordController
+                vc.state = "login"
+                currentVC.present(vc, animated: true)
+            }
+        }
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
@@ -78,6 +83,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         print("Failed to register: \(error)")
+    }
+    
+    func topViewControllerWithRootViewController(rootViewController: UIViewController!) -> UIViewController! {
+        
+        if rootViewController is UITabBarController {
+            let tabbarController =  rootViewController as! UITabBarController
+            return self.topViewControllerWithRootViewController(rootViewController: tabbarController.selectedViewController)
+        } else if rootViewController is UINavigationController {
+            let navigationController = rootViewController as! UINavigationController
+            return self.topViewControllerWithRootViewController(rootViewController: navigationController.visibleViewController)
+        } else if rootViewController.presentedViewController != nil {
+            let controller = rootViewController.presentedViewController
+            
+            return self.topViewControllerWithRootViewController(rootViewController: controller)
+        } else {
+            return rootViewController
+        }
     }
 }
 
