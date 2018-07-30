@@ -226,7 +226,17 @@ class GroupProfileView: UIView {
                 
                 let tap = UITapGestureRecognizer()
                 tap.add {
+                    let controller = self.delegate.storyboard?.instantiateViewController(withIdentifier: "TopicsListController") as! TopicsListController
                     
+                    controller.groupID = "\(self.profile.gid)"
+                    controller.group = self.profile
+                    controller.title = "Обсуждения в сообществе «\(self.profile.name)»"
+                    
+                    if let split = self.delegate.splitViewController {
+                        let detail = split.viewControllers[split.viewControllers.endIndex - 1]
+                        controller.width = detail.view.bounds.width
+                        detail.childViewControllers[0].navigationController?.pushViewController(controller, animated: true)
+                    }
                 }
                 tap.numberOfTapsRequired = 1
                 label1.isUserInteractionEnabled = true

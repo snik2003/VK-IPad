@@ -238,6 +238,12 @@ extension UILabel {
                         }
                     }
                     
+                    if let cell = cell as? TopicCell {
+                        if let topic = cell.topic {
+                            print(topic.title)
+                        }
+                    }
+                    
                     /*if let vc = delegate as? RecordController {
                         
                         if tap.state == .ended {

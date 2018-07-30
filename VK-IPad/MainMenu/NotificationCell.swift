@@ -363,6 +363,30 @@ class NotificationCell: UITableViewCell {
                     feedbackString = ""
                 }
             }
+            
+            if not.type == "like_comment_topic" {
+                if indexPath.row == 0 {
+                    if sex == 1 {
+                        notText = "\(name) оценила ваш комментарий \(getParentCommentText()) в обсуждении \(getVideoName())"
+                    } else {
+                        notText = "\(name) оценил ваш комментарий \(getParentCommentText()) в обсуждении \(getVideoName())"
+                    }
+                    
+                    postString = "обсуждении"
+                    parentString = "" //getTopicName()
+                    feedbackString = getParentCommentText()
+                } else {
+                    if sex == 1 {
+                        notText = "\(name) также оценила этот комментарий в обсуждении"
+                    } else {
+                        notText = "\(name) также оценил этот комментарий в обсуждении"
+                    }
+                    
+                    postString = ""
+                    parentString = ""
+                    feedbackString = ""
+                }
+            }
         }
         
         if not.type == "copy_post" || not.type == "copy_photo" || not.type == "copy_video" {

@@ -23,6 +23,9 @@ class ReloadPhotosListController: Operation {
             controller.photosCount = parsePhotos.count
             
             controller.segmentedControl.selectedSegmentIndex = controller.selectIndex
+            controller.segmentedControl.setTitle("Все фотографии (\(controller.photosCount))", forSegmentAt: 0)
+            controller.segmentedControl.setTitle("Альбомы (\(controller.albums.count))", forSegmentAt: 1)
+            
             switch controller.selectIndex {
             case 0:
                 if controller.offset == 0 {
