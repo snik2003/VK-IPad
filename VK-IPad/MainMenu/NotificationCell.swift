@@ -123,13 +123,13 @@ class NotificationCell: UITableViewCell {
             smallAvatarName = "not_plus"
             
             if sex == 1 {
-                notText = "\(name) опубликовала запись \(getNameRecord())на вашей стене"
+                notText = "\(name) опубликовала запись \(getFeedbackNameRecord())на вашей стене"
             } else {
-                notText = "\(name) опубликовал запись \(getNameRecord())на вашей стене"
+                notText = "\(name) опубликовал запись \(getFeedbackNameRecord())на вашей стене"
             }
             
             postString = "запись"
-            parentString = getNameRecord()
+            parentString = getFeedbackNameRecord()
         }
         
         if not.type == "comment_post" || not.type == "comment_photo" || not.type == "comment_video" || not.type == "reply_comment" || not.type == "reply_comment_photo" || not.type == "reply_comment_video" {
@@ -455,15 +455,15 @@ class NotificationCell: UITableViewCell {
             
             if not.type == "mention" {
                 if sex == -1 {
-                    notText = "Сообщество \(name) упоминуло вас в записи \(getNameRecord())на своей стене"
+                    notText = "Сообщество \(name) упоминуло вас в записи \(getFeedbackNameRecord())на своей стене"
                 } else if sex == 1 {
-                    notText = "\(name) упоминула вас в записи \(getNameRecord())на своей стене"
+                    notText = "\(name) упоминула вас в записи \(getFeedbackNameRecord())на своей стене"
                 } else {
-                    notText = "\(name) упоминул вас в записи \(getNameRecord())на своей стене"
+                    notText = "\(name) упоминул вас в записи \(getFeedbackNameRecord())на своей стене"
                 }
                 
                 postString = "записи"
-                parentString = getNameRecord()
+                parentString = getFeedbackNameRecord()
             }
             
             if not.type == "mention_comments" {
@@ -683,6 +683,20 @@ class NotificationCell: UITableViewCell {
         return nameRecord
     }
     
+    func getFeedbackNameRecord() -> String {
+        var nameRecord = ""
+        
+        let str = not.feedback[0].text.prepareTextForPublic()
+        var str1 = str.components(separatedBy: [".", "!", "?", "\n"])
+        
+        
+        if str1[0] != "" {
+            nameRecord = "\"\(str1[0])...\" "
+        }
+        
+        return nameRecord
+    }
+    
     func setColorText(label: UILabel) {
         
         let range1 = (notText as NSString).range(of: postString)
@@ -700,6 +714,10 @@ class NotificationCell: UITableViewCell {
             if self.postString.hasPrefix("запис") {
                 if let post = self.not.parent.post {
                     self.delegate.openWallRecord(ownerID: post.fromID, postID: post.id, accessKey: "", type: "post")
+                } else if self.not.type == "wall" {
+                    self.delegate.openWallRecord(ownerID: self.not.feedback[0].toID, postID: self.not.feedback[0].id, accessKey: "", type: "post")
+                } else if self.not.type == "mention" {
+                    self.delegate.openWallRecord(ownerID: self.not.feedback[0].fromID, postID: self.not.feedback[0].id, accessKey: "", type: "post")
                 }
             } else if self.postString.hasPrefix("фото") {
                 if let photo = self.not.parent.photo {
