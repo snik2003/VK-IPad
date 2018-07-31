@@ -239,8 +239,8 @@ extension UILabel {
                     }
                     
                     if let cell = cell as? TopicCell {
-                        if let topic = cell.topic {
-                            print(topic.title)
+                        if let topic = cell.topic, let controller = delegate as? TopicsListController {
+                            delegate.openTopicController(groupID: controller.groupID, topicID: "\(topic.id)", title: "Обсуждение «\(topic.title)»", delegate: controller)
                         }
                     }
                     

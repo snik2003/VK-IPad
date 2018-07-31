@@ -374,6 +374,21 @@ extension UIViewController: ViewControllerProtocol {
         detailVC.childViewControllers[0].navigationController?.pushViewController(controller, animated: true)
     }
     
+    func openTopicController(groupID: String, topicID: String, title: String, delegate: UIViewController) {
+        let controller = self.storyboard?.instantiateViewController(withIdentifier: "TopicController") as! TopicController
+        
+        controller.groupID = groupID
+        controller.topicID = topicID
+        controller.title = title
+        controller.delegate = delegate
+        
+        if let split = self.splitViewController {
+            let detail = split.viewControllers[split.viewControllers.endIndex - 1]
+            controller.width = detail.view.bounds.width
+            detail.childViewControllers[0].navigationController?.pushViewController(controller, animated: true)
+        }
+    }
+    
     func updateAppCounters() {
         if let splitVC = self.navigationController?.splitViewController, let detailVC = splitVC.viewControllers[0].childViewControllers[0] as? MenuViewController {
             detailVC.getUserInfo()
@@ -580,9 +595,9 @@ extension UIViewController: ViewControllerProtocol {
                     accs[index] = accs[index].replacingOccurrences(of: "[A-Z,a-z,А-Я,а-я]", with: "", options: .regularExpression, range: nil)
                 }
                 if accs.count == 2 {
-                    //if let groupID = Int(accs[0]), let topicID = Int(accs[1]) {
-                        //openTopicController(groupID: "\(abs(groupID))", topicID: "\(topicID)", title: "", delegate: self)
-                    //}
+                    if let groupID = Int(accs[0]), let topicID = Int(accs[1]) {
+                        openTopicController(groupID: "\(abs(groupID))", topicID: "\(topicID)", title: "", delegate: self)
+                    }
                 }
                 
                 res = 0

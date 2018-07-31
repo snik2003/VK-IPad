@@ -69,6 +69,7 @@ class NotificationParent {
     var photo: Photo!
     var video: Video!
     var comment: Comment!
+    var topic: Topic!
     
     init(json: JSON, type: String) {
         if type == "mention_comments" || type == "comment_post" || type == "like_post" || type == "copy_post" {
@@ -99,8 +100,12 @@ class NotificationParent {
             }
             
             if type == "like_comment_topic" {
-    
+                self.topic = Topic(json: json["topic"])
             }
+        }
+        
+        if type == "reply_topic" {
+            self.topic = Topic(json: json)
         }
     }
 }

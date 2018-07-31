@@ -367,13 +367,13 @@ class NotificationCell: UITableViewCell {
             if not.type == "like_comment_topic" {
                 if indexPath.row == 0 {
                     if sex == 1 {
-                        notText = "\(name) оценила ваш комментарий \(getParentCommentText()) в обсуждении \(getVideoName())"
+                        notText = "\(name) оценила ваш комментарий \(getParentCommentText()) в обсуждении \(getParentTopicName())"
                     } else {
-                        notText = "\(name) оценил ваш комментарий \(getParentCommentText()) в обсуждении \(getVideoName())"
+                        notText = "\(name) оценил ваш комментарий \(getParentCommentText()) в обсуждении \(getParentTopicName())"
                     }
                     
                     postString = "обсуждении"
-                    parentString = "" //getTopicName()
+                    parentString = getParentTopicName()
                     feedbackString = getParentCommentText()
                 } else {
                     if sex == 1 {
@@ -644,7 +644,7 @@ class NotificationCell: UITableViewCell {
         var str = ""
         if let comment = not.parent.comment {
             if comment.text != "" {
-                str = "\"\(comment.text.prepareTextForPublic())\""
+                str = "«\(comment.text.prepareTextForPublic())»"
             }
         }
         
@@ -657,7 +657,7 @@ class NotificationCell: UITableViewCell {
         if not.feedback.count > 0 {
             let text = not.feedback[0].text
             if text != "" {
-                str = "\"\(text.prepareTextForPublic())\""
+                str = "«\(text.prepareTextForPublic())»"
             }
         }
         
@@ -669,7 +669,7 @@ class NotificationCell: UITableViewCell {
         var str = ""
         if let photo = not.parent.photo {
             if photo.text != "" {
-                str = "\"\(photo.text.prepareTextForPublic())\" "
+                str = "«\(photo.text.prepareTextForPublic())» "
             }
         }
         
@@ -681,7 +681,7 @@ class NotificationCell: UITableViewCell {
         var str = ""
         if let video = not.parent.video {
             if video.title != "" {
-                str = "\"\(video.title.prepareTextForPublic())\" "
+                str = "«\(video.title.prepareTextForPublic())» "
             }
         }
         
@@ -700,7 +700,7 @@ class NotificationCell: UITableViewCell {
             
             
             if str1[0] != "" {
-                nameRecord = "\"\(str1[0])...\" "
+                nameRecord = "«\(str1[0])...» "
             }
         }
         
@@ -715,11 +715,25 @@ class NotificationCell: UITableViewCell {
         
         
         if str1[0] != "" {
-            nameRecord = "\"\(str1[0])...\" "
+            nameRecord = "«\(str1[0])...» "
         }
         
         return nameRecord
     }
+    
+    func getParentTopicName() -> String {
+        var name = ""
+        
+        if let topic = not.parent.topic {
+            let str = topic.title.prepareTextForPublic()
+            if str != "" {
+                name = "«\(str)»"
+            }
+        }
+        
+        return name
+    }
+    
     
     func setColorText(label: UILabel) {
         
@@ -745,11 +759,16 @@ class NotificationCell: UITableViewCell {
                 }
             } else if self.postString.hasPrefix("фото") {
                 if let photo = self.not.parent.photo {
-                    self.delegate.openPhotoViewController(numPhoto: 0, photos: [photo])
+                    self.delegate.openWallRecord(ownerID: photo.ownerID, postID: photo.id, accessKey: photo.accessKey, type: "photo")
+                    //self.delegate.openPhotoViewController(numPhoto: 0, photos: [photo])
                 }
             } else if self.postString.hasPrefix("видео") {
                 if let video = self.not.parent.video {
                     self.delegate.openVideoController(ownerID: "\(video.ownerID)", vid: "\(video.id)", accessKey: video.accessKey, title: "Видеозапись")
+                }
+            } else if self.postString.hasPrefix("обсужд") {
+                if let topic = self.not.parent.topic {
+                    self.delegate.openTopicController(groupID: "\(abs(topic.createdBy))", topicID: "\(topic.id)", title: "Обсуждение «\(topic.title)»", delegate: self.delegate)
                 }
             } else if self.not.type == "group_invite" {
                 self.delegate.openProfileController(id: -1 * self.not.feedback[0].id, name: "")

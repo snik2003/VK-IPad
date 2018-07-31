@@ -574,6 +574,7 @@ class VideoController: UIViewController, UITableViewDelegate, UITableViewDataSou
                     if count > totalComments - comments.count {
                         count = totalComments - comments.count
                     }
+                    cell.cellWidth = self.tableView.frame.width
                     cell.configureCountCell(count: count, total: totalComments - comments.count)
                     cell.countButton.addTarget(self, action: #selector(loadMoreComments), for: .touchUpInside)
                 } else {

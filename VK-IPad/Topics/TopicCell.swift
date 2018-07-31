@@ -40,7 +40,10 @@ class TopicCell: UITableViewCell {
         let title = topic.title.prepareTextForPublic()
         let titleLabelSize = self.delegate.getTextSize(text: title, font: titleFont, maxWidth: cellWidth - 2 * leftInsets)
         
-        let comment = topic.firstCommentText.prepareTextForPublic().replacingOccurrences(of: "\n", with: " ")
+        var comment = topic.firstCommentText.prepareTextForPublic()
+        if self.delegate is TopicsListController {
+            comment = topic.firstCommentText.prepareTextForPublic().replacingOccurrences(of: "\n", with: " ")
+        }
         let commentLabelSize = self.delegate.getTextSize(text: comment, font: commentFont, maxWidth: cellWidth - 2 * leftInsets)
         
         if !calc {

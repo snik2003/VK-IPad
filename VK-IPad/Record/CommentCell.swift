@@ -56,7 +56,7 @@ class CommentCell: UITableViewCell {
         countButton.titleLabel?.font = UIFont(name: "Verdana", size: 13)!
         countButton.titleLabel?.adjustsFontSizeToFitWidth = true
         countButton.titleLabel?.minimumScaleFactor = 0.5
-        countButton.frame = CGRect(x: 20, y: 0, width: bounds.width-40, height: bounds.height)
+        countButton.frame = CGRect(x: 20, y: 0, width: cellWidth-40, height: bounds.height)
         self.addSubview(countButton)
     }
     
@@ -656,6 +656,13 @@ class CommentCell: UITableViewCell {
                 if vc.video.count > 0 {
                     owner = vc.video[0].ownerID
                 }
+            } else if let vc = self.delegate as? TopicController {
+                type = "topic_comment"
+                if vc.topics.count > 0 {
+                    if let groupID = Int(vc.groupID) {
+                        owner = -1 * groupID
+                    }
+                }
             }
             
             if comment.userLikes == 0 {
@@ -779,6 +786,10 @@ class CommentCell: UITableViewCell {
                     ownerID = controller.ownerID
                     
                     type = "video_comment"
+                } else if let controller = self.delegate as? TopicController {
+                    ownerID = "-\(controller.groupID)"
+                    
+                    type = "topic_comment"
                 }
                 
                 let url = "/method/likes.getList"

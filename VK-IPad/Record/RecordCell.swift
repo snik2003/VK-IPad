@@ -18,8 +18,8 @@ class RecordCell: UITableViewCell {
     var users: [UserProfile]!
     var groups: [GroupProfile]!
     
-    var likes: [Likes]!
-    var reposts: [Likes]!
+    var likes: [Likes] = []
+    var reposts: [Likes] = []
     
     var showLikesPanel = false
     
@@ -193,8 +193,10 @@ class RecordCell: UITableViewCell {
             topY = setSigner(record: record, topY: topY)
             topY += 5
             
-            if (delegate as? RecordController) != nil && record.postType != "postpone"  && record.postType != "suggest"{
-                topY = setInfoLikePanel(topY: topY)
+            if (likes.count > 0 || reposts.count > 0) {
+                if (delegate as? RecordController) != nil && record.postType != "postpone"  && record.postType != "suggest"{
+                    topY = setInfoLikePanel(topY: topY)
+                }
             }
             
             if record.postType != "postpone" && record.postType != "suggest" {
@@ -833,7 +835,8 @@ class RecordCell: UITableViewCell {
         infoAvatar2.tag = 250
         infoAvatar3.tag = 250
         
-        if let likes = self.likes {
+        let likes = self.likes
+        if likes.count > 0 {
             for like in likes {
                 if like.uid != vkSingleton.shared.userID {
                     if like.friendStatus == 3 {
@@ -1001,8 +1004,8 @@ class RecordCell: UITableViewCell {
             infoLikesLabel.isUserInteractionEnabled = true
             infoLikesLabel.addGestureRecognizer(tap)
             tap.add {
-                if let likes = self.likes, let reposts = self.reposts {
-                    self.delegate.openLikesUsersController(likes: likes, reposts: reposts)
+                if self.likes.count > 0 || self.reposts.count > 0 {
+                    self.delegate.openLikesUsersController(likes: self.likes, reposts: self.reposts)
                 }
             }
             
@@ -1428,8 +1431,10 @@ extension RecordCell {
         
         height += 5
         
-        if (delegate as? RecordController) != nil && record.postType != "postpone" && record.postType != "suggest" {
-            height += infoPanelHeight
+        if (likes.count > 0 || reposts.count > 0) {
+            if (delegate as? RecordController) != nil && record.postType != "postpone" && record.postType != "suggest" {
+                height += infoPanelHeight
+            }
         }
         
         if record.postType != "postpone" && record.postType != "suggest"{

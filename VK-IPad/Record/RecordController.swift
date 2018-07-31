@@ -274,6 +274,9 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
                 cell.cellWidth = self.tableView.frame.width
                 cell.showLikesPanel = true
                 
+                cell.likes = likes
+                cell.reposts = reposts
+                
                 let height = cell.getRowHeight()
                 heights[indexPath] = height
                 
@@ -295,6 +298,9 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
                 cell.record = record[0]
                 cell.cellWidth = self.tableView.frame.width
                 cell.showLikesPanel = true
+                
+                cell.likes = likes
+                cell.reposts = reposts
                 
                 let height = cell.getRowHeight()
                 heights[indexPath] = height
@@ -401,6 +407,7 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
                     if count > totalComments - comments.count {
                         count = totalComments - comments.count
                     }
+                    cell.cellWidth = self.tableView.frame.width
                     cell.configureCountCell(count: count, total: totalComments - comments.count)
                     cell.countButton.addTarget(self, action: #selector(loadMoreComments), for: .touchUpInside)
                 } else {
@@ -619,6 +626,7 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
                     if photos.count > 0 {
                         let record = Record(json: JSON.null)
                         let photo = photos[0]
+                        photo.accessKey = self.accessKey
                         
                         record.id = photo.id
                         record.ownerID = photo.ownerID

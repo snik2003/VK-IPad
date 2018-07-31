@@ -111,6 +111,10 @@
 		17FDD8E3210F2D410064558A /* TopicsListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17FDD8E2210F2D410064558A /* TopicsListController.swift */; };
 		17FDD8E5210F2F3C0064558A /* Topic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17FDD8E4210F2F3C0064558A /* Topic.swift */; };
 		17FDD8E7210F34410064558A /* TopicCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17FDD8E6210F34410064558A /* TopicCell.swift */; };
+		17FDD8E9211059F20064558A /* TopicController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17FDD8E8211059F20064558A /* TopicController.swift */; };
+		17FDD8EB211061890064558A /* ParseComments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17FDD8EA211061890064558A /* ParseComments.swift */; };
+		17FDD8ED2110621E0064558A /* ParseTopics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17FDD8EC2110621E0064558A /* ParseTopics.swift */; };
+		17FDD8EF2110629C0064558A /* ReloadTopicController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17FDD8EE2110629C0064558A /* ReloadTopicController.swift */; };
 		2286DFA9FA1B572377DE03A3 /* Pods_VK_IPad.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ECEFB335DD55F5E58C7A64A /* Pods_VK_IPad.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 /* End PBXBuildFile section */
 
@@ -222,6 +226,10 @@
 		17FDD8E2210F2D410064558A /* TopicsListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopicsListController.swift; sourceTree = "<group>"; };
 		17FDD8E4210F2F3C0064558A /* Topic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Topic.swift; sourceTree = "<group>"; };
 		17FDD8E6210F34410064558A /* TopicCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopicCell.swift; sourceTree = "<group>"; };
+		17FDD8E8211059F20064558A /* TopicController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopicController.swift; sourceTree = "<group>"; };
+		17FDD8EA211061890064558A /* ParseComments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParseComments.swift; sourceTree = "<group>"; };
+		17FDD8EC2110621E0064558A /* ParseTopics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParseTopics.swift; sourceTree = "<group>"; };
+		17FDD8EE2110629C0064558A /* ReloadTopicController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReloadTopicController.swift; sourceTree = "<group>"; };
 		1ECEFB335DD55F5E58C7A64A /* Pods_VK_IPad.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_VK_IPad.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		92ED85805D6C190E02304F34 /* Pods-VK-IPad.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VK-IPad.debug.xcconfig"; path = "Pods/Target Support Files/Pods-VK-IPad/Pods-VK-IPad.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -263,6 +271,7 @@
 				17A1A5C020D8EA4C00D9CE00 /* ReloadGroupProfileController.swift */,
 				17996B5220DCDC6F003DA26B /* ReloadVideoListController.swift */,
 				178D83C92100A04000AFB7EB /* ReloadPhotosListController.swift */,
+				17FDD8EE2110629C0064558A /* ReloadTopicController.swift */,
 			);
 			path = ReloadInterface;
 			sourceTree = "<group>";
@@ -444,6 +453,8 @@
 				178D83C521009F7B00AFB7EB /* ParsePhotosList.swift */,
 				178D83C721009FBF00AFB7EB /* ParsePhotoAlbums.swift */,
 				17725130210A1E4300B4C6FA /* ParsePushSettings.swift */,
+				17FDD8EA211061890064558A /* ParseComments.swift */,
+				17FDD8EC2110621E0064558A /* ParseTopics.swift */,
 			);
 			path = ParseServerData;
 			sourceTree = "<group>";
@@ -515,6 +526,7 @@
 			isa = PBXGroup;
 			children = (
 				17FDD8E2210F2D410064558A /* TopicsListController.swift */,
+				17FDD8E8211059F20064558A /* TopicController.swift */,
 				17FDD8E6210F34410064558A /* TopicCell.swift */,
 			);
 			path = Topics;
@@ -668,6 +680,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				17424FF120D5A3C400F52C4C /* Poll.swift in Sources */,
+				17FDD8ED2110621E0064558A /* ParseTopics.swift in Sources */,
 				174912EC20D300DD00FCF9F9 /* vkSingleton.swift in Sources */,
 				17996B5320DCDC6F003DA26B /* ReloadVideoListController.swift in Sources */,
 				17A1A5BF20D8E7FD00D9CE00 /* GroupProfileView.swift in Sources */,
@@ -686,6 +699,7 @@
 				17A1A5B720D8D31200D9CE00 /* Button.swift in Sources */,
 				1700D24B20DE4104003C50A1 /* VideoCell.swift in Sources */,
 				174912E720D300DD00FCF9F9 /* Int.swift in Sources */,
+				17FDD8EB211061890064558A /* ParseComments.swift in Sources */,
 				174912F520D300DD00FCF9F9 /* AppDelegate.swift in Sources */,
 				17B409F62109F961004CED46 /* OptionsController.swift in Sources */,
 				174912E320D300DD00FCF9F9 /* Date.swift in Sources */,
@@ -718,10 +732,12 @@
 				1749130720D3055100FCF9F9 /* FriendRequest.swift in Sources */,
 				174912F720D300DD00FCF9F9 /* ViewControllerUtils.swift in Sources */,
 				17B409F02108822E004CED46 /* UserInfoController.swift in Sources */,
+				17FDD8EF2110629C0064558A /* ReloadTopicController.swift in Sources */,
 				17B134A720DACD110058E1A8 /* Likes.swift in Sources */,
 				178D83C821009FBF00AFB7EB /* ParsePhotoAlbums.swift in Sources */,
 				173D666120D3C07900EEBF46 /* Control.swift in Sources */,
 				174912E420D300DD00FCF9F9 /* Label.swift in Sources */,
+				17FDD8E9211059F20064558A /* TopicController.swift in Sources */,
 				173D667920D40FCE00EEBF46 /* UITextViewPlaceholder.swift in Sources */,
 				17996B5120DCDBC0003DA26B /* ParseVideos.swift in Sources */,
 				1700D24D20DE4156003C50A1 /* VideoController.swift in Sources */,
