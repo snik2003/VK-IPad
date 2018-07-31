@@ -53,7 +53,7 @@ class TopicController: UIViewController, UITableViewDelegate, UITableViewDataSou
     func createTableView() {
         tableView = UITableView()
         
-        tableView.frame = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height)
+        tableView.frame = CGRect(x: 0, y: 0, width: self.width, height: self.view.bounds.height)
         
         commentView = DCCommentView.init(scrollView: self.tableView, frame: self.tableView.bounds)
         commentView.delegate = self
@@ -76,7 +76,17 @@ class TopicController: UIViewController, UITableViewDelegate, UITableViewDataSou
     }
     
     @objc func tapStickerButton(sender: UIButton) {
+        commentView.endEditing(true)
         
+        let stickerView = StickerView()
+        stickerView.width = 320
+        stickerView.height = stickerView.width + 70
+        
+        stickerView.delegate = self
+        stickerView.button = self.commentView.stickerButton
+        stickerView.numProd = 1
+        
+        stickerView.show()
     }
     
     @objc func tapAccessoryButton(sender: UIButton) {
@@ -216,7 +226,9 @@ class TopicController: UIViewController, UITableViewDelegate, UITableViewDataSou
             return topics.count
         }
         if section == 1 {
-            return comments.count + 1
+            if comments.count > 0 {
+                return comments.count + 1
+            }
         }
         return 0
     }
@@ -265,8 +277,22 @@ class TopicController: UIViewController, UITableViewDelegate, UITableViewDataSou
         
     }
     
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if section == 0 {
+            return 5
+        }
+        return 0
+    }
+    
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 5
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let viewHeader = UIView()
+        viewHeader.backgroundColor = UIColor(displayP3Red: 242/255, green: 242/255, blue: 242/255, alpha: 1)
+        
+        return viewHeader
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
@@ -336,6 +362,7 @@ class TopicController: UIViewController, UITableViewDelegate, UITableViewDataSou
                 
                 cell.configureCell()
                 
+                cell.separatorInset = UIEdgeInsets(top: 0, left: 20 + cell.avatarHeight, bottom: 0, right: 20)
                 cell.selectionStyle = .none
                 
                 return cell
@@ -345,5 +372,101 @@ class TopicController: UIViewController, UITableViewDelegate, UITableViewDataSou
             
             return cell
         }
+    }
+    
+    func createComment(text: String, attachments: String, replyID: Int, stickerID: Int) {
+        let url = "/method/board.createComment"
+        var parameters = [
+            "access_token": vkSingleton.shared.accessToken,
+            "group_id": self.groupID,
+            "topic_id": self.topicID,
+            "message": text,
+            "attachments": attachments,
+            "v": vkSingleton.shared.version
+        ]
+        
+        if vkSingleton.shared.commentFromGroup > 0 {
+            parameters["from_group"] = "\(vkSingleton.shared.commentFromGroup)"
+        }
+        
+        if replyID > 0 {
+            parameters["reply_to_comment"] = "\(replyID)"
+        }
+        
+        if stickerID > 0 {
+            parameters["sticker_id"] = "\(stickerID)"
+        }
+        
+        let request = GetServerDataOperation(url: url, parameters: parameters)
+        request.completionBlock = {
+            guard let data = request.data else { return }
+            
+            guard let json = try? JSON(data: data) else { print("json error"); return }
+            
+            let error = ErrorJson(json: JSON.null)
+            error.errorCode = json["error"]["error_code"].intValue
+            error.errorMsg = json["error"]["error_msg"].stringValue
+            
+            if error.errorCode == 0 {
+                OperationQueue.main.addOperation {
+                    self.offset = 0
+                    self.comments.removeAll(keepingCapacity: false)
+                    self.users.removeAll(keepingCapacity: false)
+                    self.groups.removeAll(keepingCapacity: false)
+                    
+                    self.loadMoreComments()
+                    self.commentView.becomeFirstResponder()
+                }
+            } else if error.errorCode == 15 && vkSingleton.shared.commentFromGroup > 0 {
+                self.showErrorMessage(title: "Ошибка", msg: "ВКонтакте закрыл доступ для отправки комментариев от имени малочисленных и недавно созданных групп. Попробуйте отправить комментарий от имени данного сообщества позднее.")
+            } else if error.errorCode == 213 {
+                self.showErrorMessage(title: "Ошибка", msg: "\nНет доступа к комментированию записи.\n")
+            } else if error.errorCode == 223 {
+                self.showErrorMessage(title: "Ошибка", msg: "\nПревышен лимит комментариев на стене.\n")
+            } else {
+                self.showErrorMessage(title: "Ошибка #\(error.errorCode)", msg: "\(error.errorMsg)")
+            }
+        }
+        OperationQueue().addOperation(request)
+    }
+    
+    func deleteComment(commentID: String) {
+        
+        let url = "/method/board.deleteComment"
+        let parameters = [
+            "access_token": vkSingleton.shared.accessToken,
+            "group_id": self.groupID,
+            "topic_id": self.topicID,
+            "comment_id": commentID,
+            "v": vkSingleton.shared.version
+        ]
+        
+        let request = GetServerDataOperation(url: url, parameters: parameters)
+        
+        request.completionBlock = {
+            guard let data = request.data else { return }
+            
+            guard let json = try? JSON(data: data) else { print("json error"); return }
+            
+            let error = ErrorJson(json: JSON.null)
+            error.errorCode = json["error"]["error_code"].intValue
+            error.errorMsg = json["error"]["error_msg"].stringValue
+            
+            if error.errorCode == 0 {
+                OperationQueue.main.addOperation {
+                    self.offset = 0
+                    self.comments.removeAll(keepingCapacity: false)
+                    self.users.removeAll(keepingCapacity: false)
+                    self.groups.removeAll(keepingCapacity: false)
+                    
+                    self.loadMoreComments()
+                    self.commentView.becomeFirstResponder()
+                }
+            } else {
+                self.showErrorMessage(title: "Ошибка #\(error.errorCode)", msg: "\(error.errorMsg)")
+            }
+        }
+        
+        OperationQueue().addOperation(request)
     }
 }

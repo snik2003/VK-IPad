@@ -31,7 +31,7 @@ class CommentCell: UITableViewCell {
     let likesButtonHeight: CGFloat = 30
     let likesButtonWidth: CGFloat = 100
     let menuButtonHeight: CGFloat = 20
-    let menuButtonWidth: CGFloat = 100
+    let menuButtonWidth: CGFloat = 120
     
     let stickerHeight: CGFloat = 150
     
@@ -858,6 +858,14 @@ class CommentCell: UITableViewCell {
             button1.add(for: .touchUpInside) {
                 button1.buttonTouched()
                 
+                
+                if let controller = self.delegate as? RecordController {
+                    controller.deleteComment(commentID: "\(self.comment.id)")
+                } else if let controller = self.delegate as? VideoController {
+                    controller.deleteComment(commentID: "\(self.comment.id)")
+                } else if let controller = self.delegate as? TopicController {
+                    controller.deleteComment(commentID: "\(self.comment.id)")
+                }
             }
             let size = delegate.getTextSize(text: button1.titleLabel!.text!, font: menuFont, maxWidth: cellWidth)
             button1.frame = CGRect(x: leftX, y: topY, width: size.width, height: menuButtonHeight)

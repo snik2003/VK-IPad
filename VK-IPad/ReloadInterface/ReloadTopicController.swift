@@ -59,7 +59,7 @@ class ReloadTopicController: Operation {
         }
         
         controller.offset += controller.count
-        controller.tableView.separatorStyle = .none
+        controller.tableView.separatorStyle = .singleLine
         controller.tableView.reloadData()
         ViewControllerUtils().hideActivityIndicator()
     }

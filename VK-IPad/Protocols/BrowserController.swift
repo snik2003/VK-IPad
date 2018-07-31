@@ -95,8 +95,12 @@ class BrowserController: UIViewController, WKNavigationDelegate {
     }
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        if let url = webView.url {
+            urlTextField.text = url.absoluteString
+        }
         progress.progress = 1
         progress.isHidden = true
+        
     }
     
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
