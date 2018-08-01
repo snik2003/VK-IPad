@@ -157,7 +157,7 @@
     self.textLabel = [[UILabel alloc] init];
     self.textLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     self.textLabel.backgroundColor = [UIColor clearColor];
-    self.textLabel.text = NSLocalizedString(@"Введите текст", nil);
+    self.textLabel.text = NSLocalizedString(@"Введите текст сообщения", nil);
     self.textLabel.font = [UIFont fontWithName:@"Verdana" size:14];
     self.textLabel.textColor = [UIColor colorWithWhite:0.8 alpha:1];
     [self.backView addSubview:self.textLabel];
@@ -202,7 +202,7 @@
         self.maxScrollHeight = self.scrollView.frame.size.height;
     }
     self.blurBar.frame = CGRectMake(0, 0, self.messageBarView.frame.size.width, self.messageBarView.frame.size.height);
-    CGFloat pad = 8;
+    CGFloat pad = 10;
     CGFloat btnWidth = 30;
     CGFloat left = pad;
     CGFloat tpad = 2;

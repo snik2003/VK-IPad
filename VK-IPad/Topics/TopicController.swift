@@ -38,6 +38,8 @@ class TopicController: UIViewController, UITableViewDelegate, UITableViewDataSou
     
     var delegate: UIViewController!
 
+    var attachments = ""
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -59,7 +61,7 @@ class TopicController: UIViewController, UITableViewDelegate, UITableViewDataSou
         commentView.delegate = self
         commentView.tintColor = UIColor.init(displayP3Red: 0/255, green: 84/255, blue: 147/255, alpha: 1)
         
-        commentView.sendImage = UIImage(named: "send")
+        commentView.sendImage = UIImage(named: "send2")
         commentView.stickerImage = UIImage(named: "sticker")
         commentView.stickerButton.addTarget(self, action: #selector(self.tapStickerButton(sender:)), for: .touchUpInside)
         
@@ -112,7 +114,8 @@ class TopicController: UIViewController, UITableViewDelegate, UITableViewDataSou
     }
     
     func didSendComment(_ text: String!) {
-        
+        commentView.endEditing(true)
+        createComment(text: text, attachments: attachments, replyID: 0, stickerID: 0)
     }
     
     @objc func tapBarButtonItem(sender: UIBarButtonItem) {
@@ -328,7 +331,7 @@ class TopicController: UIViewController, UITableViewDelegate, UITableViewDataSou
             
             if group.count > 0 {
                 cell.delegate = self
-                cell.topic = topics[indexPath.section]
+                cell.topic = topics[0]
                 cell.group = group[0]
                 cell.users = topicUsers
                 
@@ -432,6 +435,12 @@ class TopicController: UIViewController, UITableViewDelegate, UITableViewDataSou
                     self.users.removeAll(keepingCapacity: false)
                     self.groups.removeAll(keepingCapacity: false)
                     
+                    self.attachments = ""
+                    
+                    if self.topics.count > 0 {
+                        self.topics[0].commentsCount += 1
+                    }
+                    
                     self.loadMoreComments()
                     self.commentView.becomeFirstResponder()
                 }
@@ -476,6 +485,10 @@ class TopicController: UIViewController, UITableViewDelegate, UITableViewDataSou
                     self.comments.removeAll(keepingCapacity: false)
                     self.users.removeAll(keepingCapacity: false)
                     self.groups.removeAll(keepingCapacity: false)
+                    
+                    if self.topics.count > 0 {
+                        self.topics[0].commentsCount -= 1
+                    }
                     
                     self.loadMoreComments()
                     self.commentView.becomeFirstResponder()

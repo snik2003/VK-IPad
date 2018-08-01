@@ -32,7 +32,6 @@ class CommentCell: UITableViewCell {
     let likesButtonHeight: CGFloat = 30
     let likesButtonWidth: CGFloat = 100
     let menuButtonHeight: CGFloat = 20
-    let menuButtonWidth: CGFloat = 120
     
     let stickerHeight: CGFloat = 150
     
@@ -746,7 +745,7 @@ class CommentCell: UITableViewCell {
         
         var leftX = avatarHeight + 20
         
-        if "\(comment.fromID)" != vkSingleton.shared.userID {
+        if "\(comment.fromID)" != vkSingleton.shared.userID && !(self.delegate is TopicController) {
             let button1 = UIButton()
             button1.tag = 250
             button1.setTitle("Ответить", for: .normal)
@@ -756,6 +755,23 @@ class CommentCell: UITableViewCell {
             button1.add(for: .touchUpInside) {
                 button1.buttonTouched()
                 
+                let name = self.getLinkFromID(commentID: self.comment.fromID)
+                
+                if let controller = self.delegate as? RecordController {
+                    
+                    controller.replyID = self.comment.id
+                    if name != "" {
+                        controller.commentView.textView.text = "\(name), "
+                    }
+                    
+                } else if let controller = self.delegate as? VideoController {
+                    
+                    controller.replyID = self.comment.id
+                    if name != "" {
+                        controller.commentView.textView.text = "\(name), "
+                    }
+                    
+                }
             }
             let size = delegate.getTextSize(text: button1.titleLabel!.text!, font: menuFont, maxWidth: cellWidth)
             button1.frame = CGRect(x: leftX, y: topY, width: size.width, height: menuButtonHeight)
@@ -847,9 +863,10 @@ class CommentCell: UITableViewCell {
                     button1.buttonTouched()
                     
                 }
-                button1.frame = CGRect(x: leftX, y: topY, width: menuButtonWidth, height: menuButtonHeight)
+                let size = delegate.getTextSize(text: button1.titleLabel!.text!, font: menuFont, maxWidth: cellWidth)
+                button1.frame = CGRect(x: leftX, y: topY, width: size.width, height: menuButtonHeight)
                 self.addSubview(button1)
-                leftX += menuButtonWidth
+                leftX += size.width + 20
             }
             
             let button1 = UIButton()
@@ -975,5 +992,28 @@ extension CommentCell {
         }
         
         return height
+    }
+    
+    func getLinkFromID(commentID: Int) -> String {
+        
+        var link = ""
+        
+        if commentID > 0 {
+            if let users = self.users {
+                let user = users.filter({ $0.uid == "\(commentID)" })
+                if user.count > 0 {
+                    link = "[id\(user[0].uid)|\(user[0].firstName)]"
+                }
+            }
+        } else if commentID < 0 {
+            if let groups = self.groups {
+                let group = groups.filter({ $0.gid == abs(commentID) })
+                if group.count > 0 {
+                    link = "[public\(group[0].gid)|\(group[0].name)]"
+                }
+            }
+        }
+        
+        return link
     }
 }

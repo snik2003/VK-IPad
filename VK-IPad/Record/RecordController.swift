@@ -42,7 +42,9 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
     var count = 30
     var offset = 0
     var totalComments = 0
+    
     var attachments = ""
+    var replyID = 0
     
     let queue: OperationQueue = {
         let queue = OperationQueue()
@@ -75,7 +77,7 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
         commentView.delegate = self
         commentView.tintColor = UIColor.init(displayP3Red: 0/255, green: 84/255, blue: 147/255, alpha: 1)
         
-        commentView.sendImage = UIImage(named: "send")
+        commentView.sendImage = UIImage(named: "send2")
         commentView.stickerImage = UIImage(named: "sticker")
         commentView.stickerButton.addTarget(self, action: #selector(self.tapStickerButton(sender:)), for: .touchUpInside)
         
@@ -120,7 +122,8 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
     }
     
     func didSendComment(_ text: String!) {
-        
+        commentView.endEditing(true)
+        createComment(text: text, attachments: attachments, replyID: replyID, stickerID: 0)
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -633,6 +636,8 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
             
             if let indexPath = self.tableView.indexPathForRow(at: buttonPosition) {
                 
+                commentView.endEditing(true)
+                
                 let index = comments.count - indexPath.row
                 let comment = comments[index]
                 
@@ -804,6 +809,13 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
                     self.commentsProfiles.removeAll(keepingCapacity: false)
                     self.commentsGroups.removeAll(keepingCapacity: false)
                     
+                    self.attachments = ""
+                    self.replyID = 0
+                    
+                    if self.record.count > 0 {
+                        self.record[0].commentsCount += 1
+                    }
+                    
                     self.loadMoreComments()
                     self.commentView.becomeFirstResponder()
                 }
@@ -851,6 +863,10 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
                     self.comments.removeAll(keepingCapacity: false)
                     self.commentsProfiles.removeAll(keepingCapacity: false)
                     self.commentsGroups.removeAll(keepingCapacity: false)
+                    
+                    if self.record.count > 0 {
+                        self.record[0].commentsCount -= 1
+                    }
                     
                     self.loadMoreComments()
                     self.commentView.becomeFirstResponder()

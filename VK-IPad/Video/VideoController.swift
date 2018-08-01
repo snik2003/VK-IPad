@@ -35,7 +35,9 @@ class VideoController: UIViewController, UITableViewDelegate, UITableViewDataSou
     
     var tableView = UITableView()
     var commentView: DCCommentView!
+    
     var attachments = ""
+    var replyID = 0
     
     var navHeight: CGFloat = 64
     
@@ -77,7 +79,7 @@ class VideoController: UIViewController, UITableViewDelegate, UITableViewDataSou
         commentView.delegate = self
         commentView.tintColor = UIColor.init(displayP3Red: 0/255, green: 84/255, blue: 147/255, alpha: 1)
         
-        commentView.sendImage = UIImage(named: "send")
+        commentView.sendImage = UIImage(named: "send2")
         commentView.stickerImage = UIImage(named: "sticker")
         commentView.stickerButton.addTarget(self, action: #selector(self.tapStickerButton(sender:)), for: .touchUpInside)
         
@@ -132,8 +134,7 @@ class VideoController: UIViewController, UITableViewDelegate, UITableViewDataSou
     
     func didSendComment(_ text: String!) {
         commentView.endEditing(true)
-        
-        
+        createComment(text: text, attachments: attachments, replyID: replyID, stickerID: 0)
     }
     
     func getVideo() {
@@ -502,6 +503,8 @@ class VideoController: UIViewController, UITableViewDelegate, UITableViewDataSou
             
             if let indexPath = self.tableView.indexPathForRow(at: buttonPosition) {
                 
+                commentView.endEditing(true)
+                
                 let index = comments.count - indexPath.row
                 let comment = comments[index]
                 
@@ -760,6 +763,13 @@ class VideoController: UIViewController, UITableViewDelegate, UITableViewDataSou
                     self.commentsProfiles.removeAll(keepingCapacity: false)
                     self.commentsGroups.removeAll(keepingCapacity: false)
                     
+                    self.attachments = ""
+                    self.replyID = 0
+                    
+                    if self.video.count > 0 {
+                        self.video[0].comments += 1
+                    }
+                    
                     self.loadMoreComments()
                     self.commentView.becomeFirstResponder()
                 }
@@ -803,6 +813,10 @@ class VideoController: UIViewController, UITableViewDelegate, UITableViewDataSou
                     self.comments.removeAll(keepingCapacity: false)
                     self.commentsProfiles.removeAll(keepingCapacity: false)
                     self.commentsGroups.removeAll(keepingCapacity: false)
+                    
+                    if self.video.count > 0 {
+                        self.video[0].comments -= 1
+                    }
                     
                     self.loadMoreComments()
                     self.commentView.becomeFirstResponder()
