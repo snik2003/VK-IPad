@@ -64,10 +64,14 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
         StoreReviewHelper.checkAndAskForReview()
     }
 
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+    }
+    
     func configureTableView() {
         tableView.frame = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height)
         
-        commentView = DCCommentView.init(scrollView: self.tableView, frame: self.tableView.bounds)
+        commentView = DCCommentView(scrollView: self.tableView, frame: self.tableView.bounds)
         commentView.delegate = self
         commentView.tintColor = UIColor.init(displayP3Red: 0/255, green: 84/255, blue: 147/255, alpha: 1)
         
@@ -78,25 +82,24 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
         commentView.accessoryImage = UIImage(named: "attachment")
         commentView.accessoryButton.addTarget(self, action: #selector(self.tapAccessoryButton(sender:)), for: .touchUpInside)
         
+        setCommentFromGroupID(id: vkSingleton.shared.commentFromGroup, controller: self)
+        
         tableView.delegate = self
         tableView.dataSource = self
         
         tableView.register(RecordCell.self, forCellReuseIdentifier: "recordCell")
         tableView.register(CommentCell.self, forCellReuseIdentifier: "commentCell")
     }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-    }
 
     @objc func tapAccessoryButton(sender: UIButton) {
-        
+        commentView.endEditing(true)
+        commentView.accessoryButton.buttonTouched()
         
     }
 
     @objc func tapStickerButton(sender: UIButton) {
         commentView.endEditing(true)
-        
+        commentView.stickerButton.buttonTouched()
         
         let stickerView = StickerView()
         stickerView.width = 320
@@ -107,6 +110,13 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
         stickerView.numProd = 1
         
         stickerView.show()
+    }
+    
+    @objc func tapFromGroupButton(sender: UIButton) {
+        commentView.endEditing(true)
+        commentView.fromGroupButton.buttonTouched()
+        
+        actionFromGroupButton(fromView: commentView.fromGroupButton)
     }
     
     func didSendComment(_ text: String!) {

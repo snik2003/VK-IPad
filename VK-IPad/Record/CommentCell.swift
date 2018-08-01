@@ -9,6 +9,7 @@
 import UIKit
 import SwiftyJSON
 import WebKit
+import SCLAlertView
 
 class CommentCell: UITableViewCell {
 
@@ -834,7 +835,8 @@ class CommentCell: UITableViewCell {
             leftX += size.width + 20
         }
         
-        if "\(comment.fromID)" == vkSingleton.shared.userID {
+        if "\(comment.fromID)" == vkSingleton.shared.userID || (comment.fromID < 0 && vkSingleton.shared.adminGroupID.contains(abs(comment.fromID))) {
+            
             if Int(Date().timeIntervalSince1970) - comment.date <= 24 * 60 * 60 {
                 let button1 = UIButton()
                 button1.tag = 250
@@ -858,15 +860,35 @@ class CommentCell: UITableViewCell {
             button1.add(for: .touchUpInside) {
                 button1.buttonTouched()
                 
+                let appearance = SCLAlertView.SCLAppearance(
+                    kTitleTop: 32.0,
+                    kWindowWidth: 350,
+                    kTitleFont: UIFont(name: "Verdana-Bold", size: 14)!,
+                    kTextFont: UIFont(name: "Verdana", size: 15)!,
+                    kButtonFont: UIFont(name: "Verdana", size: 16)!,
+                    showCloseButton: false,
+                    showCircularIcon: true
+                )
+                let alertView = SCLAlertView(appearance: appearance)
                 
-                if let controller = self.delegate as? RecordController {
-                    controller.deleteComment(commentID: "\(self.comment.id)")
-                } else if let controller = self.delegate as? VideoController {
-                    controller.deleteComment(commentID: "\(self.comment.id)")
-                } else if let controller = self.delegate as? TopicController {
-                    controller.deleteComment(commentID: "\(self.comment.id)")
+                alertView.addButton("Да, я уверен") {
+                    
+                    if let controller = self.delegate as? RecordController {
+                        controller.deleteComment(commentID: "\(self.comment.id)")
+                    } else if let controller = self.delegate as? VideoController {
+                        controller.deleteComment(commentID: "\(self.comment.id)")
+                    } else if let controller = self.delegate as? TopicController {
+                        controller.deleteComment(commentID: "\(self.comment.id)")
+                    }
                 }
+                
+                alertView.addButton("Отмена, я передумал") {
+                    
+                }
+                
+                alertView.showWarning("Подтверждение!", subTitle: "Вы уверены, что хотите удалить данный комментарий? Это действие необратимо.")
             }
+            
             let size = delegate.getTextSize(text: button1.titleLabel!.text!, font: menuFont, maxWidth: cellWidth)
             button1.frame = CGRect(x: leftX, y: topY, width: size.width, height: menuButtonHeight)
             self.addSubview(button1)

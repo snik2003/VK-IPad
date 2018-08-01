@@ -70,31 +70,6 @@ class VideoController: UIViewController, UITableViewDelegate, UITableViewDataSou
         
     }
     
-    func didSendComment(_ text: String!) {
-        
-        commentView.endEditing(true)
-        //self.createVideoComment(text: text, attachments: attachments, stickerID: 0, replyID: 0, guid: "\(Date().timeIntervalSince1970)", controller: self)
-    }
-    
-    @objc func tapStickerButton(sender: UIButton) {
-        commentView.endEditing(true)
-        
-        let stickerView = StickerView()
-        stickerView.width = 320
-        stickerView.height = stickerView.width + 70
-        
-        stickerView.delegate = self
-        stickerView.button = self.commentView.stickerButton
-        stickerView.numProd = 1
-        
-        stickerView.show()
-    }
-    
-    @objc func tapAccessoryButton(sender: UIButton) {
-        
-        //self.openNewCommentController(ownerID: ownerID, message: commentView.textView.text!, type: "new_video_comment", title: "Новый комментарий", replyID: 0, replyName: "", comment: nil, controller: self)
-    }
-    
     func configureTableView() {
         tableView.frame = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height)
         
@@ -106,12 +81,13 @@ class VideoController: UIViewController, UITableViewDelegate, UITableViewDataSou
         commentView.stickerImage = UIImage(named: "sticker")
         commentView.stickerButton.addTarget(self, action: #selector(self.tapStickerButton(sender:)), for: .touchUpInside)
         
-        if vkSingleton.shared.commentFromGroup > 0 && vkSingleton.shared.commentFromGroup == abs(Int(self.ownerID)!) {
-            //setCommentFromGroupID(id: vkSingleton.shared.commentFromGroup, controller: self)
-        } else {
-            //setCommentFromGroupID(id: 0, controller: self)
+        if let id = Int(self.ownerID) {
+            if vkSingleton.shared.commentFromGroup > 0 && vkSingleton.shared.commentFromGroup == abs(id) {
+                setCommentFromGroupID(id: vkSingleton.shared.commentFromGroup, controller: self)
+            } else {
+                setCommentFromGroupID(id: 0, controller: self)
+            }
         }
-        
         
         commentView.accessoryImage = UIImage(named: "attachment")
         commentView.accessoryButton.addTarget(self, action: #selector(self.tapAccessoryButton(sender:)), for: .touchUpInside)
@@ -126,9 +102,38 @@ class VideoController: UIViewController, UITableViewDelegate, UITableViewDataSou
         tableView.register(CommentCell.self, forCellReuseIdentifier: "commentCell")
     }
     
+    @objc func tapAccessoryButton(sender: UIButton) {
+        commentView.endEditing(true)
+        commentView.accessoryButton.buttonTouched()
+        
+    }
+    
+    @objc func tapStickerButton(sender: UIButton) {
+        commentView.endEditing(true)
+        commentView.stickerButton.buttonTouched()
+        
+        let stickerView = StickerView()
+        stickerView.width = 320
+        stickerView.height = stickerView.width + 70
+        
+        stickerView.delegate = self
+        stickerView.button = self.commentView.stickerButton
+        stickerView.numProd = 1
+        
+        stickerView.show()
+    }
+    
     @objc func tapFromGroupButton(sender: UIButton) {
-        self.commentView.endEditing(true)
-        //self.actionFromGroupButton(fromView: commentView.fromGroupButton)
+        commentView.endEditing(true)
+        commentView.fromGroupButton.buttonTouched()
+        
+        actionFromGroupButton(fromView: commentView.fromGroupButton)
+    }
+    
+    func didSendComment(_ text: String!) {
+        commentView.endEditing(true)
+        
+        
     }
     
     func getVideo() {

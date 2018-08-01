@@ -66,6 +66,14 @@ class TopicController: UIViewController, UITableViewDelegate, UITableViewDataSou
         commentView.accessoryImage = UIImage(named: "attachment")
         commentView.accessoryButton.addTarget(self, action: #selector(self.tapAccessoryButton(sender:)), for: .touchUpInside)
         
+        if let gid = Int(self.groupID) {
+            if vkSingleton.shared.commentFromGroup > 0 && vkSingleton.shared.commentFromGroup == abs(gid) {
+                setCommentFromGroupID(id: vkSingleton.shared.commentFromGroup, controller: self)
+            } else {
+                setCommentFromGroupID(id: 0, controller: self)
+            }
+        }
+        
         tableView.delegate = self
         tableView.dataSource = self
         
@@ -75,8 +83,15 @@ class TopicController: UIViewController, UITableViewDelegate, UITableViewDataSou
         tableView.separatorStyle = .none
     }
     
+    @objc func tapAccessoryButton(sender: UIButton) {
+        commentView.endEditing(true)
+        commentView.accessoryButton.buttonTouched()
+        
+    }
+    
     @objc func tapStickerButton(sender: UIButton) {
         commentView.endEditing(true)
+        commentView.stickerButton.buttonTouched()
         
         let stickerView = StickerView()
         stickerView.width = 320
@@ -89,8 +104,11 @@ class TopicController: UIViewController, UITableViewDelegate, UITableViewDataSou
         stickerView.show()
     }
     
-    @objc func tapAccessoryButton(sender: UIButton) {
+    @objc func tapFromGroupButton(sender: UIButton) {
+        commentView.endEditing(true)
+        commentView.fromGroupButton.buttonTouched()
         
+        actionFromGroupButton(fromView: commentView.fromGroupButton)
     }
     
     func didSendComment(_ text: String!) {
