@@ -8,6 +8,7 @@
 
 import UIKit
 import Popover
+import SCLAlertView
 
 class ChangeAccountView: UIView {
 
@@ -73,12 +74,19 @@ class ChangeAccountView: UIView {
                 self.popover.dismiss()
                 
                 if let userID = Int(vkSingleton.shared.userID), account.userID != userID {
-                    let alertController = UIAlertController(title: nil, message: "Вы действительно хотите перейти в  учетную запись «\(account.firstName) \(account.lastName)»?", preferredStyle: .alert)
                     
-                    let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
-                    alertController.addAction(cancelAction)
+                    let appearance = SCLAlertView.SCLAppearance(
+                        kTitleTop: 32.0,
+                        kWindowWidth: 350,
+                        kTitleFont: UIFont(name: "Verdana-Bold", size: 14)!,
+                        kTextFont: UIFont(name: "Verdana", size: 15)!,
+                        kButtonFont: UIFont(name: "Verdana", size: 16)!,
+                        showCloseButton: false,
+                        showCircularIcon: true
+                    )
+                    let alertView = SCLAlertView(appearance: appearance)
                     
-                    let action = UIAlertAction(title: "Да, хочу", style: .destructive) { action in
+                    alertView.addButton("Да, хочу перейти") {
                         
                         vkSingleton.shared.userID = "\(account.userID)"
                         vkSingleton.shared.avatarURL = ""
@@ -104,9 +112,10 @@ class ChangeAccountView: UIView {
                         
                         UIApplication.shared.keyWindow?.rootViewController = controller
                     }
-                    alertController.addAction(action)
                     
-                    self.delegate.present(alertController, animated: true)
+                    alertView.addButton("Нет, я передумал") {}
+                    
+                    alertView.showWarning("Подтверждение!", subTitle: "Вы действительно хотите перейти в  учетную запись «\(account.firstName) \(account.lastName)»?")
                 }
             }
         }
@@ -140,12 +149,18 @@ class ChangeAccountView: UIView {
             tap.add {
                 self.popover.dismiss()
                 
-                let alertController = UIAlertController(title: nil, message: "Вы действительно хотите добавить еще одну учетную запись?", preferredStyle: .alert)
+                let appearance = SCLAlertView.SCLAppearance(
+                    kTitleTop: 32.0,
+                    kWindowWidth: 350,
+                    kTitleFont: UIFont(name: "Verdana-Bold", size: 14)!,
+                    kTextFont: UIFont(name: "Verdana", size: 15)!,
+                    kButtonFont: UIFont(name: "Verdana", size: 16)!,
+                    showCloseButton: false,
+                    showCircularIcon: true
+                )
+                let alertView = SCLAlertView(appearance: appearance)
                 
-                let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
-                alertController.addAction(cancelAction)
-                
-                let action = UIAlertAction(title: "Да, хочу", style: .destructive) { action in
+                alertView.addButton("Да, хочу добавить") {
                     vkSingleton.shared.avatarURL = ""
                     
                     /*vkUserLongPoll.shared.request.cancel()
@@ -161,9 +176,10 @@ class ChangeAccountView: UIView {
                     
                     self.delegate.performSegue(withIdentifier: "addAccountVK", sender: nil)
                 }
-                alertController.addAction(action)
                 
-                self.delegate.present(alertController, animated: true)
+                alertView.addButton("Нет, я передумал") {}
+                
+                alertView.showWarning("Подтверждение!", subTitle: "Вы действительно хотите добавить еще одну учетную запись?")
             }
         }
         

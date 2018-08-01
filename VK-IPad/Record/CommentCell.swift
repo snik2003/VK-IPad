@@ -882,9 +882,7 @@ class CommentCell: UITableViewCell {
                     }
                 }
                 
-                alertView.addButton("Отмена, я передумал") {
-                    
-                }
+                alertView.addButton("Нет, я передумал") { }
                 
                 alertView.showWarning("Подтверждение!", subTitle: "Вы уверены, что хотите удалить данный комментарий? Это действие необратимо.")
             }

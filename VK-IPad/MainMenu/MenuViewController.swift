@@ -10,6 +10,7 @@ import UIKit
 import RealmSwift
 import SwiftyJSON
 import Popover
+import SCLAlertView
 
 class MenuViewController: UITableViewController {
 
@@ -287,31 +288,39 @@ class MenuViewController: UITableViewController {
     }
     
     func exitAccountFunc() {
-        let alertController = UIAlertController(title: nil, message: "Вы действительно хотите выйти из текущей учетной записи?", preferredStyle: .alert)
+        let appearance = SCLAlertView.SCLAppearance(
+            kTitleTop: 32.0,
+            kWindowWidth: 350,
+            kTitleFont: UIFont(name: "Verdana-Bold", size: 14)!,
+            kTextFont: UIFont(name: "Verdana", size: 15)!,
+            kButtonFont: UIFont(name: "Verdana", size: 16)!,
+            showCloseButton: false,
+            showCircularIcon: true
+        )
+        let alertView = SCLAlertView(appearance: appearance)
         
-        let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
-        alertController.addAction(cancelAction)
-        
-        let action = UIAlertAction(title: "Да, хочу", style: .destructive) { action in
-            /*self.unregisterDeviceOnPush()
-            if let request = vkUserLongPoll.shared.request {
-                request.cancel()
-            }
-            vkUserLongPoll.shared.firstLaunch = true
+        alertView.addButton("Да, хочу выйти") {
             
-            for id in vkGroupLongPoll.shared.request.keys {
-                if let request = vkGroupLongPoll.shared.request[id] {
-                    request.cancel()
-                    vkGroupLongPoll.shared.firstLaunch[id] = true
-                    vkSingleton.shared.groupToken[id] = nil
-                }
-            }*/
+            /*self.unregisterDeviceOnPush()
+             if let request = vkUserLongPoll.shared.request {
+             request.cancel()
+             }
+             vkUserLongPoll.shared.firstLaunch = true
+             
+             for id in vkGroupLongPoll.shared.request.keys {
+             if let request = vkGroupLongPoll.shared.request[id] {
+             request.cancel()
+             vkGroupLongPoll.shared.firstLaunch[id] = true
+             vkSingleton.shared.groupToken[id] = nil
+             }
+             }*/
             
             self.performSegue(withIdentifier: "logoutVK", sender: nil)
         }
-        alertController.addAction(action)
         
-        self.present(alertController, animated: true)
+        alertView.addButton("Нет, я передумал") {}
+        
+        alertView.showWarning("Подтверждение!", subTitle: "Вы действительно хотите выйти из текущей учетной записи?")
     }
     
     func refreshUserInfo() {
