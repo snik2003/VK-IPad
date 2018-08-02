@@ -91,6 +91,13 @@ class TopicController: UIViewController, UITableViewDelegate, UITableViewDataSou
         commentView.endEditing(true)
         commentView.accessoryButton.buttonTouched()
         
+        let selectView = SelectAttachPanel()
+        
+        selectView.delegate = self
+        selectView.attachPanel = self.attachPanel
+        selectView.button = self.commentView.accessoryButton
+        
+        selectView.show()
     }
     
     @objc func tapStickerButton(sender: UIButton) {

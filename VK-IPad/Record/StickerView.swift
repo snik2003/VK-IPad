@@ -65,105 +65,112 @@ class StickerView: UIView {
                 product = product5
             }
         }
-        
         didSet {
-            for subview in self.subviews {
-                if subview is UIButton {
-                    subview.removeFromSuperview()
-                }
-            }
+            self.configure()
+        }
+    }
+    
+    func configure() {
+        
+        let bWidth = (width - 20) / 5
+        for index in 0...product.count-1 {
+            let sButton = UIButton()
+            sButton.frame = CGRect(x: 10 + bWidth * CGFloat(index % 5) + 3, y: 10 + bWidth * CGFloat(index / 5) + 3, width: bWidth - 6, height: bWidth - 6)
             
-            let bWidth = (width - 20) / 5
-            for index in 0...product.count-1 {
-                let sButton = UIButton()
-                sButton.frame = CGRect(x: 10 + bWidth * CGFloat(index % 5) + 3, y: 10 + bWidth * CGFloat(index / 5) + 3, width: bWidth - 6, height: bWidth - 6)
-                
-                sButton.tag = product[index]
-                let url = "https://vk.com/images/stickers/\(product[index])/256.png"
-                let getCacheImage = GetCacheImage(url: url, lifeTime: .avatarImage)
-                getCacheImage.completionBlock = {
-                    OperationQueue.main.addOperation {
-                        sButton.setImage(getCacheImage.outputImage, for: .normal)
-                        sButton.add(for: .touchUpInside) {
-                            if let controller = self.delegate as? RecordController {
-                                let attachments = controller.attachPanel.attachments
-                                let replyID = controller.attachPanel.replyID
-                                
-                                controller.createComment(text: "", attachments: attachments, replyID: replyID, stickerID: sButton.tag)
-                            } else if let controller = self.delegate as? VideoController {
-                                let attachments = controller.attachPanel.attachments
-                                let replyID = controller.attachPanel.replyID
-                                
-                                controller.createComment(text: "", attachments: attachments, replyID: replyID, stickerID: sButton.tag)
-                            } else if let controller = self.delegate as? TopicController {
-                                let attachments = controller.attachPanel.attachments
-                                
-                                controller.createComment(text: "", attachments: attachments, stickerID: sButton.tag)
-                            }
+            sButton.tag = product[index]
+            let url = "https://vk.com/images/stickers/\(product[index])/256.png"
+            let getCacheImage = GetCacheImage(url: url, lifeTime: .avatarImage)
+            getCacheImage.completionBlock = {
+                OperationQueue.main.addOperation {
+                    sButton.setImage(getCacheImage.outputImage, for: .normal)
+                    sButton.add(for: .touchUpInside) {
+                        if let controller = self.delegate as? RecordController {
+                            let attachments = controller.attachPanel.attachments
+                            let replyID = controller.attachPanel.replyID
                             
+                            controller.createComment(text: "", attachments: attachments, replyID: replyID, stickerID: sButton.tag)
+                        } else if let controller = self.delegate as? VideoController {
+                            let attachments = controller.attachPanel.attachments
+                            let replyID = controller.attachPanel.replyID
                             
-                            self.popover.dismiss()
+                            controller.createComment(text: "", attachments: attachments, replyID: replyID, stickerID: sButton.tag)
+                        } else if let controller = self.delegate as? TopicController {
+                            let attachments = controller.attachPanel.attachments
+                            
+                            controller.createComment(text: "", attachments: attachments, stickerID: sButton.tag)
                         }
-                        self.addSubview(sButton)
+                        
+                        
+                        self.popover.dismiss()
                     }
+                    self.addSubview(sButton)
                 }
-                OperationQueue().addOperation(getCacheImage)
+            }
+            OperationQueue().addOperation(getCacheImage)
+        }
+        
+        
+        for index in 1...5 {
+            var startX = width / 2 - 50 * 2.5 - 10
+            var url = "https://vk.com/images/stickers/105/256.png"
+            
+            if index == 2 {
+                startX = width / 2 - 50 * 1.5 - 5
+                url = "https://vk.com/images/stickers/3/256.png"
             }
             
+            if index == 3 {
+                startX = width / 2 - 25
+                url = "https://vk.com/images/stickers/63/256.png"
+            }
             
-            for index in 1...5 {
-                var startX = width / 2 - 50 * 2.5 - 10
-                var url = "https://vk.com/images/stickers/105/256.png"
-                
-                if index == 2 {
-                    startX = width / 2 - 50 * 1.5 - 5
-                    url = "https://vk.com/images/stickers/3/256.png"
-                }
-                
-                if index == 3 {
-                    startX = width / 2 - 25
-                    url = "https://vk.com/images/stickers/63/256.png"
-                }
-                
-                if index == 4 {
-                    startX = width / 2 + 25 + 5
-                    url = "https://vk.com/images/stickers/145/256.png"
-                }
-                
-                if index == 5 {
-                    startX = width / 2 + 50 * 1.5 + 10
-                    url = "https://vk.com/images/stickers/231/256.png"
-                }
-                
-                let menuButton = UIButton()
-                menuButton.imageEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-                menuButton.frame = CGRect(x: startX, y: width + 10, width: 50, height: 50)
-                
-                let getCacheImage = GetCacheImage(url: url, lifeTime: .avatarImage)
-                getCacheImage.completionBlock = {
-                    OperationQueue.main.addOperation {
-                        let image = getCacheImage.outputImage
-                        
+            if index == 4 {
+                startX = width / 2 + 25 + 5
+                url = "https://vk.com/images/stickers/145/256.png"
+            }
+            
+            if index == 5 {
+                startX = width / 2 + 50 * 1.5 + 10
+                url = "https://vk.com/images/stickers/231/256.png"
+            }
+            
+            let menuButton = UIButton()
+            menuButton.imageEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+            menuButton.frame = CGRect(x: startX, y: width + 10, width: 50, height: 50)
+            
+            let getCacheImage = GetCacheImage(url: url, lifeTime: .avatarImage)
+            getCacheImage.completionBlock = {
+                OperationQueue.main.addOperation {
+                    let image = getCacheImage.outputImage
+                    
+                    menuButton.layer.cornerRadius = 10
+                    menuButton.layer.borderColor = UIColor.gray.cgColor
+                    menuButton.layer.borderWidth = 1
+                    
+                    if index == self.numProd {
+                        menuButton.backgroundColor = UIColor.init(displayP3Red: 0/255, green: 84/255, blue: 147/255, alpha: 0.5)
                         menuButton.layer.cornerRadius = 10
-                        menuButton.layer.borderColor = UIColor.gray.cgColor
+                        menuButton.layer.borderColor = UIColor.init(displayP3Red: 0/255, green: 84/255, blue: 147/255, alpha: 1).cgColor
                         menuButton.layer.borderWidth = 1
-                        
-                        if index == self.numProd {
-                            menuButton.backgroundColor = UIColor.init(displayP3Red: 0/255, green: 84/255, blue: 147/255, alpha: 0.5)
-                            menuButton.layer.cornerRadius = 10
-                            menuButton.layer.borderColor = UIColor.init(displayP3Red: 0/255, green: 84/255, blue: 147/255, alpha: 1).cgColor
-                            menuButton.layer.borderWidth = 1
-                        }
-                        
-                        menuButton.setImage(image, for: .normal)
-                        
-                        menuButton.add(for: .touchUpInside) {
-                            self.numProd = index
-                        }
-                        self.addSubview(menuButton)
                     }
+                    
+                    menuButton.setImage(image, for: .normal)
+                    
+                    menuButton.add(for: .touchUpInside) {
+                        self.numProd = index
+                    }
+                    self.addSubview(menuButton)
                 }
-                OperationQueue().addOperation(getCacheImage)
+            }
+            OperationQueue().addOperation(getCacheImage)
+        }
+    }
+    
+    func removeSubviews() {
+        
+        for subview in self.subviews {
+            if subview is UIButton {
+                subview.removeFromSuperview()
             }
         }
     }

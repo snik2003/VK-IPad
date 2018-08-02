@@ -770,7 +770,9 @@ extension UIViewController: ViewControllerProtocol {
         var popover: Popover!
         let popoverOptions: [PopoverOption] = [
             .type(.up),
-            .blackOverlayColor(UIColor(white: 0.0, alpha: 0.6))
+            .cornerRadius(20),
+            .color(UIColor.white),
+            .blackOverlayColor(UIColor.gray.withAlphaComponent(0.75))
         ]
         
         let maxWidth = self.view.frame.width - 40
