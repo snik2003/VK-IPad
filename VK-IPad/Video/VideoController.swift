@@ -36,10 +36,7 @@ class VideoController: UIViewController, UITableViewDelegate, UITableViewDataSou
     var tableView = UITableView()
     var commentView: DCCommentView!
     
-    var attachments = ""
-    var replyID = 0
-    
-    var navHeight: CGFloat = 64
+    var attachPanel = AttachPanel()
     
     let queue: OperationQueue = {
         let queue = OperationQueue()
@@ -54,6 +51,7 @@ class VideoController: UIViewController, UITableViewDelegate, UITableViewDataSou
         super.viewDidLoad()
         
         OperationQueue.main.addOperation {
+            self.attachPanel.delegate = self
             self.configureTableView()
             
             let barButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(self.tapBarButtonItem(sender:)))
@@ -134,7 +132,7 @@ class VideoController: UIViewController, UITableViewDelegate, UITableViewDataSou
     
     func didSendComment(_ text: String!) {
         commentView.endEditing(true)
-        createComment(text: text, attachments: attachments, replyID: replyID, stickerID: 0)
+        createComment(text: text, attachments: attachPanel.attachments, replyID: attachPanel.replyID, stickerID: 0)
     }
     
     func getVideo() {
@@ -143,7 +141,7 @@ class VideoController: UIViewController, UITableViewDelegate, UITableViewDataSou
         
         code = "\(code) var b = API.likes.getList({\"type\":\"video\",\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"owner_id\":\"\(ownerID)\",\"item_id\":\"\(vid)\",\"filter\":\"likes\",\"extended\":\"1\",\"fields\":\"id, first_name, last_name, sex, has_photo, last_seen, online, photo_max_orig, photo_max, photo_100, deactivated, first_name_dat, friend_status\",\"count\":\"1000\",\"skip_own\":\"0\",\"v\": \"\(vkSingleton.shared.version)\"}); \n"
         
-        code = "\(code) var c = API.video.getComments({\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"owner_id\":\"\(ownerID)\",\"video_id\":\"\(vid)\",\"need_likes\":\"1\",\"offset\":\"\(offset)\",\"count\":\"\(count)\",\"sort\":\"desc\",\"preview_length\":\"0\",\"extended\":\"1\",\"fields\":\"id, first_name, last_name, photo_max_orig, photo_100, first_name_dat, first_name_acc, sex\",\"v\":\"\(vkSingleton.shared.version)\"}); \n"
+        code = "\(code) var c = API.video.getComments({\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"owner_id\":\"\(ownerID)\",\"video_id\":\"\(vid)\",\"need_likes\":\"1\",\"offset\":\"\(offset)\",\"count\":\"\(count)\",\"sort\":\"desc\",\"preview_length\":\"0\",\"extended\":\"1\",\"fields\":\"id, first_name, last_name, photo_max_orig, photo_100, first_name_dat, first_name_acc, last_name_dat, last_name_acc, sex\",\"v\":\"\(vkSingleton.shared.version)\"}); \n"
         
         code = "\(code) var d = API.likes.getList({\"type\":\"video\",\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"owner_id\":\"\(ownerID)\",\"item_id\":\"\(vid)\",\"filter\":\"copies\",\"extended\":\"1\",\"fields\":\"id, first_name, last_name, sex, has_photo, last_seen, online, photo_max_orig, photo_max, photo_100, deactivated, first_name_dat, friend_status\",\"count\":\"1000\",\"skip_own\":\"0\",\"v\":\"\(vkSingleton.shared.version)\"}); \n"
         
@@ -214,6 +212,10 @@ class VideoController: UIViewController, UITableViewDelegate, UITableViewDataSou
                     self.navigationItem.rightBarButtonItem = barButton
                 }
                 
+                self.attachPanel.comments = self.comments
+                self.attachPanel.users = self.commentsProfiles
+                self.attachPanel.groups = self.commentsGroups
+                
                 self.offset += self.count
                 self.tableView.reloadData()
                 self.tableView.separatorStyle = .singleLine
@@ -237,7 +239,7 @@ class VideoController: UIViewController, UITableViewDelegate, UITableViewDataSou
             "count": "\(count)",
             "sort": "desc",
             "extended": "1",
-            "fields": "id, first_name, last_name, photo_max_orig, photo_100, first_name_dat, first_name_acc",
+            "fields": "id, first_name, last_name, photo_max_orig, photo_100, first_name_dat, first_name_acc, last_name_dat, last_name_acc, sex",
             "v": vkSingleton.shared.version
         ]
         
@@ -265,6 +267,10 @@ class VideoController: UIViewController, UITableViewDelegate, UITableViewDataSou
             }
             
             OperationQueue.main.addOperation {
+                self.attachPanel.comments = self.comments
+                self.attachPanel.users = self.commentsProfiles
+                self.attachPanel.groups = self.commentsGroups
+                
                 self.tableView.reloadData()
                 if self.comments.count > 0 {
                     self.tableView.scrollToRow(at: IndexPath(row: 1, section: 1), at: .bottom, animated: true)
@@ -517,7 +523,7 @@ class VideoController: UIViewController, UITableViewDelegate, UITableViewDataSou
                     "count": "1",
                     "preview_length": "0",
                     "extended": "1",
-                    "fields": "id, first_name, last_name, photo_max_orig, photo_100, first_name_dat, first_name_acc, sex",
+                    "fields": "id, first_name, last_name, photo_max_orig, photo_100, first_name_dat, first_name_acc, last_name_dat, last_name_acc, sex",
                     "v": vkSingleton.shared.version
                 ]
                 
@@ -763,8 +769,10 @@ class VideoController: UIViewController, UITableViewDelegate, UITableViewDataSou
                     self.commentsProfiles.removeAll(keepingCapacity: false)
                     self.commentsGroups.removeAll(keepingCapacity: false)
                     
-                    self.attachments = ""
-                    self.replyID = 0
+                    self.commentView.textView.text = ""
+                    
+                    self.attachPanel.attachments = ""
+                    self.attachPanel.replyID = 0
                     
                     if self.video.count > 0 {
                         self.video[0].comments += 1

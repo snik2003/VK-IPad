@@ -86,12 +86,21 @@ class StickerView: UIView {
                         sButton.setImage(getCacheImage.outputImage, for: .normal)
                         sButton.add(for: .touchUpInside) {
                             if let controller = self.delegate as? RecordController {
-                                controller.createComment(text: "", attachments: "", replyID: 0, stickerID: sButton.tag)
+                                let attachments = controller.attachPanel.attachments
+                                let replyID = controller.attachPanel.replyID
+                                
+                                controller.createComment(text: "", attachments: attachments, replyID: replyID, stickerID: sButton.tag)
                             } else if let controller = self.delegate as? VideoController {
-                                controller.createComment(text: "", attachments: "", replyID: 0, stickerID: sButton.tag)
+                                let attachments = controller.attachPanel.attachments
+                                let replyID = controller.attachPanel.replyID
+                                
+                                controller.createComment(text: "", attachments: attachments, replyID: replyID, stickerID: sButton.tag)
                             } else if let controller = self.delegate as? TopicController {
-                                controller.createComment(text: "", attachments: "", replyID: 0, stickerID: sButton.tag)
+                                let attachments = controller.attachPanel.attachments
+                                
+                                controller.createComment(text: "", attachments: attachments, stickerID: sButton.tag)
                             }
+                            
                             
                             self.popover.dismiss()
                         }

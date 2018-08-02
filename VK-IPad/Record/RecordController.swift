@@ -43,8 +43,7 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
     var offset = 0
     var totalComments = 0
     
-    var attachments = ""
-    var replyID = 0
+    var attachPanel = AttachPanel()
     
     let queue: OperationQueue = {
         let queue = OperationQueue()
@@ -56,6 +55,7 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
         super.viewDidLoad()
 
         OperationQueue.main.addOperation {
+            self.attachPanel.delegate = self
             self.configureTableView()
             
             self.tableView.separatorStyle = .none
@@ -75,7 +75,7 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
         
         commentView = DCCommentView(scrollView: self.tableView, frame: self.tableView.bounds)
         commentView.delegate = self
-        commentView.tintColor = UIColor.init(displayP3Red: 0/255, green: 84/255, blue: 147/255, alpha: 1)
+        commentView.tintColor = vkSingleton.shared.mainColor
         
         commentView.sendImage = UIImage(named: "send2")
         commentView.stickerImage = UIImage(named: "sticker")
@@ -123,7 +123,7 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
     
     func didSendComment(_ text: String!) {
         commentView.endEditing(true)
-        createComment(text: text, attachments: attachments, replyID: replyID, stickerID: 0)
+        createComment(text: text, attachments: attachPanel.attachments, replyID: attachPanel.replyID, stickerID: 0)
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -347,7 +347,7 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
             
             code = "\(code) var b = API.likes.getList({\"type\":\"post\",\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"owner_id\":\"\(uid)\",\"item_id\":\"\(pid)\",\"filter\":\"likes\",\"extended\":\"1\",\"fields\":\"id, first_name, last_name, sex, has_photo, last_seen, online, photo_max_orig, photo_max, photo_100, deactivated, first_name_dat, friend_status\",\"count\":\"1000\",\"skip_own\":\"0\",\"v\": \"\(vkSingleton.shared.version)\"}); \n"
             
-            code = "\(code) var c = API.wall.getComments({\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"owner_id\":\"\(uid)\",\"post_id\":\"\(pid)\",\"need_likes\":\"1\",\"offset\":\"\(offset)\",\"count\":\"\(count)\",\"sort\":\"desc\",\"preview_length\":\"0\",\"extended\":\"1\",\"fields\":\"id, first_name, last_name, photo_max_orig, photo_100, first_name_dat, first_name_acc, sex\",\"v\":\"\(vkSingleton.shared.version)\"}); \n"
+            code = "\(code) var c = API.wall.getComments({\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"owner_id\":\"\(uid)\",\"post_id\":\"\(pid)\",\"need_likes\":\"1\",\"offset\":\"\(offset)\",\"count\":\"\(count)\",\"sort\":\"desc\",\"preview_length\":\"0\",\"extended\":\"1\",\"fields\":\"id, first_name, last_name, photo_max_orig, photo_100, first_name_dat, first_name_acc, last_name_dat, last_name_acc, sex\",\"v\":\"\(vkSingleton.shared.version)\"}); \n"
             
             code = "\(code) var d = API.likes.getList({\"type\":\"post\",\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"owner_id\":\"\(uid)\",\"item_id\":\"\(pid)\",\"filter\":\"copies\",\"extended\":\"1\",\"fields\":\"id, first_name, last_name, sex, has_photo, last_seen, online, photo_max_orig, photo_max, photo_100, deactivated, first_name_dat, friend_status\",\"count\":\"1000\",\"skip_own\":\"0\",\"v\":\"\(vkSingleton.shared.version)\"}); \n"
             
@@ -422,6 +422,10 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
                         self.navigationItem.rightBarButtonItem = barButton
                     }
                     
+                    self.attachPanel.comments = self.comments
+                    self.attachPanel.users = self.commentsProfiles
+                    self.attachPanel.groups = self.commentsGroups
+                    
                     self.offset += self.count
                     self.tableView.reloadData()
                     self.tableView.separatorStyle = .singleLine
@@ -435,7 +439,7 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
             
             code = "\(code) var b = API.likes.getList({\"type\":\"photo\",\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"owner_id\":\"\(uid)\",\"item_id\":\"\(pid)\",\"filter\":\"likes\",\"extended\":\"1\",\"fields\":\"id, first_name, last_name, sex, has_photo, last_seen, online, photo_max_orig, photo_max, photo_100, deactivated, first_name_dat, friend_status\",\"count\":\"1000\",\"skip_own\":\"0\",\"v\": \"\(vkSingleton.shared.version)\"}); \n"
             
-            code = "\(code) var c = API.photos.getComments({\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"owner_id\":\"\(uid)\",\"photo_id\":\"\(pid)\",\"need_likes\":\"1\",\"offset\":\"\(offset)\",\"count\":\"\(count)\",\"sort\":\"desc\",\"preview_length\":\"0\",\"extended\":\"1\",\"fields\":\"id, first_name, last_name, photo_max_orig, photo_100, first_name_dat, first_name_acc, sex\",\"v\":\"\(vkSingleton.shared.version)\"}); \n"
+            code = "\(code) var c = API.photos.getComments({\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"owner_id\":\"\(uid)\",\"photo_id\":\"\(pid)\",\"need_likes\":\"1\",\"offset\":\"\(offset)\",\"count\":\"\(count)\",\"sort\":\"desc\",\"preview_length\":\"0\",\"extended\":\"1\",\"fields\":\"id, first_name, last_name, photo_max_orig, photo_100, first_name_dat, first_name_acc, last_name_dat, last_name_acc, sex\",\"v\":\"\(vkSingleton.shared.version)\"}); \n"
             
             code = "\(code) var d = API.likes.getList({\"type\":\"photo\",\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"owner_id\":\"\(uid)\",\"item_id\":\"\(pid)\",\"filter\":\"copies\",\"extended\":\"1\",\"fields\":\"id, first_name, last_name, sex, has_photo, last_seen, online, photo_max_orig, photo_max, photo_100, deactivated, first_name_dat, friend_status\",\"count\":\"1000\",\"skip_own\":\"0\",\"v\":\"\(vkSingleton.shared.version)\"}); \n"
             
@@ -550,6 +554,10 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
                         self.navigationItem.rightBarButtonItem = barButton
                     }
                     
+                    self.attachPanel.comments = self.comments
+                    self.attachPanel.users = self.commentsProfiles
+                    self.attachPanel.groups = self.commentsGroups
+                    
                     self.offset += self.count
                     self.tableView.reloadData()
                     self.tableView.separatorStyle = .singleLine
@@ -580,7 +588,7 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
                 "sort": "desc",
                 "preview_length": "0",
                 "extended": "1",
-                "fields": "id, first_name, last_name, photo_max_orig, photo_100, first_name_dat, first_name_acc, sex",
+                "fields": "id, first_name, last_name, photo_max_orig, photo_100, first_name_dat, first_name_acc, last_name_dat, last_name_acc, sex",
                 "v": vkSingleton.shared.version
             ]
         } else if type == "photo" {
@@ -594,7 +602,7 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
                 "count": "\(count)",
                 "sort": "desc",
                 "extended": "1",
-                "fields": "id, first_name, last_name, photo_max_orig, photo_100, first_name_dat, first_name_acc, sex",
+                "fields": "id, first_name, last_name, photo_max_orig, photo_100, first_name_dat, first_name_acc, last_name_dat, last_name_acc, sex",
                 "v": vkSingleton.shared.version
             ]
         }
@@ -623,6 +631,10 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
             }
             
             OperationQueue.main.addOperation {
+                self.attachPanel.comments = self.comments
+                self.attachPanel.users = self.commentsProfiles
+                self.attachPanel.groups = self.commentsGroups
+                
                 self.tableView.reloadData()
                 ViewControllerUtils().hideActivityIndicator()
             }
@@ -652,7 +664,7 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
                     "count": "1",
                     "preview_length": "0",
                     "extended": "1",
-                    "fields": "id, first_name, last_name, photo_max_orig, photo_100, first_name_dat, first_name_acc, sex",
+                    "fields": "id, first_name, last_name, photo_max_orig, photo_100, first_name_dat, first_name_acc, last_name_dat, last_name_acc, sex",
                     "v": vkSingleton.shared.version
                 ]
                 
@@ -666,7 +678,7 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
                         "count": "1",
                         "preview_length": "0",
                         "extended": "1",
-                        "fields": "id, first_name, last_name, photo_max_orig, photo_100, first_name_dat, first_name_acc, sex",
+                        "fields": "id, first_name, last_name, photo_max_orig, photo_100, first_name_dat, first_name_acc, last_name_dat, last_name_acc, sex",
                         "v": vkSingleton.shared.version
                     ]
                 }
@@ -809,8 +821,10 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
                     self.commentsProfiles.removeAll(keepingCapacity: false)
                     self.commentsGroups.removeAll(keepingCapacity: false)
                     
-                    self.attachments = ""
-                    self.replyID = 0
+                    self.commentView.textView.text = ""
+                    
+                    self.attachPanel.attachments = ""
+                    self.attachPanel.replyID = 0
                     
                     if self.record.count > 0 {
                         self.record[0].commentsCount += 1

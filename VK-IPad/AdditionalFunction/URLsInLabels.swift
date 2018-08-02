@@ -219,9 +219,25 @@ extension UILabel {
                 if isTap == false {
                     print("tap nithing")
                     
+                    if cell is CommentCell {
+                        if let controller = delegate as? RecordController {
+                            controller.commentView.endEditing(true)
+                        }
+                        
+                        if let controller = delegate as? VideoController {
+                            controller.commentView.endEditing(true)
+                        }
+                        
+                        if let controller = delegate as? TopicController {
+                            controller.commentView.endEditing(true)
+                        }
+                    }
+                    
                     if let cell = cell as? RecordCell {
                         
                         if let controller = delegate as? RecordController {
+                            controller.commentView.endEditing(true)
+                            
                             if let record = cell.record, record.copy.count > 0 {
                                 controller.openWallRecord(ownerID: record.copy[0].ownerID, postID: record.copy[0].id, accessKey: "", type: "post")
                             }
@@ -232,13 +248,27 @@ extension UILabel {
                         }
                     }
                     
+                    if cell is VideoCell {
+                        if let controller = delegate as? VideoController {
+                            controller.commentView.endEditing(true)
+                        }
+                    }
+                    
                     if let cell = cell as? VideoListCell {
+                        if let controller = delegate as? VideoController {
+                            controller.commentView.endEditing(true)
+                        }
+                        
                         if let video = cell.video {
                             delegate.openVideoController(ownerID: "\(video.ownerID)", vid: "\(video.id)", accessKey: video.accessKey, title: "Видеозапись")
                         }
                     }
                     
                     if let cell = cell as? TopicCell {
+                        if let controller = delegate as? TopicController {
+                            controller.commentView.endEditing(true)
+                        }
+                        
                         if let topic = cell.topic, let controller = delegate as? TopicsListController {
                             delegate.openTopicController(groupID: controller.groupID, topicID: "\(topic.id)", title: "Обсуждение «\(topic.title)»", delegate: controller)
                         }

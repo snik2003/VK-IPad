@@ -745,7 +745,7 @@ class CommentCell: UITableViewCell {
         
         var leftX = avatarHeight + 20
         
-        if "\(comment.fromID)" != vkSingleton.shared.userID && !(self.delegate is TopicController) {
+        if "\(comment.fromID)" != vkSingleton.shared.userID /*&& !(self.delegate is TopicController)*/ {
             let button1 = UIButton()
             button1.tag = 250
             button1.setTitle("Ответить", for: .normal)
@@ -759,17 +759,24 @@ class CommentCell: UITableViewCell {
                 
                 if let controller = self.delegate as? RecordController {
                     
-                    controller.replyID = self.comment.id
                     if name != "" {
                         controller.commentView.textView.text = "\(name), "
                     }
+                    controller.attachPanel.replyID = self.comment.id
                     
                 } else if let controller = self.delegate as? VideoController {
                     
-                    controller.replyID = self.comment.id
                     if name != "" {
                         controller.commentView.textView.text = "\(name), "
                     }
+                    controller.attachPanel.replyID = self.comment.id
+                    
+                } else if let controller = self.delegate as? TopicController {
+                    
+                    if name != "" {
+                        controller.commentView.textView.text = "\(name), "
+                    }
+                    controller.attachPanel.replyID = self.comment.id
                     
                 }
             }

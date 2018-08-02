@@ -58,6 +58,10 @@ class ReloadTopicController: Operation {
             }
         }
         
+        controller.attachPanel.comments = controller.comments
+        controller.attachPanel.users = controller.users
+        controller.attachPanel.groups = controller.groups
+        
         controller.offset += controller.count
         controller.tableView.separatorStyle = .singleLine
         controller.tableView.reloadData()

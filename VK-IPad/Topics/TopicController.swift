@@ -38,10 +38,12 @@ class TopicController: UIViewController, UITableViewDelegate, UITableViewDataSou
     
     var delegate: UIViewController!
 
-    var attachments = ""
+    var attachPanel = AttachPanel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        attachPanel.delegate = self
         
         createTableView()
         getTopicComments()
@@ -115,7 +117,7 @@ class TopicController: UIViewController, UITableViewDelegate, UITableViewDataSou
     
     func didSendComment(_ text: String!) {
         commentView.endEditing(true)
-        createComment(text: text, attachments: attachments, replyID: 0, stickerID: 0)
+        createComment(text: text, attachments: attachPanel.attachments, stickerID: 0)
     }
     
     @objc func tapBarButtonItem(sender: UIBarButtonItem) {
@@ -139,6 +141,7 @@ class TopicController: UIViewController, UITableViewDelegate, UITableViewDataSou
             "count": "\(count)",
             "extended": "1",
             "sort": "desc",
+            "fields": "id, first_name, last_name, photo_max_orig, photo_100, first_name_dat, first_name_acc, last_name_dat, last_name_acc, sex",
             "v": vkSingleton.shared.version
         ]
         
@@ -205,6 +208,7 @@ class TopicController: UIViewController, UITableViewDelegate, UITableViewDataSou
             "count": "\(count)",
             "extended": "1",
             "sort": "desc",
+            "fields": "id, first_name, last_name, photo_max_orig, photo_100, first_name_dat, first_name_acc, last_name_dat, last_name_acc, sex",
             "v": vkSingleton.shared.version
         ]
         
@@ -228,6 +232,10 @@ class TopicController: UIViewController, UITableViewDelegate, UITableViewDataSou
             }
             
             OperationQueue.main.addOperation {
+                self.attachPanel.comments = self.comments
+                self.attachPanel.users = self.users
+                self.attachPanel.groups = self.groups
+                
                 self.tableView.reloadData()
                 if self.comments.count > 0 {
                     self.tableView.scrollToRow(at: IndexPath(row: 1, section: 1), at: .bottom, animated: true)
@@ -395,7 +403,7 @@ class TopicController: UIViewController, UITableViewDelegate, UITableViewDataSou
         }
     }
     
-    func createComment(text: String, attachments: String, replyID: Int, stickerID: Int) {
+    func createComment(text: String, attachments: String, stickerID: Int) {
         let url = "/method/board.createComment"
         var parameters = [
             "access_token": vkSingleton.shared.accessToken,
@@ -408,10 +416,6 @@ class TopicController: UIViewController, UITableViewDelegate, UITableViewDataSou
         
         if vkSingleton.shared.commentFromGroup > 0 {
             parameters["from_group"] = "\(vkSingleton.shared.commentFromGroup)"
-        }
-        
-        if replyID > 0 {
-            parameters["reply_to_comment"] = "\(replyID)"
         }
         
         if stickerID > 0 {
@@ -435,7 +439,10 @@ class TopicController: UIViewController, UITableViewDelegate, UITableViewDataSou
                     self.users.removeAll(keepingCapacity: false)
                     self.groups.removeAll(keepingCapacity: false)
                     
-                    self.attachments = ""
+                    self.commentView.textView.text = ""
+                    
+                    self.attachPanel.attachments = ""
+                    self.attachPanel.replyID = 0
                     
                     if self.topics.count > 0 {
                         self.topics[0].commentsCount += 1

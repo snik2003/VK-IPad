@@ -12,6 +12,7 @@
 		1700D24F20DEAFF3003C50A1 /* ChangeAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1700D24E20DEAFF3003C50A1 /* ChangeAccountView.swift */; };
 		1731A5342110972300023409 /* StickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1731A5332110972300023409 /* StickerView.swift */; };
 		1731A5362110AFBA00023409 /* TableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1731A5352110AFBA00023409 /* TableView.swift */; };
+		1731A5382113144E00023409 /* AttachPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1731A5372113144E00023409 /* AttachPanel.swift */; };
 		173D666120D3C07900EEBF46 /* Control.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173D666020D3C07900EEBF46 /* Control.swift */; };
 		173D666420D3C91300EEBF46 /* GroupsListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173D666320D3C91300EEBF46 /* GroupsListController.swift */; };
 		173D666620D3C94500EEBF46 /* Groups.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173D666520D3C94500EEBF46 /* Groups.swift */; };
@@ -127,6 +128,7 @@
 		1700D24E20DEAFF3003C50A1 /* ChangeAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeAccountView.swift; sourceTree = "<group>"; };
 		1731A5332110972300023409 /* StickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerView.swift; sourceTree = "<group>"; };
 		1731A5352110AFBA00023409 /* TableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableView.swift; sourceTree = "<group>"; };
+		1731A5372113144E00023409 /* AttachPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachPanel.swift; sourceTree = "<group>"; };
 		173D666020D3C07900EEBF46 /* Control.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Control.swift; sourceTree = "<group>"; };
 		173D666320D3C91300EEBF46 /* GroupsListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupsListController.swift; sourceTree = "<group>"; };
 		173D666520D3C94500EEBF46 /* Groups.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Groups.swift; sourceTree = "<group>"; };
@@ -289,6 +291,7 @@
 				17B134AC20DB8B070058E1A8 /* LikesUsersController.swift */,
 				17B134AE20DBBEAE0058E1A8 /* CommentCell.swift */,
 				1731A5332110972300023409 /* StickerView.swift */,
+				1731A5372113144E00023409 /* AttachPanel.swift */,
 			);
 			path = Record;
 			sourceTree = "<group>";
@@ -690,6 +693,7 @@
 				174912EC20D300DD00FCF9F9 /* vkSingleton.swift in Sources */,
 				17996B5320DCDC6F003DA26B /* ReloadVideoListController.swift in Sources */,
 				17A1A5BF20D8E7FD00D9CE00 /* GroupProfileView.swift in Sources */,
+				1731A5382113144E00023409 /* AttachPanel.swift in Sources */,
 				174912DD20D300DD00FCF9F9 /* Photos.swift in Sources */,
 				174912E920D300DD00FCF9F9 /* StartViewController.swift in Sources */,
 				17B134A520DA8B840058E1A8 /* PhotoViewController.swift in Sources */,
