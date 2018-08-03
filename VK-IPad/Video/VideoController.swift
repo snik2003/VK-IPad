@@ -778,7 +778,7 @@ class VideoController: UIViewController, UITableViewDelegate, UITableViewDataSou
                     
                     self.commentView.textView.text = ""
                     
-                    self.attachPanel.attachments = ""
+                    self.attachPanel.attachArray.removeAll(keepingCapacity: false)
                     self.attachPanel.replyID = 0
                     
                     if self.video.count > 0 {

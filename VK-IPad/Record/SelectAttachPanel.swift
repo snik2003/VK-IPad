@@ -11,13 +11,14 @@ import Popover
 
 class SelectAttachPanel: UIView {
 
-    var actions: [String] = [
-        "Упомянуть друга в сообщении",
-        "Упомянуть сообщество в сообщении",
-        "Вложить фотографию из профиля",
-        "Вложить фотографию с устройства",
-        "Сфотографировать на устройство",
-        "Вложить видеозапись из профиля"
+    var actions: [Int:String] = [
+        0: "Упомянуть себя в сообщении",
+        1: "Упомянуть друга в сообщении",
+        2: "Упомянуть сообщество в сообщении",
+        3: "Вложить фотографию из профиля",
+        4: "Вложить фотографию с устройства",
+        5: "Сфотографировать с устройства",
+        6: "Вложить видеозапись из профиля"
         ]
     
     var sizes: [String: CGSize] = [:]
@@ -27,7 +28,6 @@ class SelectAttachPanel: UIView {
     var button: UIButton!
     
     var attachPanel: AttachPanel!
-    
     var popover: Popover!
 
     let textFont = UIFont(name: "Verdana", size: 18)!
@@ -53,11 +53,11 @@ class SelectAttachPanel: UIView {
         var topY: CGFloat = 0
         var count = 0
         
-        for action in actions {
+        for key in 0...actions.keys.count - 1 {
             count += 1
             
             let label = UILabel()
-            label.text = action
+            label.text = actions[key]
             label.textColor = label.tintColor
             label.font = textFont
             label.numberOfLines = 1
@@ -71,8 +71,98 @@ class SelectAttachPanel: UIView {
             label.isUserInteractionEnabled = true
             label.addGestureRecognizer(tap)
             tap.add {
-                print(action)
-            
+                if key == 0 {
+                    if let user = vkSingleton.shared.myProfile {
+                        let mention = "[id\(user.uid)|\(user.firstName) \(user.lastName)]"
+                        
+                        if let controller = self.delegate as? RecordController {
+                            controller.commentView.textView.insertText(mention)
+                        } else if let controller = self.delegate as? VideoController {
+                            controller.commentView.textView.insertText(mention)
+                        } else if let controller = self.delegate as? TopicController {
+                            controller.commentView.textView.insertText(mention)
+                        }
+                    }
+                }
+                
+                if key == 1 {
+                    let controller = self.delegate.storyboard?.instantiateViewController(withIdentifier: "UsersController") as! UsersController
+                    
+                    controller.userID = vkSingleton.shared.userID
+                    controller.type = "friends"
+                    controller.source = "add_mention"
+                    controller.title = "Упомянуть друга в сообщении/комментарии"
+                    
+                    controller.navigationItem.hidesBackButton = true
+                    let cancelButton = UIBarButtonItem(title: "Отмена", style: .plain, target: controller, action: #selector(controller.tapCancelButton(sender:)))
+                    controller.navigationItem.leftBarButtonItem = cancelButton
+                    controller.delegate = self.delegate
+                    
+                    if let split = self.delegate.splitViewController {
+                        let detail = split.viewControllers[split.viewControllers.endIndex - 1]
+                        detail.childViewControllers[0].navigationController?.pushViewController(controller, animated: true)
+                    }
+                }
+                
+                if key == 2 {
+                    let controller = self.delegate.storyboard?.instantiateViewController(withIdentifier: "GroupsListController") as! GroupsListController
+                    
+                    controller.userID = vkSingleton.shared.userID
+                    controller.type = ""
+                    controller.source = "add_mention"
+                    controller.title = "Упомянуть сообщество в сообщении/комментарии"
+                    
+                    controller.navigationItem.hidesBackButton = true
+                    let cancelButton = UIBarButtonItem(title: "Отмена", style: .plain, target: self, action: #selector(controller.tapCancelButton(sender:)))
+                    controller.navigationItem.leftBarButtonItem = cancelButton
+                    controller.delegate = self.delegate
+                    
+                    if let split = self.delegate.splitViewController {
+                        let detail = split.viewControllers[split.viewControllers.endIndex - 1]
+                        detail.childViewControllers[0].navigationController?.pushViewController(controller, animated: true)
+                    }
+                }
+
+                if key == 3 {
+                    let controller = self.delegate.storyboard?.instantiateViewController(withIdentifier: "PhotosListController") as! PhotosListController
+                    
+                    controller.ownerID = vkSingleton.shared.userID
+                    controller.title = "Вложить фотографии в сообщение/комментарий"
+                    
+                    controller.selectIndex = 0
+                    
+                    controller.delegate = self.delegate
+                    controller.source = "add_photo"
+                    
+                    if let split = self.delegate.splitViewController {
+                        let detail = split.viewControllers[split.viewControllers.endIndex - 1]
+                        detail.childViewControllers[0].navigationController?.pushViewController(controller, animated: true)
+                    }
+                }
+
+                if key == 4 {
+                    
+                }
+
+                if key == 5 {
+                    
+                }
+
+                if key == 6 {
+                    let controller = self.delegate.storyboard?.instantiateViewController(withIdentifier: "VideoListController") as! VideoListController
+                    
+                    controller.delegate = self.delegate
+                    controller.ownerID = vkSingleton.shared.userID
+                    controller.type = ""
+                    controller.source = "add_video"
+                    controller.title = "Вложить видеозапись в сообщение/комментарий"
+                    
+                    if let split = self.delegate.splitViewController {
+                        let detail = split.viewControllers[split.viewControllers.endIndex - 1]
+                        detail.childViewControllers[0].navigationController?.pushViewController(controller, animated: true)
+                    }
+                }
+                
                 self.popover.dismiss()
             }
             

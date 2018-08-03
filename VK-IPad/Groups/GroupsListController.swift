@@ -284,9 +284,27 @@ class GroupsListController: UIViewController, UITableViewDelegate, UITableViewDa
                         }
                         self.navigationController?.popViewController(animated: true)
                     } else {*/
-                        self.openProfileController(id: -1 * Int(group.gid)!, name: group.name)
-                    //}
                     
+                    if source == "add_mention" {
+                        var mention = "[club\(group.gid)|\(group.name)]"
+                        if group.typeGroup == "page" {
+                            mention = "[public\(group.gid)|\(group.name)]"
+                        } else if group.typeGroup == "event" {
+                            mention = "[event\(group.gid)|\(group.name)]"
+                        }
+                        
+                        if let controller = delegate as? RecordController {
+                            controller.commentView.textView.insertText(mention)
+                        } else if let controller = delegate as? VideoController {
+                            controller.commentView.textView.insertText(mention)
+                        } else if let controller = delegate as? TopicController {
+                            controller.commentView.textView.insertText(mention)
+                        }
+                        
+                        self.navigationController?.popViewController(animated: true)
+                    } else {
+                        self.openProfileController(id: -1 * Int(group.gid)!, name: group.name)
+                    }
                 }
             }
         }

@@ -191,17 +191,6 @@ class ProfileViewController: UITableViewController, WKNavigationDelegate {
             
             //print(json["response"][2])
             
-            if self.userID == vkSingleton.shared.userID {
-                OperationQueue.main.addOperation {
-                    if self.userProfile.count > 0 {
-                        vkSingleton.shared.avatarURL = self.userProfile[0].maxPhotoURL
-                        if vkSingleton.shared.avatarURL == "" {
-                            vkSingleton.shared.avatarURL = self.userProfile[0].maxPhotoOrigURL
-                        }
-                    }
-                }
-            }
-            
             if self.userProfile.count > 0 {
                 let user = self.userProfile[0]
                 if user.blacklisted == 1 {

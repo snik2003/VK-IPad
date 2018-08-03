@@ -830,7 +830,7 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
                     
                     self.commentView.textView.text = ""
                     
-                    self.attachPanel.attachments = ""
+                    self.attachPanel.attachArray.removeAll(keepingCapacity: false)
                     self.attachPanel.replyID = 0
                     
                     if self.record.count > 0 {

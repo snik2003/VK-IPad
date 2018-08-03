@@ -30,7 +30,6 @@ class VideoListController: UIViewController, UITableViewDelegate, UITableViewDat
     var type = ""
     var source = ""
     
-    var markPhotos: [Int:UIImage] = [:]
     var selectButton: UIBarButtonItem!
     
     var heights: [IndexPath: CGFloat] = [:]
@@ -64,6 +63,8 @@ class VideoListController: UIViewController, UITableViewDelegate, UITableViewDat
                 self.selectButton = UIBarButtonItem(title: "Вложить", style: .done, target: self, action: #selector(self.tapSelectButton(sender:)))
                 self.navigationItem.rightBarButtonItem = self.selectButton
                 self.selectButton.isEnabled = false
+                
+                self.tableView.allowsMultipleSelection = true
             }
             
             self.tableView.separatorStyle = .none
@@ -95,6 +96,7 @@ class VideoListController: UIViewController, UITableViewDelegate, UITableViewDat
         
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.allowsMultipleSelection = false
         
         tableView.register(VideoListCell.self, forCellReuseIdentifier: "videoCell")
         
@@ -229,8 +231,15 @@ class VideoListController: UIViewController, UITableViewDelegate, UITableViewDat
         cell.cell = cell
         cell.tableView = tableView
         cell.cellWidth = tableView.bounds.width
+        cell.source = source
         
         cell.configureCell()
+        
+        if cell.video.isSelected {
+            tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
+        } else {
+            tableView.deselectRow(at: indexPath, animated: true)
+        }
         
         cell.selectionStyle = .none
         
@@ -252,134 +261,49 @@ class VideoListController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     @objc func tapSelectButton(sender: UIBarButtonItem) {
-        /*if source == "add_video", let vc = delegate as? NewRecordController {
-            if vc.attach.count + markPhotos.count <= vc.maxCountAttach {
-                for video in self.videos {
-                    if let videoImage = markPhotos[video.id] {
-                        let attachment = "video\(video.ownerID)_\(video.id)"
-                        vc.attach.append(attachment)
-                        vc.isLoad.append(false)
-                        vc.typeOf.append("video")
-                        vc.photos.append(videoImage)
-                    }
-                    
-                }
-                vc.setAttachments()
-                vc.startConfigureView()
-                vc.collectionView.reloadData()
-                self.navigationController?.popViewController(animated: true)
-            } else {
-                self.showInfoMessage(title: "Внимание!", msg: "Вы превысили максимальное количество вложений: \(vc.maxCountAttach)")
-            }
-        }
         
-        if source == "add_comment_video", let vc = delegate as? NewCommentController {
-            if vc.attach.count + markPhotos.count <= vc.maxCountAttach {
-                for video in self.videos {
-                    if let videoImage = markPhotos[video.id] {
-                        let attachment = "video\(video.ownerID)_\(video.id)"
-                        vc.attach.append(attachment)
-                        vc.isLoad.append(false)
-                        vc.typeOf.append("video")
-                        vc.photos.append(videoImage)
-                    }
-                    
-                }
-                vc.setAttachments()
-                vc.startConfigureView()
-                vc.collectionView.reloadData()
-                self.navigationController?.popViewController(animated: true)
-            } else {
-                self.showInfoMessage(title: "Внимание!", msg: "Вы превысили максимальное количество вложений: \(vc.maxCountAttach)")
-            }
-        }
-        
-        if source == "add_topic_video", let vc = delegate as? AddTopicController {
-            if vc.attach.count + markPhotos.count <= vc.maxCountAttach {
-                for video in self.videos {
-                    if let videoImage = markPhotos[video.id] {
-                        let attachment = "video\(video.ownerID)_\(video.id)"
-                        vc.attach.append(attachment)
-                        vc.isLoad.append(false)
-                        vc.typeOf.append("video")
-                        vc.photos.append(videoImage)
-                    }
-                    
-                }
-                vc.setAttachments()
-                vc.startConfigureView()
-                vc.collectionView.reloadData()
-                self.navigationController?.popViewController(animated: true)
-            } else {
-                self.showInfoMessage(title: "Внимание!", msg: "Вы превысили максимальное количество вложений: \(vc.maxCountAttach)")
-            }
-        }
-        if source == "add_message_video" {
-            if let vc = delegate as? DialogController {
-                if vc.attach.count + markPhotos.count <= vc.maxCountAttach {
-                    for video in self.videos {
-                        if let videoImage = markPhotos[video.id] {
-                            let attachment = "video\(video.ownerID)_\(video.id)"
-                            vc.attach.append(attachment)
-                            vc.isLoad.append(false)
-                            vc.typeOf.append("video")
-                            vc.photos.append(videoImage)
-                        }
-                        
-                    }
-                    vc.setAttachments()
-                    vc.configureStartView()
-                    self.navigationController?.popViewController(animated: true)
-                } else {
-                    self.showInfoMessage(title: "Внимание!", msg: "Вы превысили максимальное количество вложений: \(vc.maxCountAttach)")
-                }
-            }
+        if source == "add_video" {
+            let videos = self.videos.filter({ $0.isSelected })
             
-            if let vc = delegate as? GroupDialogController {
-                if vc.attach.count + markPhotos.count <= vc.maxCountAttach {
-                    for video in self.videos {
-                        if let videoImage = markPhotos[video.id] {
-                            let attachment = "video\(video.ownerID)_\(video.id)"
-                            vc.attach.append(attachment)
-                            vc.isLoad.append(false)
-                            vc.typeOf.append("video")
-                            vc.photos.append(videoImage)
-                        }
-                        
-                    }
-                    vc.setAttachments()
-                    vc.configureStartView()
-                    self.navigationController?.popViewController(animated: true)
-                } else {
-                    self.showInfoMessage(title: "Внимание!", msg: "Вы превысили максимальное количество вложений: \(vc.maxCountAttach)")
+            if let controller = delegate as? RecordController {
+                for video in videos {
+                    controller.attachPanel.attachArray.append(video)
                 }
+                controller.attachPanel.removeFromSuperview()
+                controller.attachPanel.reconfigure()
+            } else if let controller = delegate as? VideoController {
+                for video in videos {
+                    controller.attachPanel.attachArray.append(video)
+                }
+                controller.attachPanel.removeFromSuperview()
+                controller.attachPanel.reconfigure()
+            } else if let controller = delegate as? TopicController {
+                for video in videos {
+                    controller.attachPanel.attachArray.append(video)
+                }
+                controller.attachPanel.removeFromSuperview()
+                controller.attachPanel.reconfigure()
             }
-        }*/
+        }
+        
+        self.navigationController?.popViewController(animated: true)
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        if let cell = tableView.cellForRow(at: indexPath) as? VideoListCell {
+            
+        if source != "" {
+            videos[indexPath.section].isSelected = true
+        } else {
             let video = videos[indexPath.section]
             
-            if source != "" {
-                if markPhotos[video.id] != nil {
-                    markPhotos[video.id] = nil
-                } else {
-                    markPhotos[video.id] = cell.videoImage.image!
-                }
-                tableView.reloadRows(at: [indexPath], with: .automatic)
-                
-                if markPhotos.count > 0 {
-                    selectButton.isEnabled = true
-                    selectButton.title = "Вложить (\(markPhotos.count))"
-                } else {
-                    selectButton.isEnabled = false
-                    selectButton.title = "Вложить"
-                }
-            } else {
-                self.openVideoController(ownerID: "\(video.ownerID)", vid: "\(video.id)", accessKey: video.accessKey, title: "Видеозапись")
-            }
+            self.openVideoController(ownerID: "\(video.ownerID)", vid: "\(video.id)", accessKey: video.accessKey, title: "Видеозапись")
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        
+        if source != "" {
+            videos[indexPath.section].isSelected = false
         }
     }
     

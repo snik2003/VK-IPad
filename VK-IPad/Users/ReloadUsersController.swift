@@ -23,7 +23,7 @@ class ReloadUsersController: Operation {
             
             if type == "friends" {
                 controller.friends = parseFriends.outputData
-                if controller.userID == vkSingleton.shared.userID {
+                if controller.userID == vkSingleton.shared.userID && controller.source == "" {
                     let barButton = UIBarButtonItem(title: "Заявки", style: .done, target: controller, action: #selector(controller.showRequests(sender:)))
                     controller.navigationItem.rightBarButtonItem = barButton
                 }

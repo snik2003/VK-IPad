@@ -121,7 +121,7 @@ class NewsfeedController: UITableViewController {
             guard let data = getServerDataOperation.data else { return }
             
             guard let json = try? JSON(data: data) else { print("json error"); return }
-            print(json)
+            //print(json)
             
             var news: [Record] = []
             if self.filters != "wall_photo" {

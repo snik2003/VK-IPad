@@ -703,26 +703,28 @@ extension UIViewController: ViewControllerProtocol {
     func setCommentFromGroupID(id: Int, controller: UIViewController) {
         
         if id == 0 {
-            let getCacheImage = GetCacheImage(url: vkSingleton.shared.avatarURL, lifeTime: .avatarImage)
-            getCacheImage.completionBlock = {
-                if let avatarImage = getCacheImage.outputImage {
-                    OperationQueue.main.addOperation {
-                        if let vc = controller as? RecordController {
-                            vc.commentView.fromGroupImage = avatarImage
-                            vc.commentView.fromGroupButton.addTarget(self, action: #selector(vc.tapFromGroupButton(sender:)), for: .touchUpInside)
-                        } else if let vc = controller as? VideoController {
-                            vc.commentView.fromGroupImage = avatarImage
-                            vc.commentView.fromGroupButton.addTarget(self, action: #selector(vc.tapFromGroupButton(sender:)), for: .touchUpInside)
-                        } else if let vc = controller as? TopicController {
-                            vc.commentView.fromGroupImage = avatarImage
-                            vc.commentView.fromGroupButton.addTarget(self, action: #selector(vc.tapFromGroupButton(sender:)), for: .touchUpInside)
-                        }/* else if let vc = controller as? DialogController {
-                            vc.commentView.fromGroupImage = avatarImage
-                        }*/
+            if let user = vkSingleton.shared.myProfile {
+                let getCacheImage = GetCacheImage(url: user.maxPhotoURL, lifeTime: .avatarImage)
+                getCacheImage.completionBlock = {
+                    if let avatarImage = getCacheImage.outputImage {
+                        OperationQueue.main.addOperation {
+                            if let vc = controller as? RecordController {
+                                vc.commentView.fromGroupImage = avatarImage
+                                vc.commentView.fromGroupButton.addTarget(self, action: #selector(vc.tapFromGroupButton(sender:)), for: .touchUpInside)
+                            } else if let vc = controller as? VideoController {
+                                vc.commentView.fromGroupImage = avatarImage
+                                vc.commentView.fromGroupButton.addTarget(self, action: #selector(vc.tapFromGroupButton(sender:)), for: .touchUpInside)
+                            } else if let vc = controller as? TopicController {
+                                vc.commentView.fromGroupImage = avatarImage
+                                vc.commentView.fromGroupButton.addTarget(self, action: #selector(vc.tapFromGroupButton(sender:)), for: .touchUpInside)
+                            }/* else if let vc = controller as? DialogController {
+                                vc.commentView.fromGroupImage = avatarImage
+                            }*/
+                        }
                     }
                 }
+                OperationQueue().addOperation(getCacheImage)
             }
-            OperationQueue().addOperation(getCacheImage)
         } else {
             let url = "/method/groups.getById"
             let parameters = [
@@ -793,57 +795,59 @@ extension UIViewController: ViewControllerProtocol {
         
         height += 25
         
-        let ownLabel = UILabel()
-        ownLabel.text = "от своего имени"
-        
-        let fullString = "от своего имени"
-        let rangeOfColoredString = (fullString as NSString).range(of: "своего имени")
-        let attributedString = NSMutableAttributedString(string: fullString)
-        
-        if vkSingleton.shared.commentFromGroup == 0 {
-            attributedString.setAttributes([NSAttributedStringKey.foregroundColor: UIColor.red], range: rangeOfColoredString)
-        } else {
-            attributedString.setAttributes([NSAttributedStringKey.foregroundColor: ownLabel.tintColor], range: rangeOfColoredString)
-        }
-        
-        ownLabel.attributedText = attributedString
-        
-        if vkSingleton.shared.commentFromGroup != 0 {
-            let tap = UITapGestureRecognizer()
-            tap.numberOfTapsRequired = 1
-            tap.add {
-                popover.dismiss()
-                self.setCommentFromGroupID(id: 0, controller: self)
-                vkSingleton.shared.commentFromGroup = 0
+        if let user = vkSingleton.shared.myProfile {
+            let ownLabel = UILabel()
+            ownLabel.text = "от своего имени «\(user.firstName) \(user.lastName)»"
+            
+            let fullString = "от своего имени «\(user.firstName) \(user.lastName)»"
+            let rangeOfColoredString = (fullString as NSString).range(of: "«\(user.firstName) \(user.lastName)»")
+            let attributedString = NSMutableAttributedString(string: fullString)
+            
+            if vkSingleton.shared.commentFromGroup == 0 {
+                attributedString.setAttributes([NSAttributedStringKey.foregroundColor: UIColor.red], range: rangeOfColoredString)
+            } else {
+                attributedString.setAttributes([NSAttributedStringKey.foregroundColor: ownLabel.tintColor], range: rangeOfColoredString)
             }
-            ownLabel.isUserInteractionEnabled = true
-            ownLabel.addGestureRecognizer(tap)
-        }
-        
-        ownLabel.font = textFont
-        ownLabel.textAlignment = .left
-        ownLabel.clipsToBounds = true
-        ownLabel.frame = CGRect(x: 20, y: height, width: maxWidth - 80, height: 30)
-        view.addSubview(ownLabel)
-        
-        let avatar = UIImageView()
-        let getCacheImage = GetCacheImage(url: vkSingleton.shared.avatarURL, lifeTime: .avatarImage)
-        getCacheImage.completionBlock = {
-            if let avatarImage = getCacheImage.outputImage {
-                OperationQueue.main.addOperation {
-                    avatar.image = avatarImage
+            
+            ownLabel.attributedText = attributedString
+            
+            if vkSingleton.shared.commentFromGroup != 0 {
+                let tap = UITapGestureRecognizer()
+                tap.numberOfTapsRequired = 1
+                tap.add {
+                    popover.dismiss()
+                    self.setCommentFromGroupID(id: 0, controller: self)
+                    vkSingleton.shared.commentFromGroup = 0
+                }
+                ownLabel.isUserInteractionEnabled = true
+                ownLabel.addGestureRecognizer(tap)
+            }
+            
+            ownLabel.font = textFont
+            ownLabel.textAlignment = .left
+            ownLabel.clipsToBounds = true
+            ownLabel.frame = CGRect(x: 20, y: height, width: maxWidth - 80, height: 30)
+            view.addSubview(ownLabel)
+            
+            let avatar = UIImageView()
+            let getCacheImage = GetCacheImage(url: user.maxPhotoURL, lifeTime: .avatarImage)
+            getCacheImage.completionBlock = {
+                if let avatarImage = getCacheImage.outputImage {
+                    OperationQueue.main.addOperation {
+                        avatar.image = avatarImage
+                    }
                 }
             }
+            OperationQueue().addOperation(getCacheImage)
+            avatar.layer.cornerRadius = 15
+            avatar.layer.borderColor = UIColor.gray.cgColor
+            avatar.layer.borderWidth = 0.6
+            avatar.clipsToBounds = true
+            avatar.frame = CGRect(x: maxWidth - 50, y: height, width: 30, height: 30)
+            view.addSubview(avatar)
+            
+            height += 35
         }
-        OperationQueue().addOperation(getCacheImage)
-        avatar.layer.cornerRadius = 15
-        avatar.layer.borderColor = UIColor.gray.cgColor
-        avatar.layer.borderWidth = 0.6
-        avatar.clipsToBounds = true
-        avatar.frame = CGRect(x: maxWidth - 50, y: height, width: 30, height: 30)
-        view.addSubview(avatar)
-        
-        height += 35
         
         let url = "/method/groups.get"
         let parameters = [

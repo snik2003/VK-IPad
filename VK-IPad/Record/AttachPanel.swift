@@ -23,17 +23,12 @@ class AttachPanel: UIView {
         }
     }
     
-    var attachments = "" {
-        didSet {
-            self.removeFromSuperview()
-            self.reconfigure()
-        }
-    }
+    var attachArray: [AnyObject] = []
+    var attachments = ""
     
     func reconfigure() {
         
         removeSubviews()
-        //self.backgroundColor = vkSingleton.shared.mainColor.withAlphaComponent(0.9)
         self.backgroundColor = vkSingleton.shared.backColor.withAlphaComponent(0.9)
         
         var height: CGFloat = 0
@@ -71,6 +66,52 @@ class AttachPanel: UIView {
             height += 40
         }
         
+        attachments = ""
+        if attachArray.count > 0 {
+            for index in 0...attachArray.count-1 {
+                let nameLabel = UILabel()
+                nameLabel.tag = 250
+                nameLabel.font = UIFont(name: "Verdana-Bold", size: 13)!
+                nameLabel.textColor = vkSingleton.shared.mainColor
+                nameLabel.frame = CGRect(x: 20, y: height, width: width - 40 - 100, height: 30)
+                self.addSubview(nameLabel)
+                
+                let xButton = UIButton()
+                xButton.tag = 250
+                xButton.setTitle("Удалить", for: .normal)
+                xButton.setTitleColor(UIColor.red, for: .normal)
+                xButton.titleLabel?.font = UIFont(name: "Verdana-Bold", size: 13)!
+                xButton.contentHorizontalAlignment = .right
+                
+                if let video = attachArray[index] as? Video {
+                    if attachments != "" {
+                        attachments = "\(attachments), "
+                    }
+                    attachments = "\(attachments)video\(video.ownerID)_\(video.id)"
+ 
+                    nameLabel.text = "Видеозапись «\(video.title)»"
+                    
+                    xButton.add(for: .touchUpInside) {
+                        self.attachArray.remove(at: index)
+                        self.removeFromSuperview()
+                        self.reconfigure()
+                    }
+                }
+                xButton.frame = CGRect(x: width - 20 - 100, y: height, width: 100, height: 30)
+                self.addSubview(xButton)
+                
+                height += 30
+            }
+        }
+        
+        if let controller = delegate as? RecordController {
+            controller.commentView.attachCount = attachArray.count
+        } else if let controller = delegate as? VideoController {
+            controller.commentView.attachCount = attachArray.count
+        } else if let controller = delegate as? TopicController {
+            controller.commentView.attachCount = attachArray.count
+        }
+        
         if height > 0 {
             self.frame = CGRect(x: 0, y: 64, width: width, height: height)
             
@@ -79,6 +120,8 @@ class AttachPanel: UIView {
             self.layer.borderWidth = 0.5
             self.delegate.view.addSubview(self)
         }
+        
+        print("attachments = \(attachments)")
     }
     
     func getReplyName(commentID: Int) -> String {

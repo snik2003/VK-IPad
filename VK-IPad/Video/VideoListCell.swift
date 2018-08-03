@@ -18,16 +18,18 @@ class VideoListCell: UITableViewCell {
     var descriptionLabel: UILabel!
     var viewsLabel: UILabel!
     var durationLabel: UILabel!
-    
     var markCheck: BEMCheckBox!
+    var fadeImage: UIImageView!
     
-    var delegate: UIViewController! //VideoListController!
+    var delegate: UIViewController!
     
     var video: Video!
+    var source: String = ""
     
     var indexPath: IndexPath!
     var cell: UITableViewCell!
     var tableView: UITableView!
+    
     
     var cellWidth: CGFloat = 0
     
@@ -42,72 +44,98 @@ class VideoListCell: UITableViewCell {
         let videoWidth: CGFloat = cellWidth * 0.5
         let videoHeight: CGFloat = 240 * videoWidth / 320
         
-        let view = UIView()
-        view.tag = 250
-        view.backgroundColor = UIColor.black
-        
-        view.frame = CGRect(x: leftInsets, y: topInsets, width: videoWidth, height: videoHeight)
-        self.addSubview(view)
-        
-        let loadingView = UIView()
-        loadingView.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
-        loadingView.center = CGPoint(x: view.frame.width/2, y: view.frame.height/2)
-        loadingView.backgroundColor = UIColor.darkGray.withAlphaComponent(0.7)
-        loadingView.clipsToBounds = true
-        loadingView.layer.cornerRadius = 8
-        view.addSubview(loadingView)
-        
-        let activityIndicator = UIActivityIndicatorView()
-        activityIndicator.frame = CGRect(x: 0, y: 0, width: loadingView.frame.maxX, height: loadingView.frame.maxY);
-        activityIndicator.activityIndicatorViewStyle = .white
-        activityIndicator.center = CGPoint(x: loadingView.frame.width/2, y: loadingView.frame.height/2)
-        loadingView.addSubview(activityIndicator)
-        activityIndicator.startAnimating()
-        
-        let webView = WKWebView()
-        webView.tag = 250
-        webView.isOpaque = false
-        webView.frame = CGRect(x: leftInsets, y: topInsets, width: videoWidth, height: videoHeight)
-        
-        if let controller = delegate as? WKNavigationDelegate {
-            webView.navigationDelegate = controller
-        }
-        
-        if video.player == "" {
-            let url = "/method/video.get"
-            let parameters = [
-                "access_token": vkSingleton.shared.accessToken,
-                "owner_id": "\(video.ownerID)",
-                "videos": "\(video.ownerID)_\(video.id)_\(video.accessKey)",
-                "v": vkSingleton.shared.version
-            ]
-            let getServerData = GetServerDataOperation(url: url, parameters: parameters)
-            getServerData.completionBlock = {
-                guard let data = getServerData.data else { return }
-                guard let json = try? JSON(data: data) else { print("json error"); return }
-                
-                let videos = json["response"]["items"].compactMap({ Video(json: $0.1) })
-                if videos.count > 0 {
-                    if let url = URL(string: videos[0].player) {
-                        let request = URLRequest(url: url)
-                        OperationQueue.main.addOperation {
-                            webView.load(request)
-                            self.addSubview(webView)
-                            if let controller = self.delegate as? VideoListController {
-                                controller.videos[self.indexPath.section].player = videos[0].player
-                            } else if let controller = self.delegate as? FavePostsController {
-                                controller.videos[self.indexPath.section].player = videos[0].player
+        if source != "" {
+            videoImage = UIImageView()
+            
+            let getCacheImage = GetCacheImage(url: video.photo320, lifeTime: .userPhotoImage)
+            let setImageToRow = SetImageToRowOfTableView(cell: cell, imageView: videoImage, indexPath: indexPath, tableView: tableView)
+            setImageToRow.addDependency(getCacheImage)
+            OperationQueue().addOperation(getCacheImage)
+            OperationQueue.main.addOperation(setImageToRow)
+            OperationQueue.main.addOperation {
+                self.videoImage.contentMode = .scaleAspectFit
+                self.videoImage.clipsToBounds = true
+            }
+            
+            videoImage.frame = CGRect(x: leftInsets, y: topInsets, width: videoWidth, height: videoHeight)
+            
+            self.addSubview(videoImage)
+            
+            
+            let vidImage = UIImageView()
+            vidImage.tag = 250
+            vidImage.image = UIImage(named: "video")
+            vidImage.frame = CGRect(x: videoWidth / 2 - 20, y: videoHeight / 2 - 20, width: 40, height: 40)
+            videoImage.addSubview(vidImage)
+        } else {
+            let view = UIView()
+            view.tag = 250
+            view.backgroundColor = UIColor.black
+            
+            view.frame = CGRect(x: leftInsets, y: topInsets, width: videoWidth, height: videoHeight)
+            self.addSubview(view)
+            
+            let loadingView = UIView()
+            loadingView.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
+            loadingView.center = CGPoint(x: view.frame.width/2, y: view.frame.height/2)
+            loadingView.backgroundColor = UIColor.darkGray.withAlphaComponent(0.7)
+            loadingView.clipsToBounds = true
+            loadingView.layer.cornerRadius = 8
+            view.addSubview(loadingView)
+            
+            let activityIndicator = UIActivityIndicatorView()
+            activityIndicator.frame = CGRect(x: 0, y: 0, width: loadingView.frame.maxX, height: loadingView.frame.maxY);
+            activityIndicator.activityIndicatorViewStyle = .white
+            activityIndicator.center = CGPoint(x: loadingView.frame.width/2, y: loadingView.frame.height/2)
+            loadingView.addSubview(activityIndicator)
+            activityIndicator.startAnimating()
+            
+            let webView = WKWebView()
+            webView.tag = 250
+            webView.isOpaque = false
+            webView.frame = CGRect(x: leftInsets, y: topInsets, width: videoWidth, height: videoHeight)
+            
+            if let controller = delegate as? WKNavigationDelegate {
+                webView.navigationDelegate = controller
+            }
+            
+            if video.player == "" {
+                let url = "/method/video.get"
+                let parameters = [
+                    "access_token": vkSingleton.shared.accessToken,
+                    "owner_id": "\(video.ownerID)",
+                    "videos": "\(video.ownerID)_\(video.id)_\(video.accessKey)",
+                    "v": vkSingleton.shared.version
+                ]
+                let getServerData = GetServerDataOperation(url: url, parameters: parameters)
+                getServerData.completionBlock = {
+                    guard let data = getServerData.data else { return }
+                    guard let json = try? JSON(data: data) else { print("json error"); return }
+                    
+                    let videos = json["response"]["items"].compactMap({ Video(json: $0.1) })
+                    if videos.count > 0 {
+                        if let url = URL(string: videos[0].player) {
+                            let request = URLRequest(url: url)
+                            OperationQueue.main.addOperation {
+                                webView.load(request)
+                                self.addSubview(webView)
+                                if let controller = self.delegate as? VideoListController {
+                                    controller.videos[self.indexPath.section].player = videos[0].player
+                                } else if let controller = self.delegate as? FavePostsController {
+                                    controller.videos[self.indexPath.section].player = videos[0].player
+                                }
+                                self.video.player = videos[0].player
                             }
                         }
                     }
                 }
-            }
-            OperationQueue().addOperation(getServerData)
-        } else {
-            if let url = URL(string: video.player) {
-                let request = URLRequest(url: url)
-                webView.load(request)
-                self.addSubview(webView)
+                OperationQueue().addOperation(getServerData)
+            } else {
+                if let url = URL(string: video.player) {
+                    let request = URLRequest(url: url)
+                    webView.load(request)
+                    self.addSubview(webView)
+                }
             }
         }
         
@@ -181,33 +209,53 @@ class VideoListCell: UITableViewCell {
         durationLabel.frame = CGRect(x: leftX, y: topInsets + videoHeight - 18, width: maxWidth, height: 18)
         self.addSubview(durationLabel)
         
-        /*if let vc = delegate as? VideoListController, vc.source != "" {
+        if source != "" {
             markCheck = BEMCheckBox()
-            markCheck.tag = 200
-            markCheck.onTintColor = UIColor.init(displayP3Red: 0/255, green: 84/255, blue: 147/255, alpha: 1)
-            markCheck.onCheckColor = UIColor.init(displayP3Red: 0/255, green: 84/255, blue: 147/255, alpha: 1)
-            markCheck.lineWidth = 2
+            markCheck.tag = 250
+            markCheck.onTintColor = vkSingleton.shared.mainColor
+            markCheck.onCheckColor = vkSingleton.shared.mainColor
+            markCheck.lineWidth = 3
             
-            markCheck.isEnabled = false
-            markCheck.on = false
+            markCheck.on = video.isSelected
             
-            if let vc = delegate as? VideoListController {
-                if vc.markPhotos[video.id] != nil {
-                    markCheck.on = true
+            markCheck.frame = CGRect(x: leftInsets + 15, y: topInsets + 15, width: 30, height: 30)
+            
+            fadeImage = UIImageView()
+            fadeImage.tag = 250
+            if video.isSelected {
+                fadeImage.backgroundColor = vkSingleton.shared.backColor.withAlphaComponent(0.75)
+            } else {
+                fadeImage.backgroundColor = UIColor.clear
+            }
+            fadeImage.frame = CGRect(x: 0, y: 0, width: cellWidth, height: cell.bounds.height)
+            self.addSubview(fadeImage)
+            self.addSubview(markCheck)
+        }
+    }
+    
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+        
+        if source != "" {
+            markCheck.on = selected
+            
+            if selected {
+                fadeImage.backgroundColor = vkSingleton.shared.backColor.withAlphaComponent(0.75)
+            } else {
+                fadeImage.backgroundColor = UIColor.clear
+            }
+            
+            if let controller = self.delegate as? VideoListController {
+                let videos = controller.videos.filter({ $0.isSelected == true })
+                
+                if videos.count > 0 {
+                    controller.selectButton.isEnabled = true
+                    controller.selectButton.title = "Вложить (\(videos.count))"
+                } else {
+                    controller.selectButton.isEnabled = false
+                    controller.selectButton.title = "Вложить"
                 }
             }
-            
-            
-            if markCheck.on == true {
-                let markImage = UIImageView()
-                markImage.tag = 200
-                markImage.backgroundColor = UIColor.white.withAlphaComponent(0.75)
-                markImage.frame = videoImage.frame
-                self.addSubview(markImage)
-            }
-            
-            markCheck.frame = CGRect(x: leftInsets + 5, y: topInsets + 5, width: 30, height: 30)
-            self.addSubview(markCheck)
-        }*/
+        }
     }
 }

@@ -616,8 +616,22 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
                             self.chatMarkCheck[indexPath]?.setOn(true, animated: true)
                         }
                     } else {*/
+                    
+                    if source == "add_mention" {
+                        let mention = "[id\(user.userID)|\(user.firstName) \(user.lastName)]"
+                        
+                        if let controller = delegate as? RecordController {
+                            controller.commentView.textView.insertText(mention)
+                        } else if let controller = delegate as? VideoController {
+                            controller.commentView.textView.insertText(mention)
+                        } else if let controller = delegate as? TopicController {
+                            controller.commentView.textView.insertText(mention)
+                        }
+                        
+                        self.navigationController?.popViewController(animated: true)
+                    } else {
                         self.openProfileController(id: Int(user.userID)!, name: "\(user.firstName) \(user.lastName)")
-                    //}
+                    }
                 }
             }
         }

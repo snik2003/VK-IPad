@@ -198,6 +198,7 @@ class MenuViewController: UITableViewController {
             OperationQueue.main.addOperation {
                 if userProfile.count > 0 {
                     let user = userProfile[0]
+                    vkSingleton.shared.myProfile = user
                     self.navigationController?.navigationBar.setupUserProfileView(user: user)
                     
                     if user.uid == vkSingleton.shared.userID {

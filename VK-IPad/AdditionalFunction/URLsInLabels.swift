@@ -255,12 +255,31 @@ extension UILabel {
                     }
                     
                     if let cell = cell as? VideoListCell {
+                        
                         if let controller = delegate as? VideoController {
                             controller.commentView.endEditing(true)
+                            
+                            if let video = cell.video {
+                                delegate.openVideoController(ownerID: "\(video.ownerID)", vid: "\(video.id)", accessKey: video.accessKey, title: "Видеозапись")
+                            }
                         }
                         
-                        if let video = cell.video {
-                            delegate.openVideoController(ownerID: "\(video.ownerID)", vid: "\(video.id)", accessKey: video.accessKey, title: "Видеозапись")
+                        if let controller = delegate as? VideoListController {
+                            
+                            if controller.source == "add_video" {
+                                if let indexPath = cell.indexPath, let video = cell.video, let tableView = cell.tableView {
+                                    video.isSelected = !video.isSelected
+                                    if video.isSelected {
+                                        tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
+                                    } else {
+                                        tableView.deselectRow(at: indexPath, animated: true)
+                                    }
+                                }
+                            } else {
+                                if let video = cell.video {
+                                    delegate.openVideoController(ownerID: "\(video.ownerID)", vid: "\(video.id)", accessKey: video.accessKey, title: "Видеозапись")
+                                }
+                            }
                         }
                     }
                     

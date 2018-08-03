@@ -89,7 +89,6 @@ class ChangeAccountView: UIView {
                     alertView.addButton("Да, хочу перейти") {
                         
                         vkSingleton.shared.userID = "\(account.userID)"
-                        vkSingleton.shared.avatarURL = ""
                         
                         UserDefaults.standard.set(vkSingleton.shared.userID, forKey: "vkUserID")
                         //self.readAppConfig()
@@ -161,8 +160,6 @@ class ChangeAccountView: UIView {
                 let alertView = SCLAlertView(appearance: appearance)
                 
                 alertView.addButton("Да, хочу добавить") {
-                    vkSingleton.shared.avatarURL = ""
-                    
                     /*vkUserLongPoll.shared.request.cancel()
                      vkUserLongPoll.shared.firstLaunch = true
                      

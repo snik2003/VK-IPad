@@ -10,6 +10,13 @@ import Foundation
 import SwiftyJSON
 
 class Video {
+    static func == (lhs: Video, rhs: Video) -> Bool {
+        if lhs.id == rhs.id && lhs.ownerID == rhs.ownerID {
+            return true
+        }
+        return false
+    }
+    
     var id = 0
     var ownerID = 0
     var title = ""
@@ -38,6 +45,8 @@ class Video {
     var canComment = 0
     var userReposted = 0
     var countReposts = 0
+    
+    var isSelected = false
     
     init(json: JSON) {
         self.id = json["id"].intValue
