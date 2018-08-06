@@ -10,6 +10,13 @@ import Foundation
 import SwiftyJSON
 
 class Photo {
+    static func == (lhs: Photo, rhs: Photo) -> Bool {
+        if lhs.id == rhs.id && lhs.ownerID == rhs.ownerID {
+            return true
+        }
+        return false
+    }
+    
     var id = 0
     var albumID = 0
     var ownerID = 0
@@ -34,6 +41,8 @@ class Photo {
     var userCanRepost = 0
     var repostCount = 0
     var userReposted = 0
+    
+    var isSelected = false
     
     init(json: JSON) {
         self.id = json["id"].intValue

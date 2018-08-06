@@ -43,6 +43,14 @@ class ReloadPhotosListController: Operation {
                 break
             }
             
+            if controller.source != "" {
+                controller.selectButton = UIBarButtonItem(title: "Вложить", style: .done, target: controller, action: #selector(controller.tapSelectButton(sender:)))
+                controller.navigationItem.rightBarButtonItem = controller.selectButton
+                controller.selectButton.isEnabled = false
+                
+                controller.tableView.allowsMultipleSelection = true
+            }
+            
             controller.offset += controller.count
             controller.tableView.estimatedRowHeight = controller.heightRow
             controller.tableView.rowHeight = controller.heightRow

@@ -113,7 +113,7 @@ class SelectAttachPanel: UIView {
                     controller.title = "Упомянуть сообщество в сообщении/комментарии"
                     
                     controller.navigationItem.hidesBackButton = true
-                    let cancelButton = UIBarButtonItem(title: "Отмена", style: .plain, target: self, action: #selector(controller.tapCancelButton(sender:)))
+                    let cancelButton = UIBarButtonItem(title: "Отмена", style: .plain, target: controller, action: #selector(controller.tapCancelButton(sender:)))
                     controller.navigationItem.leftBarButtonItem = cancelButton
                     controller.delegate = self.delegate
                     

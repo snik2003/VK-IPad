@@ -14,6 +14,7 @@
 		1731A5362110AFBA00023409 /* TableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1731A5352110AFBA00023409 /* TableView.swift */; };
 		1731A5382113144E00023409 /* AttachPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1731A5372113144E00023409 /* AttachPanel.swift */; };
 		1731A53A2113489800023409 /* SelectAttachPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1731A5392113489800023409 /* SelectAttachPanel.swift */; };
+		1731A53C21187DA500023409 /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1731A53B21187DA500023409 /* View.swift */; };
 		173D666120D3C07900EEBF46 /* Control.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173D666020D3C07900EEBF46 /* Control.swift */; };
 		173D666420D3C91300EEBF46 /* GroupsListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173D666320D3C91300EEBF46 /* GroupsListController.swift */; };
 		173D666620D3C94500EEBF46 /* Groups.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173D666520D3C94500EEBF46 /* Groups.swift */; };
@@ -131,6 +132,7 @@
 		1731A5352110AFBA00023409 /* TableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableView.swift; sourceTree = "<group>"; };
 		1731A5372113144E00023409 /* AttachPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachPanel.swift; sourceTree = "<group>"; };
 		1731A5392113489800023409 /* SelectAttachPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectAttachPanel.swift; sourceTree = "<group>"; };
+		1731A53B21187DA500023409 /* View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
 		173D666020D3C07900EEBF46 /* Control.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Control.swift; sourceTree = "<group>"; };
 		173D666320D3C91300EEBF46 /* GroupsListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupsListController.swift; sourceTree = "<group>"; };
 		173D666520D3C94500EEBF46 /* Groups.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Groups.swift; sourceTree = "<group>"; };
@@ -396,6 +398,7 @@
 				173D666020D3C07900EEBF46 /* Control.swift */,
 				17A1A5B620D8D31200D9CE00 /* Button.swift */,
 				178D83BF20FF707900AFB7EB /* TapGesture.swift */,
+				1731A53B21187DA500023409 /* View.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -733,6 +736,7 @@
 				178D83C020FF707900AFB7EB /* TapGesture.swift in Sources */,
 				174912F120D300DD00FCF9F9 /* LoginViewController.swift in Sources */,
 				17B134AB20DADDAE0058E1A8 /* Comment.swift in Sources */,
+				1731A53C21187DA500023409 /* View.swift in Sources */,
 				1749130320D304DD00FCF9F9 /* ParseRequestList.swift in Sources */,
 				17424FEF20D591E800F52C4C /* Document.swift in Sources */,
 				17A1A5C120D8EA4C00D9CE00 /* ReloadGroupProfileController.swift in Sources */,

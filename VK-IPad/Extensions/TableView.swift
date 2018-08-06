@@ -9,15 +9,15 @@
 import UIKit
 
 extension UITableView {
-    func scrollToBottom(){
+    func scrollToBottom() {
         
-        self.setContentOffset(CGPoint(x: 0, y: self.contentSize.height - UIScreen.main.bounds.height), animated: true)
-        /*DispatchQueue.main.async {
-            let indexPath = IndexPath(
-                row: self.numberOfRows(inSection:  self.numberOfSections - 1) - 1,
-                section: self.numberOfSections - 1)
+        OperationQueue.main.addOperation {
+            let row = self.numberOfRows(inSection:  self.numberOfSections - 1) - 1
+            let section = self.numberOfSections - 1
+            
+            let indexPath = IndexPath(row: row, section: section)
             self.scrollToRow(at: indexPath, at: .bottom, animated: true)
-        }*/
+        }
     }
     
     func scrollToTop() {

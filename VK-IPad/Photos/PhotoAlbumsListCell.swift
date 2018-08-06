@@ -87,7 +87,32 @@ class PhotoAlbumsListCell: UITableViewCell {
                 coverImage.addGestureRecognizer(tap)
                 coverImage.isUserInteractionEnabled = true
                 tap.add {
-                    self.delegate.openAlbumController(ownerID: "\(album.ownerID)", albumID: "\(album.id)", title: "Альбом «\(album.title)»")
+                    if let controller = self.delegate as? PhotosListController {
+                        if controller.source == "add_photo" {
+                            controller.selectIndex = 0
+                            controller.ownerID = "\(album.ownerID)"
+                            controller.albumID = "\(album.id)"
+                            controller.type = "album"
+                            
+                            /*controller.photos.removeAll(keepingCapacity: false)
+                            controller.albums.removeAll(keepingCapacity: false)
+                            controller.tableView.reloadData()*/
+                            
+                            controller.selectButton.isEnabled = false
+                            controller.selectButton.title = "Вложить"
+                            
+                            controller.offset = 0
+                            controller.tableView.separatorStyle = .none
+                            controller.tableView.frame = CGRect(x: 0, y: 0, width: controller.view.bounds.width, height: controller.view.bounds.height)
+                            ViewControllerUtils().showActivityIndicator(uiView: controller.view)
+                            
+                            controller.getPhotos()
+                        } else {
+                            self.delegate.openAlbumController(ownerID: "\(album.ownerID)", albumID: "\(album.id)", title: "Альбом «\(album.title)»")
+                        }
+                    } else {
+                        self.delegate.openAlbumController(ownerID: "\(album.ownerID)", albumID: "\(album.id)", title: "Альбом «\(album.title)»")
+                    }
                 }
             }
         }

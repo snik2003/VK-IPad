@@ -67,7 +67,7 @@ class TopicController: UIViewController, UITableViewDelegate, UITableViewDataSou
         commentView.stickerImage = UIImage(named: "sticker")
         commentView.stickerButton.addTarget(self, action: #selector(self.tapStickerButton(sender:)), for: .touchUpInside)
         
-        commentView.accessoryImage = UIImage(named: "attachment")
+        commentView.accessoryImage = UIImage(named: "attachment2")?.tint(tintColor: vkSingleton.shared.mainColor)
         commentView.accessoryButton.addTarget(self, action: #selector(self.tapAccessoryButton(sender:)), for: .touchUpInside)
         
         if let gid = Int(self.groupID) {

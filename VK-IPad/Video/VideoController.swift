@@ -89,7 +89,7 @@ class VideoController: UIViewController, UITableViewDelegate, UITableViewDataSou
             }
         }
         
-        commentView.accessoryImage = UIImage(named: "attachment")
+        commentView.accessoryImage = UIImage(named: "attachment2")?.tint(tintColor: vkSingleton.shared.mainColor)
         commentView.accessoryButton.addTarget(self, action: #selector(self.tapAccessoryButton(sender:)), for: .touchUpInside)
         
         tableView.delegate = self

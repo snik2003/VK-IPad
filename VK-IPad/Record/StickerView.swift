@@ -72,6 +72,8 @@ class StickerView: UIView {
     
     func configure() {
         
+        removeSubviews()
+        
         let bWidth = (width - 20) / 5
         for index in 0...product.count-1 {
             let sButton = UIButton()

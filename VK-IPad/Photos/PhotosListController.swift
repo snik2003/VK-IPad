@@ -27,7 +27,6 @@ class PhotosListController: UIViewController, UITableViewDelegate, UITableViewDa
     
     var selectIndex = 0
     
-    var markPhotos: [Int:UIImage] = [:]
     var selectButton: UIBarButtonItem!
     
     @IBOutlet weak var segmentedControl: UISegmentedControl!
@@ -162,12 +161,14 @@ class PhotosListController: UIViewController, UITableViewDelegate, UITableViewDa
             heightRow = (self.view.bounds.width * 0.333) * CGFloat(240) /
                 CGFloat(320)
             
-            if let id = Int(ownerID) {
-                if id > 0 {
-                    self.title = self.title?.replacingFirstOccurrence(of: "Альбомы", with: "Фотографии")
-                    self.title = self.title?.replacingFirstOccurrence(of: "альбомы", with: "фотографии")
-                } else {
-                    self.title = self.title?.replacingFirstOccurrence(of: "Альбомы", with: "Фотографии")
+            if source == "" {
+                if let id = Int(ownerID) {
+                    if id > 0 {
+                        self.title = self.title?.replacingFirstOccurrence(of: "Альбомы", with: "Фотографии")
+                        self.title = self.title?.replacingFirstOccurrence(of: "альбомы", with: "фотографии")
+                    } else {
+                        self.title = self.title?.replacingFirstOccurrence(of: "Альбомы", with: "Фотографии")
+                    }
                 }
             }
         case 1:
@@ -175,12 +176,14 @@ class PhotosListController: UIViewController, UITableViewDelegate, UITableViewDa
             tableView.separatorStyle = .none
             heightRow = (self.view.bounds.width * 0.5) * CGFloat(240) / CGFloat(320) + 50
             
-            if let id = Int(ownerID) {
-                if id > 0 {
-                    self.title = self.title?.replacingFirstOccurrence(of: "Фотографии", with: "Альбомы")
-                    self.title = self.title?.replacingFirstOccurrence(of: "фотографии", with: "альбомы")
-                } else {
-                    self.title = self.title?.replacingFirstOccurrence(of: "Фотографии", with: "Альбомы")
+            if source == "" {
+                if let id = Int(ownerID) {
+                    if id > 0 {
+                        self.title = self.title?.replacingFirstOccurrence(of: "Фотографии", with: "Альбомы")
+                        self.title = self.title?.replacingFirstOccurrence(of: "фотографии", with: "альбомы")
+                    } else {
+                        self.title = self.title?.replacingFirstOccurrence(of: "Фотографии", with: "Альбомы")
+                    }
                 }
             }
         default:
@@ -227,7 +230,10 @@ class PhotosListController: UIViewController, UITableViewDelegate, UITableViewDa
             cell.photos = photos
             
             cell.indexPath = indexPath
+            cell.tableView = self.tableView
+            
             cell.cellWidth = self.view.bounds.width
+            cell.source = source
             
             cell.configureCell()
             cell.selectionStyle = .none
@@ -247,6 +253,35 @@ class PhotosListController: UIViewController, UITableViewDelegate, UITableViewDa
             
             return cell
         }
+    }
+    
+    @objc func tapSelectButton(sender: UIBarButtonItem) {
+        
+        if source == "add_photo" {
+            let photos = self.photos.filter({ $0.isSelected })
+            
+            if let controller = delegate as? RecordController {
+                for photo in photos {
+                    controller.attachPanel.attachArray.append(photo)
+                }
+                controller.attachPanel.removeFromSuperview()
+                controller.attachPanel.reconfigure()
+            } else if let controller = delegate as? VideoController {
+                for photo in photos {
+                    controller.attachPanel.attachArray.append(photo)
+                }
+                controller.attachPanel.removeFromSuperview()
+                controller.attachPanel.reconfigure()
+            } else if let controller = delegate as? TopicController {
+                for photo in photos {
+                    controller.attachPanel.attachArray.append(photo)
+                }
+                controller.attachPanel.removeFromSuperview()
+                controller.attachPanel.reconfigure()
+            }
+        }
+        
+        self.navigationController?.popViewController(animated: true)
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {

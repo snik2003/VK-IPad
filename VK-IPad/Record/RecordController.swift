@@ -81,7 +81,7 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
         commentView.stickerImage = UIImage(named: "sticker")
         commentView.stickerButton.addTarget(self, action: #selector(self.tapStickerButton(sender:)), for: .touchUpInside)
         
-        commentView.accessoryImage = UIImage(named: "attachment")
+        commentView.accessoryImage = UIImage(named: "attachment2")?.tint(tintColor: vkSingleton.shared.mainColor)
         commentView.accessoryButton.addTarget(self, action: #selector(self.tapAccessoryButton(sender:)), for: .touchUpInside)
         
         setCommentFromGroupID(id: vkSingleton.shared.commentFromGroup, controller: self)
@@ -838,7 +838,9 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
                     }
                     
                     self.loadMoreComments()
+                    //self.tableView.scrollToBottom()
                     self.commentView.becomeFirstResponder()
+                    self.commentView.resignFirstResponder()
                 }
             } else if error.errorCode == 15 && vkSingleton.shared.commentFromGroup > 0 {
                 self.showErrorMessage(title: "Ошибка", msg: "ВКонтакте закрыл доступ для отправки комментариев от имени малочисленных и недавно созданных групп. Попробуйте отправить комментарий от имени данного сообщества позднее.")
@@ -890,7 +892,8 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
                     }
                     
                     self.loadMoreComments()
-                    self.commentView.becomeFirstResponder()
+                    self.tableView.scrollToBottom()
+                    //self.commentView.becomeFirstResponder()
                 }
             } else {
                 self.showErrorMessage(title: "Ошибка #\(error.errorCode)", msg: "\(error.errorMsg)")
