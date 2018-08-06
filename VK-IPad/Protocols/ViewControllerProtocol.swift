@@ -772,7 +772,7 @@ extension UIViewController: ViewControllerProtocol {
         var popover: Popover!
         let popoverOptions: [PopoverOption] = [
             .type(.up),
-            .cornerRadius(20),
+            .cornerRadius(6),
             .color(UIColor.white),
             .blackOverlayColor(UIColor.gray.withAlphaComponent(0.75))
         ]
@@ -845,6 +845,18 @@ extension UIViewController: ViewControllerProtocol {
             avatar.clipsToBounds = true
             avatar.frame = CGRect(x: maxWidth - 50, y: height, width: 30, height: 30)
             view.addSubview(avatar)
+            
+            if vkSingleton.shared.commentFromGroup != 0 {
+                let tap = UITapGestureRecognizer()
+                tap.numberOfTapsRequired = 1
+                tap.add {
+                    popover.dismiss()
+                    self.setCommentFromGroupID(id: 0, controller: self)
+                    vkSingleton.shared.commentFromGroup = 0
+                }
+                avatar.isUserInteractionEnabled = true
+                avatar.addGestureRecognizer(tap)
+            }
             
             height += 35
         }
@@ -940,6 +952,20 @@ extension UIViewController: ViewControllerProtocol {
                         avatar2.clipsToBounds = true
                         avatar2.frame = CGRect(x: maxWidth - 50, y: height, width: 30, height: 30)
                         view.addSubview(avatar2)
+                        
+                        if let gid = Int(group.gid) {
+                            if vkSingleton.shared.commentFromGroup != gid {
+                                let tap = UITapGestureRecognizer()
+                                tap.numberOfTapsRequired = 1
+                                tap.add {
+                                    popover.dismiss()
+                                    self.setCommentFromGroupID(id: gid, controller: self)
+                                    vkSingleton.shared.commentFromGroup = gid
+                                }
+                                avatar2.isUserInteractionEnabled = true
+                                avatar2.addGestureRecognizer(tap)
+                            }
+                        }
                         
                         height += 35
                     }

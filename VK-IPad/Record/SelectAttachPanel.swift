@@ -36,7 +36,7 @@ class SelectAttachPanel: UIView {
         
         let popoverOptions: [PopoverOption] = [
             .type(.up),
-            .cornerRadius(20),
+            .cornerRadius(6),
             .color(UIColor.white),
             .blackOverlayColor(UIColor.gray.withAlphaComponent(0.75))
         ]
