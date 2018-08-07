@@ -134,12 +134,19 @@ class VideoController: UIViewController, UITableViewDelegate, UITableViewDataSou
         commentView.endEditing(true)
         commentView.fromGroupButton.buttonTouched()
         
-        actionFromGroupButton(fromView: commentView.fromGroupButton)
+        if attachPanel.editID == 0 {
+            actionFromGroupButton(fromView: commentView.fromGroupButton)
+        }
     }
     
     func didSendComment(_ text: String!) {
         commentView.endEditing(true)
-        createComment(text: text, attachments: attachPanel.attachments, replyID: attachPanel.replyID, stickerID: 0)
+        
+        if attachPanel.editID == 0 {
+            createComment(text: text, stickerID: 0)
+        } else {
+            editComment(text: text)
+        }
     }
     
     func getVideo() {
@@ -332,6 +339,9 @@ class VideoController: UIViewController, UITableViewDelegate, UITableViewDataSou
                 return 40
             } else {
                 if let height = heights[indexPath] {
+                    if self.attachPanel.editID > 0 {
+                        return height - 20
+                    }
                     return height
                 } else {
                     let cell = tableView.dequeueReusableCell(withIdentifier: "commentCell") as! CommentCell
@@ -373,6 +383,9 @@ class VideoController: UIViewController, UITableViewDelegate, UITableViewDataSou
                 return 40
             } else {
                 if let height = heights[indexPath] {
+                    if self.attachPanel.editID > 0 {
+                        return height - 20
+                    }
                     return height
                 } else {
                     let cell = tableView.dequeueReusableCell(withIdentifier: "commentCell") as! CommentCell
@@ -480,6 +493,8 @@ class VideoController: UIViewController, UITableViewDelegate, UITableViewDataSou
                 let comment = comments[comments.count - indexPath.row]
                 
                 cell.delegate = self
+                cell.editID = self.attachPanel.editID
+                
                 cell.indexPath = indexPath
                 cell.cell = cell
                 cell.tableView = self.tableView
@@ -736,14 +751,14 @@ class VideoController: UIViewController, UITableViewDelegate, UITableViewDataSou
         }
     }
     
-    func createComment(text: String, attachments: String, replyID: Int, stickerID: Int) {
+    func createComment(text: String, stickerID: Int) {
         let url = "/method/video.createComment"
         var parameters = [
             "access_token": vkSingleton.shared.accessToken,
             "owner_id": self.ownerID,
             "video_id": self.vid,
             "message": text,
-            "attachments": attachments,
+            "attachments": self.attachPanel.attachments,
             "v": vkSingleton.shared.version
         ]
         
@@ -751,8 +766,8 @@ class VideoController: UIViewController, UITableViewDelegate, UITableViewDataSou
             parameters["from_group"] = "\(vkSingleton.shared.commentFromGroup)"
         }
         
-        if replyID > 0 {
-            parameters["reply_to_comment"] = "\(replyID)"
+        if self.attachPanel.replyID > 0 {
+            parameters["reply_to_comment"] = "\(self.attachPanel.replyID)"
         }
         
         if stickerID > 0 {
@@ -779,6 +794,7 @@ class VideoController: UIViewController, UITableViewDelegate, UITableViewDataSou
                     self.commentView.textView.text = ""
                     
                     self.attachPanel.attachArray.removeAll(keepingCapacity: false)
+                    self.attachPanel.editID = 0
                     self.attachPanel.replyID = 0
                     
                     if self.video.count > 0 {
@@ -786,7 +802,6 @@ class VideoController: UIViewController, UITableViewDelegate, UITableViewDataSou
                     }
                     
                     self.loadMoreComments()
-                    self.commentView.becomeFirstResponder()
                 }
             } else if error.errorCode == 15 && vkSingleton.shared.commentFromGroup > 0 {
                 self.showErrorMessage(title: "Ошибка", msg: "ВКонтакте закрыл доступ для отправки комментариев от имени малочисленных и недавно созданных групп. Попробуйте отправить комментарий от имени данного сообщества позднее.")
@@ -796,6 +811,53 @@ class VideoController: UIViewController, UITableViewDelegate, UITableViewDataSou
                 self.showErrorMessage(title: "Ошибка", msg: "\nПревышен лимит комментариев на стене.\n")
             } else {
                 self.showErrorMessage(title: "Ошибка #\(error.errorCode)", msg: "\(error.errorMsg)")
+            }
+        }
+        OperationQueue().addOperation(request)
+    }
+    
+    func editComment(text: String) {
+        
+        let url = "/method/video.editComment"
+        let parameters = [
+            "access_token": vkSingleton.shared.accessToken,
+            "owner_id": self.ownerID,
+            "comment_id": "\(self.attachPanel.editID)",
+            "message": text,
+            "attachments": self.attachPanel.attachments,
+            "v": vkSingleton.shared.version
+        ]
+        
+        let request = GetServerDataOperation(url: url, parameters: parameters)
+        request.completionBlock = {
+            guard let data = request.data else { return }
+            
+            guard let json = try? JSON(data: data) else { print("json error"); return }
+            
+            let error = ErrorJson(json: JSON.null)
+            error.errorCode = json["error"]["error_code"].intValue
+            error.errorMsg = json["error"]["error_msg"].stringValue
+            
+            if error.errorCode == 0 {
+                OperationQueue.main.addOperation {
+                    self.offset = 0
+                    self.comments.removeAll(keepingCapacity: false)
+                    self.commentsProfiles.removeAll(keepingCapacity: false)
+                    self.commentsGroups.removeAll(keepingCapacity: false)
+                    
+                    self.commentView.textView.text = ""
+                    
+                    self.attachPanel.attachArray.removeAll(keepingCapacity: false)
+                    self.attachPanel.editID = 0
+                    self.attachPanel.replyID = 0
+                    
+                    self.loadMoreComments()
+                }
+            } else {
+                OperationQueue.main.addOperation {
+                    self.commentView.textView.text = text
+                    self.showErrorMessage(title: "Ошибка #\(error.errorCode)", msg: "\(error.errorMsg)")
+                }
             }
         }
         OperationQueue().addOperation(request)
@@ -834,7 +896,6 @@ class VideoController: UIViewController, UITableViewDelegate, UITableViewDataSou
                     }
                     
                     self.loadMoreComments()
-                    self.commentView.becomeFirstResponder()
                 }
             } else {
                 self.showErrorMessage(title: "Ошибка #\(error.errorCode)", msg: "\(error.errorMsg)")
@@ -842,5 +903,21 @@ class VideoController: UIViewController, UITableViewDelegate, UITableViewDataSou
         }
         
         OperationQueue().addOperation(request)
+    }
+    
+    @objc func cancelEditMode(sender: UIBarButtonItem) {
+        self.title = "Видеозапись"
+        
+        let barButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(self.tapBarButtonItem(sender:)))
+        self.navigationItem.rightBarButtonItem = barButton
+        
+        self.setCommentFromGroupID(id: vkSingleton.shared.commentFromGroup, controller: self)
+        self.commentView.textView.text = ""
+        
+        self.attachPanel.attachArray.removeAll(keepingCapacity: false)
+        self.attachPanel.editID = 0
+        self.attachPanel.replyID = 0
+        
+        self.tableView.reloadData()
     }
 }

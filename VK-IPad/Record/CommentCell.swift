@@ -14,6 +14,7 @@ import SCLAlertView
 class CommentCell: UITableViewCell {
 
     var delegate: UIViewController!
+    var editID: Int = 0
     
     var comment: Comment!
     var users: [UserProfile]!
@@ -68,6 +69,17 @@ class CommentCell: UITableViewCell {
             
             var topY: CGFloat = 0
             
+            if editID == comment.id {
+                let editLabel = UILabel()
+                editLabel.tag = 250
+                editLabel.text = "В режиме редактирования"
+                editLabel.textAlignment = .right
+                editLabel.textColor = UIColor.blue
+                editLabel.font = menuFont
+                editLabel.frame = CGRect(x: cellWidth - 220, y: topY, width: 200, height: 20)
+                self.addSubview(editLabel)
+            }
+            
             let maxWidth = cellWidth - avatarHeight - 40
             
             setAvatar(topY: topY)
@@ -116,7 +128,9 @@ class CommentCell: UITableViewCell {
             
             topY = setInfoPanel(topY: topY)
             
-            setMenuComment(topY: topY)
+            if editID == 0 {
+                setMenuComment(topY: topY)
+            }
         }
         
     }
@@ -789,7 +803,7 @@ class CommentCell: UITableViewCell {
         if comment.countLikes > 0 {
             let button1 = UIButton()
             button1.tag = 250
-            button1.setTitle("Кому понравилось", for: .normal)
+            button1.setTitle("Оценили", for: .normal)
             button1.setTitleColor(button1.tintColor, for: .normal)
             button1.titleLabel?.font = menuFont
             button1.add(for: .touchUpInside) {
@@ -860,7 +874,7 @@ class CommentCell: UITableViewCell {
         
         if "\(comment.fromID)" == vkSingleton.shared.userID || (comment.fromID < 0 && vkSingleton.shared.adminGroupID.contains(abs(comment.fromID))) {
             
-            if Int(Date().timeIntervalSince1970) - comment.date <= 24 * 60 * 60 {
+            if Int(Date().timeIntervalSince1970) - comment.date <= 24 * 60 * 60 && !comment.isSticker {
                 let button1 = UIButton()
                 button1.tag = 250
                 button1.setTitle("Редактировать", for: .normal)
@@ -869,6 +883,98 @@ class CommentCell: UITableViewCell {
                 button1.add(for: .touchUpInside) {
                     button1.buttonTouched()
                     
+                    if let controller = self.delegate as? RecordController {
+                        controller.title = "Режим редактирования комментария"
+                        let barButton = UIBarButtonItem(title: "Отмена", style: .done, target: controller, action: #selector(controller.cancelEditMode(sender:)))
+                        controller.navigationItem.rightBarButtonItem = barButton
+                        
+                        controller.commentView.textView.text = self.comment.text
+                        
+                        if self.comment.fromID < 0 {
+                            let id = abs(self.comment.fromID)
+                            controller.setCommentFromGroupID(id: id, controller: self.delegate)
+                        } else {
+                            controller.setCommentFromGroupID(id: 0, controller: self.delegate)
+                        }
+                        
+                        controller.attachPanel.attachArray.removeAll(keepingCapacity: false)
+                        for attach in self.comment.attachments {
+                            if attach.photo.count > 0 {
+                                controller.attachPanel.attachArray.append(attach.photo[0])
+                            }
+                            
+                            if attach.video.count > 0 {
+                                controller.attachPanel.attachArray.append(attach.video[0])
+                            }
+                        }
+                        
+                        controller.attachPanel.editID = self.comment.id
+                        controller.attachPanel.replyID = self.comment.replyComment
+                        
+                        controller.tableView.reloadData()
+                    }
+                    
+                    if let controller = self.delegate as? VideoController {
+                        controller.title = "Режим редактирования комментария"
+                        let barButton = UIBarButtonItem(title: "Отмена", style: .done, target: controller, action: #selector(controller.cancelEditMode(sender:)))
+                        controller.navigationItem.rightBarButtonItem = barButton
+                        
+                        controller.commentView.textView.text = self.comment.text
+                        
+                        if self.comment.fromID < 0 {
+                            let id = abs(self.comment.fromID)
+                            controller.setCommentFromGroupID(id: id, controller: self.delegate)
+                        } else {
+                            controller.setCommentFromGroupID(id: 0, controller: self.delegate)
+                        }
+                        
+                        controller.attachPanel.attachArray.removeAll(keepingCapacity: false)
+                        for attach in self.comment.attachments {
+                            if attach.photo.count > 0 {
+                                controller.attachPanel.attachArray.append(attach.photo[0])
+                            }
+                            
+                            if attach.video.count > 0 {
+                                controller.attachPanel.attachArray.append(attach.video[0])
+                            }
+                        }
+                        
+                        controller.attachPanel.editID = self.comment.id
+                        controller.attachPanel.replyID = self.comment.replyComment
+                        
+                        controller.tableView.reloadData()
+                    }
+                    
+                    if let controller = self.delegate as? TopicController {
+                        controller.title = "Режим редактирования комментария"
+                        let barButton = UIBarButtonItem(title: "Отмена", style: .done, target: controller, action: #selector(controller.cancelEditMode(sender:)))
+                        controller.navigationItem.rightBarButtonItem = barButton
+                        
+                        controller.commentView.textView.text = self.comment.text
+                        
+                        if self.comment.fromID < 0 {
+                            let id = abs(self.comment.fromID)
+                            controller.setCommentFromGroupID(id: id, controller: self.delegate)
+                        } else {
+                            controller.setCommentFromGroupID(id: 0, controller: self.delegate)
+                        }
+                        
+                        controller.attachPanel.attachArray.removeAll(keepingCapacity: false)
+                        for attach in self.comment.attachments {
+                            if attach.photo.count > 0 {
+                                controller.attachPanel.attachArray.append(attach.photo[0])
+                            }
+                            
+                            if attach.video.count > 0 {
+                                controller.attachPanel.attachArray.append(attach.video[0])
+                            }
+                        }
+                        
+                        controller.attachPanel.editID = self.comment.id
+                        controller.attachPanel.replyID = self.comment.replyComment
+                        
+                        controller.tableView.reloadData()
+                    }
                 }
                 let size = delegate.getTextSize(text: button1.titleLabel!.text!, font: menuFont, maxWidth: cellWidth)
                 button1.frame = CGRect(x: leftX, y: topY, width: size.width, height: menuButtonHeight)

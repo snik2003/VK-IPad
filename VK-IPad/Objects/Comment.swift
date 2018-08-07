@@ -35,4 +35,14 @@ class Comment {
         
         self.attachments = json["attachments"].compactMap({ Attachment(json: $0.1) })
     }
+    
+    var isSticker: Bool {
+        var res = false
+        for attach in self.attachments {
+            if attach.sticker.count > 0 {
+                res = true
+            }
+        }
+        return res
+    }
 }

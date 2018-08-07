@@ -14,7 +14,7 @@ class AttachPanel: UIView {
     
     var delegate: UIViewController! {
         didSet {
-            if !(delegate is ProfileViewController) {
+            if !(delegate is TopicController) {
                 maxAttachCount = 2
             }
         }
@@ -31,6 +31,10 @@ class AttachPanel: UIView {
         }
     }
     
+    var editID = 0
+    
+    var cornerRadius: CGFloat = 6
+    
     var attachArray: [AnyObject] = []
     var attachments = ""
     
@@ -46,9 +50,9 @@ class AttachPanel: UIView {
         if replyID != 0 {
             let view = UIView()
             view.tag = 250
-            view.backgroundColor = vkSingleton.shared.backColor.withAlphaComponent(0.85)
-            view.layer.cornerRadius = 15
-            view.layer.borderColor = UIColor.darkGray.cgColor
+            view.backgroundColor = UIColor.white.withAlphaComponent(0.85)
+            view.layer.cornerRadius = cornerRadius
+            view.layer.borderColor = UIColor.lightGray.cgColor
             view.layer.borderWidth = 1.0
             
             let nameLabel = UILabel()
@@ -77,10 +81,12 @@ class AttachPanel: UIView {
                 self.replyID = 0
             }
             xButton.frame = CGRect(x: width - 20 - 120, y: height, width: 120, height: 30)
-            view.addSubview(xButton)
+            if editID == 0 {
+                view.addSubview(xButton)
+            }
             
             view.frame = CGRect(x: 10, y: 10, width: width, height: 30)
-            view.dropShadow(color: UIColor.black, opacity: 0.9, offSet: CGSize(width: -1, height: 1), radius: 15)
+            view.dropShadow(color: UIColor.black, opacity: 0.9, offSet: CGSize(width: -1, height: 1), radius: cornerRadius)
             self.addSubview(view)
             height += 40
         }
@@ -89,9 +95,9 @@ class AttachPanel: UIView {
         if attachArray.count > 0 {
             let view = UIView()
             view.tag = 250
-            view.backgroundColor = vkSingleton.shared.backColor.withAlphaComponent(0.85)
-            view.layer.cornerRadius = 15
-            view.layer.borderColor = UIColor.darkGray.cgColor
+            view.backgroundColor = UIColor.white.withAlphaComponent(0.85)
+            view.layer.cornerRadius = cornerRadius
+            view.layer.borderColor = UIColor.lightGray.cgColor
             view.layer.borderWidth = 1.0
             
             var top: CGFloat = 0
@@ -229,7 +235,7 @@ class AttachPanel: UIView {
             view.frame = CGRect(x: 10, y: height, width: width, height: top)
             height += top
             
-            view.dropShadow(color: UIColor.black, opacity: 0.9, offSet: CGSize(width: -1, height: 1), radius: 15)
+            view.dropShadow(color: UIColor.black, opacity: 0.9, offSet: CGSize(width: -1, height: 1), radius: cornerRadius)
             self.addSubview(view)
         }
         
