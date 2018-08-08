@@ -348,17 +348,22 @@ class ProfileView: UIView {
         alertController.addAction(cancelAction)
         
         if delegate.userID != vkSingleton.shared.userID {
+            var title = ""
+            var style: UIAlertActionStyle = .default
+            
             if user.isFavorite == 1 {
-                let action1 = UIAlertAction(title: "Удалить \(user.firstNameAcc) из Закладок", style: .destructive) { action in
-                    
-                }
-                alertController.addAction(action1)
+                title = "Удалить из «Избранное»"
+                style = .destructive
             } else {
-                let action1 = UIAlertAction(title: "Добавить \(user.firstNameAcc) в Закладки", style: .default) { action in
-                    
-                }
-                alertController.addAction(action1)
+                title = "Добавить в «Избранное»"
+                style = .default
             }
+            
+            let action1 = UIAlertAction(title: title, style: style) { action in
+                
+                self.delegate.userInFave()
+            }
+            alertController.addAction(action1)
         }
         
         let action2 = UIAlertAction(title: "Скопировать ссылку", style: .default) { action in
@@ -376,29 +381,36 @@ class ProfileView: UIView {
         alertController.addAction(action2)
         
         if self.delegate.userID != vkSingleton.shared.userID {
+            var title = ""
+            var style: UIAlertActionStyle = .default
+            
             if user.isHiddenFromFeed == 0 {
-                let action3 = UIAlertAction(title: "Скрывать новости в ленте", style: .destructive) { action in
-                    
-                }
-                alertController.addAction(action3)
+                title = "Скрывать новости в ленте"
+                style = .destructive
             } else {
-                let action3 = UIAlertAction(title: "Показывать новости в ленте", style: .default) { action in
-                    
-                }
-                alertController.addAction(action3)
+                title = "Показывать новости в ленте"
+                style = .default
             }
             
-            if user.blacklistedByMe == 1 {
-                let action4 = UIAlertAction(title: "Удалить из черного списка", style: .default) { action in
-                    
-                }
-                alertController.addAction(action4)
-            } else {
-                let action4 = UIAlertAction(title: "Добавить в черный список", style: .destructive) { action in
-                    
-                }
-                alertController.addAction(action4)
+            let action3 = UIAlertAction(title: title, style: style) { action in
+                
+                self.delegate.userInNewsfeed()
             }
+            alertController.addAction(action3)
+            
+            if user.blacklistedByMe == 0 {
+                title = "Добавить в «Черный список»"
+                style = .destructive
+            } else {
+                title = "Удалить из «Черного списка»"
+                style = .default
+            }
+            
+            let action4 = UIAlertAction(title: title, style: style) { action in
+                
+                self.delegate.userInBanList()
+            }
+            alertController.addAction(action4)
         }
         
         let action5 = UIAlertAction(title: "Пожаловаться", style: .destructive) { action in

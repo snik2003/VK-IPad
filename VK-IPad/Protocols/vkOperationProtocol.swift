@@ -16,6 +16,11 @@ protocol VkOperationProtocol {
     
     func registerDeviceOnPush()
     
+    func userInFave()
+    
+    func userInNewsfeed()
+    
+    func userInBanList()
 }
 
 extension UIViewController: VkOperationProtocol {
@@ -232,5 +237,198 @@ extension UIViewController: VkOperationProtocol {
             }
         }
         opq.addOperation(parsePush)
+    }
+    
+    func userInFave() {
+        
+        if let controller = self as? ProfileViewController, controller.userProfile.count > 0 {
+            
+            let user = controller.userProfile[0]
+            
+            var url = ""
+            var parameters: Parameters = [:]
+            var successText = ""
+            
+            if user.isFavorite == 1 {
+                url = "/method/fave.removeUser"
+                parameters = [
+                    "user_id": user.uid,
+                    "access_token": vkSingleton.shared.accessToken,
+                    "v": vkSingleton.shared.version
+                ]
+                
+                if user.sex == 1 {
+                    successText = "\n\(user.firstName) \(user.lastName) успешно удалена из «Избранное».\n"
+                } else {
+                    successText = "\n\(user.firstName) \(user.lastName) успешно удален из «Избранное».\n"
+                }
+            } else {
+                url = "/method/fave.addUser"
+                parameters = [
+                    "user_id": user.uid,
+                    "access_token": vkSingleton.shared.accessToken,
+                    "v": vkSingleton.shared.version
+                ]
+                
+                if user.sex == 1 {
+                    successText = "\n\(user.firstName) \(user.lastName) успешно добавлена в «Избранное».\n"
+                } else {
+                    successText = "\n\(user.firstName) \(user.lastName) успешно добавлен в «Избранное».\n"
+                }
+            }
+            
+            let request = GetServerDataOperation(url: url, parameters: parameters)
+            request.completionBlock = {
+                guard let data = request.data else { return }
+                
+                guard let json = try? JSON(data: data) else { print("json error"); return }
+                let result = json["response"].intValue
+                
+                if result == 1 {
+                    if user.isFavorite == 1 {
+                        controller.userProfile[0].isFavorite = 0
+                    } else {
+                        controller.userProfile[0].isFavorite = 1
+                    }
+                    
+                    OperationQueue.main.addOperation {
+                        
+                    }
+                    self.showSuccessMessage(title: "Избранные пользователи", msg: successText)
+                } else {
+                    let error = ErrorJson(json: JSON.null)
+                    error.errorCode = json["error"]["error_code"].intValue
+                    error.errorMsg = json["error"]["error_msg"].stringValue
+                    
+                    self.showErrorMessage(title: "Избранные пользователи", msg: "\nОшибка #\(error.errorCode): \(error.errorMsg)\n")
+                }
+            }
+            OperationQueue().addOperation(request)
+        }
+    }
+    
+    func userInNewsfeed() {
+        if let controller = self as? ProfileViewController, controller.userProfile.count > 0 {
+            
+            let user = controller.userProfile[0]
+            
+            var url = ""
+            var parameters: Parameters = [:]
+            var successText = ""
+            
+            if user.isHiddenFromFeed == 0 {
+                url = "/method/newsfeed.addBan"
+                parameters = [
+                    "access_token": vkSingleton.shared.accessToken,
+                    "user_ids": user.uid,
+                    "v": vkSingleton.shared.version
+                ]
+                
+                successText = "Новости \(user.firstNameGen) \(user.lastNameGen) больше не будут показываться в вашей ленте новостей."
+            } else {
+                url = "/method/newsfeed.deleteBan"
+                parameters = [
+                    "access_token": vkSingleton.shared.accessToken,
+                    "user_ids": user.uid,
+                    "v": vkSingleton.shared.version
+                ]
+                
+                successText = "Новости \(user.firstNameGen) \(user.lastNameGen) теперь будут показываться в вашей ленте новостей."
+            }
+            
+            let request = GetServerDataOperation(url: url, parameters: parameters)
+            
+            request.completionBlock = {
+                guard let data = request.data else { return }
+                
+                guard let json = try? JSON(data: data) else { print("json error"); return }
+                
+                let error = ErrorJson(json: JSON.null)
+                error.errorCode = json["error"]["error_code"].intValue
+                error.errorMsg = json["error"]["error_msg"].stringValue
+                
+                if error.errorCode == 0 {
+                    if user.isHiddenFromFeed == 0 {
+                        controller.userProfile[0].isHiddenFromFeed = 1
+                    } else {
+                        controller.userProfile[0].isHiddenFromFeed = 0
+                    }
+                    
+                    self.showSuccessMessage(title: "Лента новостей", msg: successText)
+                } else {
+                    self.showErrorMessage(title: "Лента новостей", msg: "\nОшибка #\(error.errorCode): \(error.errorMsg)\n")
+                }
+            }
+            
+            OperationQueue().addOperation(request)
+        }
+    }
+    
+    func userInBanList() {
+        
+        if let controller = self as? ProfileViewController, controller.userProfile.count > 0 {
+            
+            let user = controller.userProfile[0]
+            
+            var url = ""
+            var parameters: Parameters = [:]
+            var successText = ""
+            
+            if user.blacklistedByMe == 1 {
+                url = "/method/account.unbanUser"
+                parameters = [
+                    "user_id": user.uid,
+                    "access_token": vkSingleton.shared.accessToken,
+                    "v": vkSingleton.shared.version
+                ]
+                
+                if user.sex == 1 {
+                    successText = "\n\(user.firstName) \(user.lastName) успешно удалена из «Черного списка».\n"
+                } else {
+                    successText = "\n\(user.firstName) \(user.lastName) успешно удален из «Черного списка».\n"
+                }
+            } else {
+                url = "/method/account.banUser"
+                parameters = [
+                    "user_id": user.uid,
+                    "access_token": vkSingleton.shared.accessToken,
+                    "v": vkSingleton.shared.version
+                ]
+                
+                if user.sex == 1 {
+                    successText = "\n\(user.firstName) \(user.lastName) успешно добавлена в «Черный список».\n"
+                } else {
+                    successText = "\n\(user.firstName) \(user.lastName) успешно добавлен в «Черный список».\n"
+                }
+            }
+            
+            let request = GetServerDataOperation(url: url, parameters: parameters)
+            request.completionBlock = {
+                guard let data = request.data else { return }
+                
+                guard let json = try? JSON(data: data) else { print("json error"); return }
+                let result = json["response"].intValue
+                
+                if result == 1 {
+                    if user.blacklistedByMe == 1 {
+                        controller.userProfile[0].blacklistedByMe = 0
+                    } else {
+                        controller.userProfile[0].blacklistedByMe = 1
+                    }
+                    
+                    OperationQueue.main.addOperation {
+                        
+                    }
+                    self.showSuccessMessage(title: "«Черный список»", msg: successText)
+                } else {
+                    let error = ErrorJson(json: JSON.null)
+                    error.errorCode = json["error"]["error_code"].intValue
+                    error.errorMsg = json["error"]["error_msg"].stringValue
+                    
+                    self.showErrorMessage(title: "«Черный список»", msg: "\nОшибка #\(error.errorCode): \(error.errorMsg)\n")
+                }
+            }
+            OperationQueue().addOperation(request)
+        }
     }
 }
