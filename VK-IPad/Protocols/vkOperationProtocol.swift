@@ -21,6 +21,11 @@ protocol VkOperationProtocol {
     func userInNewsfeed()
     
     func userInBanList()
+    
+    func groupInFave()
+    
+    func groupInNewsfeed()
+    
 }
 
 extension UIViewController: VkOperationProtocol {
@@ -428,6 +433,124 @@ extension UIViewController: VkOperationProtocol {
                     self.showErrorMessage(title: "«Черный список»", msg: "\nОшибка #\(error.errorCode): \(error.errorMsg)\n")
                 }
             }
+            OperationQueue().addOperation(request)
+        }
+    }
+    
+    func groupInFave() {
+        
+        if let controller = self as? GroupProfileViewController, controller.groupProfile.count > 0 {
+            
+            let group = controller.groupProfile[0]
+            
+            var url = ""
+            var parameters: Parameters = [:]
+            var successText = ""
+            
+            if group.isFavorite == 1 {
+                url = "/method/fave.removeGroup"
+                parameters = [
+                    "group_id": group.gid,
+                    "access_token": vkSingleton.shared.accessToken,
+                    "v": vkSingleton.shared.version
+                ]
+                
+                successText = "\nСообщество «\(group.name)» успешно удалено из «Избранное».\n"
+                
+            } else {
+                url = "/method/fave.addGroup"
+                parameters = [
+                    "group_id": group.gid,
+                    "access_token": vkSingleton.shared.accessToken,
+                    "v": vkSingleton.shared.version
+                ]
+                
+                successText = "\nСообщество «\(group.name)» успешно добавлено в «Избранное».\n"
+            }
+            
+            let request = GetServerDataOperation(url: url, parameters: parameters)
+            request.completionBlock = {
+                guard let data = request.data else { return }
+                
+                guard let json = try? JSON(data: data) else { print("json error"); return }
+                let result = json["response"].intValue
+                
+                if result == 1 {
+                    if group.isFavorite == 1 {
+                        controller.groupProfile[0].isFavorite = 0
+                    } else {
+                        controller.groupProfile[0].isFavorite = 1
+                    }
+                    
+                    OperationQueue.main.addOperation {
+                        
+                    }
+                    self.showSuccessMessage(title: "Избранные сообщества", msg: successText)
+                } else {
+                    let error = ErrorJson(json: JSON.null)
+                    error.errorCode = json["error"]["error_code"].intValue
+                    error.errorMsg = json["error"]["error_msg"].stringValue
+                    
+                    self.showErrorMessage(title: "Избранные сообщества", msg: "\nОшибка #\(error.errorCode): \(error.errorMsg)\n")
+                }
+            }
+            OperationQueue().addOperation(request)
+        }
+    }
+    
+    func groupInNewsfeed() {
+        if let controller = self as? GroupProfileViewController, controller.groupProfile.count > 0 {
+            
+            let group = controller.groupProfile[0]
+            
+            var url = ""
+            var parameters: Parameters = [:]
+            var successText = ""
+            
+            if group.isHiddenFromFeed == 0 {
+                url = "/method/newsfeed.addBan"
+                parameters = [
+                    "access_token": vkSingleton.shared.accessToken,
+                    "group_ids": group.gid,
+                    "v": vkSingleton.shared.version
+                ]
+                
+                successText = "Новости сообщества «\(group.name)» больше не будут показываться в вашей ленте новостей."
+            } else {
+                url = "/method/newsfeed.deleteBan"
+                parameters = [
+                    "access_token": vkSingleton.shared.accessToken,
+                    "group_ids": group.gid,
+                    "v": vkSingleton.shared.version
+                ]
+                
+                successText = "Новости сообщества «\(group.name)» теперь будут показываться в вашей ленте новостей."
+            }
+            
+            let request = GetServerDataOperation(url: url, parameters: parameters)
+            
+            request.completionBlock = {
+                guard let data = request.data else { return }
+                
+                guard let json = try? JSON(data: data) else { print("json error"); return }
+                
+                let error = ErrorJson(json: JSON.null)
+                error.errorCode = json["error"]["error_code"].intValue
+                error.errorMsg = json["error"]["error_msg"].stringValue
+                
+                if error.errorCode == 0 {
+                    if group.isHiddenFromFeed == 0 {
+                        controller.groupProfile[0].isHiddenFromFeed = 1
+                    } else {
+                        controller.groupProfile[0].isHiddenFromFeed = 0
+                    }
+                    
+                    self.showSuccessMessage(title: "Лента новостей", msg: successText)
+                } else {
+                    self.showErrorMessage(title: "Лента новостей", msg: "\nОшибка #\(error.errorCode): \(error.errorMsg)\n")
+                }
+            }
+            
             OperationQueue().addOperation(request)
         }
     }

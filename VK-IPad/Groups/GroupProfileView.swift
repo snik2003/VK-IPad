@@ -455,6 +455,8 @@ class GroupProfileView: UIView {
             
             dopButton.add(for: .touchUpInside) {
                 self.dopButton.buttonTouched()
+                
+                self.tapDopButton()
             }
         
             dopButton.frame = CGRect(x: width - 45, y: topY + startY, width: buttonHeight + 10, height: buttonHeight)
@@ -504,6 +506,110 @@ class GroupProfileView: UIView {
         self.addSubview(coverView)
         
         return topY + 20
+    }
+    
+    func tapDopButton() {
+        if let profile = self.profile {
+            let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+            
+            let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
+            alertController.addAction(cancelAction)
+            
+            if profile.contacts.count > 0 {
+                let action1 = UIAlertAction(title: "Контакты сообщества", style: .default) { action in
+                    
+                    
+                }
+                alertController.addAction(action1)
+            }
+            
+            if profile.isAdmin == 1 {
+                let action1 = UIAlertAction(title: "Новая тема в «Обсуждения»", style: .default) { action in
+                    
+                    
+                }
+                alertController.addAction(action1)
+            }
+            
+            let action2 = UIAlertAction(title: "Скопировать ссылку", style: .default) { action in
+                
+                var link = "https://vk.com/\(profile.screenName)"
+                if profile.screenName == "" {
+                    link = "https://vk.com/club\(profile.gid)"
+                    if profile.type == "page" {
+                        link = "https://vk.com/public\(profile.gid)"
+                    } else if profile.type == "event" {
+                        link = "https://vk.com/event\(profile.gid)"
+                    }
+                }
+                
+                UIPasteboard.general.string = link
+                if let string = UIPasteboard.general.string {
+                    self.delegate.showInfoMessage(title: "Ссылка на профиль сообщества:", msg: "\(string)")
+                }
+            }
+            alertController.addAction(action2)
+            
+            
+            var title = ""
+            var style: UIAlertActionStyle = .default
+            
+            if profile.isFavorite == 1 {
+                title = "Удалить из «Избранное»"
+                style = .destructive
+            } else {
+                title = "Добавить в «Избранное»"
+                style = .default
+            }
+            
+            let action3 = UIAlertAction(title: title, style: style) { action in
+                
+                self.delegate.groupInFave()
+            }
+            alertController.addAction(action3)
+            
+            
+            if profile.isHiddenFromFeed == 0 {
+                title = "Скрывать новости в ленте"
+                style = .destructive
+            } else {
+                title = "Показывать новости в ленте"
+                style = .default
+            }
+            
+            let action4 = UIAlertAction(title: title, style: style) { action in
+                
+                self.delegate.groupInNewsfeed()
+            }
+            alertController.addAction(action4)
+            
+            
+            let userDefaults = UserDefaults.standard
+            if profile.isAdmin == 1 {
+                if let _ = userDefaults.string(forKey: "\(vkSingleton.shared.userID)_groupToken_\(profile.gid)") {
+                    let action5 = UIAlertAction(title: "Забыть токен сообщества", style: .destructive) { action in
+                        
+                        userDefaults.removeObject(forKey: "\(vkSingleton.shared.userID)_groupToken_\(profile.gid)")
+                        vkSingleton.shared.groupToken[profile.gid] = nil
+                        
+                        /*if let request = vkGroupLongPoll.shared.request[profile.gid] {
+                            request.cancel()
+                            vkGroupLongPoll.shared.firstLaunch[profile.gid] = true
+                        }*/
+                    }
+                    alertController.addAction(action5)
+                }
+            }
+            
+            if let popoverController = alertController.popoverPresentationController {
+                popoverController.sourceView = self.dopButton
+                let bounds = self.dopButton.bounds
+                popoverController.sourceRect = CGRect(x: bounds.midX, y: bounds.maxY + 10, width: 0, height: 0)
+                popoverController.permittedArrowDirections = [.up]
+            }
+            
+            self.delegate.present(alertController, animated: true)
+        }
     }
     
     func joinGroup() {

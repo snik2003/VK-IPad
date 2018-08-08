@@ -347,10 +347,25 @@ class ProfileView: UIView {
         let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
         alertController.addAction(cancelAction)
         
-        if delegate.userID != vkSingleton.shared.userID {
-            var title = ""
-            var style: UIAlertActionStyle = .default
+        var title = ""
+        var style: UIAlertActionStyle = .default
+        
+        let action2 = UIAlertAction(title: "Скопировать ссылку", style: .default) { action in
             
+            let link = "https://vk.com/\(self.user.domain)"
+            var title = "Ссылка на профиль \(self.user.firstNameGen) скопирована в буфер обмена:"
+            if self.delegate.userID == vkSingleton.shared.userID {
+                title = "Ссылка на ваш профиль скопирована в буфер обмена:"
+            }
+            
+            UIPasteboard.general.string = link
+            if let string = UIPasteboard.general.string {
+                self.delegate.showInfoMessage(title: title, msg: "\(string)")
+            }
+        }
+        alertController.addAction(action2)
+        
+        if delegate.userID != vkSingleton.shared.userID {
             if user.isFavorite == 1 {
                 title = "Удалить из «Избранное»"
                 style = .destructive
@@ -366,24 +381,7 @@ class ProfileView: UIView {
             alertController.addAction(action1)
         }
         
-        let action2 = UIAlertAction(title: "Скопировать ссылку", style: .default) { action in
-            
-            let link = "https://vk.com/\(self.user.domain)"
-            var title = "Ссылка на профиль \(self.user.firstNameGen) скопирована в буфер обмена:"
-            if self.delegate.userID == vkSingleton.shared.userID {
-                title = "Ссылка на ваш профиль скопирована в буфер обмена:"
-            }
-            UIPasteboard.general.string = link
-            if let string = UIPasteboard.general.string {
-                self.delegate.showInfoMessage(title: title, msg: "\(string)")
-            }
-        }
-        alertController.addAction(action2)
-        
         if self.delegate.userID != vkSingleton.shared.userID {
-            var title = ""
-            var style: UIAlertActionStyle = .default
-            
             if user.isHiddenFromFeed == 0 {
                 title = "Скрывать новости в ленте"
                 style = .destructive
