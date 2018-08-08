@@ -553,6 +553,25 @@ class FavePostsController: UIViewController, UITableViewDelegate, UITableViewDat
         }
     }
     
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        if source == "links" {
+            return true
+        }
+        
+        return false
+    }
+    
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        
+        let deleteAction = UITableViewRowAction(style: .normal, title: "Удалить") { (rowAction, indexPath) in
+            
+            self.removeLinkFromFave(link: self.links[indexPath.row])
+        }
+        deleteAction.backgroundColor = .red
+        
+        return [deleteAction]
+    }
+    
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         
         if source == "post" || source == "video" {

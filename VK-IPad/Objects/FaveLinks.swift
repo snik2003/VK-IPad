@@ -24,3 +24,13 @@ class FaveLinks {
         self.url = json["url"].stringValue
     }
 }
+
+extension FaveLinks: Equatable {
+    static func == (lhs: FaveLinks, rhs: FaveLinks) -> Bool {
+        if lhs.id == rhs.id {
+            return true
+        }
+        return false
+    }
+}
+

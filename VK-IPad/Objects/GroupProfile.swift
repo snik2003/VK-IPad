@@ -93,6 +93,16 @@ class GroupProfile {
             }
         }
     }
+}
+
+struct Contact {
+    var userID: Int = 0
+    var desc: String = ""
+    var phone: String = ""
+    var email: String = ""
+}
+
+extension GroupProfile {
     
     func groupType() -> String {
         
@@ -152,11 +162,4 @@ class GroupProfile {
         
         return ""
     }
-}
-
-struct Contact {
-    var userID: Int = 0
-    var desc: String = ""
-    var phone: String = ""
-    var email: String = ""
 }

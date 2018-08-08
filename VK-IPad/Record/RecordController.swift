@@ -20,6 +20,7 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
     
     var tableView = UITableView()
     var commentView: DCCommentView!
+    var barButton: UIBarButtonItem!
     
     var uid = 0
     var pid = 0
@@ -437,8 +438,8 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
                             self.view.addSubview(self.commentView)
                         }
                         
-                        let barButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(self.tapBarButtonItem(sender:)))
-                        self.navigationItem.rightBarButtonItem = barButton
+                        self.barButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(self.tapBarButtonItem(sender:)))
+                        self.navigationItem.rightBarButtonItem = self.barButton
                     }
                     
                     self.attachPanel.comments = self.comments
@@ -569,8 +570,8 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
                             self.view.addSubview(self.commentView)
                         }
                         
-                        let barButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(self.tapBarButtonItem(sender:)))
-                        self.navigationItem.rightBarButtonItem = barButton
+                        self.barButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(self.tapBarButtonItem(sender:)))
+                        self.navigationItem.rightBarButtonItem = self.barButton
                     }
                     
                     self.attachPanel.comments = self.comments
@@ -788,6 +789,110 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
     
     @objc func tapBarButtonItem(sender: UIBarButtonItem) {
         
+        let record = self.record[0]
+        
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        
+        let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
+        alertController.addAction(cancelAction)
+        
+        var title = ""
+        var style: UIAlertActionStyle = .default
+        
+        let action1 = UIAlertAction(title: "Скопировать ссылку", style: .default) { action in
+            
+            if self.type == "post" {
+                let link = "https://vk.com/wall\(record.ownerID)_\(record.id)"
+                
+                UIPasteboard.general.string = link
+                if let string = UIPasteboard.general.string {
+                    self.showInfoMessage(title: "Ссылка на пост:" , msg: "\(string)")
+                }
+            } else if self.type == "photo" {
+                let link = "https://vk.com/photo\(record.ownerID)_\(record.id)"
+                
+                UIPasteboard.general.string = link
+                if let string = UIPasteboard.general.string {
+                    self.showInfoMessage(title: "Ссылка на фотографию:" , msg: "\(string)")
+                }
+            }
+        }
+        alertController.addAction(action1)
+        
+        
+        let action2 = UIAlertAction(title: "Добавить в «Избранное»", style: .default) { action in
+            
+            var text = "Запись на стене \(record.title)"
+            var link = "https://vk.com/wall\(record.ownerID)_\(record.id)"
+                
+            if self.type == "photo" {
+                text = "Фотография \(record.title)"
+                link = "https://vk.com/photo\(record.ownerID)_\(record.id)"
+            }
+            
+            self.addLinkToFave(link: link, text: text)
+        }
+        alertController.addAction(action2)
+        
+        
+        if record.canPin == 1 {
+            if record.isPinned == 0 {
+                title = "Закрепить на стене"
+                style = .default
+            } else {
+                title = "Открепить на стене"
+                style = .destructive
+            }
+            
+            let action3 = UIAlertAction(title: title, style: style) { action in
+                
+                self.pinRecord()
+            }
+            alertController.addAction(action3)
+        }
+        
+        
+        if record.canEdit == 1 {
+            let action4 = UIAlertAction(title: "Редактировать запись", style: .default) { action in
+                
+                
+            }
+            alertController.addAction(action4)
+        }
+        
+        
+        if record.postType == "postpone" {
+            let action5 = UIAlertAction(title: "Опубликовать запись", style: .destructive) { action in
+                
+                
+            }
+            alertController.addAction(action5)
+        }
+        
+        
+        if record.canDelete == 1 {
+            let action6 = UIAlertAction(title: "Удалить запись", style: .destructive) { action in
+                
+                
+            }
+            alertController.addAction(action6)
+        }
+        
+        if record.postType != "postpone" {
+            let action7 = UIAlertAction(title: "Пожаловаться", style: .destructive) { action in
+                
+                
+            }
+            alertController.addAction(action7)
+        }
+        
+        
+        if let popoverController = alertController.popoverPresentationController {
+            popoverController.barButtonItem = self.barButton
+            popoverController.permittedArrowDirections = [.up]
+        }
+        
+        self.present(alertController, animated: true)
     }
     
     func createComment(text: String, stickerID: Int) {
@@ -974,8 +1079,8 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
             self.title = "Фотография"
         }
         
-        let barButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(self.tapBarButtonItem(sender:)))
-        self.navigationItem.rightBarButtonItem = barButton
+        self.barButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(self.tapBarButtonItem(sender:)))
+        self.navigationItem.rightBarButtonItem = self.barButton
         
         self.setCommentFromGroupID(id: vkSingleton.shared.commentFromGroup, controller: self)
         self.commentView.textView.text = ""

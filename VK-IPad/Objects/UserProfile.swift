@@ -212,6 +212,15 @@ class UserProfile {
             }
         }
     }
+}
+
+struct Relatives {
+    var id = 0
+    var name = ""
+    var type = ""
+}
+
+extension UserProfile {
     
     var familyStatus: String {
         switch relation {
@@ -401,10 +410,4 @@ class UserProfile {
         }
         return list
     }
-}
-
-struct Relatives {
-    var id = 0
-    var name = ""
-    var type = ""
 }

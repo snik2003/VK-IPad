@@ -91,5 +91,23 @@ class Record {
             }
         }
     }
+}
+
+extension Record {
     
+    var title: String {
+        var title = ""
+        
+        var str = self.text.prepareTextForPublic().replacingOccurrences(of: "\n", with: " ")
+        if self.text == "" && self.copy.count > 0 {
+            str = "\(self.copy[0].text.prepareTextForPublic().replacingOccurrences(of: "\n", with: " "))"
+        }
+        var str1 = str.components(separatedBy: [".", "!", "?", "\n"])
+        
+        if str1[0] != "" {
+            title = "«\(str1[0].prefix(50))»"
+        }
+        
+        return title
+    }
 }

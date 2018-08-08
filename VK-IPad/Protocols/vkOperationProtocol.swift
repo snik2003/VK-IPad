@@ -26,6 +26,12 @@ protocol VkOperationProtocol {
     
     func groupInNewsfeed()
     
+    func pinRecord()
+    
+    func addLinkToFave(link: String, text: String)
+    
+    func removeLinkFromFave(link: FaveLinks)
+    
 }
 
 extension UIViewController: VkOperationProtocol {
@@ -553,5 +559,133 @@ extension UIViewController: VkOperationProtocol {
             
             OperationQueue().addOperation(request)
         }
+    }
+    
+    func pinRecord() {
+        
+        if let controller = self as? RecordController, controller.record.count > 0 {
+            
+            let record = controller.record[0]
+            
+            var url = ""
+            var parameters: Parameters = [:]
+            var successText = ""
+            
+            if record.isPinned == 1 {
+                url = "/method/wall.unpin"
+                parameters = [
+                    "access_token": vkSingleton.shared.accessToken,
+                    "owner_id": "\(record.ownerID)",
+                    "post_id": "\(record.id)",
+                    "v": vkSingleton.shared.version
+                ]
+                
+                successText = "\nЗапись успешно откреплена на стене\n"
+                
+            } else {
+                url = "/method/wall.pin"
+                parameters = [
+                    "access_token": vkSingleton.shared.accessToken,
+                    "owner_id": "\(record.ownerID)",
+                    "post_id": "\(record.id)",
+                    "v": vkSingleton.shared.version
+                ]
+                
+                successText = "\nЗапись успешно закреплена на стене\n"
+            }
+            
+            let request = GetServerDataOperation(url: url, parameters: parameters)
+            request.completionBlock = {
+                guard let data = request.data else { return }
+                
+                guard let json = try? JSON(data: data) else { print("json error"); return }
+                
+                let error = ErrorJson(json: JSON.null)
+                error.errorCode = json["error"]["error_code"].intValue
+                error.errorMsg = json["error"]["error_msg"].stringValue
+                
+                if error.errorCode == 0 {
+                    if record.isPinned == 1 {
+                        controller.record[0].isPinned = 0
+                    } else {
+                        controller.record[0].isPinned = 1
+                    }
+                    
+                    OperationQueue.main.addOperation {
+                        controller.tableView.reloadData()
+                    }
+                    self.showSuccessMessage(title: "Запись на стене", msg: successText)
+                } else {
+                    self.showErrorMessage(title: "Запись на стене", msg: "\nОшибка #\(error.errorCode): \(error.errorMsg)\n")
+                }
+            }
+            OperationQueue().addOperation(request)
+        }
+    }
+    
+    func addLinkToFave(link: String, text: String) {
+        
+        let url = "/method/fave.addLink"
+        let parameters = [
+            "access_token": vkSingleton.shared.accessToken,
+            "link": link,
+            "text": text,
+            "v": vkSingleton.shared.version
+        ]
+        
+        let request = GetServerDataOperation(url: url, parameters: parameters)
+        
+        request.completionBlock = {
+            guard let data = request.data else { return }
+            
+            guard let json = try? JSON(data: data) else { print("json error"); return }
+            
+            let error = ErrorJson(json: JSON.null)
+            error.errorCode = json["error"]["error_code"].intValue
+            error.errorMsg = json["error"]["error_msg"].stringValue
+            
+            if error.errorCode == 0 {
+                self.showSuccessMessage(title: "Избранные ссылки", msg: "\(text) (\(link)) успешно добавлена в «Избранное»")
+                
+            } else {
+                self.showErrorMessage(title: "Избранные ссылки", msg: "\nОшибка #\(error.errorCode): \(error.errorMsg)\n")
+            }
+        }
+        OperationQueue().addOperation(request)
+    }
+    
+    func removeLinkFromFave(link: FaveLinks) {
+        
+        let url = "/method/fave.removeLink"
+        let parameters = [
+            "access_token": vkSingleton.shared.accessToken,
+            "link_id": link.id,
+            "v": vkSingleton.shared.version
+        ]
+        
+        let request = GetServerDataOperation(url: url, parameters: parameters)
+        
+        request.completionBlock = {
+            guard let data = request.data else { return }
+            
+            guard let json = try? JSON(data: data) else { print("json error"); return }
+            
+            let error = ErrorJson(json: JSON.null)
+            error.errorCode = json["error"]["error_code"].intValue
+            error.errorMsg = json["error"]["error_msg"].stringValue
+            
+            if error.errorCode == 0 {
+                OperationQueue.main.addOperation {
+                    if let controller = self as? FavePostsController {
+                        controller.links.remove(object: link)
+                        controller.tableView.reloadData()
+                    }
+                }
+            } else {
+                self.showErrorMessage(title: "Избранные ссылки", msg: "\nОшибка #\(error.errorCode): \(error.errorMsg)\n")
+            }
+        }
+        
+        OperationQueue().addOperation(request)
     }
 }

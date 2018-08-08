@@ -35,6 +35,9 @@ class Comment {
         
         self.attachments = json["attachments"].compactMap({ Attachment(json: $0.1) })
     }
+}
+
+extension Comment {
     
     var isSticker: Bool {
         var res = false
