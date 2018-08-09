@@ -893,7 +893,7 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
                 
                 alertView.addButton("Нет, я передумал") {}
                 
-                alertView.showWarning("Подтверждение!", subTitle: "Вы действительно хотите опубликовать эту отложенную сейчас, в этом самый момент?")
+                alertView.showWarning("Подтверждение!", subTitle: "Вы действительно хотите опубликовать эту отложенную запись сейчас, в данный момент?")
             }
             alertController.addAction(action5)
         }

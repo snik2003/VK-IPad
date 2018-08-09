@@ -638,6 +638,10 @@ extension UIViewController: VkOperationProtocol {
             
             text = "Фотография \(photo.title)"
             link = "https://vk.com/photo\(photo.ownerID)_\(photo.id)"
+        } else if let _ = self as? VideoController, let video = object as? Video {
+            
+            text = "Видеозапись «\(video.title)»"
+            link = "https://vk.com/video\(video.ownerID)_\(video.id)"
         }
         
         let url = "/method/fave.addLink"

@@ -233,9 +233,6 @@ class ProfileViewController: UITableViewController, WKNavigationDelegate {
                 if self.userProfile.count > 0 {
                     let user = self.userProfile[0]
                     self.title = "\(user.firstName) \(user.lastName)"
-                    
-                    let barButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(self.tapBarButtonItem(sender:)))
-                    self.navigationItem.rightBarButtonItem = barButton
                 }
                 
                 self.refreshControl?.endRefreshing()
@@ -395,9 +392,5 @@ class ProfileViewController: UITableViewController, WKNavigationDelegate {
             }
         }
         opq.addOperation(getServerDataOperation)
-    }
-    
-    @objc func tapBarButtonItem(sender: UIBarButtonItem) {
-        
     }
 }

@@ -150,7 +150,10 @@ class FavePostsController: UIViewController, UITableViewDelegate, UITableViewDat
         getServerDataOperation.completionBlock = {
             guard let data = getServerDataOperation.data else { return }
             guard let json = try? JSON(data: data) else { print("json error"); return }
-            //print(json)
+            
+            /*if self.source == "links" {
+                print(json)
+            }*/
             
             if self.source == "post" {
                 let records = json["response"]["items"].compactMap { Record(json: $0.1) }

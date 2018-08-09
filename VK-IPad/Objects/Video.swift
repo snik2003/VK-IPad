@@ -10,13 +10,6 @@ import Foundation
 import SwiftyJSON
 
 class Video {
-    static func == (lhs: Video, rhs: Video) -> Bool {
-        if lhs.id == rhs.id && lhs.ownerID == rhs.ownerID {
-            return true
-        }
-        return false
-    }
-    
     var id = 0
     var ownerID = 0
     var title = ""
@@ -77,5 +70,118 @@ class Video {
         self.countLikes = json["likes"]["count"].intValue
         self.userReposted = json["reposts"]["user_reposted"].intValue
         self.countReposts = json["reposts"]["count"].intValue
+    }
+}
+
+extension Video: Equatable {
+    
+    static func == (lhs: Video, rhs: Video) -> Bool {
+        if lhs.id == rhs.id && lhs.ownerID == rhs.ownerID {
+            return true
+        }
+        return false
+    }
+    
+    func addToFaveVideos(delegate: UIViewController) {
+        
+        let url = "/method/video.add"
+        let parameters = [
+            "access_token": vkSingleton.shared.accessToken,
+            "target_id": vkSingleton.shared.userID,
+            "owner_id": "\(ownerID)",
+            "video_id": "\(id)",
+            "v": vkSingleton.shared.version
+        ]
+        
+        let request = GetServerDataOperation(url: url, parameters: parameters)
+        
+        request.completionBlock = {
+            guard let data = request.data else { return }
+            
+            guard let json = try? JSON(data: data) else { print("json error"); return }
+            
+            let error = ErrorJson(json: JSON.null)
+            error.errorCode = json["error"]["error_code"].intValue
+            error.errorMsg = json["error"]["error_msg"].stringValue
+            
+            if error.errorCode == 0 {
+                delegate.showSuccessMessage(title: "Мои видеозаписи", msg: "\nВидеозапись «\(self.title)» успешно добавлена в раздел «Мои видеозаписи».\n")
+            } else {
+                if error.errorCode == 800 {
+                    delegate.showSuccessMessage(title: "Мои видеозаписи", msg: "\nЭта видеозапись уже ранее была добавлена в раздел «Мои видеозаписи».\n")
+                } else if error.errorCode == 204 {
+                    delegate.showSuccessMessage(title: "Мои видеозаписи", msg: "\nОшибка. Нет доступа.\n")
+                } else {
+                    delegate.showSuccessMessage(title: "Мои видеозаписи", msg: "\nОшибка #\(error.errorCode): \(error.errorMsg)\n")
+                }
+            }
+        }
+        OperationQueue().addOperation(request)
+    }
+    
+    func deleteFromFaveVideos(delegate: UIViewController) {
+        
+        let url = "/method/video.delete"
+        let parameters = [
+            "access_token": vkSingleton.shared.accessToken,
+            "target_id": vkSingleton.shared.userID,
+            "owner_id": "\(ownerID)",
+            "video_id": "\(id)",
+            "v": vkSingleton.shared.version
+        ]
+        
+        let request = GetServerDataOperation(url: url, parameters: parameters)
+        
+        request.completionBlock = {
+            guard let data = request.data else { return }
+            
+            guard let json = try? JSON(data: data) else { print("json error"); return }
+            
+            let error = ErrorJson(json: JSON.null)
+            error.errorCode = json["error"]["error_code"].intValue
+            error.errorMsg = json["error"]["error_msg"].stringValue
+            
+            if error.errorCode == 0 {
+                delegate.showSuccessMessage(title: "Мои видеозаписи", msg: "\nВидеозапись «\(self.title)» успешно удалена из раздела «Мои видеозаписи».\n")
+            } else {
+                delegate.showSuccessMessage(title: "Мои видеозаписи", msg: "\nОшибка #\(error.errorCode): \(error.errorMsg)\n")
+            }
+        }
+        OperationQueue().addOperation(request)
+    }
+    
+    func deleteFromSite(delegate: UIViewController) {
+        
+        let url = "/method/video.delete"
+        let parameters = [
+            "access_token": vkSingleton.shared.accessToken,
+            "photo_id": "\(id)",
+            "owner_id": "\(ownerID)",
+            "target_id": "\(ownerID)",
+            "v": vkSingleton.shared.version
+        ]
+        
+        let request = GetServerDataOperation(url: url, parameters: parameters)
+        
+        request.completionBlock = {
+            guard let data = request.data else { return }
+            
+            guard let json = try? JSON(data: data) else { print("json error"); return }
+            
+            let error = ErrorJson(json: JSON.null)
+            error.errorCode = json["error"]["error_code"].intValue
+            error.errorMsg = json["error"]["error_msg"].stringValue
+            
+            if error.errorCode == 0 {
+                OperationQueue.main.addOperation {
+                    delegate.navigationController?.popViewController(animated: true)
+                }
+                
+                delegate.showSuccessMessage(title: "Удаление видеозаписи", msg: "Удаление видеозаписи успешно завершено. Для завершения обновите информацию на экране.")
+            } else {
+                delegate.showErrorMessage(title: "Удаление видеозаписи", msg: "\nОшибка #\(error.errorCode): \(error.errorMsg)\n")
+            }
+        }
+        OperationQueue().addOperation(request)
     }
 }

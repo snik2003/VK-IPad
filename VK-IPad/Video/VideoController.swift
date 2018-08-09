@@ -520,11 +520,6 @@ class VideoController: UIViewController, UITableViewDelegate, UITableViewDataSou
         }
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        
-    }
-    
     @objc func showReplyComment(sender: UITapGestureRecognizer) {
         if sender.state == .ended {
             let buttonPosition: CGPoint = sender.location(in: self.tableView)
@@ -643,87 +638,7 @@ class VideoController: UIViewController, UITableViewDelegate, UITableViewDataSou
             let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
             alertController.addAction(cancelAction)
             
-            if video.canAdd == 1 {
-                let action1 = UIAlertAction(title: "Добавить в \"Мои видеозаписи\"", style: .default) { action in
-                    
-                    let url = "/method/video.add"
-                    let parameters = [
-                        "access_token": vkSingleton.shared.accessToken,
-                        "target_id": vkSingleton.shared.userID,
-                        "owner_id": "\(video.ownerID)",
-                        "video_id": "\(video.id)",
-                        "v": vkSingleton.shared.version
-                    ]
-                    
-                    let request = GetServerDataOperation(url: url, parameters: parameters)
-                    
-                    request.completionBlock = {
-                        guard let data = request.data else { return }
-                        
-                        guard let json = try? JSON(data: data) else { print("json error"); return }
-                        
-                        let error = ErrorJson(json: JSON.null)
-                        error.errorCode = json["error"]["error_code"].intValue
-                        error.errorMsg = json["error"]["error_msg"].stringValue
-                        
-                        if error.errorCode == 0 {
-                            self.showSuccessMessage(title: "Мои видеозаписи", msg: "\nВидеозапись \"\(video.title)\" успешно добавлена.\n")
-                        } else {
-                            var title = "Ошибка #\(error.errorCode)"
-                            var msg = "\n\(error.errorMsg)\n"
-                            if error.errorCode == 800 {
-                                title = "Мои видеозаписи"
-                                msg = "\nЭта видеозапись уже добавлена.\n"
-                            }
-                            if error.errorCode == 204 {
-                                title = "Мои видеозаписи"
-                                msg = "\nОшибка. Нет доступа.\n"
-                            }
-                            self.showErrorMessage(title: title, msg: msg)
-                        }
-                    }
-                    
-                    OperationQueue().addOperation(request)
-                }
-                alertController.addAction(action1)
-            }
-            
-            let action4 = UIAlertAction(title: "Удалить из \"Мои видеозаписи\"", style: .destructive) { action in
-                
-                let url = "/method/video.delete"
-                let parameters = [
-                    "access_token": vkSingleton.shared.accessToken,
-                    "target_id": vkSingleton.shared.userID,
-                    "owner_id": "\(video.ownerID)",
-                    "video_id": "\(video.id)",
-                    "v": vkSingleton.shared.version
-                ]
-                
-                let request = GetServerDataOperation(url: url, parameters: parameters)
-                
-                request.completionBlock = {
-                    guard let data = request.data else { return }
-                    
-                    guard let json = try? JSON(data: data) else { print("json error"); return }
-                    
-                    let error = ErrorJson(json: JSON.null)
-                    error.errorCode = json["error"]["error_code"].intValue
-                    error.errorMsg = json["error"]["error_msg"].stringValue
-                    
-                    if error.errorCode == 0 {
-                        self.showSuccessMessage(title: "Мои видеозаписи", msg: "\nВидеозапись \"\(video.title)\" успешно удалена.\n")
-                    } else {
-                        let title = "Ошибка #\(error.errorCode)"
-                        let msg = "\n\(error.errorMsg)\n"
-                        self.showErrorMessage(title: title, msg: msg)
-                    }
-                }
-                
-                OperationQueue().addOperation(request)
-            }
-            alertController.addAction(action4)
-            
-            let action5 = UIAlertAction(title: "Скопировать ссылку", style: .default) { action in
+            let action1 = UIAlertAction(title: "Скопировать ссылку", style: .default) { action in
                 
                 let link = "https://vk.com/video\(self.ownerID)_\(self.vid)"
                 UIPasteboard.general.string = link
@@ -731,21 +646,69 @@ class VideoController: UIViewController, UITableViewDelegate, UITableViewDataSou
                     self.showInfoMessage(title: "Ссылка на видеозапись:" , msg: "\(string)")
                 }
             }
-            alertController.addAction(action5)
+            alertController.addAction(action1)
             
-            let action6 = UIAlertAction(title: "Добавить ссылку в \"Избранное\"", style: .default) { action in
-                
-                //let link = "https://vk.com/video\(self.ownerID)_\(self.vid)"
-                //self.addLinkToFave(link: link, text: "Видеозапись")
-            }
-            alertController.addAction(action6)
             
-            let action2 = UIAlertAction(title: "Пожаловаться", style: .destructive) { action in
+            let action2 = UIAlertAction(title: "Добавить в «Избранное»", style: .default) { action in
                 
-                //self.reportOnObject(ownerID: self.ownerID, itemID: self.vid, type: "video")
+                self.addLinkToFave(object: video)
             }
             alertController.addAction(action2)
             
+            
+            if video.canAdd == 1 {
+                let action3 = UIAlertAction(title: "Добавить в «Мои видеозаписи»", style: .default) { action in
+                    
+                    video.addToFaveVideos(delegate: self)
+                }
+                alertController.addAction(action3)
+            }
+            
+            let action4 = UIAlertAction(title: "Удалить из «Мои видеозаписи»", style: .destructive) { action in
+                
+                video.deleteFromFaveVideos(delegate: self)
+            }
+            alertController.addAction(action4)
+            
+            
+            if "\(video.ownerID)" == vkSingleton.shared.userID {
+                let action5 = UIAlertAction(title: "Удалить видеозапись", style: .destructive) { action in
+                    
+                    let appearance = SCLAlertView.SCLAppearance(
+                        kTitleTop: 32.0,
+                        kWindowWidth: 400,
+                        kTitleFont: UIFont(name: "Verdana-Bold", size: 14)!,
+                        kTextFont: UIFont(name: "Verdana", size: 15)!,
+                        kButtonFont: UIFont(name: "Verdana", size: 16)!,
+                        showCloseButton: false,
+                        showCircularIcon: true
+                    )
+                    let alertView = SCLAlertView(appearance: appearance)
+                    
+                    alertView.addButton("Да, хочу удалить") {
+                        
+                        video.deleteFromSite(delegate: self)
+                    }
+                    
+                    alertView.addButton("Нет, я передумал") {}
+                    
+                    alertView.showWarning("Подтверждение!", subTitle: "Внимание! Данное действие необратимо.\nВы действительно хотите удалить эту видеозапись с сайта ВКонтакте?")
+                }
+                alertController.addAction(action5)
+            }
+            
+            
+            let action6 = UIAlertAction(title: "Пожаловаться", style: .destructive) { action in
+                
+                
+            }
+            alertController.addAction(action6)
+            
+            
+            if let popoverController = alertController.popoverPresentationController, let barButton = self.navigationItem.rightBarButtonItem {
+                popoverController.barButtonItem = barButton
+                popoverController.permittedArrowDirections = [.up]
+            }
             
             present(alertController, animated: true)
         }
