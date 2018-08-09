@@ -434,6 +434,39 @@ class RecordCell: UITableViewCell {
                     }
                 }
                 
+                let tap = UITapGestureRecognizer()
+                doc.isUserInteractionEnabled = true
+                doc.addGestureRecognizer(tap)
+                tap.add {
+                    let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+                    
+                    let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
+                    alertController.addAction(cancelAction)
+                    
+                    let action1 = UIAlertAction(title: "Сохранить GIF на устройство", style: .default) { action in
+                        
+                        if let url = URL(string: attach.doc[0].url) {
+                            
+                            OperationQueue().addOperation {
+                                OperationQueue.main.addOperation {
+                                    ViewControllerUtils().showActivityIndicator(uiView: self.delegate.view)
+                                }
+                                
+                                self.delegate.saveGifToDevice(url: url)
+                            }
+                        }
+                    }
+                    alertController.addAction(action1)
+                    
+                    if let popoverController = alertController.popoverPresentationController {
+                        popoverController.sourceView = doc
+                        popoverController.sourceRect = CGRect(x: doc.bounds.midX, y: doc.bounds.maxY - 40, width: 0, height: 0)
+                        popoverController.permittedArrowDirections = []
+                    }
+                    
+                    self.delegate.present(alertController, animated: true)
+                }
+                
                 topY += photoHeight
             }
         }

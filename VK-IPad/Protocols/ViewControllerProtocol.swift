@@ -11,6 +11,7 @@ import RealmSwift
 import SCLAlertView
 import SwiftyJSON
 import Popover
+import Photos
 
 protocol ViewControllerProtocol {
     
@@ -983,6 +984,25 @@ extension UIViewController: ViewControllerProtocol {
         }
         parseGroups.addDependency(getServerDataOperation)
         OperationQueue().addOperation(parseGroups)
+    }
+    
+    func saveGifToDevice(url: URL) {
+        if let data = try? Data(contentsOf: url) {
+            PHPhotoLibrary.shared().performChanges({
+                PHAssetCreationRequest.forAsset().addResource(with: .photo, data: data, options: nil)
+            })
+            
+            OperationQueue.main.addOperation {
+                ViewControllerUtils().hideActivityIndicator()
+                self.showSuccessMessage(title: "Сохранение на устройство", msg: "GIF успешно сохранена на ваше устройство.")
+            }
+            
+        } else {
+            OperationQueue.main.addOperation {
+                ViewControllerUtils().hideActivityIndicator()
+                self.showErrorMessage(title: "Сохранение на устройство", msg: "Возникла неизвестная ошибка при сохранении GIF на устройство")
+            }
+        }
     }
 }
 
