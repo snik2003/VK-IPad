@@ -48,5 +48,11 @@
         <key>NSAllowsArbitraryLoads</key>
         <true/>
     </dict>
+    <key>NSCameraUsageDescription</key>
+    <string>Приложение "ВКлючайся!" запрашивает доступ к вашей библиотеке фотографий и камере.</string>
+    <key>NSPhotoLibraryAddUsageDescription</key>
+    <string>Приложение "ВКлючайся!" запрашивает доступ к вашей библиотеке фотографий и камере.</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Приложение "ВКлючайся!" запрашивает доступ к вашей библиотеке фотографий и камере.</string>
 </dict>
 </plist>

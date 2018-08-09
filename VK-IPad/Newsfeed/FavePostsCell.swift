@@ -25,6 +25,9 @@ class FavePostsCell: UITableViewCell {
         let nameLabel = UILabel()
         nameLabel.tag = 250
         nameLabel.text = link.title.replacingOccurrences(of: "\n", with: " ")
+        if link.title.hasPrefix("Фотография") {
+            nameLabel.text = link.description.replacingOccurrences(of: "\n", with: " ")
+        }
         nameLabel.font = nameFont
         nameLabel.numberOfLines = 1
         

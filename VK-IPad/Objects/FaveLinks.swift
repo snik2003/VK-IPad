@@ -32,5 +32,40 @@ extension FaveLinks: Equatable {
         }
         return false
     }
+    
+    func removeFromFave(delegate: UIViewController) {
+        
+        let url = "/method/fave.removeLink"
+        let parameters = [
+            "access_token": vkSingleton.shared.accessToken,
+            "link_id": self.id,
+            "v": vkSingleton.shared.version
+        ]
+        
+        let request = GetServerDataOperation(url: url, parameters: parameters)
+        
+        request.completionBlock = {
+            guard let data = request.data else { return }
+            
+            guard let json = try? JSON(data: data) else { print("json error"); return }
+            
+            let error = ErrorJson(json: JSON.null)
+            error.errorCode = json["error"]["error_code"].intValue
+            error.errorMsg = json["error"]["error_msg"].stringValue
+            
+            if error.errorCode == 0 {
+                OperationQueue.main.addOperation {
+                    if let controller = delegate as? FavePostsController {
+                        controller.links.remove(object: self)
+                        controller.tableView.reloadData()
+                    }
+                }
+            } else {
+                delegate.showErrorMessage(title: "Избранные ссылки", msg: "\nОшибка #\(error.errorCode): \(error.errorMsg)\n")
+            }
+        }
+        
+        OperationQueue().addOperation(request)
+    }
 }
 

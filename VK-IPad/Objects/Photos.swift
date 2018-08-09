@@ -6,17 +6,10 @@
 //  Copyright © 2018 Sergey Nikitin. All rights reserved.
 //
 
-import Foundation
+import UIKit
 import SwiftyJSON
 
 class Photo {
-    static func == (lhs: Photo, rhs: Photo) -> Bool {
-        if lhs.id == rhs.id && lhs.ownerID == rhs.ownerID {
-            return true
-        }
-        return false
-    }
-    
     var id = 0
     var albumID = 0
     var ownerID = 0
@@ -68,5 +61,117 @@ class Photo {
         self.userCanRepost = json["can_repost"].intValue
         self.repostCount = json["reposts"]["count"].intValue
         self.userReposted = json["reposts"]["user_reposted"].intValue
+    }
+}
+
+extension Photo {
+    
+    static func == (lhs: Photo, rhs: Photo) -> Bool {
+        if lhs.id == rhs.id && lhs.ownerID == rhs.ownerID {
+            return true
+        }
+        return false
+    }
+    
+    var title: String {
+        var title = ""
+        
+        let str1 = self.text.prepareTextForPublic().replacingOccurrences(of: "\n", with: " ").components(separatedBy: [".", "!", "?", "\n"])
+        
+        if str1[0] != "" {
+            title = "«\(str1[0].prefix(50))»"
+        }
+        
+        return title
+    }
+    
+    func copyToSaveAlbum(delegate: UIViewController) {
+        
+        let url = "/method/photos.copy"
+        let parameters = [
+            "access_token": vkSingleton.shared.accessToken,
+            "owner_id": "\(self.ownerID)",
+            "photo_id": "\(self.id)",
+            "access_key": self.accessKey,
+            "v": vkSingleton.shared.version
+        ]
+        
+        let request = GetServerDataOperation(url: url, parameters: parameters)
+        
+        request.completionBlock = {
+            guard let data = request.data else { return }
+            
+            guard let json = try? JSON(data: data) else { print("json error"); return }
+            
+            let error = ErrorJson(json: JSON.null)
+            error.errorCode = json["error"]["error_code"].intValue
+            error.errorMsg = json["error"]["error_msg"].stringValue
+            
+            if error.errorCode == 0 {
+                delegate.showSuccessMessage(title: "Сохранение фотографии", msg: "Фотография успешно скопирована в альбом «Сохраненные фотографии».")
+                
+            } else {
+                delegate.showErrorMessage(title: "Сохранение фотографии", msg: "\nОшибка #\(error.errorCode): \(error.errorMsg)\n")
+            }
+        }
+        OperationQueue().addOperation(request)
+    }
+    
+    func saveToDevice(delegate: UIViewController) {
+        
+        var url = self.photo2560
+        if url == "" {
+            url = self.photo1280
+            if url == "" {
+                url = self.photo807
+                if url == "" {
+                    url = self.photo604
+                }
+            }
+        }
+        
+        let getCacheImage = GetCacheImage(url: url, lifeTime: .avatarImage)
+        getCacheImage.completionBlock = {
+            let image = getCacheImage.outputImage
+            OperationQueue.main.addOperation {
+                UIImageWriteToSavedPhotosAlbum(image!, nil, nil, nil)
+            }
+        }
+        OperationQueue().addOperation(getCacheImage)
+        delegate.showSuccessMessage(title: "Сохранение фотографии", msg: "Фотография успешно сохранена на ваше устройство.")
+    }
+    
+    func deleteFromSite(delegate: UIViewController) {
+        
+        let url = "/method/photos.delete"
+        let parameters = [
+            "access_token": vkSingleton.shared.accessToken,
+            "owner_id": "\(self.ownerID)",
+            "photo_id": "\(self.id)",
+            "v": vkSingleton.shared.version
+        ]
+        
+        let request = GetServerDataOperation(url: url, parameters: parameters)
+        
+        request.completionBlock = {
+            guard let data = request.data else { return }
+            
+            guard let json = try? JSON(data: data) else { print("json error"); return }
+            
+            let error = ErrorJson(json: JSON.null)
+            error.errorCode = json["error"]["error_code"].intValue
+            error.errorMsg = json["error"]["error_msg"].stringValue
+            
+            if error.errorCode == 0 {
+                OperationQueue.main.addOperation {
+                    delegate.navigationController?.popViewController(animated: true)
+                }
+                
+                delegate.showSuccessMessage(title: "Удаление фотографии", msg: "Удаление фотографии успешно завершено. Для завершения обновите информацию на экране.")
+            } else {
+                delegate.showErrorMessage(title: "Удаление фотографии", msg: "\nОшибка #\(error.errorCode): \(error.errorMsg)\n")
+            }
+        }
+        OperationQueue().addOperation(request)
     }
 }

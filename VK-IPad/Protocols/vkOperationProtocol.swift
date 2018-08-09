@@ -28,10 +28,7 @@ protocol VkOperationProtocol {
     
     func pinRecord()
     
-    func addLinkToFave(link: String, text: String)
-    
-    func removeLinkFromFave(link: FaveLinks)
-    
+    func addLinkToFave(object: AnyObject)
 }
 
 extension UIViewController: VkOperationProtocol {
@@ -623,7 +620,25 @@ extension UIViewController: VkOperationProtocol {
         }
     }
     
-    func addLinkToFave(link: String, text: String) {
+    func addLinkToFave(object: AnyObject) {
+        
+        var text = ""
+        var link = ""
+        
+        if let controller = self as? RecordController, let record = object as? Record {
+            
+            text = "Запись на стене \(record.title)"
+            link = "https://vk.com/wall\(record.ownerID)_\(record.id)"
+            
+            if controller.type == "photo" {
+                text = "Фотография \(record.title)"
+                link = "https://vk.com/photo\(record.ownerID)_\(record.id)"
+            }
+        } else if let _ = self as? PhotoViewController, let photo = object as? Photo {
+            
+            text = "Фотография \(photo.title)"
+            link = "https://vk.com/photo\(photo.ownerID)_\(photo.id)"
+        }
         
         let url = "/method/fave.addLink"
         let parameters = [
@@ -651,41 +666,6 @@ extension UIViewController: VkOperationProtocol {
                 self.showErrorMessage(title: "Избранные ссылки", msg: "\nОшибка #\(error.errorCode): \(error.errorMsg)\n")
             }
         }
-        OperationQueue().addOperation(request)
-    }
-    
-    func removeLinkFromFave(link: FaveLinks) {
-        
-        let url = "/method/fave.removeLink"
-        let parameters = [
-            "access_token": vkSingleton.shared.accessToken,
-            "link_id": link.id,
-            "v": vkSingleton.shared.version
-        ]
-        
-        let request = GetServerDataOperation(url: url, parameters: parameters)
-        
-        request.completionBlock = {
-            guard let data = request.data else { return }
-            
-            guard let json = try? JSON(data: data) else { print("json error"); return }
-            
-            let error = ErrorJson(json: JSON.null)
-            error.errorCode = json["error"]["error_code"].intValue
-            error.errorMsg = json["error"]["error_msg"].stringValue
-            
-            if error.errorCode == 0 {
-                OperationQueue.main.addOperation {
-                    if let controller = self as? FavePostsController {
-                        controller.links.remove(object: link)
-                        controller.tableView.reloadData()
-                    }
-                }
-            } else {
-                self.showErrorMessage(title: "Избранные ссылки", msg: "\nОшибка #\(error.errorCode): \(error.errorMsg)\n")
-            }
-        }
-        
         OperationQueue().addOperation(request)
     }
 }

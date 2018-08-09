@@ -565,7 +565,8 @@ class FavePostsController: UIViewController, UITableViewDelegate, UITableViewDat
         
         let deleteAction = UITableViewRowAction(style: .normal, title: "Удалить") { (rowAction, indexPath) in
             
-            self.removeLinkFromFave(link: self.links[indexPath.row])
+            let link = self.links[indexPath.row]
+            link.removeFromFave(delegate: self)
         }
         deleteAction.backgroundColor = .red
         

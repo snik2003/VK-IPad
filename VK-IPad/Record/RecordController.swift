@@ -12,6 +12,7 @@ import SwiftyJSON
 import WebKit
 import DCCommentView
 import Popover
+import SCLAlertView
 
 class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSource, WKNavigationDelegate, DCCommentViewDelegate {
     
@@ -558,6 +559,7 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
                         record.attachments.append(attach)
                         
                         self.record.append(record)
+                        self.photo = photo
                     }
                     self.title = "Фотография"
                     
@@ -822,17 +824,26 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
         
         let action2 = UIAlertAction(title: "Добавить в «Избранное»", style: .default) { action in
             
-            var text = "Запись на стене \(record.title)"
-            var link = "https://vk.com/wall\(record.ownerID)_\(record.id)"
-                
-            if self.type == "photo" {
-                text = "Фотография \(record.title)"
-                link = "https://vk.com/photo\(record.ownerID)_\(record.id)"
-            }
-            
-            self.addLinkToFave(link: link, text: text)
+            self.addLinkToFave(object: record)
         }
         alertController.addAction(action2)
+        
+        
+        if self.type == "photo" {
+            if let photo = self.photo {
+                let action1 = UIAlertAction(title: "Сохранить в личном профиле", style: .default) { action in
+                    
+                    photo.copyToSaveAlbum(delegate: self)
+                }
+                alertController.addAction(action1)
+                
+                let action2 = UIAlertAction(title: "Сохранить в памяти устройства", style: .default) { action in
+                    
+                    photo.saveToDevice(delegate: self)
+                }
+                alertController.addAction(action2)
+            }
+        }
         
         
         if record.canPin == 1 {
@@ -864,7 +875,25 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
         if record.postType == "postpone" {
             let action5 = UIAlertAction(title: "Опубликовать запись", style: .destructive) { action in
                 
+                let appearance = SCLAlertView.SCLAppearance(
+                    kTitleTop: 32.0,
+                    kWindowWidth: 400,
+                    kTitleFont: UIFont(name: "Verdana-Bold", size: 14)!,
+                    kTextFont: UIFont(name: "Verdana", size: 15)!,
+                    kButtonFont: UIFont(name: "Verdana", size: 16)!,
+                    showCloseButton: false,
+                    showCircularIcon: true
+                )
+                let alertView = SCLAlertView(appearance: appearance)
                 
+                alertView.addButton("Да, хочу опубликовать") {
+                    
+                    
+                }
+                
+                alertView.addButton("Нет, я передумал") {}
+                
+                alertView.showWarning("Подтверждение!", subTitle: "Вы действительно хотите опубликовать эту отложенную сейчас, в этом самый момент?")
             }
             alertController.addAction(action5)
         }
@@ -873,7 +902,25 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
         if record.canDelete == 1 {
             let action6 = UIAlertAction(title: "Удалить запись", style: .destructive) { action in
                 
+                let appearance = SCLAlertView.SCLAppearance(
+                    kTitleTop: 32.0,
+                    kWindowWidth: 400,
+                    kTitleFont: UIFont(name: "Verdana-Bold", size: 14)!,
+                    kTextFont: UIFont(name: "Verdana", size: 15)!,
+                    kButtonFont: UIFont(name: "Verdana", size: 16)!,
+                    showCloseButton: false,
+                    showCircularIcon: true
+                )
+                let alertView = SCLAlertView(appearance: appearance)
                 
+                alertView.addButton("Да, хочу удалить") {
+                    
+                    
+                }
+                
+                alertView.addButton("Нет, я передумал") {}
+                
+                alertView.showWarning("Подтверждение!", subTitle: "Внимание! Данное действие необратимо.\nВы действительно хотите удалить эту запись с вашей стены?")
             }
             alertController.addAction(action6)
         }

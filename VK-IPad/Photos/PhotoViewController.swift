@@ -8,6 +8,8 @@
 
 import UIKit
 import SwiftyJSON
+import SCLAlertView
+
 class PhotoViewController: UITableViewController {
 
     var delegate: UIViewController!
@@ -291,6 +293,94 @@ class PhotoViewController: UITableViewController {
     }
     
     @objc func tapBarButtonItem(sender: UIBarButtonItem) {
+        let photo = self.photo[0]
         
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        
+        let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
+        alertController.addAction(cancelAction)
+        
+        let action1 = UIAlertAction(title: "Скопировать ссылку", style: .default) { action in
+            
+            let link = "https://vk.com/photo\(photo.ownerID)_\(photo.id)"
+                
+            UIPasteboard.general.string = link
+            if let string = UIPasteboard.general.string {
+                self.showInfoMessage(title: "Ссылка на фотографию:" , msg: "\(string)")
+            }
+            
+        }
+        alertController.addAction(action1)
+        
+        
+        let action2 = UIAlertAction(title: "Добавить в «Избранное»", style: .default) { action in
+            
+            self.addLinkToFave(object: photo)
+        }
+        alertController.addAction(action2)
+        
+        
+        
+        let action3 = UIAlertAction(title: "Сохранить в личном профиле", style: .default) { action in
+            
+            photo.copyToSaveAlbum(delegate: self)
+        }
+        alertController.addAction(action3)
+        
+        
+        let action4 = UIAlertAction(title: "Сохранить в памяти устройства", style: .default) { action in
+            
+            photo.saveToDevice(delegate: self)
+        }
+        alertController.addAction(action4)
+        
+        
+        let action5 = UIAlertAction(title: "Установить фото на аватар", style: .default) { action in
+            
+            
+        }
+        alertController.addAction(action5)
+        
+        
+        if "\(photo.ownerID)" == vkSingleton.shared.userID {
+            let action6 = UIAlertAction(title: "Удалить фотографию", style: .destructive) { action in
+                
+                let appearance = SCLAlertView.SCLAppearance(
+                    kTitleTop: 32.0,
+                    kWindowWidth: 400,
+                    kTitleFont: UIFont(name: "Verdana-Bold", size: 14)!,
+                    kTextFont: UIFont(name: "Verdana", size: 15)!,
+                    kButtonFont: UIFont(name: "Verdana", size: 16)!,
+                    showCloseButton: false,
+                    showCircularIcon: true
+                )
+                let alertView = SCLAlertView(appearance: appearance)
+                
+                alertView.addButton("Да, хочу удалить") {
+                    
+                    photo.deleteFromSite(delegate: self)
+                }
+                
+                alertView.addButton("Нет, я передумал") {}
+                
+                alertView.showWarning("Подтверждение!", subTitle: "Внимание! Данное действие необратимо.\nВы действительно хотите удалить эту фотографию с сайта ВКонтакте?")
+            }
+            alertController.addAction(action6)
+        }
+        
+        
+        let action7 = UIAlertAction(title: "Пожаловаться", style: .destructive) { action in
+                
+                
+        }
+        alertController.addAction(action7)
+        
+        
+        if let popoverController = alertController.popoverPresentationController, let barButton = self.navigationItem.rightBarButtonItem {
+            popoverController.barButtonItem = barButton
+            popoverController.permittedArrowDirections = [.up]
+        }
+        
+        self.present(alertController, animated: true)
     }
 }
