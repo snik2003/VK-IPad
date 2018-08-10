@@ -201,38 +201,44 @@ class AttachPanel: UIView {
                         self.delegate.openWallRecord(ownerID: photo.ownerID, postID: photo.id, accessKey: photo.accessKey, type: "photo")
                     }
                 } else if let doc = attachArray[index] as? Document {
-                    var url = ""
-                    if doc.photoURL.count > 0 {
-                        url = doc.photoURL[doc.photoURL.count-1]
-                    }
+                    
+                    if doc.type == 3 {
+                        nameLabel.text = "Анимированное изображение GIF"
                         
-                    let getCacheImage = GetCacheImage(url: url, lifeTime: .userPhotoImage)
-                    getCacheImage.completionBlock = {
-                        OperationQueue.main.addOperation {
-                            imageView.image = getCacheImage.outputImage
+                        var url = ""
+                        if doc.photoURL.count > 0 {
+                            url = doc.photoURL[doc.photoURL.count-1]
                         }
+                        
+                        let getCacheImage = GetCacheImage(url: url, lifeTime: .userPhotoImage)
+                        getCacheImage.completionBlock = {
+                            OperationQueue.main.addOperation {
+                                imageView.image = getCacheImage.outputImage
+                            }
+                        }
+                        OperationQueue().addOperation(getCacheImage)
+                    } else {
+                        nameLabel.text = "Документ «\(doc.title)»"
+                        imageView.image = UIImage(named: "document")
                     }
-                    OperationQueue().addOperation(getCacheImage)
                     
                     if attachments != "" {
                         attachments = "\(attachments),"
                     }
                     attachments = "\(attachments)doc\(doc.ownerID)_\(doc.id)"
                     
-                    nameLabel.text = "Анимированное изображение GIF"
-                    
                     let tap1 = UITapGestureRecognizer()
                     nameLabel.isUserInteractionEnabled = true
                     nameLabel.addGestureRecognizer(tap1)
                     tap1.add {
-                        
+                        self.delegate.openBrowserControllerNoCheck(url: doc.url)
                     }
                     
                     let tap2 = UITapGestureRecognizer()
                     imageView.isUserInteractionEnabled = true
                     imageView.addGestureRecognizer(tap2)
                     tap2.add {
-                        
+                        self.delegate.openBrowserControllerNoCheck(url: doc.url)
                     }
                 }
                 
