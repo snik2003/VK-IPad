@@ -217,6 +217,11 @@ class SelectAttachPanel: UIView, UIImagePickerControllerDelegate, UINavigationCo
         
         if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
             
+            ownerID = vkSingleton.shared.userID
+            if vkSingleton.shared.commentFromGroup > 0 {
+                ownerID = "-\(vkSingleton.shared.commentFromGroup)"
+            }
+            
             var type = "JPG"
             var path = NSURL(string: "photo.jpg")
             var imageData: Data!
