@@ -108,6 +108,7 @@
 		17B409F42109CE47004CED46 /* PersonalInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B409F32109CE47004CED46 /* PersonalInfoCell.swift */; };
 		17B409F62109F961004CED46 /* OptionsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B409F52109F961004CED46 /* OptionsController.swift */; };
 		17C8653C211B46CB0081E8A9 /* ArrayOfObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C8653B211B46CB0081E8A9 /* ArrayOfObjects.swift */; };
+		17C8653E211D9C000081E8A9 /* LoadToServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C8653D211D9C000081E8A9 /* LoadToServer.swift */; };
 		17CCB7F920F4E89A0051947A /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CCB7F820F4E89A0051947A /* Notification.swift */; };
 		17CCB7FB20F63AB30051947A /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CCB7FA20F63AB30051947A /* NotificationController.swift */; };
 		17CCB7FD20F75D1F0051947A /* NotificationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CCB7FC20F75D1F0051947A /* NotificationCell.swift */; };
@@ -229,6 +230,7 @@
 		17B409F32109CE47004CED46 /* PersonalInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalInfoCell.swift; sourceTree = "<group>"; };
 		17B409F52109F961004CED46 /* OptionsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsController.swift; sourceTree = "<group>"; };
 		17C8653B211B46CB0081E8A9 /* ArrayOfObjects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayOfObjects.swift; sourceTree = "<group>"; };
+		17C8653D211D9C000081E8A9 /* LoadToServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadToServer.swift; sourceTree = "<group>"; };
 		17CCB7F820F4E89A0051947A /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
 		17CCB7FA20F63AB30051947A /* NotificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationController.swift; sourceTree = "<group>"; };
 		17CCB7FC20F75D1F0051947A /* NotificationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCell.swift; sourceTree = "<group>"; };
@@ -409,6 +411,7 @@
 		174912C520D300DC00FCF9F9 /* WebService */ = {
 			isa = PBXGroup;
 			children = (
+				17C8653D211D9C000081E8A9 /* LoadToServer.swift */,
 				174912C620D300DC00FCF9F9 /* GetServerDataOperation.swift */,
 				174912C720D300DC00FCF9F9 /* AsyncOperation.swift */,
 			);
@@ -752,6 +755,7 @@
 				174912E520D300DD00FCF9F9 /* TableViewCell.swift in Sources */,
 				17B409ED2106306F004CED46 /* BrowserController.swift in Sources */,
 				1749130720D3055100FCF9F9 /* FriendRequest.swift in Sources */,
+				17C8653E211D9C000081E8A9 /* LoadToServer.swift in Sources */,
 				174912F720D300DD00FCF9F9 /* ViewControllerUtils.swift in Sources */,
 				17B409F02108822E004CED46 /* UserInfoController.swift in Sources */,
 				17FDD8EF2110629C0064558A /* ReloadTopicController.swift in Sources */,

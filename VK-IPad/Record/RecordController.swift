@@ -105,6 +105,8 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
         selectView.attachPanel = self.attachPanel
         selectView.button = self.commentView.accessoryButton
         
+        selectView.ownerID = "\(self.uid)"
+        
         selectView.show()
     }
 

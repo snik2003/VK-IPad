@@ -112,6 +112,7 @@ class VideoController: UIViewController, UITableViewDelegate, UITableViewDataSou
         selectView.attachPanel = self.attachPanel
         selectView.button = self.commentView.accessoryButton
         
+        selectView.ownerID = self.ownerID
         selectView.show()
     }
     

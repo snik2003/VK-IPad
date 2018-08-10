@@ -9,8 +9,10 @@
 import UIKit
 import Popover
 
-class SelectAttachPanel: UIView {
+class SelectAttachPanel: UIView, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
+    var load = LoadToServer()
+    
     var actions: [Int:String] = [
         0: "Упомянуть себя в сообщении",
         1: "Упомянуть друга в сообщении",
@@ -30,6 +32,10 @@ class SelectAttachPanel: UIView {
     var attachPanel: AttachPanel!
     var popover: Popover!
 
+    var ownerID = ""
+    
+    let pickerController = UIImagePickerController()
+    
     let textFont = UIFont(name: "Verdana", size: 18)!
     
     func show() {
@@ -141,11 +147,31 @@ class SelectAttachPanel: UIView {
                 }
 
                 if key == 4 {
+                    self.load.delegate = self.delegate
+                    self.pickerController.delegate = self
                     
+                    self.pickerController.sourceType = .photoLibrary
+                    self.pickerController.mediaTypes =  UIImagePickerController.availableMediaTypes(for: .photoLibrary)!
+                    
+                    self.delegate.present(self.pickerController, animated: true)
                 }
 
                 if key == 5 {
+                    self.load.delegate = self.delegate
+                    self.pickerController.delegate = self
                     
+                    if UIImagePickerController.isSourceTypeAvailable(.camera) {
+                        self.pickerController.sourceType = .camera
+                        self.pickerController.cameraCaptureMode = .photo
+                        self.pickerController.modalPresentationStyle = .currentContext
+                        
+                        self.delegate.present(self.pickerController, animated: true)
+                    } else {
+                        
+                        if let title = self.actions[key] {
+                            self.delegate.showErrorMessage(title: title, msg: "Ошибка! Камера на устройстве не активна.")
+                        }
+                    }
                 }
 
                 if key == 6 {
@@ -180,5 +206,68 @@ class SelectAttachPanel: UIView {
         view.backgroundColor = UIColor.lightGray.withAlphaComponent(0.8)
         view.frame = CGRect(x: 10, y: topY, width: maxWidth - 20, height: 1)
         self.addSubview(view)
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        
+        picker.dismiss(animated: true, completion: nil)
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        
+        if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            
+            var type = "JPG"
+            var path = NSURL(string: "photo.jpg")
+            var imageData: Data!
+            var filename = ""
+            
+            if pickerController.sourceType == .photoLibrary {
+                if #available(iOS 11.0, *) {
+                    path = info[UIImagePickerControllerImageURL] as? NSURL
+                }
+                
+                if let str = path?.absoluteString, str.containsIgnoringCase(find: ".gif") {
+                    type = "GIF"
+                    imageData = try! Data(contentsOf: path! as URL)
+                }
+            }
+            
+            if let str = path?.absoluteString {
+                filename = str
+            }
+            
+            if type == "JPG" {
+                load.wallPhoto(ownerID: ownerID, image: image, filename: filename) { photos in
+                    OperationQueue.main.addOperation {
+                        for photo in photos {
+                            self.attachPanel.attachArray.append(photo)
+                        }
+                        self.attachPanel.removeFromSuperview()
+                        self.attachPanel.reconfigure()
+                        ViewControllerUtils().hideActivityIndicator()
+                    }
+                }
+            } else if type == "GIF" {
+                load.wallDocument(ownerID: ownerID, image: image, filename: filename, imageData: imageData) { docs in
+                    OperationQueue.main.addOperation {
+                        for doc in docs {
+                            self.attachPanel.attachArray.append(doc)
+                        }
+                        self.attachPanel.removeFromSuperview()
+                        self.attachPanel.reconfigure()
+                        ViewControllerUtils().hideActivityIndicator()
+                    }
+                }
+            }
+        }
+        
+        picker.dismiss(animated: true, completion: nil)
+    }
+}
+
+extension UIImagePickerController {
+    override open var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return .all
     }
 }
