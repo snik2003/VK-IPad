@@ -54,7 +54,7 @@ class BrowserController: UIViewController, WKNavigationDelegate {
         
         view.addSubview(webView)
         
-        let barButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: nil)
+        let barButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(self.tapBarButton(sender:)))
         self.navigationItem.rightBarButtonItem = barButton
         
         if let url = URL(string: path), url.host != nil {
@@ -132,5 +132,41 @@ class BrowserController: UIViewController, WKNavigationDelegate {
         self.progress.progress = 1
         self.progress.isHidden = true
         self.showErrorMessage(title: "Ошибка!", msg: error.localizedDescription)
+    }
+    
+    @objc func tapBarButton(sender: UIBarButtonItem) {
+        
+        if let stringURL = webView.url?.absoluteString {
+            let alertController = UIAlertController(title: stringURL, message: nil, preferredStyle: .actionSheet)
+            
+            let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
+            alertController.addAction(cancelAction)
+            
+            let action1 = UIAlertAction(title: "Скопировать ссылку", style: .default) { action in
+                
+                UIPasteboard.general.string = stringURL
+                if let string = UIPasteboard.general.string {
+                    self.showInfoMessage(title: "Ссылка скопирована в буфер обмена:\n" , msg: "\(string)")
+                }
+            }
+            alertController.addAction(action1)
+            
+            
+            let action2 = UIAlertAction(title: "Открыть ссылку в Safari", style: .destructive) { action in
+                
+                if let url = self.webView.url {
+                    UIApplication.shared.open(url, options: [:])
+                }
+            }
+            alertController.addAction(action2)
+            
+            
+            if let popoverController = alertController.popoverPresentationController {
+                popoverController.barButtonItem = self.navigationItem.rightBarButtonItem
+                popoverController.permittedArrowDirections = [.up]
+            }
+            
+            self.present(alertController, animated: true)
+        }
     }
 }

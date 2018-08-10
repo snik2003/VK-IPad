@@ -184,7 +184,6 @@ extension UILabel {
                     if let range = ranges1[match] {
                         if self.didTapAttributedTextInLabel2(tap: tap, inRange: range) {
                             isTap = true
-                            //delegate.popoverHideAll()
                             delegate.openBrowserController(url: "https://vk.com/\(match.getIdFromLink())")
                         }
                     }
@@ -194,7 +193,6 @@ extension UILabel {
                     if let range = ranges2[match] {
                         if self.didTapAttributedTextInLabel2(tap: tap, inRange: range) {
                             isTap = true
-                            //delegate.popoverHideAll()
                             
                             let controller = delegate.storyboard?.instantiateViewController(withIdentifier: "NewsfeedController") as! NewsfeedController
                             
@@ -210,7 +208,6 @@ extension UILabel {
                     if let range = ranges3[match] {
                         if self.didTapAttributedTextInLabel2(tap: tap, inRange: range) {
                             isTap = true
-                            //delegate.popoverHideAll()
                             delegate.openBrowserController(url: match)
                         }
                     }
@@ -455,16 +452,12 @@ extension UILabel {
             longPress.minimumPressDuration = 0.5
             self.addGestureRecognizer(longPress)
             
-            var isLongPress = false
-            
             longPress.add {
                 for match in ranges3.keys {
-                    /*if let range = ranges3[match] {
+                    if let range = ranges3[match] {
                         if self.didTapAttributedTextInLabel2(tap: tap, inRange: range) {
-                            isLongPress = true
-                            //delegate.popoverHideAll()
                             
-                            let alertController = UIAlertController(title: match, message: "", preferredStyle: .actionSheet)
+                            let alertController = UIAlertController(title: match, message: nil, preferredStyle: .actionSheet)
                             
                             let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
                             alertController.addAction(cancelAction)
@@ -475,6 +468,7 @@ extension UILabel {
                             }
                             alertController.addAction(action1)
                             
+                            
                             let action2 = UIAlertAction(title: "Скопировать ссылку", style: .default) { action in
                                 
                                 UIPasteboard.general.string = match
@@ -484,6 +478,7 @@ extension UILabel {
                             }
                             alertController.addAction(action2)
                             
+                            
                             let action3 = UIAlertAction(title: "Открыть ссылку в Safari", style: .destructive) { action in
                                 
                                 if let url = URL(string: match) {
@@ -492,26 +487,17 @@ extension UILabel {
                             }
                             alertController.addAction(action3)
                             
-                            delegate.present(alertController, animated: true, completion: { () -> Void in
-                                isLongPress = false
-                            })
+                            
+                            if let popoverController = alertController.popoverPresentationController {
+                                popoverController.sourceView = delegate.view
+                                let bounds = delegate.view.bounds
+                                popoverController.sourceRect = CGRect(x: bounds.midX, y: bounds.midY, width: 0, height: 0)
+                                popoverController.permittedArrowDirections = []
+                            }
+                            
+                            delegate.present(alertController, animated: true)
                         }
-                    }*/
-                }
-                
-                if isLongPress == false {
-                    /*if let vc = delegate as? DialogController {
-                        vc.action1Message(sender: longPress)
-                    } else if let vc = delegate as? GroupDialogController {
-                        vc.actionMessage(sender: longPress)
-                    } else {
-                      self.becomeFirstResponder()
-                        let menu = UIMenuController.shared
-                        if !menu.isMenuVisible {
-                            menu.setTargetRect(self.bounds, in: self)
-                            menu.setMenuVisible(true, animated: true)
-                        }
-                    }*/
+                    }
                 }
             }
             self.text = text
