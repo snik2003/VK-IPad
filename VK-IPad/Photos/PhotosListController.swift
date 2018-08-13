@@ -278,6 +278,13 @@ class PhotosListController: UIViewController, UITableViewDelegate, UITableViewDa
                 }
                 controller.attachPanel.removeFromSuperview()
                 controller.attachPanel.reconfigure()
+            } else if let controller = delegate as? NewRecordController {
+                for photo in photos {
+                    controller.attachPanel.attachArray.append(photo)
+                }
+                controller.attachPanel.removeFromSuperview()
+                controller.attachPanel.reconfigure()
+                controller.tableView.reloadData()
             }
         }
         

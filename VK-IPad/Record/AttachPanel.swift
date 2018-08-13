@@ -14,9 +14,19 @@ class AttachPanel: UIView {
     
     var delegate: UIViewController! {
         didSet {
-            if !(delegate is TopicController) {
+            if !(delegate is TopicController || delegate is NewRecordController) {
                 maxAttachCount = 2
             }
+        }
+    }
+    
+    var titleGen: String {
+        if delegate is NewRecordController {
+            return "записи"
+        } /*else if delegate if DialogController {
+            return "сообщению"
+        } */else {
+            return "комментарию"
         }
     }
     
@@ -38,6 +48,8 @@ class AttachPanel: UIView {
     var attachArray: [AnyObject] = []
     var attachments = ""
     
+    var width: CGFloat = 0
+    
     func reconfigure() {
         
         removeSubviews()
@@ -45,7 +57,9 @@ class AttachPanel: UIView {
         
         var height: CGFloat = 0
         
-        let width = self.delegate.view.bounds.width - 20
+        if width == 0 {
+            width = self.delegate.view.bounds.width - 20
+        }
         
         if replyID != 0 {
             let view = UIView()
@@ -104,7 +118,7 @@ class AttachPanel: UIView {
             
             let nameLabel = UILabel()
             nameLabel.tag = 250
-            nameLabel.text = "Вложения в сообщение/комментарий:"
+            nameLabel.text = "Прикрепленные к \(titleGen) вложения:"
             nameLabel.font = UIFont(name: "Verdana", size: 14)!
             nameLabel.textColor = UIColor.purple
             nameLabel.textAlignment = .left
@@ -246,6 +260,10 @@ class AttachPanel: UIView {
                     self.attachArray.remove(at: index)
                     self.removeFromSuperview()
                     self.reconfigure()
+                    
+                    if let controller = self.delegate as? NewRecordController {
+                        controller.tableView.reloadData()
+                    }
                 }
                 
                 xButton.frame = CGRect(x: width - 20 - 120, y: top, width: 120, height: 40)
@@ -287,8 +305,8 @@ class AttachPanel: UIView {
             controller.commentView.attachCount = attachArray.count
         }
         
+        self.frame = CGRect(x: 0, y: 64, width: width + 20, height: height)
         if height > 0 {
-            self.frame = CGRect(x: 0, y: 64, width: width + 20, height: height)
             self.delegate.view.addSubview(self)
         }
         

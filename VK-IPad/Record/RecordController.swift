@@ -868,7 +868,15 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
         if record.canEdit == 1 {
             let action4 = UIAlertAction(title: "Редактировать запись", style: .default) { action in
                 
-                
+                var title = "Редактировать запись на своей стене"
+                if record.ownerID > 0 {
+                    if vkSingleton.shared.userID != "\(record.ownerID)" {
+                        title = "Редактировать запись на чужой стене"
+                    }
+                } else if record.ownerID < 0 {
+                    title = "Редактировать запись на стене сообщества"
+                }
+                self.delegate.openNewRecordController(ownerID: "\(record.ownerID)", mode: .edit, title: title, record: record)
             }
             alertController.addAction(action4)
         }

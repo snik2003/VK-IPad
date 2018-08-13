@@ -13,15 +13,27 @@ class SelectAttachPanel: UIView, UIImagePickerControllerDelegate, UINavigationCo
 
     var load = LoadToServer()
     
-    var actions: [Int:String] = [
-        0: "Упомянуть себя в сообщении",
-        1: "Упомянуть друга в сообщении",
-        2: "Упомянуть сообщество в сообщении",
-        3: "Вложить фотографию из профиля",
-        4: "Вложить фотографию с устройства",
-        5: "Сфотографировать с устройства",
-        6: "Вложить видеозапись из профиля"
-        ]
+    var titleGen: String {
+        if delegate is NewRecordController {
+            return "тексте записи"
+        } /*else if delegate if DialogController {
+             return "сообщении"
+         } */else {
+            return "комментарии"
+        }
+    }
+    
+    var actions: [Int:String] {
+        return [
+            0: "Упомянуть себя в \(titleGen)",
+            1: "Упомянуть друга в \(titleGen)",
+            2: "Упомянуть сообщество в \(titleGen)",
+            3: "Вложить фотографию из профиля",
+            4: "Вложить фотографию с устройства",
+            5: "Сфотографировать с устройства",
+            6: "Вложить видеозапись из профиля"
+            ]
+    }
     
     var sizes: [String: CGSize] = [:]
     var maxWidth: CGFloat = 400
@@ -49,7 +61,13 @@ class SelectAttachPanel: UIView, UIImagePickerControllerDelegate, UINavigationCo
         
         
         self.configure()
-        let point = CGPoint(x: button.frame.midX, y: delegate.view.frame.height - 12 - button.frame.height)
+        
+        var point: CGPoint
+        if delegate is NewRecordController {
+            point = CGPoint(x: 100, y: delegate.view.frame.height - 46)
+        } else {
+            point = CGPoint(x: button.frame.midX, y: delegate.view.frame.height - 12 - button.frame.height)
+        }
         
         popover = Popover(options: popoverOptions)
         popover.show(self, point: point, inView: self.delegate.view)
@@ -87,6 +105,8 @@ class SelectAttachPanel: UIView, UIImagePickerControllerDelegate, UINavigationCo
                             controller.commentView.textView.insertText(mention)
                         } else if let controller = self.delegate as? TopicController {
                             controller.commentView.textView.insertText(mention)
+                        } else if let controller = self.delegate as? NewRecordController {
+                            controller.textView.insertText(mention)
                         }
                     }
                 }
@@ -251,6 +271,9 @@ class SelectAttachPanel: UIView, UIImagePickerControllerDelegate, UINavigationCo
                         self.attachPanel.removeFromSuperview()
                         self.attachPanel.reconfigure()
                         ViewControllerUtils().hideActivityIndicator()
+                        if let controller = self.delegate as? NewRecordController {
+                            controller.tableView.reloadData()
+                        }
                     }
                 }
             } else if type == "GIF" {
@@ -262,6 +285,9 @@ class SelectAttachPanel: UIView, UIImagePickerControllerDelegate, UINavigationCo
                         self.attachPanel.removeFromSuperview()
                         self.attachPanel.reconfigure()
                         ViewControllerUtils().hideActivityIndicator()
+                        if let controller = self.delegate as? NewRecordController {
+                            controller.tableView.reloadData()
+                        }
                     }
                 }
             }

@@ -107,6 +107,7 @@
 		17B409F2210889C7004CED46 /* RelativeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B409F1210889C7004CED46 /* RelativeCell.swift */; };
 		17B409F42109CE47004CED46 /* PersonalInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B409F32109CE47004CED46 /* PersonalInfoCell.swift */; };
 		17B409F62109F961004CED46 /* OptionsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B409F52109F961004CED46 /* OptionsController.swift */; };
+		17C066FD2121A0DA00037C39 /* NewRecordController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C066FC2121A0DA00037C39 /* NewRecordController.swift */; };
 		17C8653C211B46CB0081E8A9 /* ArrayOfObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C8653B211B46CB0081E8A9 /* ArrayOfObjects.swift */; };
 		17C8653E211D9C000081E8A9 /* LoadToServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C8653D211D9C000081E8A9 /* LoadToServer.swift */; };
 		17CCB7F920F4E89A0051947A /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CCB7F820F4E89A0051947A /* Notification.swift */; };
@@ -229,6 +230,7 @@
 		17B409F1210889C7004CED46 /* RelativeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelativeCell.swift; sourceTree = "<group>"; };
 		17B409F32109CE47004CED46 /* PersonalInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalInfoCell.swift; sourceTree = "<group>"; };
 		17B409F52109F961004CED46 /* OptionsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsController.swift; sourceTree = "<group>"; };
+		17C066FC2121A0DA00037C39 /* NewRecordController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewRecordController.swift; sourceTree = "<group>"; };
 		17C8653B211B46CB0081E8A9 /* ArrayOfObjects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayOfObjects.swift; sourceTree = "<group>"; };
 		17C8653D211D9C000081E8A9 /* LoadToServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadToServer.swift; sourceTree = "<group>"; };
 		17CCB7F820F4E89A0051947A /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
@@ -295,6 +297,7 @@
 			children = (
 				17B134A820DAD7090058E1A8 /* RecordController.swift */,
 				173D667120D3F56600EEBF46 /* RecordCell.swift */,
+				17C066FC2121A0DA00037C39 /* NewRecordController.swift */,
 				17DD5DB720D7CBE20019938D /* AttachmentsView.swift */,
 				17B134AC20DB8B070058E1A8 /* LikesUsersController.swift */,
 				17B134AE20DBBEAE0058E1A8 /* CommentCell.swift */,
@@ -755,6 +758,7 @@
 				174912E520D300DD00FCF9F9 /* TableViewCell.swift in Sources */,
 				17B409ED2106306F004CED46 /* BrowserController.swift in Sources */,
 				1749130720D3055100FCF9F9 /* FriendRequest.swift in Sources */,
+				17C066FD2121A0DA00037C39 /* NewRecordController.swift in Sources */,
 				17C8653E211D9C000081E8A9 /* LoadToServer.swift in Sources */,
 				174912F720D300DD00FCF9F9 /* ViewControllerUtils.swift in Sources */,
 				17B409F02108822E004CED46 /* UserInfoController.swift in Sources */,

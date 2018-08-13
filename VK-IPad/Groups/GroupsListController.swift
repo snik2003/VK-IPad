@@ -299,6 +299,8 @@ class GroupsListController: UIViewController, UITableViewDelegate, UITableViewDa
                             controller.commentView.textView.insertText(mention)
                         } else if let controller = delegate as? TopicController {
                             controller.commentView.textView.insertText(mention)
+                        } else if let controller = delegate as? NewRecordController {
+                            controller.textView.insertText(mention)
                         }
                         
                         self.navigationController?.popViewController(animated: true)

@@ -1370,6 +1370,12 @@ class ProfileView: UIView {
                 
                 newRecordButton.add(for: .touchUpInside) {
                     self.newRecordButton.buttonTouched()
+                    
+                    var title = "Опубликовать новую запись на своей стене"
+                    if vkSingleton.shared.userID != self.user.uid {
+                       title = "Опубликовать новую запись на стене \(self.user.firstNameGen) \(self.user.lastNameGen)"
+                    }
+                    self.delegate.openNewRecordController(ownerID: self.user.uid, mode: .new, title: title)
                 }
                 
                 newRecordButton.frame = CGRect(x: 10, y: 5, width: 100, height: buttonHeight)

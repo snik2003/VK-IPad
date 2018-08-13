@@ -391,6 +391,26 @@ extension UIViewController: ViewControllerProtocol {
         }
     }
     
+    func openNewRecordController(ownerID: String, mode: Mode, title: String, record: Record? = nil) {
+        let controller = self.storyboard?.instantiateViewController(withIdentifier: "NewRecordController") as! NewRecordController
+        
+        controller.ownerID = ownerID
+        controller.mode = mode
+        controller.title = title
+        
+        controller.delegate = self
+        
+        if mode == .edit, let record = record {
+            controller.record = record
+        }
+        
+        if let split = self.splitViewController {
+            let detail = split.viewControllers[split.viewControllers.endIndex - 1]
+            controller.width = detail.view.bounds.width
+            detail.childViewControllers[0].navigationController?.pushViewController(controller, animated: true)
+        }
+    }
+    
     func updateAppCounters() {
         if let splitVC = self.navigationController?.splitViewController, let detailVC = splitVC.viewControllers[0].childViewControllers[0] as? MenuViewController {
             detailVC.getUserInfo()

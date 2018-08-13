@@ -1297,6 +1297,9 @@ class GroupProfileView: UIView {
             
             newRecordButton.add(for: .touchUpInside) {
                 self.newRecordButton.buttonTouched()
+                
+                let title = "Опубликовать новую запись в сообществе"
+                self.delegate.openNewRecordController(ownerID: "-\(self.profile.gid)", mode: .new, title: title)
             }
             
             newRecordButton.frame = CGRect(x: 10, y: 5, width: 100, height: buttonHeight)
