@@ -44,6 +44,7 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
     var count = 30
     var offset = 0
     var totalComments = 0
+    var preview = false
     
     var attachPanel = AttachPanel()
     
@@ -62,10 +63,18 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
             
             self.tableView.separatorStyle = .none
             ViewControllerUtils().showActivityIndicator(uiView: self.view)
+            
+            if self.preview {
+                self.title = "Предварительный просмотр"
+                self.view.addSubview(self.tableView)
+                
+                self.tableView.reloadData()
+                ViewControllerUtils().hideActivityIndicator()
+            } else {
+                self.getRecord()
+                StoreReviewHelper.checkAndAskForReview()
+            }
         }
-        
-        getRecord()
-        StoreReviewHelper.checkAndAskForReview()
     }
 
     override func didReceiveMemoryWarning() {
@@ -75,18 +84,22 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
     func configureTableView() {
         tableView.frame = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height)
         
-        commentView = DCCommentView(scrollView: self.tableView, frame: self.tableView.bounds)
-        commentView.delegate = self
-        commentView.tintColor = vkSingleton.shared.mainColor
-        
-        commentView.sendImage = UIImage(named: "send2")
-        commentView.stickerImage = UIImage(named: "sticker")
-        commentView.stickerButton.addTarget(self, action: #selector(self.tapStickerButton(sender:)), for: .touchUpInside)
-        
-        commentView.accessoryImage = UIImage(named: "attachment2")?.tint(tintColor: vkSingleton.shared.mainColor)
-        commentView.accessoryButton.addTarget(self, action: #selector(self.tapAccessoryButton(sender:)), for: .touchUpInside)
-        
-        setCommentFromGroupID(id: vkSingleton.shared.commentFromGroup, controller: self)
+        if !preview {
+            commentView = DCCommentView(scrollView: self.tableView, frame: self.tableView.bounds)
+            commentView.delegate = self
+            commentView.tintColor = vkSingleton.shared.mainColor
+            
+            commentView.sendImage = UIImage(named: "send2")
+            commentView.stickerImage = UIImage(named: "sticker")
+            commentView.stickerButton.addTarget(self, action: #selector(self.tapStickerButton(sender:)), for: .touchUpInside)
+            
+            commentView.accessoryImage = UIImage(named: "attachment2")?.tint(tintColor: vkSingleton.shared.mainColor)
+            commentView.accessoryButton.addTarget(self, action: #selector(self.tapAccessoryButton(sender:)), for: .touchUpInside)
+            
+            setCommentFromGroupID(id: vkSingleton.shared.commentFromGroup, controller: self)
+        } else {
+            commentView = DCCommentView()
+        }
         
         tableView.delegate = self
         tableView.dataSource = self
@@ -175,6 +188,9 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
                 cell.record = record[0]
                 cell.cellWidth = self.tableView.frame.width
                 cell.showLikesPanel = true
+                if preview {
+                    cell.showLikesPanel = false
+                }
                 
                 cell.likes = likes
                 cell.reposts = reposts
@@ -200,6 +216,9 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
                 cell.record = record[0]
                 cell.cellWidth = self.tableView.frame.width
                 cell.showLikesPanel = true
+                if preview {
+                    cell.showLikesPanel = false
+                }
                 
                 cell.likes = likes
                 cell.reposts = reposts
@@ -287,6 +306,9 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
             cell.cell = cell
             cell.tableView = self.tableView
             cell.showLikesPanel = true
+            if preview {
+                cell.showLikesPanel = false
+            }
             
             cell.record = record[0]
             cell.users = users
@@ -429,10 +451,13 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
                         }
                     }
                     
-                    
                     self.title = "Запись"
                     
                     if self.record.count > 0 {
+                        if self.record[0].postType == "postpone" {
+                            self.title = "Отложенная запись"
+                        }
+                        
                         if self.record[0].canComment == 0 {
                             self.tableView.frame = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height)
                             self.view.addSubview(self.tableView)
@@ -865,18 +890,23 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
         }
         
         
-        if record.canEdit == 1 {
+        if record.canEdit <= 1 {
             let action4 = UIAlertAction(title: "Редактировать запись", style: .default) { action in
                 
                 var title = "Редактировать запись на своей стене"
-                if record.ownerID > 0 {
-                    if vkSingleton.shared.userID != "\(record.ownerID)" {
-                        title = "Редактировать запись на чужой стене"
+                if record.postType == "postpone" {
+                    title = "Редактировать отложенную запись"
+                } else {
+                    if record.ownerID > 0 {
+                        if vkSingleton.shared.userID != "\(record.ownerID)" {
+                            title = "Редактировать запись на чужой стене"
+                        }
+                    } else if record.ownerID < 0 {
+                        title = "Редактировать запись на стене сообщества"
                     }
-                } else if record.ownerID < 0 {
-                    title = "Редактировать запись на стене сообщества"
                 }
-                self.delegate.openNewRecordController(ownerID: "\(record.ownerID)", mode: .edit, title: title, record: record)
+                
+                self.openNewRecordController(ownerID: "\(record.ownerID)", mode: .edit, title: title, record: record)
             }
             alertController.addAction(action4)
         }

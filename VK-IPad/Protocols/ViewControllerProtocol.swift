@@ -309,8 +309,10 @@ extension UIViewController: ViewControllerProtocol {
         
         recordController.delegate = self
         
-        let detailVC = self.splitViewController!.viewControllers[self.splitViewController!.viewControllers.endIndex - 1]
-        detailVC.childViewControllers[0].navigationController?.pushViewController(recordController, animated: true)
+        if let split = self.splitViewController {
+            let detailVC = split.viewControllers[split.viewControllers.endIndex - 1]
+            detailVC.childViewControllers[0].navigationController?.pushViewController(recordController, animated: true)
+        }
     }
     
     func openLikesUsersController(likes: [Likes], reposts: [Likes]) {

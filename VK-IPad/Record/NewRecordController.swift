@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SwiftyJSON
 
 enum Mode {
     case new
@@ -22,9 +23,15 @@ class NewRecordController: UIViewController, UITableViewDelegate, UITableViewDat
     
     var delegate: UIViewController!
     var attachPanel = AttachPanel()
+    
     var record: Record!
     
     var textView = UITextView()
+    
+    var onlyFriends = false
+    var addSigner = false
+    var postponed = false
+    var postponedDate = 0
     
     @IBOutlet weak var attachButton: UIBarButtonItem!
     @IBOutlet weak var previewButton: UIBarButtonItem!
@@ -37,6 +44,7 @@ class NewRecordController: UIViewController, UITableViewDelegate, UITableViewDat
         tableView.dataSource = self
         
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        tableView.register(SwitchOptionCell.self, forCellReuseIdentifier: "switchCell")
         tableView.separatorStyle = .none
         
         let barButton = UIBarButtonItem(title: "Готово", style: .done, target: self, action: #selector(tapBarButton(sender:)))
@@ -54,16 +62,27 @@ class NewRecordController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 2
+        return 7
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
         switch indexPath.row {
         case 0:
-            return attachPanel.frame.height
-        case 1:
-            return 220
+            return attachPanel.frame.height + 5
+        case 1,2:
+            return 40
+        case 3:
+            return 310
+        case 4:
+            return 20
+        case 5:
+            if postponed {
+                return 20
+            }
+            return 0
+        case 6:
+            return 300
         default:
             return 0
         }
@@ -76,40 +95,169 @@ class NewRecordController: UIViewController, UITableViewDelegate, UITableViewDat
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        
-        cell.removeAllSubviews()
-        
         switch indexPath.row {
         case 1:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "switchCell") as! SwitchOptionCell
+            
+            cell.removeAllSubviews()
+            
+            cell.delegate = self
+            cell.header = "Отложенная по времени запись"
+            cell.desc = ""
+            cell.cellWidth = self.width
+            cell.optSwitch.isOn = postponed
+            cell.optSwitch.addTarget(self, action: #selector(postponedSwitchValueChanged(sender:)), for: .valueChanged)
+            cell.configureCell()
+            
+            if mode == .edit, let record = record {
+                if record.postType != "postpone" {
+                    cell.headerLabel.isEnabled = false
+                    cell.optSwitch.isEnabled = false
+                }
+            }
+            
+            cell.selectionStyle = .none
+            
+            return cell
+        case 2:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "switchCell") as! SwitchOptionCell
+            
+            cell.removeAllSubviews()
+            if let id = Int(self.ownerID) {
+                cell.delegate = self
+                if id > 0 {
+                    cell.header = "Публикация только для друзей"
+                    cell.optSwitch.isOn = onlyFriends
+                    cell.optSwitch.add(for: .valueChanged) {
+                        self.onlyFriends = cell.optSwitch.isOn
+                    }
+                } else {
+                    cell.header = "Добавить к записи мою подпись"
+                    cell.optSwitch.isOn = addSigner
+                    cell.optSwitch.add(for: .valueChanged) {
+                        self.addSigner = cell.optSwitch.isOn
+                    }
+                }
+                cell.desc = ""
+                cell.cellWidth = self.width
+                
+                cell.configureCell()
+                
+                if mode == .edit, let record = record {
+                    if record.postType != "postpone" {
+                        cell.headerLabel.isEnabled = false
+                        cell.optSwitch.isEnabled = false
+                    }
+                }
+            }
+            
+            cell.selectionStyle = .none
+            
+            return cell
+        case 3:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+            
+            cell.removeAllSubviews()
+            
             textView.tag = 250
             textView.layer.cornerRadius = 6
             textView.layer.borderWidth = 0.8
             textView.layer.borderColor = UIColor.darkGray.cgColor
             textView.backgroundColor = UIColor.lightGray.withAlphaComponent(0.2)
             
-            textView.text = ""
-            if mode == .edit, let record = record {
-                textView.text = record.text
+            textView.font = UIFont(name: "Verdana", size: 15)
+            textView.frame = CGRect(x: 10, y: 5, width: width - 20, height: 300)
+            cell.addSubview(textView)
+            
+            cell.selectionStyle = .none
+            
+            return cell
+        case 4:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+            
+            cell.removeAllSubviews()
+            
+            var text = "Публикация записи от своего имени"
+            
+            if let id = Int(self.ownerID) {
+                if id < 0 {
+                    text = "Публикация записи от имени сообщества"
+                }
+            
+                if postponed {
+                    text = "\(text) \(postponedDate.toStringLastTime())"
+                }
+                let nameLabel = UILabel()
+                nameLabel.tag = 250
+                nameLabel.text = text
+                nameLabel.font = UIFont(name: "Verdana", size: 13)
+                nameLabel.textAlignment = .right
+                nameLabel.isEnabled = false
+                nameLabel.frame = CGRect(x: 20, y: 0, width: width - 40, height: 15)
+                cell.addSubview(nameLabel)
             }
             
-            textView.font = UIFont(name: "Verdana", size: 15)
-            textView.frame = CGRect(x: 10, y: 10, width: width - 20, height: 200)
-            cell.addSubview(textView)
+            cell.selectionStyle = .none
+            
+            return cell
+        case 5:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+            
+            cell.removeAllSubviews()
+            
+            if postponed {
+                let changeTimeButton = UIButton()
+                changeTimeButton.tag = 250
+                changeTimeButton.setTitle("Изменить время публикации", for: .normal)
+                changeTimeButton.setTitleColor(changeTimeButton.tintColor, for: .normal)
+                changeTimeButton.titleLabel?.font = UIFont(name: "Verdana", size: 13)
+                changeTimeButton.contentHorizontalAlignment = .right
+                changeTimeButton.frame = CGRect(x: width - 220, y: 0, width: 200, height: 15)
+                cell.addSubview(changeTimeButton)
+                
+                changeTimeButton.add(for: .touchUpInside) {
+                    changeTimeButton.buttonTouched()
+                    
+                    
+                }
+            }
+            
+            cell.selectionStyle = .none
+            
+            return cell
         default:
-            break
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+            
+            return cell
         }
-        
-        cell.selectionStyle = .none
-        
-        return cell
     }
     
     func configureAttachPanel() {
         attachPanel.delegate = self
         attachPanel.width = width - 20
         
+        textView.text = ""
+        
         if mode == .edit, let record = record {
+            textView.text = record.text
+            
+            if record.postType == "postpone" {
+                postponed = true
+                postponedDate = record.date
+            }
+            
+            if record.ownerID > 0 {
+                if record.friendsOnly == 1 {
+                    onlyFriends = true
+                } else {
+                    onlyFriends = false
+                }
+            } else if record.ownerID < 0 {
+                if record.signerID > 0 {
+                    addSigner = true
+                }
+            }
+            
             for attach in record.attachments {
                 if attach.photo.count > 0 {
                     attachPanel.attachArray.append(attach.photo[0])
@@ -142,6 +290,180 @@ class NewRecordController: UIViewController, UITableViewDelegate, UITableViewDat
     
     @IBAction func tapPreviewButton(sender: UIBarButtonItem) {
         
+        let controller = self.storyboard?.instantiateViewController(withIdentifier: "RecordController") as! RecordController
+        
+        controller.type = "post"
+        controller.delegate = self
+        controller.preview = true
+        
+        var canPost = false
+        
+        if mode == .edit, let record = record {
+            
+            record.canComment = 0
+            record.text = textView.text
+            
+            if record.postType == "postpone" {
+                record.date = self.postponedDate
+            }
+            
+            record.attachments.removeAll(keepingCapacity: false)
+            for object in attachPanel.attachArray {
+                let attach = Attachment(json: JSON.null)
+                
+                if let photo = object as? Photo {
+                    attach.type = "photo"
+                    attach.photo.append(photo)
+                }
+                
+                if let video = object as? Video {
+                    attach.type = "video"
+                    attach.video.append(video)
+                }
+                
+                if let doc = object as? Document {
+                    attach.type = "doc"
+                    attach.doc.append(doc)
+                }
+                
+                record.attachments.append(attach)
+            }
+            
+            if attachPanel.link != "" {
+                print(attachPanel.link)
+                let attach = Attachment(json: JSON.null)
+                attach.type = "link"
+                
+                let link = Link(json: JSON.null)
+                link.title = "Внешняя ссылка"
+                link.url = attachPanel.link
+                
+                attach.link.append(link)
+                
+                record.attachments.append(attach)
+            }
+            
+            controller.record.append(record)
+            
+            if let vc = delegate as? RecordController {
+                controller.users = vc.users
+                controller.groups = vc.groups
+            }
+            
+            if record.text == "" && record.attachments.count == 0 {
+                self.showErrorMessage(title: "Новая запись", msg: "При публикации записи обязательно указать текст сообщения, либо вложить какой-либо объект (фотография, видеозапись, документ и т.д.)")
+            } else {
+                canPost = true
+            }
+        }
+        
+        if mode == .new {
+            
+            let record = Record(json: JSON.null)
+            
+            if let id = Int(ownerID) {
+                record.ownerID = id
+                
+                
+                if id > 0 {
+                    if let fromID = Int(vkSingleton.shared.userID) {
+                        record.fromID = fromID
+                    }
+                    
+                    if onlyFriends {
+                        record.friendsOnly = 1
+                    }
+                } else if id < 0 {
+                    record.fromID = id
+                    
+                    if addSigner, let signerID = Int(vkSingleton.shared.userID) {
+                        record.signerID = signerID
+                    }
+                }
+            }
+            
+            record.canComment = 0
+            record.text = textView.text
+            
+            if postponed {
+                record.date = self.postponedDate
+            } else {
+                record.date = Int(Date().timeIntervalSince1970)
+            }
+            
+            for object in attachPanel.attachArray {
+                let attach = Attachment(json: JSON.null)
+                
+                if let photo = object as? Photo {
+                    attach.type = "photo"
+                    attach.photo.append(photo)
+                }
+                
+                if let video = object as? Video {
+                    attach.type = "video"
+                    attach.video.append(video)
+                }
+                
+                if let doc = object as? Document {
+                    attach.type = "doc"
+                    attach.doc.append(doc)
+                }
+                
+                record.attachments.append(attach)
+            }
+            
+            if attachPanel.link != "" {
+                print(attachPanel.link)
+                let attach = Attachment(json: JSON.null)
+                attach.type = "link"
+                
+                let link = Link(json: JSON.null)
+                link.title = "Внешняя ссылка"
+                link.url = attachPanel.link
+                
+                attach.link.append(link)
+                
+                record.attachments.append(attach)
+            }
+            
+            controller.record.append(record)
+            
+            if let vc = delegate as? ProfileViewController {
+                controller.users = vc.wallProfiles
+                controller.groups = vc.wallGroups
+            } else if let vc = delegate as? GroupProfileViewController {
+                controller.users = vc.wallProfiles
+                controller.groups = vc.wallGroups
+            }
+            
+            vkSingleton.shared.myProfile.photo100 = vkSingleton.shared.myProfile.maxPhotoURL
+            controller.users.append(vkSingleton.shared.myProfile)
+            
+            if record.text == "" && record.attachments.count == 0 {
+                self.showErrorMessage(title: "Новая запись", msg: "При публикации записи нужно обязательно указать текст сообщения, либо вложить какой-либо объект (фотографию, видеозапись, документ и т.д.)")
+            } else {
+                canPost = true
+            }
+        }
+        
+         if canPost {
+            if let split = self.splitViewController {
+                let detail = split.viewControllers[split.viewControllers.endIndex - 1]
+                detail.childViewControllers[0].navigationController?.pushViewController(controller, animated: true)
+            }
+        }
+    }
+    
+    @objc func postponedSwitchValueChanged(sender: UISwitch) {
+        postponed = sender.isOn
+        
+        if postponed && postponedDate == 0 {
+            let currentDate = Date()
+            let newDate = Calendar.current.date(byAdding: .hour, value: 5, to: currentDate)!
+            postponedDate = Int(newDate.timeIntervalSince1970)
+        }
+        
+        tableView.reloadData()
     }
     
     @objc func tapBarButton(sender: UIBarButtonItem) {

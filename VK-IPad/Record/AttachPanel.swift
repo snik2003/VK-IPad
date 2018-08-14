@@ -12,6 +12,8 @@ class AttachPanel: UIView {
 
     var maxAttachCount = 10
     
+    var showPanel = true
+    
     var delegate: UIViewController! {
         didSet {
             if !(delegate is TopicController || delegate is NewRecordController) {
@@ -46,6 +48,7 @@ class AttachPanel: UIView {
     var cornerRadius: CGFloat = 6
     
     var attachArray: [AnyObject] = []
+    var link = ""
     var attachments = ""
     
     var width: CGFloat = 0
@@ -106,7 +109,7 @@ class AttachPanel: UIView {
         }
         
         attachments = ""
-        if attachArray.count > 0 {
+        if attachArray.count > 0 || link != "" {
             let view = UIView()
             view.tag = 250
             view.backgroundColor = UIColor.white.withAlphaComponent(0.85)
@@ -118,158 +121,210 @@ class AttachPanel: UIView {
             
             let nameLabel = UILabel()
             nameLabel.tag = 250
-            nameLabel.text = "Прикрепленные к \(titleGen) вложения:"
+            nameLabel.text = "Прикрепленные к \(titleGen) вложения (\(attachArray.count)):"
             nameLabel.font = UIFont(name: "Verdana", size: 14)!
             nameLabel.textColor = UIColor.purple
             nameLabel.textAlignment = .left
-            nameLabel.frame = CGRect(x: 20, y: top + 5, width: width - 40, height: 20)
+            nameLabel.frame = CGRect(x: 20, y: top + 5, width: width - 40 - 150, height: 20)
             view.addSubview(nameLabel)
             
-            top += 25
-            
-            for index in 0...attachArray.count-1 {
-                let imageView = UIImageView()
-                imageView.tag = 250
-                imageView.contentMode = .scaleAspectFill
-                imageView.clipsToBounds = true
-                imageView.layer.borderColor = UIColor.lightGray.cgColor
-                imageView.layer.borderWidth = 0.5
-                imageView.frame = CGRect(x: 20, y: top + 5, width: 30, height: 30)
-                view.addSubview(imageView)
+            let showButton = UIButton()
+            showButton.tag = 250
+            if showPanel {
+                showButton.setTitle("Спрятать панель", for: .normal)
+            } else {
+                showButton.setTitle("Показать панель", for: .normal)
+            }
+            showButton.setTitleColor(showButton.tintColor, for: .normal)
+            showButton.titleLabel?.font = UIFont(name: "Verdana", size: 14)!
+            showButton.contentHorizontalAlignment = .right
+            showButton.add(for: .touchUpInside) {
+                self.showPanel = !self.showPanel
+                self.removeFromSuperview()
+                self.reconfigure()
                 
-                let nameLabel = UILabel()
-                nameLabel.tag = 250
-                nameLabel.font = UIFont(name: "Verdana", size: 14)!
-                nameLabel.textColor = nameLabel.tintColor
-                nameLabel.frame = CGRect(x: 60, y: top, width: width - 40 - 120, height: 40)
-                view.addSubview(nameLabel)
+                if let controller = self.delegate as? NewRecordController {
+                    controller.tableView.reloadData()
+                }
+            }
+            showButton.frame = CGRect(x: width - 20 - 150, y: top + 5, width: 150, height: 20)
+            view.addSubview(showButton)
                 
-                let xButton = UIButton()
-                xButton.tag = 250
-                xButton.setTitle("✘ Удалить", for: .normal)
-                xButton.setTitleColor(UIColor.red, for: .normal)
-                xButton.titleLabel?.font = UIFont(name: "Verdana", size: 14)!
-                xButton.contentHorizontalAlignment = .right
+            if showPanel {
+                top += 25
                 
-                if let video = attachArray[index] as? Video {
-                    let getCacheImage = GetCacheImage(url: video.photo320, lifeTime: .userPhotoImage)
-                    getCacheImage.completionBlock = {
-                        OperationQueue.main.addOperation {
-                            imageView.image = getCacheImage.outputImage
-                        }
-                    }
-                    OperationQueue().addOperation(getCacheImage)
-                    
-                    if attachments != "" {
-                        attachments = "\(attachments),"
-                    }
-                    attachments = "\(attachments)video\(video.ownerID)_\(video.id)"
- 
-                    nameLabel.text = "Видеозапись «\(video.title)»"
-                    
-                    let tap1 = UITapGestureRecognizer()
-                    nameLabel.isUserInteractionEnabled = true
-                    nameLabel.addGestureRecognizer(tap1)
-                    tap1.add {
-                        self.delegate.openVideoController(ownerID: "\(video.ownerID)", vid: "\(video.id)", accessKey: video.accessKey, title: "Видеозапись")
-                    }
-                    
-                    let tap2 = UITapGestureRecognizer()
-                    imageView.isUserInteractionEnabled = true
-                    imageView.addGestureRecognizer(tap2)
-                    tap2.add {
-                        self.delegate.openVideoController(ownerID: "\(video.ownerID)", vid: "\(video.id)", accessKey: video.accessKey, title: "Видеозапись")
-                    }
-                } else if let photo = attachArray[index] as? Photo {
-                    let getCacheImage = GetCacheImage(url: photo.photo604, lifeTime: .userPhotoImage)
-                    getCacheImage.completionBlock = {
-                        OperationQueue.main.addOperation {
-                            imageView.image = getCacheImage.outputImage
-                        }
-                    }
-                    OperationQueue().addOperation(getCacheImage)
-                    
-                    var text = ""
-                    if photo.text != "" {
-                        text = "«\(photo.text)»"
-                    }
-                    
-                    if attachments != "" {
-                        attachments = "\(attachments),"
-                    }
-                    attachments = "\(attachments)photo\(photo.ownerID)_\(photo.id)"
-                    
-                    nameLabel.text = "Фотография \(text)"
-                    
-                    let tap1 = UITapGestureRecognizer()
-                    nameLabel.isUserInteractionEnabled = true
-                    nameLabel.addGestureRecognizer(tap1)
-                    tap1.add {
-                        self.delegate.openWallRecord(ownerID: photo.ownerID, postID: photo.id, accessKey: photo.accessKey, type: "photo")
-                    }
-                    
-                    let tap2 = UITapGestureRecognizer()
-                    imageView.isUserInteractionEnabled = true
-                    imageView.addGestureRecognizer(tap2)
-                    tap2.add {
-                        self.delegate.openWallRecord(ownerID: photo.ownerID, postID: photo.id, accessKey: photo.accessKey, type: "photo")
-                    }
-                } else if let doc = attachArray[index] as? Document {
-                    
-                    if doc.type == 3 {
-                        nameLabel.text = "Анимированное изображение GIF"
+                if attachArray.count > 0 {
+                    for index in 0...attachArray.count-1 {
+                        let imageView = UIImageView()
+                        imageView.tag = 250
+                        imageView.contentMode = .scaleAspectFill
+                        imageView.clipsToBounds = true
+                        imageView.layer.borderColor = UIColor.lightGray.cgColor
+                        imageView.layer.borderWidth = 0.5
+                        imageView.frame = CGRect(x: 20, y: top + 5, width: 30, height: 30)
+                        view.addSubview(imageView)
                         
-                        var url = ""
-                        if doc.photoURL.count > 0 {
-                            url = doc.photoURL[doc.photoURL.count-1]
-                        }
+                        let nameLabel = UILabel()
+                        nameLabel.tag = 250
+                        nameLabel.font = UIFont(name: "Verdana", size: 14)!
+                        nameLabel.textColor = nameLabel.tintColor
+                        nameLabel.frame = CGRect(x: 60, y: top, width: width - 40 - 120, height: 40)
+                        view.addSubview(nameLabel)
                         
-                        let getCacheImage = GetCacheImage(url: url, lifeTime: .userPhotoImage)
-                        getCacheImage.completionBlock = {
-                            OperationQueue.main.addOperation {
-                                imageView.image = getCacheImage.outputImage
+                        let xButton = UIButton()
+                        xButton.tag = 250
+                        xButton.setTitle("✘ Удалить", for: .normal)
+                        xButton.setTitleColor(UIColor.red, for: .normal)
+                        xButton.titleLabel?.font = UIFont(name: "Verdana", size: 14)!
+                        xButton.contentHorizontalAlignment = .right
+                        
+                        if let video = attachArray[index] as? Video {
+                            let getCacheImage = GetCacheImage(url: video.photo320, lifeTime: .userPhotoImage)
+                            getCacheImage.completionBlock = {
+                                OperationQueue.main.addOperation {
+                                    imageView.image = getCacheImage.outputImage
+                                }
+                            }
+                            OperationQueue().addOperation(getCacheImage)
+         
+                            nameLabel.text = "Видеозапись «\(video.title)»"
+                            
+                            let tap1 = UITapGestureRecognizer()
+                            nameLabel.isUserInteractionEnabled = true
+                            nameLabel.addGestureRecognizer(tap1)
+                            tap1.add {
+                                self.delegate.openVideoController(ownerID: "\(video.ownerID)", vid: "\(video.id)", accessKey: video.accessKey, title: "Видеозапись")
+                            }
+                            
+                            let tap2 = UITapGestureRecognizer()
+                            imageView.isUserInteractionEnabled = true
+                            imageView.addGestureRecognizer(tap2)
+                            tap2.add {
+                                self.delegate.openVideoController(ownerID: "\(video.ownerID)", vid: "\(video.id)", accessKey: video.accessKey, title: "Видеозапись")
+                            }
+                        } else if let photo = attachArray[index] as? Photo {
+                            let getCacheImage = GetCacheImage(url: photo.photo604, lifeTime: .userPhotoImage)
+                            getCacheImage.completionBlock = {
+                                OperationQueue.main.addOperation {
+                                    imageView.image = getCacheImage.outputImage
+                                }
+                            }
+                            OperationQueue().addOperation(getCacheImage)
+                            
+                            var text = ""
+                            if photo.text != "" {
+                                text = "«\(photo.text)»"
+                            }
+                            
+                            nameLabel.text = "Фотография \(text)"
+                            
+                            let tap1 = UITapGestureRecognizer()
+                            nameLabel.isUserInteractionEnabled = true
+                            nameLabel.addGestureRecognizer(tap1)
+                            tap1.add {
+                                self.delegate.openWallRecord(ownerID: photo.ownerID, postID: photo.id, accessKey: photo.accessKey, type: "photo")
+                            }
+                            
+                            let tap2 = UITapGestureRecognizer()
+                            imageView.isUserInteractionEnabled = true
+                            imageView.addGestureRecognizer(tap2)
+                            tap2.add {
+                                self.delegate.openWallRecord(ownerID: photo.ownerID, postID: photo.id, accessKey: photo.accessKey, type: "photo")
+                            }
+                        } else if let doc = attachArray[index] as? Document {
+                            
+                            if doc.type == 3 {
+                                nameLabel.text = "Анимированное изображение GIF"
+                                
+                                var url = ""
+                                if doc.photoURL.count > 0 {
+                                    url = doc.photoURL[doc.photoURL.count-1]
+                                }
+                                
+                                let getCacheImage = GetCacheImage(url: url, lifeTime: .userPhotoImage)
+                                getCacheImage.completionBlock = {
+                                    OperationQueue.main.addOperation {
+                                        imageView.image = getCacheImage.outputImage
+                                    }
+                                }
+                                OperationQueue().addOperation(getCacheImage)
+                            } else {
+                                nameLabel.text = "Документ «\(doc.title)»"
+                                imageView.image = UIImage(named: "document")
+                            }
+                            
+                            let tap1 = UITapGestureRecognizer()
+                            nameLabel.isUserInteractionEnabled = true
+                            nameLabel.addGestureRecognizer(tap1)
+                            tap1.add {
+                                self.delegate.openBrowserControllerNoCheck(url: doc.url)
+                            }
+                            
+                            let tap2 = UITapGestureRecognizer()
+                            imageView.isUserInteractionEnabled = true
+                            imageView.addGestureRecognizer(tap2)
+                            tap2.add {
+                                self.delegate.openBrowserControllerNoCheck(url: doc.url)
                             }
                         }
-                        OperationQueue().addOperation(getCacheImage)
-                    } else {
-                        nameLabel.text = "Документ «\(doc.title)»"
-                        imageView.image = UIImage(named: "document")
+                        
+                        xButton.add(for: .touchUpInside) {
+                            self.attachArray.remove(at: index)
+                            self.removeFromSuperview()
+                            self.reconfigure()
+                            
+                            if let controller = self.delegate as? NewRecordController {
+                                controller.tableView.reloadData()
+                            }
+                        }
+                        
+                        xButton.frame = CGRect(x: width - 20 - 120, y: top, width: 120, height: 40)
+                        view.addSubview(xButton)
+                        
+                        top += 40
                     }
-                    
-                    if attachments != "" {
-                        attachments = "\(attachments),"
-                    }
-                    attachments = "\(attachments)doc\(doc.ownerID)_\(doc.id)"
+                }
+                
+                if link != "" {
+                    let nameLabel = UILabel()
+                    nameLabel.tag = 250
+                    nameLabel.text = "Внешняя ссылка:  \(link)"
+                    nameLabel.font = UIFont(name: "Verdana", size: 14)!
+                    nameLabel.textColor = nameLabel.tintColor
+                    nameLabel.frame = CGRect(x: 20, y: top, width: width - 40 - 120, height: 40)
+                    view.addSubview(nameLabel)
                     
                     let tap1 = UITapGestureRecognizer()
                     nameLabel.isUserInteractionEnabled = true
                     nameLabel.addGestureRecognizer(tap1)
                     tap1.add {
-                        self.delegate.openBrowserControllerNoCheck(url: doc.url)
+                        self.delegate.openBrowserController(url: self.link)
                     }
                     
-                    let tap2 = UITapGestureRecognizer()
-                    imageView.isUserInteractionEnabled = true
-                    imageView.addGestureRecognizer(tap2)
-                    tap2.add {
-                        self.delegate.openBrowserControllerNoCheck(url: doc.url)
-                    }
-                }
-                
-                xButton.add(for: .touchUpInside) {
-                    self.attachArray.remove(at: index)
-                    self.removeFromSuperview()
-                    self.reconfigure()
+                    let xButton = UIButton()
+                    xButton.tag = 250
+                    xButton.setTitle("✘ Удалить", for: .normal)
+                    xButton.setTitleColor(UIColor.red, for: .normal)
+                    xButton.titleLabel?.font = UIFont(name: "Verdana", size: 14)!
+                    xButton.contentHorizontalAlignment = .right
                     
-                    if let controller = self.delegate as? NewRecordController {
-                        controller.tableView.reloadData()
+                    xButton.add(for: .touchUpInside) {
+                        self.link = ""
+                        self.removeFromSuperview()
+                        self.reconfigure()
+                        
+                        if let controller = self.delegate as? NewRecordController {
+                            controller.tableView.reloadData()
+                        }
                     }
+                    
+                    xButton.frame = CGRect(x: width - 20 - 120, y: top, width: 120, height: 40)
+                    view.addSubview(xButton)
+                    
+                    top += 40
                 }
-                
-                xButton.frame = CGRect(x: width - 20 - 120, y: top, width: 120, height: 40)
-                view.addSubview(xButton)
-                
-                top += 40
+            } else {
+                top += 30
             }
             
             if attachArray.count > maxAttachCount {
@@ -310,6 +365,7 @@ class AttachPanel: UIView {
             self.delegate.view.addSubview(self)
         }
         
+        attachments = formStringAttachments()
         print("attachments = \(attachments)")
     }
     
@@ -348,5 +404,41 @@ class AttachPanel: UIView {
                 subview.removeFromSuperview()
             }
         }
+    }
+    
+    func formStringAttachments() -> String {
+        
+        var str = ""
+        
+        for attach in attachArray {
+            if let photo = attach as? Photo {
+                if str != "" {
+                    str = "\(str),"
+                }
+                str = "\(str)photo\(photo.ownerID)_\(photo.id)"
+            }
+            
+            if let video = attach as? Video {
+                if str != "" {
+                    str = "\(str),"
+                }
+                str = "\(str)video\(video.ownerID)_\(video.id)"
+            }
+            
+            if let doc = attach as? Document {
+                if str != "" {
+                    str = "\(str),"
+                }
+                str = "\(str)doc\(doc.ownerID)_\(doc.id)"
+            }
+        }
+        
+        if link != "" {
+            if str != "" {
+                str = "\(str),"
+            }
+            str = "\(str)\(link)"
+        }
+        return str
     }
 }

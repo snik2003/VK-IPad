@@ -24,6 +24,19 @@ class SelectAttachPanel: UIView, UIImagePickerControllerDelegate, UINavigationCo
     }
     
     var actions: [Int:String] {
+        if delegate is NewRecordController {
+            return [
+                0: "Упомянуть себя в \(titleGen)",
+                1: "Упомянуть друга в \(titleGen)",
+                2: "Упомянуть сообщество в \(titleGen)",
+                3: "Вложить фотографию из профиля",
+                4: "Вложить фотографию с устройства",
+                5: "Сфотографировать с устройства",
+                6: "Вложить видеозапись из профиля",
+                7: "Прикрепить внешнюю ссылку"
+                ]
+        }
+        
         return [
             0: "Упомянуть себя в \(titleGen)",
             1: "Упомянуть друга в \(titleGen)",
@@ -32,7 +45,7 @@ class SelectAttachPanel: UIView, UIImagePickerControllerDelegate, UINavigationCo
             4: "Вложить фотографию с устройства",
             5: "Сфотографировать с устройства",
             6: "Вложить видеозапись из профиля"
-            ]
+        ]
     }
     
     var sizes: [String: CGSize] = [:]
@@ -206,6 +219,17 @@ class SelectAttachPanel: UIView, UIImagePickerControllerDelegate, UINavigationCo
                     if let split = self.delegate.splitViewController {
                         let detail = split.viewControllers[split.viewControllers.endIndex - 1]
                         detail.childViewControllers[0].navigationController?.pushViewController(controller, animated: true)
+                    }
+                }
+                
+                if key == 7 {
+                    if let controller = self.delegate as? NewRecordController {
+                        let link = "https://matchtv.ru/"
+                        
+                        controller.attachPanel.link = link
+                        controller.attachPanel.removeFromSuperview()
+                        controller.attachPanel.reconfigure()
+                        controller.tableView.reloadData()
                     }
                 }
                 

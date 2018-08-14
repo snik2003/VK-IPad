@@ -12,7 +12,8 @@ class SwitchOptionCell: UITableViewCell {
 
     var delegate: UIViewController!
     
-    var optSwitch: UISwitch!
+    var optSwitch = UISwitch()
+    var headerLabel = UILabel()
     
     var header: String = ""
     var desc: String = ""
@@ -26,7 +27,6 @@ class SwitchOptionCell: UITableViewCell {
         
         self.removeAllSubviews()
         
-        let headerLabel = UILabel()
         headerLabel.tag = 250
         headerLabel.text = header
         headerLabel.font = headFont
@@ -34,7 +34,6 @@ class SwitchOptionCell: UITableViewCell {
         headerLabel.frame = CGRect(x: 20, y: 5, width: cellWidth - 40 - 50, height: 30)
         self.addSubview(headerLabel)
         
-        optSwitch = UISwitch()
         optSwitch.tag = 250
         optSwitch.onTintColor = vkSingleton.shared.mainColor
         optSwitch.frame = CGRect(x: cellWidth - 70, y: 5, width: 50, height: 30)
