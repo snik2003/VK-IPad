@@ -51,18 +51,61 @@ class NewRecordController: UIViewController, UITableViewDelegate, UITableViewDat
         self.navigationItem.rightBarButtonItem = barButton
         
         configureAttachPanel()
+        
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
+        self.view.addGestureRecognizer(tapRecognizer)
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWasShown(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillBeHidden(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+    }
+    
+    @objc func keyboardWasShown(notification: NSNotification) {
+        
+        let info = notification.userInfo! as NSDictionary
+        let kbSize = (info.value(forKey: UIKeyboardFrameEndUserInfoKey) as! NSValue).cgRectValue.size
+        let contentInsets = UIEdgeInsetsMake(0, 0, kbSize.height - 44, 0)
+        
+        let frame = tableView.frame
+        tableView.contentSize = CGSize(width: frame.width, height: frame.height - kbSize.height - 44)
+        
+        tableView.contentInset = contentInsets
+        tableView.scrollIndicatorInsets = contentInsets
+        
+        tableView.scrollToRow(at: IndexPath(row: 3, section: 0), at: .top, animated: false)
+    }
+    
+    @objc func keyboardWillBeHidden(notification: NSNotification) {
+        
+        tableView.contentInset = UIEdgeInsets.zero
+        tableView.scrollIndicatorInsets = UIEdgeInsets.zero
+    }
+    
+    @objc func hideKeyboard() {
+        self.view.endEditing(true)
+    }
+    
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 7
+        return 6
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -81,8 +124,6 @@ class NewRecordController: UIViewController, UITableViewDelegate, UITableViewDat
                 return 20
             }
             return 0
-        case 6:
-            return 300
         default:
             return 0
         }
@@ -90,7 +131,7 @@ class NewRecordController: UIViewController, UITableViewDelegate, UITableViewDat
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         
-        return 0.001
+        return 0.0001
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
