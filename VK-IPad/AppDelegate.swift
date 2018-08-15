@@ -85,6 +85,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         print("Failed to register: \(error)")
     }
     
+    var orientationLock = UIInterfaceOrientationMask.landscape
+
+    var myOrientation: UIInterfaceOrientationMask = .landscape
+    
+    func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
+        return myOrientation
+    }
+    
     func topViewControllerWithRootViewController(rootViewController: UIViewController!) -> UIViewController! {
         
         if rootViewController is UITabBarController {

@@ -196,6 +196,9 @@ class SelectAttachPanel: UIView, UIImagePickerControllerDelegate, UINavigationCo
                     self.pickerController.sourceType = .photoLibrary
                     self.pickerController.mediaTypes =  UIImagePickerController.availableMediaTypes(for: .photoLibrary)!
                     
+                    let appDelegate = UIApplication.shared.delegate as! AppDelegate
+                    appDelegate.myOrientation = .all
+                    
                     self.delegate.present(self.pickerController, animated: true)
                 }
 
@@ -295,6 +298,9 @@ class SelectAttachPanel: UIView, UIImagePickerControllerDelegate, UINavigationCo
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        appDelegate.myOrientation = .landscape
+        
         picker.dismiss(animated: true, completion: nil)
     }
     
@@ -363,6 +369,10 @@ class SelectAttachPanel: UIView, UIImagePickerControllerDelegate, UINavigationCo
 }
 
 extension UIImagePickerController {
+    override open var shouldAutorotate: Bool {
+        return true
+    }
+    
     override open var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return .all
     }
