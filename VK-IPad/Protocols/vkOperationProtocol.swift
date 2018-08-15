@@ -672,4 +672,255 @@ extension UIViewController: VkOperationProtocol {
         }
         OperationQueue().addOperation(request)
     }
+    
+    func publishPostponedPost() {
+        
+        if let controller = self as? RecordController, controller.record.count > 0 {
+            
+            let record = controller.record[0]
+            
+            let url = "/method/wall.post"
+            let parameters = [
+                "access_token": vkSingleton.shared.accessToken,
+                "owner_id": "\(record.ownerID)",
+                "post_id": "\(record.id)",
+                "v": vkSingleton.shared.version
+            ]
+            
+            let request = GetServerDataOperation(url: url, parameters: parameters)
+            request.completionBlock = {
+                guard let data = request.data else { return }
+                guard let json = try? JSON(data: data) else { print("json error"); return }
+                
+                let error = ErrorJson(json: JSON.null)
+                error.errorCode = json["error"]["error_code"].intValue
+                error.errorMsg = json["error"]["error_msg"].stringValue
+                
+                if error.errorCode == 0 {
+                    OperationQueue.main.addOperation {
+                        let postID = json["response"]["post_id"].intValue
+                        let ownerID = record.ownerID
+                        controller.navigationController?.popViewController(animated: true)
+                        
+                        
+                        
+                        if let delegate = controller.delegate as? ProfileViewController {
+                            delegate.offset = 0
+                            delegate.filterRecords = "owner"
+                            delegate.refreshExecute()
+                            
+                            delegate.openWallRecord(ownerID: ownerID, postID: postID, accessKey: "", type: "post")
+                        } else if let delegate = controller.delegate as? GroupProfileViewController {
+                            delegate.offset = 0
+                            delegate.filterRecords = "all"
+                            delegate.refresh()
+                            
+                            delegate.openWallRecord(ownerID: ownerID, postID: postID, accessKey: "", type: "post")
+                        }
+                    }
+                } else {
+                    self.showErrorMessage(title: "Публикация новой записи", msg: "\nОшибка #\(error.errorCode): \(error.errorMsg)\n")
+                }
+            }
+            OperationQueue().addOperation(request)
+        }
+    }
+    
+    func publishPost() {
+        
+        if let controller = self as? NewRecordController, let message = controller.textView.text {
+            
+            let url = "/method/wall.post"
+            var parameters = [
+                "access_token": vkSingleton.shared.accessToken,
+                "owner_id": controller.ownerID,
+                "message": message,
+                "attachments": controller.attachPanel.attachments,
+                "v": vkSingleton.shared.version
+            ]
+            
+            if controller.postponed {
+                if let id = Int(controller.ownerID) {
+                    if id > 0 {
+                        if controller.onlyFriends {
+                            parameters["friends_only"] = "1"
+                        }
+                    } else if id < 0 {
+                        parameters["from_group"] = "1"
+                        
+                        if controller.addSigner {
+                            parameters["signed"] = "1"
+                        }
+                    }
+                }
+                
+                parameters["publish_date"] = "\(controller.postponedDate)"
+            }
+            
+            if controller.closeComments {
+                parameters["close_comments"] = "1"
+            } else {
+                parameters["close_comments"] = "0"
+            }
+            
+            let request = GetServerDataOperation(url: url, parameters: parameters)
+            request.completionBlock = {
+                guard let data = request.data else { return }
+                guard let json = try? JSON(data: data) else { print("json error"); return }
+                
+                let error = ErrorJson(json: JSON.null)
+                error.errorCode = json["error"]["error_code"].intValue
+                error.errorMsg = json["error"]["error_msg"].stringValue
+                
+                if error.errorCode == 0 {
+                    OperationQueue.main.addOperation {
+                        controller.navigationController?.popViewController(animated: true)
+                        
+                        let postID = json["response"]["post_id"].intValue
+                        
+                        if let delegate = controller.delegate as? ProfileViewController {
+                            delegate.offset = 0
+                            delegate.filterRecords = "owner"
+                            delegate.refreshExecute()
+                            
+                            if let ownerID = Int(controller.ownerID) {
+                                delegate.openWallRecord(ownerID: ownerID, postID: postID, accessKey: "", type: "post")
+                            }
+                        } else if let delegate = controller.delegate as? GroupProfileViewController {
+                            delegate.offset = 0
+                            delegate.filterRecords = "all"
+                            delegate.refresh()
+                            
+                            if let ownerID = Int(controller.ownerID) {
+                                delegate.openWallRecord(ownerID: ownerID, postID: postID, accessKey: "", type: "post")
+                            }
+                        }
+                        
+                        
+                    }
+                } else {
+                    self.showErrorMessage(title: "Публикация новой записи", msg: "\nОшибка #\(error.errorCode): \(error.errorMsg)\n")
+                }
+            }
+            OperationQueue().addOperation(request)
+        }
+    }
+    
+    func editPost() {
+        
+        if let controller = self as? NewRecordController, let record = controller.record, let message = controller.textView.text {
+            
+            let url = "/method/wall.edit"
+            var parameters = [
+                "access_token": vkSingleton.shared.accessToken,
+                "owner_id": controller.ownerID,
+                "post_id": "\(record.id)",
+                "message": message,
+                "attachments": controller.attachPanel.attachments,
+                "v": vkSingleton.shared.version
+            ]
+            
+            if controller.postponed {
+                if let id = Int(controller.ownerID) {
+                    if id > 0 {
+                        if controller.onlyFriends {
+                            parameters["friends_only"] = "1"
+                        } else {
+                            parameters["friends_only"] = "0"
+                        }
+                    } else if id < 0 {
+                        if controller.addSigner {
+                            parameters["signed"] = "1"
+                        } else {
+                            parameters["signed"] = "0"
+                        }
+                    }
+                }
+            
+                parameters["publish_date"] = "\(controller.postponedDate)"
+            }
+            
+            if controller.closeComments {
+                parameters["close_comments"] = "1"
+            } else {
+                parameters["close_comments"] = "0"
+            }
+            
+            let request = GetServerDataOperation(url: url, parameters: parameters)
+            request.completionBlock = {
+                guard let data = request.data else { return }
+                guard let json = try? JSON(data: data) else { print("json error"); return }
+                
+                let error = ErrorJson(json: JSON.null)
+                error.errorCode = json["error"]["error_code"].intValue
+                error.errorMsg = json["error"]["error_msg"].stringValue
+                
+                if error.errorCode == 0 {
+                    OperationQueue.main.addOperation {
+                        controller.navigationController?.popViewController(animated: true)
+                        
+                        if let delegate = controller.delegate as? RecordController {
+                            delegate.getRecord()
+                            
+                            if let delegate2 = delegate.delegate as? ProfileViewController {
+                                delegate2.offset = 0
+                                delegate2.refreshExecute()
+                            } else if let delegate2 = delegate.delegate as? GroupProfileViewController {
+                                delegate2.offset = 0
+                                delegate2.refresh()
+                            }
+                        }
+                    }
+                } else {
+                    self.showErrorMessage(title: "Редактирование записи", msg: "\nОшибка #\(error.errorCode): \(error.errorMsg)\n")
+                }
+            }
+            OperationQueue().addOperation(request)
+        }
+    }
+    
+    func deletePost() {
+        
+        if let controller = self as? RecordController, controller.record.count > 0 {
+            let record = controller.record[0]
+            
+            let url = "/method/wall.delete"
+            let parameters = [
+                "access_token": vkSingleton.shared.accessToken,
+                "owner_id": "\(record.ownerID)",
+                "post_id": "\(record.id)",
+                "v": vkSingleton.shared.version
+            ]
+            
+            let request = GetServerDataOperation(url: url, parameters: parameters)
+            request.completionBlock = {
+                guard let data = request.data else { return }
+                guard let json = try? JSON(data: data) else { print("json error"); return }
+                
+                let error = ErrorJson(json: JSON.null)
+                error.errorCode = json["error"]["error_code"].intValue
+                error.errorMsg = json["error"]["error_msg"].stringValue
+                
+                if error.errorCode == 0 {
+                    OperationQueue.main.addOperation {
+                        self.navigationController?.popViewController(animated: true)
+                        
+                        if let delegate = controller.delegate as? ProfileViewController {
+                            delegate.offset = 0
+                            delegate.filterRecords = "owner"
+                            delegate.refreshExecute()
+                            
+                        } else if let delegate = controller.delegate as? GroupProfileViewController {
+                            delegate.offset = 0
+                            delegate.filterRecords = "all"
+                            delegate.refresh()
+                        }
+                    }
+                } else {
+                    self.showErrorMessage(title: "Удаление записи", msg: "\nОшибка #\(error.errorCode): \(error.errorMsg)\n")
+                }
+            }
+            OperationQueue().addOperation(request)
+        }
+    }
 }

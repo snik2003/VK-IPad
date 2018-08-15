@@ -279,7 +279,7 @@ class ProfileViewController: UITableViewController, WKNavigationDelegate {
     func refreshWall(filter: String) {
         if userProfile.count > 0 {
             isRefresh = true
-            ViewControllerUtils().showActivityIndicator(uiView: self.view.superview!)
+            ViewControllerUtils().showActivityIndicator(uiView: self.view)
             heights.removeAll(keepingCapacity: false)
             filterRecords = filter
             recordsCount = 0

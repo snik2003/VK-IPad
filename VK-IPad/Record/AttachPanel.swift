@@ -295,8 +295,9 @@ class AttachPanel: UIView {
                     nameLabel.tag = 250
                     nameLabel.text = "Внешняя ссылка:  \(link)"
                     nameLabel.font = UIFont(name: "Verdana", size: 14)!
-                    nameLabel.textColor = nameLabel.tintColor
+                    //nameLabel.textColor = nameLabel.tintColor
                     nameLabel.frame = CGRect(x: 20, y: top, width: width - 40 - 120, height: 40)
+                    nameLabel.prepareTextForPublish2(self.delegate, cell: nil)
                     view.addSubview(nameLabel)
                     
                     let tap1 = UITapGestureRecognizer()

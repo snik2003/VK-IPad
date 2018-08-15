@@ -30,6 +30,7 @@ class NewRecordController: UIViewController, UITableViewDelegate, UITableViewDat
     
     var onlyFriends = false
     var addSigner = false
+    var closeComments = false
     var postponed = false
     var postponedDate = 0
     
@@ -371,6 +372,10 @@ class NewRecordController: UIViewController, UITableViewDelegate, UITableViewDat
                 if attach.doc.count > 0 {
                     attachPanel.attachArray.append(attach.doc[0])
                 }
+                
+                if attach.link.count > 0 {
+                    attachPanel.link = attach.link[0].url
+                }
             }
         }
         
@@ -406,6 +411,20 @@ class NewRecordController: UIViewController, UITableViewDelegate, UITableViewDat
             
             if record.postType == "postpone" {
                 record.date = self.postponedDate
+                
+                if record.ownerID > 0 {
+                    if self.onlyFriends {
+                        record.friendsOnly = 1
+                    } else {
+                        record.friendsOnly = 0
+                    }
+                } else if record.ownerID < 0 {
+                    if addSigner, let signerID = Int(vkSingleton.shared.userID) {
+                        record.signerID = signerID
+                    } else {
+                        record.signerID = 0
+                    }
+                }
             }
             
             record.attachments.removeAll(keepingCapacity: false)
@@ -569,14 +588,12 @@ class NewRecordController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     @objc func tapBarButton(sender: UIBarButtonItem) {
-        if mode == .new {
-            
-            
-        } else if mode == .edit {
-            
-            
-        }
         
-        self.navigationController?.popViewController(animated: true)
+        switch mode {
+        case .new:
+            publishPost()
+        case .edit:
+            editPost()
+        }
     }
 }

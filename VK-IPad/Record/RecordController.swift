@@ -890,7 +890,7 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
         }
         
         
-        if record.canEdit <= 1 {
+        if record.canEdit == 1 {
             let action4 = UIAlertAction(title: "Редактировать запись", style: .default) { action in
                 
                 var title = "Редактировать запись на своей стене"
@@ -928,7 +928,7 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
                 
                 alertView.addButton("Да, хочу опубликовать") {
                     
-                    
+                    self.publishPostponedPost()
                 }
                 
                 alertView.addButton("Нет, я передумал") {}
@@ -955,7 +955,7 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
                 
                 alertView.addButton("Да, хочу удалить") {
                     
-                    
+                    self.deletePost()
                 }
                 
                 alertView.addButton("Нет, я передумал") {}

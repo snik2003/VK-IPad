@@ -23,16 +23,26 @@ class SelectAttachPanel: UIView, UIImagePickerControllerDelegate, UINavigationCo
         }
     }
     
+    var titleAbl: String {
+        if delegate is NewRecordController {
+            return "записи"
+        } /*else if delegate if DialogController {
+             return "сообщению"
+         } */else {
+            return "комментарию"
+        }
+    }
+    
     var actions: [Int:String] {
         if delegate is NewRecordController {
             return [
                 0: "Упомянуть себя в \(titleGen)",
                 1: "Упомянуть друга в \(titleGen)",
                 2: "Упомянуть сообщество в \(titleGen)",
-                3: "Вложить фотографию из профиля",
-                4: "Вложить фотографию с устройства",
+                3: "Прикрепить фотографию из профиля",
+                4: "Прикрепить фотографию с устройства",
                 5: "Сфотографировать с устройства",
-                6: "Вложить видеозапись из профиля",
+                6: "Прикрепить видеозапись из профиля",
                 7: "Прикрепить внешнюю ссылку"
                 ]
         }
@@ -41,10 +51,10 @@ class SelectAttachPanel: UIView, UIImagePickerControllerDelegate, UINavigationCo
             0: "Упомянуть себя в \(titleGen)",
             1: "Упомянуть друга в \(titleGen)",
             2: "Упомянуть сообщество в \(titleGen)",
-            3: "Вложить фотографию из профиля",
-            4: "Вложить фотографию с устройства",
+            3: "Прикрепить фотографию из профиля",
+            4: "Прикрепить фотографию с устройства",
             5: "Сфотографировать с устройства",
-            6: "Вложить видеозапись из профиля"
+            6: "Прикрепить видеозапись из профиля"
         ]
     }
     
@@ -130,7 +140,7 @@ class SelectAttachPanel: UIView, UIImagePickerControllerDelegate, UINavigationCo
                     controller.userID = vkSingleton.shared.userID
                     controller.type = "friends"
                     controller.source = "add_mention"
-                    controller.title = "Упомянуть друга в сообщении/комментарии"
+                    controller.title = "Упомянуть друга в \(self.titleGen)"
                     
                     controller.navigationItem.hidesBackButton = true
                     let cancelButton = UIBarButtonItem(title: "Отмена", style: .plain, target: controller, action: #selector(controller.tapCancelButton(sender:)))
@@ -149,7 +159,7 @@ class SelectAttachPanel: UIView, UIImagePickerControllerDelegate, UINavigationCo
                     controller.userID = vkSingleton.shared.userID
                     controller.type = ""
                     controller.source = "add_mention"
-                    controller.title = "Упомянуть сообщество в сообщении/комментарии"
+                    controller.title = "Упомянуть сообщество в \(self.titleGen)"
                     
                     controller.navigationItem.hidesBackButton = true
                     let cancelButton = UIBarButtonItem(title: "Отмена", style: .plain, target: controller, action: #selector(controller.tapCancelButton(sender:)))
@@ -166,7 +176,7 @@ class SelectAttachPanel: UIView, UIImagePickerControllerDelegate, UINavigationCo
                     let controller = self.delegate.storyboard?.instantiateViewController(withIdentifier: "PhotosListController") as! PhotosListController
                     
                     controller.ownerID = vkSingleton.shared.userID
-                    controller.title = "Вложить фотографии в сообщение/комментарий"
+                    controller.title = "Прикрепить фото к \(self.titleAbl)"
                     
                     controller.selectIndex = 0
                     
@@ -214,7 +224,7 @@ class SelectAttachPanel: UIView, UIImagePickerControllerDelegate, UINavigationCo
                     controller.ownerID = vkSingleton.shared.userID
                     controller.type = ""
                     controller.source = "add_video"
-                    controller.title = "Вложить видеозапись в сообщение/комментарий"
+                    controller.title = "Прикрепить видео к \(self.titleAbl)"
                     
                     if let split = self.delegate.splitViewController {
                         let detail = split.viewControllers[split.viewControllers.endIndex - 1]

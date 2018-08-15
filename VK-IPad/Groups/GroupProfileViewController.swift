@@ -244,7 +244,7 @@ class GroupProfileViewController: UITableViewController {
     
     func refreshWall(filter: String) {
         isRefresh = true
-        ViewControllerUtils().showActivityIndicator(uiView: self.view.superview!)
+        ViewControllerUtils().showActivityIndicator(uiView: self.view)
         heights.removeAll(keepingCapacity: false)
         filterRecords = filter
         recordsCount = 0
