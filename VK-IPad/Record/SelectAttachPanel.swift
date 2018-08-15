@@ -223,14 +223,7 @@ class SelectAttachPanel: UIView, UIImagePickerControllerDelegate, UINavigationCo
                 }
                 
                 if key == 7 {
-                    if let controller = self.delegate as? NewRecordController {
-                        let link = "https://matchtv.ru/"
-                        
-                        controller.attachPanel.link = link
-                        controller.attachPanel.removeFromSuperview()
-                        controller.attachPanel.reconfigure()
-                        controller.tableView.reloadData()
-                    }
+                    self.getLink()
                 }
                 
                 self.popover.dismiss()
@@ -250,6 +243,44 @@ class SelectAttachPanel: UIView, UIImagePickerControllerDelegate, UINavigationCo
         view.backgroundColor = UIColor.lightGray.withAlphaComponent(0.8)
         view.frame = CGRect(x: 10, y: topY, width: maxWidth - 20, height: 1)
         self.addSubview(view)
+    }
+    
+    func getLink() {
+        
+        if let controller = self.delegate as? NewRecordController {
+            let alertController = UIAlertController(title: "Введите внешнюю ссылку", message: nil, preferredStyle: .alert)
+            
+            alertController.addTextField { (textField) -> Void in }
+            
+            let cancelAction: UIAlertAction = UIAlertAction(title: "Отмена", style: .cancel)
+            alertController.addAction(cancelAction)
+        
+            let doneAction = UIAlertAction(title: "Готово", style: .default) { action -> Void in
+                
+                let textField = alertController.textFields!.first
+                
+                if let link = textField?.text, URL(string: link) != nil {
+                    controller.attachPanel.link = link
+                    controller.attachPanel.removeFromSuperview()
+                    controller.attachPanel.reconfigure()
+                    controller.tableView.reloadData()
+                } else {
+                    controller.showErrorMessage(title: "Внешняя ссылка", msg: "\nОшибка! Неверный формат введенной ссылки.\n")
+                }
+            }
+            alertController.addAction(doneAction)
+            
+            
+            
+            if let popoverController = alertController.popoverPresentationController {
+                let bounds = controller.view.bounds
+                popoverController.sourceView = controller.view
+                popoverController.sourceRect = CGRect(x: bounds.midX, y: bounds.midY, width: 0, height: 0)
+                popoverController.permittedArrowDirections = []
+            }
+            
+            controller.present(alertController, animated: true, completion: nil)
+        }
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {

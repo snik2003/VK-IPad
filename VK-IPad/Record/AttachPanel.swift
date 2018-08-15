@@ -119,9 +119,14 @@ class AttachPanel: UIView {
             
             var top: CGFloat = 0
             
+            var count = attachArray.count
+            if link != "" {
+                count += 1
+            }
+            
             let nameLabel = UILabel()
             nameLabel.tag = 250
-            nameLabel.text = "Прикрепленные к \(titleGen) вложения (\(attachArray.count)):"
+            nameLabel.text = "Прикрепленные к \(titleGen) вложения (\(count)):"
             nameLabel.font = UIFont(name: "Verdana", size: 14)!
             nameLabel.textColor = UIColor.purple
             nameLabel.textAlignment = .left
@@ -131,9 +136,9 @@ class AttachPanel: UIView {
             let showButton = UIButton()
             showButton.tag = 250
             if showPanel {
-                showButton.setTitle("Спрятать панель", for: .normal)
+                showButton.setTitle("Свернуть панель", for: .normal)
             } else {
-                showButton.setTitle("Показать панель", for: .normal)
+                showButton.setTitle("Развернуть панель", for: .normal)
             }
             showButton.setTitleColor(showButton.tintColor, for: .normal)
             showButton.titleLabel?.font = UIFont(name: "Verdana", size: 14)!
