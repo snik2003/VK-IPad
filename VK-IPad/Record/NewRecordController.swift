@@ -37,6 +37,10 @@ class NewRecordController: UIViewController, UITableViewDelegate, UITableViewDat
     @IBOutlet weak var previewButton: UIBarButtonItem!
     @IBOutlet weak var tableView: UITableView!
     
+    var selectView = SelectAttachPanel()
+    
+    var setDate = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -98,6 +102,10 @@ class NewRecordController: UIViewController, UITableViewDelegate, UITableViewDat
     
     @objc func hideKeyboard() {
         self.view.endEditing(true)
+        
+        if let popover = selectView.popover {
+            popover.dismiss()
+        }
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -105,7 +113,7 @@ class NewRecordController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 6
+        return 7
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -120,8 +128,13 @@ class NewRecordController: UIViewController, UITableViewDelegate, UITableViewDat
         case 4:
             return 20
         case 5:
-            if postponed {
+            if postponed && !setDate {
                 return 20
+            }
+            return 0
+        case 6:
+            if postponed && setDate {
+                return 250
             }
             return 0
         default:
@@ -246,20 +259,67 @@ class NewRecordController: UIViewController, UITableViewDelegate, UITableViewDat
             
             cell.removeAllSubviews()
             
-            if postponed {
+            if postponed && !setDate {
                 let changeTimeButton = UIButton()
                 changeTimeButton.tag = 250
                 changeTimeButton.setTitle("Изменить время публикации", for: .normal)
                 changeTimeButton.setTitleColor(changeTimeButton.tintColor, for: .normal)
-                changeTimeButton.titleLabel?.font = UIFont(name: "Verdana", size: 13)
+                changeTimeButton.titleLabel?.font = UIFont(name: "Verdana", size: 14)
                 changeTimeButton.contentHorizontalAlignment = .right
-                changeTimeButton.frame = CGRect(x: width - 220, y: 0, width: 200, height: 15)
+                changeTimeButton.frame = CGRect(x: width - 320, y: 0, width: 300, height: 15)
                 cell.addSubview(changeTimeButton)
                 
                 changeTimeButton.add(for: .touchUpInside) {
                     changeTimeButton.buttonTouched()
                     
+                    self.setDate = true
+                    self.tableView.reloadData()
+                    self.tableView.scrollToRow(at: IndexPath(row: 6, section: 0), at: .bottom, animated: false)
+                }
+            }
+            
+            cell.selectionStyle = .none
+            
+            return cell
+        case 6:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+            
+            cell.removeAllSubviews()
+            
+            if postponed && setDate {
+                let rect = CGRect(x: 10, y: 20, width: width - 20, height: 230)
+                let datePicker = UIDatePicker(frame: rect)
+                datePicker.tag = 250
+                datePicker.backgroundColor = vkSingleton.shared.backColor.withAlphaComponent(0.3)
+                datePicker.tintColor = vkSingleton.shared.mainColor
+                
+                let currentDate = Date()
+                datePicker.date = Calendar.current.date(byAdding: .hour, value: 3, to: currentDate)!
+                datePicker.minimumDate = Calendar.current.date(byAdding: .minute, value: 15, to: currentDate)!
+                
+                if postponedDate == 0 {
+                    datePicker.date = datePicker.minimumDate!
+                } else {
+                    datePicker.date = Date(timeIntervalSince1970: Double(postponedDate))
+                }
+                cell.addSubview(datePicker)
+                
+                let doneButton = UIButton()
+                doneButton.tag = 250
+                doneButton.setTitle("Сохранить время публикации", for: .normal)
+                doneButton.setTitleColor(doneButton.tintColor, for: .normal)
+                doneButton.titleLabel?.font = UIFont(name: "Verdana", size: 14)
+                doneButton.contentHorizontalAlignment = .right
+                doneButton.frame = CGRect(x: width - 320, y: 0, width: 300, height: 15)
+                cell.addSubview(doneButton)
+                
+                doneButton.add(for: .touchUpInside) {
+                    doneButton.buttonTouched()
                     
+                    self.postponedDate = Int(datePicker.date.timeIntervalSince1970)
+                    self.setDate = false
+                    self.tableView.reloadData()
+                    self.tableView.scrollToRow(at: IndexPath(row: 5, section: 0), at: .bottom, animated: false)
                 }
             }
             
@@ -322,10 +382,10 @@ class NewRecordController: UIViewController, UITableViewDelegate, UITableViewDat
     
     @IBAction func tapAttachButton(sender: UIBarButtonItem) {
         
-        let selectView = SelectAttachPanel()
         selectView.delegate = self
         selectView.attachPanel = self.attachPanel
         selectView.ownerID = self.ownerID
+        
         selectView.show()
     }
     
@@ -497,6 +557,7 @@ class NewRecordController: UIViewController, UITableViewDelegate, UITableViewDat
     
     @objc func postponedSwitchValueChanged(sender: UISwitch) {
         postponed = sender.isOn
+        setDate = false
         
         if postponed && postponedDate == 0 {
             let currentDate = Date()
