@@ -399,7 +399,17 @@ class GroupsListController: UIViewController, UITableViewDelegate, UITableViewDa
             }
             joinAction.backgroundColor = .blue
             
-            return [joinAction, deleteAction]
+            let gotoAction = UITableViewRowAction(style: .normal, title: "Перейти\nв сообщество") { (rowAction, indexPath) in
+                
+                let group = self.groupsList[indexPath.row]
+                
+                if let id = Int("-\(group.gid)") {
+                    self.openProfileController(id: id, name: group.name)
+                }
+            }
+            gotoAction.backgroundColor = .orange
+            
+            return [joinAction, deleteAction, gotoAction]
         }
         
         return []
