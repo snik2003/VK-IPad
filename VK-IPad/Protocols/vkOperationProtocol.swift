@@ -923,4 +923,41 @@ extension UIViewController: VkOperationProtocol {
             OperationQueue().addOperation(request)
         }
     }
+    
+    func inviteFriendInGroup(friend: Friends) {
+        
+        if let controller = self as? GroupProfileViewController, controller.groupProfile.count > 0 {
+            let group = controller.groupProfile[0]
+            
+            let url = "/method/groups.invite"
+            let parameters = [
+                "access_token": vkSingleton.shared.accessToken,
+                "group_id": "\(group.gid)",
+                "user_id": friend.userID,
+                "v": vkSingleton.shared.version
+            ]
+            
+            let request = GetServerDataOperation(url: url, parameters: parameters)
+            request.completionBlock = {
+                guard let data = request.data else { return }
+                guard let json = try? JSON(data: data) else { print("json error"); return }
+                
+                let error = ErrorJson(json: JSON.null)
+                error.errorCode = json["error"]["error_code"].intValue
+                error.errorMsg = json["error"]["error_msg"].stringValue
+                //print(json)
+                
+                if error.errorCode == 0 {
+                    self.showSuccessMessage(title: "Приглашение в сообщество", msg: "Приглашение в сообщество «\(group.name)» успешно выслано \(friend.firstNameDat) \(friend.lastNameDat).")
+                } /*else if error.errorCode == 15 {
+                    self.showErrorMessage(title: "Ошибка приглашения", msg: "#15: \(friend.firstName) \(friend.lastName) запретил приглашать себя в сообщества.")
+                } else if error.errorCode == 103 {
+                    self.showErrorMessage(title: "Ошибка приглашения", msg: "#103: Превышен лимит!")
+                } */else {
+                    self.showErrorMessage(title: "Ошибка приглашения", msg: "#\(error.errorCode): \(error.errorMsg)")
+                }
+            }
+            OperationQueue().addOperation(request)
+        }
+    }
 }

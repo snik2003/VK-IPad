@@ -18,12 +18,14 @@ class Friends : Equatable {
     }
     
     var uid: String = ""
+    var firstName: String = ""
     var lastName: String = ""
+    var firstNameDat: String = ""
+    var lastNameDat: String = ""
     var userID: String = ""
     var onlineStatus: Int = 0
     var onlineMobile: Int = 0
     var deactivated: String = ""
-    var firstName: String = ""
     var photoURL: String = ""
     var lastSeen: Int = 0
     var platform: Int = 0
@@ -33,9 +35,11 @@ class Friends : Equatable {
     
     init(json: JSON) {
         self.uid = json["id"].stringValue
-        self.lastName = json["last_name"].stringValue
-        self.userID = json["id"].stringValue
         self.firstName = json["first_name"].stringValue
+        self.lastName = json["last_name"].stringValue
+        self.firstNameDat = json["first_name_dat"].stringValue
+        self.lastNameDat = json["last_name_dat"].stringValue
+        self.userID = json["id"].stringValue
         self.onlineStatus = json["online"].intValue
         self.onlineMobile = json["online_mobile"].intValue
         self.deactivated = json["deactivated"].stringValue

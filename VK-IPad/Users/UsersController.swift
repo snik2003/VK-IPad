@@ -113,7 +113,7 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
                 "user_id": self.userID,
                 "access_token": vkSingleton.shared.accessToken,
                 "order": "hints",
-                "fields": "online,photo_max,last_seen,sex,is_friend",
+                "fields": "online,photo_max,last_seen,sex,is_friend,first_name_dat,last_name_dat",
                 "v": vkSingleton.shared.version
             ]
             
@@ -135,7 +135,7 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
                 "offset": "0",
                 "count": "1000",
                 "access_token": vkSingleton.shared.accessToken,
-                "fields": "online,photo_max,last_seen,sex,is_friend",
+                "fields": "online,photo_max,last_seen,sex,is_friend,first_name_dat,last_name_dat",
                 "v": vkSingleton.shared.version
             ]
             
@@ -157,7 +157,7 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
                 "offset": "0",
                 "out": "1",
                 "count": "1000",
-                "fields": "online,photo_max,last_seen,sex,is_friend",
+                "fields": "online,photo_max,last_seen,sex,is_friend,first_name_dat,last_name_dat",
                 "v": vkSingleton.shared.version
             ]
             
@@ -174,7 +174,7 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
                     parameters = [
                         "user_ids": listID,
                         "access_token": vkSingleton.shared.accessToken,
-                        "fields": "online,photo_max,last_seen,sex,is_friend",
+                        "fields": "online,photo_max,last_seen,sex,is_friend,first_name_dat,last_name_dat",
                         "v": vkSingleton.shared.version
                     ]
                     
@@ -207,7 +207,7 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
                 "out": "0",
                 "sort": "0",
                 "count": "1000",
-                "fields": "online,photo_max,last_seen,sex,is_friend",
+                "fields": "online,photo_max,last_seen,sex,is_friend,first_name_dat,last_name_dat",
                 "v": vkSingleton.shared.version
             ]
             
@@ -224,7 +224,7 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
                     parameters = [
                         "user_ids": listID,
                         "access_token": vkSingleton.shared.accessToken,
-                        "fields": "online,photo_max,last_seen,sex,is_friend",
+                        "fields": "online,photo_max,last_seen,sex,is_friend,first_name_dat,last_name_dat",
                         "v": vkSingleton.shared.version
                     ]
                     
@@ -257,7 +257,7 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
                 "sort": "id_desc",
                 "offset": "\(offset)",
                 "count": "\(count)",
-                "fields": "online,photo_max,last_seen,sex,is_friend",
+                "fields": "online,photo_max,last_seen,sex,is_friend,first_name_dat,last_name_dat",
                 "filter": filters,
                 "v": vkSingleton.shared.version
             ]
@@ -631,6 +631,8 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
                         }
                         
                         self.navigationController?.popViewController(animated: true)
+                    } else if source == "invite" {
+                        self.delegate.inviteFriendInGroup(friend: user)
                     } else {
                         self.openProfileController(id: Int(user.userID)!, name: "\(user.firstName) \(user.lastName)")
                     }

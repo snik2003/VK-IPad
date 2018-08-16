@@ -8,6 +8,7 @@
 
 import UIKit
 import SwiftyJSON
+import SCLAlertView
 
 class GroupProfileView: UIView {
 
@@ -621,48 +622,46 @@ class GroupProfileView: UIView {
             
             let action1 = UIAlertAction(title: "Пригласить друзей", style: .default) { action in
                 
+                let сontroller = self.delegate.storyboard?.instantiateViewController(withIdentifier: "UsersController") as! UsersController
+                
+                сontroller.userID = vkSingleton.shared.userID
+                сontroller.type = "friends"
+                сontroller.source = "invite"
+                сontroller.title = "Пригласить друзей"
+                
+                сontroller.navigationItem.hidesBackButton = true
+                let cancelButton = UIBarButtonItem(title: "Закрыть", style: .plain, target: сontroller, action: #selector(сontroller.tapCancelButton(sender:)))
+                сontroller.navigationItem.leftBarButtonItem = cancelButton
+                сontroller.delegate = self.delegate
+                
+                if let split = self.delegate.splitViewController {
+                    let detail = split.viewControllers[split.viewControllers.endIndex - 1]
+                    detail.childViewControllers[0].navigationController?.pushViewController(сontroller, animated: true)
+                }
             }
             alertController.addAction(action1)
             
             let action2 = UIAlertAction(title: "Покинуть сообщество", style: .destructive) { action in
                 
-                let url = "/method/groups.leave"
-                let parameters = [
-                    "access_token": vkSingleton.shared.accessToken,
-                    "group_id": "\(self.profile.gid)",
-                    "v": vkSingleton.shared.version
-                ]
+                let appearance = SCLAlertView.SCLAppearance(
+                    kTitleTop: 32.0,
+                    kWindowWidth: 400,
+                    kTitleFont: UIFont(name: "Verdana-Bold", size: 14)!,
+                    kTextFont: UIFont(name: "Verdana", size: 15)!,
+                    kButtonFont: UIFont(name: "Verdana", size: 16)!,
+                    showCloseButton: false,
+                    showCircularIcon: true
+                )
+                let alertView = SCLAlertView(appearance: appearance)
                 
-                let request = GetServerDataOperation(url: url, parameters: parameters)
-                
-                request.completionBlock = {
-                    guard let data = request.data else { return }
+                alertView.addButton("Да, хочу покинуть сообщество") {
                     
-                    guard let json = try? JSON(data: data) else { print("json error"); return }
-                    
-                    let error = ErrorJson(json: JSON.null)
-                    error.errorCode = json["error"]["error_code"].intValue
-                    error.errorMsg = json["error"]["error_msg"].stringValue
-                    
-                    if error.errorCode == 0 {
-                        self.profile.isMember = 0
-                        self.profile.isAdmin = 0
-                        self.profile.membersCounter -= 1
-                        
-                        OperationQueue.main.addOperation {
-                            self.isMemberButton.setTitle(self.profile.memberButtonText(), for: .normal)
-                            self.isMemberButton.setTitleColor(UIColor.white, for: .normal)
-                            self.isMemberButton.backgroundColor = vkSingleton.shared.mainColor
-                            
-                            self.dopButton.setTitleColor(UIColor.white, for: .normal)
-                            self.dopButton.backgroundColor = vkSingleton.shared.mainColor
-                        }
-                    } else {
-                        self.delegate.showErrorMessage(title: "Ошибка #\(error.errorCode)", msg: "\n\(error.errorMsg)\n")
-                    }
+                    self.leaveGroup()
                 }
                 
-                OperationQueue().addOperation(request)
+                alertView.addButton("Нет, я передумал") {}
+                
+                alertView.showWarning("Подтверждение!", subTitle: "Внимание! Вы являетесь администратором данного сообщества.\n\nВы действительно хотите покинуть сообщество «\(self.profile.name)»?")
             }
             alertController.addAction(action2)
             
@@ -806,42 +805,8 @@ class GroupProfileView: UIView {
                     alertController.addAction(action2)
                     
                     let action3 = UIAlertAction(title: "Отклонить приглашение", style: .destructive) { action in
-                        let url = "/method/groups.leave"
                         
-                        let parameters = [
-                            "access_token": vkSingleton.shared.accessToken,
-                            "group_id": "\(self.profile.gid)",
-                            "v": vkSingleton.shared.version
-                        ]
-                        
-                        let request = GetServerDataOperation(url: url, parameters: parameters)
-                        
-                        request.completionBlock = {
-                            guard let data = request.data else { return }
-                            
-                            guard let json = try? JSON(data: data) else { print("json error"); return }
-                            
-                            let error = ErrorJson(json: JSON.null)
-                            error.errorCode = json["error"]["error_code"].intValue
-                            error.errorMsg = json["error"]["error_msg"].stringValue
-                            
-                            if error.errorCode == 0 {
-                                self.profile.isMember = 0
-                                OperationQueue.main.addOperation {
-                                    self.isMemberButton.setTitle(self.profile.memberButtonText(), for: .normal)
-                                    self.isMemberButton.setTitleColor(UIColor.black, for: .normal)
-                                    self.isMemberButton.backgroundColor = vkSingleton.shared.backColor
-                                    
-                                    self.dopButton.setTitleColor(UIColor.black, for: .normal)
-                                    self.dopButton.backgroundColor = vkSingleton.shared.backColor
-                                    
-                                    self.delegate.updateAppCounters()
-                                }
-                            } else {
-                                self.delegate.showErrorMessage(title: "Ошибка #\(error.errorCode)", msg: "\n\(error.errorMsg)\n")
-                            }
-                        }
-                        OperationQueue().addOperation(request)
+                        self.leaveGroup()
                     }
                     alertController.addAction(action3)
                 }
@@ -861,41 +826,7 @@ class GroupProfileView: UIView {
                 
                 let OKAction = UIAlertAction(title: "Отписаться", style: .destructive) { action in
                     
-                    let url = "/method/groups.leave"
-                    
-                    let parameters = [
-                        "access_token": vkSingleton.shared.accessToken,
-                        "group_id": "\(self.profile.gid)",
-                        "v": vkSingleton.shared.version
-                    ]
-                    
-                    let request = GetServerDataOperation(url: url, parameters: parameters)
-                    
-                    request.completionBlock = {
-                        guard let data = request.data else { return }
-                        
-                        guard let json = try? JSON(data: data) else { print("json error"); return }
-                        
-                        let error = ErrorJson(json: JSON.null)
-                        error.errorCode = json["error"]["error_code"].intValue
-                        error.errorMsg = json["error"]["error_msg"].stringValue
-                        
-                        if error.errorCode == 0 {
-                            self.profile.isMember = 0
-                            self.profile.membersCounter -= 1
-                            OperationQueue.main.addOperation {
-                                self.isMemberButton.setTitle(self.profile.memberButtonText(), for: .normal)
-                                self.isMemberButton.setTitleColor(UIColor.white, for: .normal)
-                                self.isMemberButton.backgroundColor = vkSingleton.shared.mainColor
-                                
-                                self.dopButton.setTitleColor(UIColor.white, for: .normal)
-                                self.dopButton.backgroundColor = vkSingleton.shared.mainColor
-                            }
-                        } else {
-                            self.delegate.showErrorMessage(title: "Ошибка #\(error.errorCode)", msg: "\n\(error.errorMsg)\n")
-                        }
-                    }
-                    OperationQueue().addOperation(request)
+                    self.leaveGroup()
                 }
                 alertController.addAction(OKAction)
                 
@@ -1366,5 +1297,45 @@ class GroupProfileView: UIView {
         }
         
         return num
+    }
+    
+    func leaveGroup() {
+        let url = "/method/groups.leave"
+        let parameters = [
+            "access_token": vkSingleton.shared.accessToken,
+            "group_id": "\(self.profile.gid)",
+            "v": vkSingleton.shared.version
+        ]
+        
+        let request = GetServerDataOperation(url: url, parameters: parameters)
+        
+        request.completionBlock = {
+            guard let data = request.data else { return }
+            
+            guard let json = try? JSON(data: data) else { print("json error"); return }
+            
+            let error = ErrorJson(json: JSON.null)
+            error.errorCode = json["error"]["error_code"].intValue
+            error.errorMsg = json["error"]["error_msg"].stringValue
+            
+            if error.errorCode == 0 {
+                self.profile.isMember = 0
+                self.profile.isAdmin = 0
+                self.profile.membersCounter -= 1
+                
+                OperationQueue.main.addOperation {
+                    self.isMemberButton.setTitle(self.profile.memberButtonText(), for: .normal)
+                    self.isMemberButton.setTitleColor(UIColor.white, for: .normal)
+                    self.isMemberButton.backgroundColor = vkSingleton.shared.mainColor
+                    
+                    self.dopButton.setTitleColor(UIColor.white, for: .normal)
+                    self.dopButton.backgroundColor = vkSingleton.shared.mainColor
+                }
+            } else {
+                self.delegate.showErrorMessage(title: "Ошибка #\(error.errorCode)", msg: "\n\(error.errorMsg)\n")
+            }
+        }
+        
+        OperationQueue().addOperation(request)
     }
 }
