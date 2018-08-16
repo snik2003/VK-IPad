@@ -471,7 +471,7 @@ class NewRecordController: UIViewController, UITableViewDelegate, UITableViewDat
             }
             
             if record.text == "" && record.attachments.count == 0 {
-                self.showErrorMessage(title: "Новая запись", msg: "При публикации записи обязательно указать текст сообщения, либо вложить какой-либо объект (фотография, видеозапись, документ и т.д.)")
+                self.showErrorMessage(title: "Новая запись", msg: "При публикации записи обязательно указать либо текст сообщения, либо вложить какой-либо объект (фотография, видеозапись, документ и т.д.)")
             } else {
                 canPost = true
             }
@@ -560,7 +560,7 @@ class NewRecordController: UIViewController, UITableViewDelegate, UITableViewDat
             controller.users.append(vkSingleton.shared.myProfile)
             
             if record.text == "" && record.attachments.count == 0 {
-                self.showErrorMessage(title: "Новая запись", msg: "При публикации записи нужно обязательно указать текст сообщения, либо вложить какой-либо объект (фотографию, видеозапись, документ и т.д.)")
+                self.showErrorMessage(title: "Новая запись", msg: "При публикации записи нужно обязательно указать либо текст сообщения, либо вложить какой-либо объект (фотографию, видеозапись, документ и т.д.)")
             } else {
                 canPost = true
             }
@@ -589,11 +589,16 @@ class NewRecordController: UIViewController, UITableViewDelegate, UITableViewDat
     
     @objc func tapBarButton(sender: UIBarButtonItem) {
         
-        switch mode {
-        case .new:
-            publishPost()
-        case .edit:
-            editPost()
+        
+        if textView.text == "" && attachPanel.attachments == "" {
+            self.showErrorMessage(title: "Новая запись", msg: "При публикации записи нужно обязательно указать либо текст сообщения, либо вложить какой-либо объект (фотографию, видеозапись, документ и т.д.)")
+        } else {
+            switch mode {
+            case .new:
+                publishPost()
+            case .edit:
+                editPost()
+            }
         }
     }
 }
