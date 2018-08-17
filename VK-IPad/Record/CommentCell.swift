@@ -16,6 +16,8 @@ class CommentCell: UITableViewCell {
     var delegate: UIViewController!
     var editID: Int = 0
     
+    var canComment = 1
+    
     var comment: Comment!
     var users: [UserProfile]!
     var groups: [GroupProfile]!
@@ -792,7 +794,7 @@ class CommentCell: UITableViewCell {
         
         var leftX = avatarHeight + 20
         
-        if "\(comment.fromID)" != vkSingleton.shared.userID /*&& !(self.delegate is TopicController)*/ {
+        if canComment == 1 && "\(comment.fromID)" != vkSingleton.shared.userID {
             let button1 = UIButton()
             button1.tag = 250
             button1.setTitle("Ответить", for: .normal)

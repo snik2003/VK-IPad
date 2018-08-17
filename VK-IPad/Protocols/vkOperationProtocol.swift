@@ -634,14 +634,18 @@ extension UIViewController: VkOperationProtocol {
                 text = "Фотография \(record.title)"
                 link = "https://vk.com/photo\(record.ownerID)_\(record.id)"
             }
-        } else if let _ = self as? PhotoViewController, let photo = object as? Photo {
+        } else if let photo = object as? Photo {
             
             text = "Фотография \(photo.title)"
             link = "https://vk.com/photo\(photo.ownerID)_\(photo.id)"
-        } else if let _ = self as? VideoController, let video = object as? Video {
+        } else if let video = object as? Video {
             
             text = "Видеозапись «\(video.title)»"
             link = "https://vk.com/video\(video.ownerID)_\(video.id)"
+        } else if let controller = self as? TopicController, let topic = object as? Topic {
+            
+            text = "Обсуждение «\(topic.title)»"
+            link = "https://vk.com/topic-\(controller.groupID)_\(controller.topicID)"
         }
         
         let url = "/method/fave.addLink"
@@ -762,6 +766,8 @@ extension UIViewController: VkOperationProtocol {
             } else {
                 parameters["close_comments"] = "0"
             }
+            
+            print(parameters)
             
             let request = GetServerDataOperation(url: url, parameters: parameters)
             request.completionBlock = {

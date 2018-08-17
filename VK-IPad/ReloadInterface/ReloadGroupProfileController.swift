@@ -17,10 +17,12 @@ class ReloadGroupProfileController: Operation {
     }
     
     override func main() {
-        guard let parseGroupWall = dependencies[0] as? ParseWall, let parseGroupProfile = dependencies[1] as? ParseGroupProfile, let parsePostponed = dependencies[2] as? ParseWall else { return }
+        guard let parseGroupWall = dependencies[0] as? ParseWall, let parseGroupProfile = dependencies[1] as? ParseGroupProfile, let parsePostponed = dependencies[2] as? ParseWall, let parseSuggested = dependencies[3] as? ParseWall else { return }
         
         controller.recordsCount = parseGroupWall.count
-            
+        
+        controller.suggestedWall = parseSuggested.wall
+        
         controller.postponedWall = parsePostponed.wall
         controller.postponedWallProfiles = parsePostponed.profiles
         controller.postponedWallGroups = parsePostponed.groups

@@ -268,6 +268,8 @@ class RecordCell: UITableViewCell {
             nameLabel.text = "📌 \(name)"
         } else if record.postType == "postpone" {
             nameLabel.text = "⏰ \(name)"
+        } else if record.postType == "suggest" {
+            nameLabel.text = "📣 \(name)"
         }
         nameLabel.font = nameFont
         

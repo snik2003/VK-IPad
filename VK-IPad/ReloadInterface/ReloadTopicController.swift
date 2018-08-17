@@ -51,11 +51,9 @@ class ReloadTopicController: Operation {
         }
         
         controller.group = parseGroupProfile.outputData
-        if controller.group.count > 0 {
-            if controller.group[0].isAdmin == 1 && controller.topics.count > 0 {
-                controller.optButton = UIBarButtonItem(barButtonSystemItem: .action, target: controller, action: #selector(controller.tapBarButtonItem(sender:)))
-                controller.navigationItem.rightBarButtonItem = controller.optButton
-            }
+        if controller.group.count > 0 && controller.topics.count > 0 {
+            let barButton = UIBarButtonItem(barButtonSystemItem: .action, target: controller, action: #selector(controller.tapBarButtonItem(sender:)))
+            controller.navigationItem.rightBarButtonItem = barButton
         }
         
         controller.attachPanel.comments = controller.comments

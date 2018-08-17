@@ -21,6 +21,7 @@ class ParseWall: Operation {
         
         guard let json = try? JSON(data: data) else { print("json error"); return }
         //print(json)
+        
         let wallData = json["response"]["items"].compactMap { Record(json: $0.1) }
         let profilesData = json["response"]["profiles"].compactMap { UserProfile(json: $0.1) }
         let groupsData = json["response"]["groups"].compactMap { GroupProfile(json: $0.1) }

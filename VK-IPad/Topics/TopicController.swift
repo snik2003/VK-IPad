@@ -34,7 +34,7 @@ class TopicController: UIViewController, UITableViewDelegate, UITableViewDataSou
     
     var tableView: UITableView!
     var commentView: DCCommentView!
-    var optButton: UIBarButtonItem!
+    //var optButton: UIBarButtonItem!
     
     var delegate: UIViewController!
 
@@ -136,7 +136,86 @@ class TopicController: UIViewController, UITableViewDelegate, UITableViewDataSou
     }
     
     @objc func tapBarButtonItem(sender: UIBarButtonItem) {
+        if topics.count > 0 {
+            let topic = topics[0]
+            
+            let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+            
+            let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
+            alertController.addAction(cancelAction)
+            
+            let action1 = UIAlertAction(title: "Скопировать ссылку", style: .default) { action in
+                
+                let link = "https://vk.com/topic-\(self.groupID)_\(self.topicID)"
+                    
+                UIPasteboard.general.string = link
+                if let string = UIPasteboard.general.string {
+                    self.showInfoMessage(title: "Ссылка на тему в обсуждениях:" , msg: "\(string)")
+                }
+            }
+            alertController.addAction(action1)
+            
+            
+            let action2 = UIAlertAction(title: "Добавить в «Избранное»", style: .default) { action in
+                    
+                self.addLinkToFave(object: topic)
+            }
+            alertController.addAction(action2)
+            
+            
+            if group[0].isAdmin == 1 {
+                let action3 = UIAlertAction(title: "Переименовать обсуждение", style: .default) { action in
+                    
+                    
+                }
+                alertController.addAction(action3)
+                
+                
+                if topic.isFixed == 0 {
+                    let action4 = UIAlertAction(title: "Закрепить обсуждение", style: .destructive) { action in
+                        
+                        
+                    }
+                    alertController.addAction(action4)
+                } else {
+                    let action4 = UIAlertAction(title: "Открепить обсуждение", style: .destructive) { action in
+                        
+                        
+                    }
+                    alertController.addAction(action4)
+                }
+                
+                
+                if topic.isClosed == 0 {
+                    let action5 = UIAlertAction(title: "Запретить комментирование", style: .destructive) { action in
+                        
+                        
+                    }
+                    alertController.addAction(action5)
+                } else {
+                    let action5 = UIAlertAction(title: "Разрешить комментирование", style: .destructive) { action in
+                        
+                        
+                    }
+                    alertController.addAction(action5)
+                }
         
+                
+                let action6 = UIAlertAction(title: "Удалить обсуждение", style: .destructive) { action in
+                    
+                    
+                }
+                alertController.addAction(action6)
+            }
+            
+            
+            if let popoverController = alertController.popoverPresentationController {
+                popoverController.barButtonItem = self.navigationItem.rightBarButtonItem
+                popoverController.permittedArrowDirections = [.up]
+            }
+            
+            self.present(alertController, animated: true)
+        }
     }
     
     func getTopicComments() {
@@ -406,6 +485,12 @@ class TopicController: UIViewController, UITableViewDelegate, UITableViewDataSou
                 cell.comment = comment
                 cell.users = users
                 cell.groups = groups
+                
+                if topics.count > 0 {
+                    if topics[0].isClosed == 1 {
+                        cell.canComment = 0
+                    }
+                }
                 
                 cell.cellWidth = self.width
                 

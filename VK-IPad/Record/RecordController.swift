@@ -360,6 +360,10 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
                 cell.users = commentsProfiles
                 cell.groups = commentsGroups
                 
+                if record.count > 0 {
+                    cell.canComment = record[0].canComment
+                }
+                
                 cell.cellWidth = self.tableView.frame.width
                 
                 cell.configureCell()
@@ -411,7 +415,7 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
                 guard let data = getServerDataOperation.data else { return }
                 
                 guard let json = try? JSON(data: data) else { print("json error"); return }
-                //print(json["response"][2]["items"])
+                //print(json["response"][0]["items"])
                 
                 let record = json["response"][0]["items"].compactMap { Record(json: $0.1) }
                 let recordProfiles = json["response"][0]["profiles"].compactMap { UserProfile(json: $0.1) }
@@ -455,7 +459,11 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
                     
                     if self.record.count > 0 {
                         if self.record[0].postType == "postpone" {
-                            self.title = "Отложенная запись"
+                            self.title = "Отложенная запись (не опубликована)"
+                        }
+                        
+                        if self.record[0].postType == "suggest" {
+                            self.title = "Предложенная запись (не опубликована)"
                         }
                         
                         if self.record[0].canComment == 0 {
@@ -849,11 +857,13 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
         alertController.addAction(action1)
         
         
-        let action2 = UIAlertAction(title: "Добавить в «Избранное»", style: .default) { action in
+        if record.postType != "postpone" && record.postType != "suggest" {
+            let action2 = UIAlertAction(title: "Добавить в «Избранное»", style: .default) { action in
             
-            self.addLinkToFave(object: record)
+                self.addLinkToFave(object: record)
+            }
+            alertController.addAction(action2)
         }
-        alertController.addAction(action2)
         
         
         if self.type == "photo" {
@@ -896,6 +906,8 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
                 var title = "Редактировать запись на своей стене"
                 if record.postType == "postpone" {
                     title = "Редактировать отложенную запись"
+                } else if record.postType == "suggest" {
+                    title = "Редактировать предложенную запись"
                 } else {
                     if record.ownerID > 0 {
                         if vkSingleton.shared.userID != "\(record.ownerID)" {
@@ -939,7 +951,18 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
         }
         
         
-        if record.canDelete == 1 {
+        if record.postType == "suggest" && vkSingleton.shared.adminGroupID.contains(abs(record.ownerID)) {
+            let action5 = UIAlertAction(title: "Опубликовать запись", style: .default) { action in
+                
+                let title = "Опубликовать предложенную запись"
+                
+                self.openNewRecordController(ownerID: "\(record.ownerID)", mode: .edit, title: title, record: record)
+            }
+            alertController.addAction(action5)
+        }
+        
+        
+        if record.postType != "suggest" && record.canDelete == 1 {
             let action6 = UIAlertAction(title: "Удалить запись", style: .destructive) { action in
                 
                 let appearance = SCLAlertView.SCLAppearance(
@@ -965,7 +988,62 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
             alertController.addAction(action6)
         }
         
-        if record.postType != "postpone" {
+        
+        if record.postType == "suggest" && record.canDelete == 1 && "\(record.fromID)" == vkSingleton.shared.userID {
+            let action6 = UIAlertAction(title: "Удалить запись", style: .destructive) { action in
+                
+                let appearance = SCLAlertView.SCLAppearance(
+                    kTitleTop: 32.0,
+                    kWindowWidth: 400,
+                    kTitleFont: UIFont(name: "Verdana-Bold", size: 14)!,
+                    kTextFont: UIFont(name: "Verdana", size: 15)!,
+                    kButtonFont: UIFont(name: "Verdana", size: 16)!,
+                    showCloseButton: false,
+                    showCircularIcon: true
+                )
+                let alertView = SCLAlertView(appearance: appearance)
+                
+                alertView.addButton("Да, хочу удалить") {
+                    
+                    self.deletePost()
+                }
+                
+                alertView.addButton("Нет, я передумал") {}
+                
+                alertView.showWarning("Подтверждение!", subTitle: "Внимание! Данное действие необратимо.\nВы действительно хотите удалить эту запись с вашей стены?")
+            }
+            alertController.addAction(action6)
+        }
+        
+        
+        if record.postType == "suggest" && record.canDelete == 1 && "\(record.fromID)" != vkSingleton.shared.userID {
+            let action6 = UIAlertAction(title: "Отклонить запись", style: .destructive) { action in
+                
+                let appearance = SCLAlertView.SCLAppearance(
+                    kTitleTop: 32.0,
+                    kWindowWidth: 400,
+                    kTitleFont: UIFont(name: "Verdana-Bold", size: 14)!,
+                    kTextFont: UIFont(name: "Verdana", size: 15)!,
+                    kButtonFont: UIFont(name: "Verdana", size: 16)!,
+                    showCloseButton: false,
+                    showCircularIcon: true
+                )
+                let alertView = SCLAlertView(appearance: appearance)
+                
+                alertView.addButton("Да, хочу отклонить") {
+                    
+                    self.deletePost()
+                }
+                
+                alertView.addButton("Нет, я передумал") {}
+                
+                alertView.showWarning("Подтверждение!", subTitle: "Внимание! Данное действие необратимо.\nВы действительно хотите отклонить данную запись?")
+            }
+            alertController.addAction(action6)
+        }
+        
+        
+        if record.postType != "postpone" && record.postType != "suggest" {
             let action7 = UIAlertAction(title: "Пожаловаться", style: .destructive) { action in
                 
                 

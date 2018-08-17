@@ -503,6 +503,10 @@ class VideoController: UIViewController, UITableViewDelegate, UITableViewDataSou
                 cell.users = commentsProfiles
                 cell.groups = commentsGroups
                 
+                if video.count > 0 {
+                    cell.canComment = video[0].canComment
+                }
+                
                 cell.cellWidth = self.tableView.frame.width
                 
                 cell.configureCell()
