@@ -705,7 +705,7 @@ class VideoController: UIViewController, UITableViewDelegate, UITableViewDataSou
             
             let action6 = UIAlertAction(title: "Пожаловаться", style: .destructive) { action in
                 
-                
+                video.reportMenu(delegate: self)
             }
             alertController.addAction(action6)
             
