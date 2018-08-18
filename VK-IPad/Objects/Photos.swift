@@ -262,7 +262,7 @@ extension Photo {
         let parameters = [
             "access_token": vkSingleton.shared.accessToken,
             "owner_id": "\(self.ownerID)",
-            "video_id": "\(self.id)",
+            "photo_id": "\(self.id)",
             "reason": "\(reason)",
             "comment": comment,
             "v": vkSingleton.shared.version

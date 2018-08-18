@@ -1047,7 +1047,7 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
             let action7 = UIAlertAction(title: "Пожаловаться", style: .destructive) { action in
                 
                 if self.type == "post" {
-                    
+                    record.reportMenu(delegate: self)
                 } else if self.type == "photo" {
                     if let photo = self.photo {
                         photo.reportMenu(delegate: self)
