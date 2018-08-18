@@ -1058,19 +1058,21 @@ class CommentCell: UITableViewCell {
             leftX += size.width + 20
         }
         
-        
-        let button1 = UIButton()
-        button1.tag = 250
-        button1.setTitle("Пожаловаться", for: .normal)
-        button1.setTitleColor(UIColor.red, for: .normal)
-        button1.titleLabel?.font = menuFont
-        button1.add(for: .touchUpInside) {
-            button1.buttonTouched()
-            
+        if delegate is RecordController || delegate is VideoController {
+            let button1 = UIButton()
+            button1.tag = 250
+            button1.setTitle("Пожаловаться", for: .normal)
+            button1.setTitleColor(UIColor.red, for: .normal)
+            button1.titleLabel?.font = menuFont
+            button1.add(for: .touchUpInside) {
+                button1.buttonTouched()
+                
+                self.comment.reportMenu(delegate: self.delegate)
+            }
+            let size = delegate.getTextSize(text: button1.titleLabel!.text!, font: menuFont, maxWidth: cellWidth)
+            button1.frame = CGRect(x: leftX, y: topY, width: size.width, height: menuButtonHeight)
+            self.addSubview(button1)
         }
-        let size = delegate.getTextSize(text: button1.titleLabel!.text!, font: menuFont, maxWidth: cellWidth)
-        button1.frame = CGRect(x: leftX, y: topY, width: size.width, height: menuButtonHeight)
-        self.addSubview(button1)
     }
 }
 
