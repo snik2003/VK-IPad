@@ -174,4 +174,115 @@ extension Photo {
         }
         OperationQueue().addOperation(request)
     }
+    
+    func reportMenu(delegate: UIViewController) {
+        let alertController = UIAlertController(title: "Жалоба на фотографию", message: "Введите комментарий и укажите тип жалобы", preferredStyle: .alert)
+        
+        let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
+        alertController.addAction(cancelAction)
+        
+        alertController.addTextField(configurationHandler: { textField in
+            textField.placeholder = "Комментарий к жалобе"
+            textField.font = UIFont(name: "Verdana", size: 14)
+            textField.layer.borderColor = vkSingleton.shared.mainColor.cgColor
+            textField.layer.cornerRadius = 4
+            textField.resignFirstResponder()
+        })
+        
+        let action1 = UIAlertAction(title: "Это спам", style: .default) { action in
+            
+            if let textView = alertController.textFields?.first, let yourComment = textView.text {
+                self.reportPhoto(delegate: delegate, reason: 0, comment: yourComment)
+            }
+        }
+        alertController.addAction(action1)
+        
+        let action2 = UIAlertAction(title: "Детская порнография", style: .default) { action in
+            
+            if let textView = alertController.textFields?.first, let yourComment = textView.text {
+                self.reportPhoto(delegate: delegate, reason: 1, comment: yourComment)
+            }
+        }
+        alertController.addAction(action2)
+        
+        let action3 = UIAlertAction(title: "Экстремизм", style: .default) { action in
+            
+            if let textView = alertController.textFields?.first, let yourComment = textView.text {
+                self.reportPhoto(delegate: delegate, reason: 2, comment: yourComment)
+            }
+        }
+        alertController.addAction(action3)
+        
+        let action4 = UIAlertAction(title: "Насилие", style: .default) { action in
+            
+            if let textView = alertController.textFields?.first, let yourComment = textView.text {
+                self.reportPhoto(delegate: delegate, reason: 3, comment: yourComment)
+            }
+        }
+        alertController.addAction(action4)
+        
+        let action5 = UIAlertAction(title: "Пропаганда наркотиков", style: .default) { action in
+            
+            if let textView = alertController.textFields?.first, let yourComment = textView.text {
+                self.reportPhoto(delegate: delegate, reason: 4, comment: yourComment)
+            }
+        }
+        alertController.addAction(action5)
+        
+        let action6 = UIAlertAction(title: "Материал для взрослых", style: .default) { action in
+            
+            if let textView = alertController.textFields?.first, let yourComment = textView.text {
+                self.reportPhoto(delegate: delegate, reason: 5, comment: yourComment)
+            }
+        }
+        alertController.addAction(action6)
+        
+        let action7 = UIAlertAction(title: "Оскорбление", style: .default) { action in
+            
+            if let textView = alertController.textFields?.first, let yourComment = textView.text {
+                self.reportPhoto(delegate: delegate, reason: 6, comment: yourComment)
+            }
+        }
+        alertController.addAction(action7)
+        
+        
+        if let popoverController = alertController.popoverPresentationController {
+            let bounds = delegate.view.bounds
+            popoverController.sourceView = delegate.view
+            popoverController.sourceRect = CGRect(x: bounds.midX, y: bounds.midY, width: 0, height: 0)
+            popoverController.permittedArrowDirections = []
+        }
+        
+        delegate.present(alertController, animated: true)
+    }
+    
+    func reportPhoto(delegate: UIViewController, reason: Int, comment: String) {
+        
+        let url = "/method/photos.report"
+        let parameters = [
+            "access_token": vkSingleton.shared.accessToken,
+            "owner_id": "\(self.ownerID)",
+            "video_id": "\(self.id)",
+            "reason": "\(reason)",
+            "comment": comment,
+            "v": vkSingleton.shared.version
+        ]
+        
+        let request = GetServerDataOperation(url: url, parameters: parameters)
+        request.completionBlock = {
+            guard let data = request.data else { return }
+            guard let json = try? JSON(data: data) else { print("json error"); return }
+            
+            let error = ErrorJson(json: JSON.null)
+            error.errorCode = json["error"]["error_code"].intValue
+            error.errorMsg = json["error"]["error_msg"].stringValue
+            
+            if error.errorCode == 0 {
+                delegate.showSuccessMessage(title: "Жалоба на фотографию", msg: "Ваша жалоба на фотографию успешно отправлена в администрацию сайта.")
+            } else {
+                delegate.showErrorMessage(title: "Жалоба на фотографию", msg: "#\(error.errorCode): \(error.errorMsg)")
+            }
+        }
+        OperationQueue().addOperation(request)
+    }
 }

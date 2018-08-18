@@ -371,7 +371,7 @@ class PhotoViewController: UITableViewController {
         
         let action7 = UIAlertAction(title: "Пожаловаться", style: .destructive) { action in
                 
-                
+            photo.reportMenu(delegate: self)
         }
         alertController.addAction(action7)
         

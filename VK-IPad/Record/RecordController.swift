@@ -1046,7 +1046,13 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
         if record.postType != "postpone" && record.postType != "suggest" {
             let action7 = UIAlertAction(title: "Пожаловаться", style: .destructive) { action in
                 
-                
+                if self.type == "post" {
+                    
+                } else if self.type == "photo" {
+                    if let photo = self.photo {
+                        photo.reportMenu(delegate: self)
+                    }
+                }
             }
             alertController.addAction(action7)
         }
