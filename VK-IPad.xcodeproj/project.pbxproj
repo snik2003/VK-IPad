@@ -330,6 +330,7 @@
 				17A1A5C220DA7EE800D9CE00 /* Photos */,
 				173D667020D3F54600EEBF46 /* Record */,
 				174912CB20D300DC00FCF9F9 /* Users */,
+				17C066FE21258C8B00037C39 /* Dialogs */,
 				17FDD8E1210F16030064558A /* Topics */,
 				174912FF20D3048A00FCF9F9 /* ParseServerData */,
 				173D666920D3CA9F00EEBF46 /* ReloadInterface */,
@@ -544,6 +545,13 @@
 				17B409F1210889C7004CED46 /* RelativeCell.swift */,
 			);
 			path = Profile;
+			sourceTree = "<group>";
+		};
+		17C066FE21258C8B00037C39 /* Dialogs */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Dialogs;
 			sourceTree = "<group>";
 		};
 		17FDD8E1210F16030064558A /* Topics */ = {

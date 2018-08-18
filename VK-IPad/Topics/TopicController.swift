@@ -8,6 +8,7 @@
 
 import UIKit
 import SwiftyJSON
+import SCLAlertView
 import DCCommentView
 import Popover
 
@@ -166,21 +167,21 @@ class TopicController: UIViewController, UITableViewDelegate, UITableViewDataSou
             if group[0].isAdmin == 1 {
                 let action3 = UIAlertAction(title: "Переименовать обсуждение", style: .default) { action in
                     
-                    
+                    self.changeTitleTopic(oldTitle: topic.title)
                 }
                 alertController.addAction(action3)
                 
                 
                 if topic.isFixed == 0 {
-                    let action4 = UIAlertAction(title: "Закрепить обсуждение", style: .destructive) { action in
+                    let action4 = UIAlertAction(title: "Закрепить обсуждение", style: .default) { action in
                         
-                        
+                        self.fixTopic()
                     }
                     alertController.addAction(action4)
                 } else {
                     let action4 = UIAlertAction(title: "Открепить обсуждение", style: .destructive) { action in
                         
-                        
+                        self.fixTopic()
                     }
                     alertController.addAction(action4)
                 }
@@ -189,13 +190,13 @@ class TopicController: UIViewController, UITableViewDelegate, UITableViewDataSou
                 if topic.isClosed == 0 {
                     let action5 = UIAlertAction(title: "Запретить комментирование", style: .destructive) { action in
                         
-                        
+                        self.closeTopic()
                     }
                     alertController.addAction(action5)
                 } else {
-                    let action5 = UIAlertAction(title: "Разрешить комментирование", style: .destructive) { action in
+                    let action5 = UIAlertAction(title: "Разрешить комментирование", style: .default) { action in
                         
-                        
+                        self.closeTopic()
                     }
                     alertController.addAction(action5)
                 }
@@ -203,7 +204,25 @@ class TopicController: UIViewController, UITableViewDelegate, UITableViewDataSou
                 
                 let action6 = UIAlertAction(title: "Удалить обсуждение", style: .destructive) { action in
                     
+                    let appearance = SCLAlertView.SCLAppearance(
+                        kTitleTop: 32.0,
+                        kWindowWidth: 400,
+                        kTitleFont: UIFont(name: "Verdana-Bold", size: 14)!,
+                        kTextFont: UIFont(name: "Verdana", size: 15)!,
+                        kButtonFont: UIFont(name: "Verdana", size: 16)!,
+                        showCloseButton: false,
+                        showCircularIcon: true
+                    )
+                    let alertView = SCLAlertView(appearance: appearance)
                     
+                    alertView.addButton("Да, хочу удалить") {
+                        
+                        self.deleteTopic()
+                    }
+                    
+                    alertView.addButton("Нет, я передумал") {}
+                    
+                    alertView.showWarning("Подтверждение!", subTitle: "Внимание! Данное действие необратимо.\nВы действительно хотите удалить данное обсуждение?")
                 }
                 alertController.addAction(action6)
             }
@@ -677,5 +696,44 @@ class TopicController: UIViewController, UITableViewDelegate, UITableViewDataSou
         self.attachPanel.replyID = 0
         
         self.tableView.reloadData()
+    }
+    
+    func changeTitleTopic(oldTitle: String) {
+        
+        let appearance = SCLAlertView.SCLAppearance(
+            kTitleTop: 32.0,
+            kWindowWidth: 300,
+            kTitleFont: UIFont(name: "Verdana-Bold", size: 14)!,
+            kTextFont: UIFont(name: "Verdana", size: 15)!,
+            kButtonFont: UIFont(name: "Verdana", size: 16)!,
+            showCloseButton: false
+        )
+        
+        let alert = SCLAlertView(appearance: appearance)
+        
+        let textView = UITextView(frame: CGRect(x: 0, y: 0, width: 274, height: 100))
+        
+        textView.layer.borderColor = UIColor.init(displayP3Red: 0/255, green: 84/255, blue: 147/255, alpha: 1).cgColor
+        textView.layer.borderWidth = 1
+        textView.layer.cornerRadius = 5
+        textView.backgroundColor = UIColor.init(red: 242/255, green: 242/255, blue: 242/255, alpha: 0.75)
+        textView.font = UIFont(name: "Verdana", size: 13)
+        textView.textColor = UIColor.init(displayP3Red: 0/255, green: 84/255, blue: 147/255, alpha: 1)
+        textView.text = oldTitle
+        
+        alert.customSubview = textView
+        
+        alert.addButton("Сохранить", backgroundColor: UIColor.init(displayP3Red: 0/255, green: 84/255, blue: 147/255, alpha: 1), textColor: UIColor.white) {
+            
+            if let text = textView.text {
+                self.editTopic(newTitle: text)
+            }
+        }
+        
+        alert.addButton("Отмена", backgroundColor: UIColor.init(displayP3Red: 0/255, green: 84/255, blue: 147/255, alpha: 1), textColor: UIColor.white) {
+            
+        }
+        
+        alert.showInfo("", subTitle: "", closeButtonTitle: "Сохранить")
     }
 }

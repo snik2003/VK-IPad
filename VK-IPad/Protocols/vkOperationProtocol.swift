@@ -620,6 +620,203 @@ extension UIViewController: VkOperationProtocol {
         }
     }
     
+    func fixTopic() {
+        
+        if let controller = self as? TopicController, controller.topics.count > 0 {
+            
+            let topic = controller.topics[0]
+            
+            var url = ""
+            
+            if topic.isFixed == 0 {
+                url = "/method/board.fixTopic"
+            } else {
+                url = "/method/board.unfixTopic"
+            }
+            
+            let parameters = [
+                "access_token": vkSingleton.shared.accessToken,
+                "group_id": controller.groupID,
+                "topic_id": controller.topicID,
+                "v": vkSingleton.shared.version
+            ]
+            
+            let request = GetServerDataOperation(url: url, parameters: parameters)
+            request.completionBlock = {
+                guard let data = request.data else { return }
+                
+                guard let json = try? JSON(data: data) else { print("json error"); return }
+                
+                let error = ErrorJson(json: JSON.null)
+                error.errorCode = json["error"]["error_code"].intValue
+                error.errorMsg = json["error"]["error_msg"].stringValue
+                
+                if error.errorCode == 0 {
+                    if topic.isFixed == 0 {
+                        controller.topics[0].isFixed = 1
+                    } else {
+                        controller.topics[0].isFixed = 0
+                    }
+                    
+                    OperationQueue.main.addOperation {
+                        controller.tableView.reloadData()
+                        
+                        if let delegate = controller.delegate as? TopicsListController {
+                            delegate.offset = 0
+                            delegate.getTopics()
+                        }
+                    }
+                } else {
+                    self.showErrorMessage(title: "Редактирование обсуждения", msg: "\nОшибка #\(error.errorCode): \(error.errorMsg)\n")
+                }
+            }
+            OperationQueue().addOperation(request)
+        }
+    }
+    
+    func closeTopic() {
+        
+        if let controller = self as? TopicController, controller.topics.count > 0 {
+            
+            let topic = controller.topics[0]
+            
+            var url = ""
+            
+            if topic.isClosed == 0 {
+                url = "/method/board.closeTopic"
+            } else {
+                url = "/method/board.openTopic"
+            }
+            
+            let parameters = [
+                "access_token": vkSingleton.shared.accessToken,
+                "group_id": controller.groupID,
+                "topic_id": controller.topicID,
+                "v": vkSingleton.shared.version
+            ]
+            
+            let request = GetServerDataOperation(url: url, parameters: parameters)
+            request.completionBlock = {
+                guard let data = request.data else { return }
+                
+                guard let json = try? JSON(data: data) else { print("json error"); return }
+                
+                let error = ErrorJson(json: JSON.null)
+                error.errorCode = json["error"]["error_code"].intValue
+                error.errorMsg = json["error"]["error_msg"].stringValue
+                
+                if error.errorCode == 0 {
+                    OperationQueue.main.addOperation {
+                        OperationQueue.main.addOperation {
+                            controller.tableView.removeFromSuperview()
+                            controller.commentView.removeFromSuperview()
+                            
+                            controller.createTableView()
+                            
+                            if topic.isClosed == 0 {
+                                controller.topics[0].isClosed = 1
+                            
+                                controller.tableView.frame = CGRect(x: 0, y: 0, width: controller.width, height: controller.view.bounds.height)
+                                controller.view.addSubview(controller.tableView)
+                                controller.commentView.removeFromSuperview()
+                            } else {
+                                controller.topics[0].isClosed = 0
+                                controller.view.addSubview(controller.commentView)
+                            }
+                            
+                            controller.tableView.reloadData()
+                            
+                            if let delegate = controller.delegate as? TopicsListController {
+                                delegate.offset = 0
+                                delegate.getTopics()
+                            }
+                        }
+                    }
+                } else {
+                    self.showErrorMessage(title: "Редактирование обсуждения", msg: "\nОшибка #\(error.errorCode): \(error.errorMsg)\n")
+                }
+            }
+            OperationQueue().addOperation(request)
+        }
+    }
+    
+    func editTopic(newTitle: String) {
+        
+        if let controller = self as? TopicController {
+            let url = "/method/board.editTopic"
+            let parameters = [
+                "access_token": vkSingleton.shared.accessToken,
+                "group_id": controller.groupID,
+                "topic_id": controller.topicID,
+                "title": newTitle,
+                "v": vkSingleton.shared.version
+            ]
+            
+            let request = GetServerDataOperation(url: url, parameters: parameters)
+            request.completionBlock = {
+                guard let data = request.data else { return }
+                
+                guard let json = try? JSON(data: data) else { print("json error"); return }
+                
+                let error = ErrorJson(json: JSON.null)
+                error.errorCode = json["error"]["error_code"].intValue
+                error.errorMsg = json["error"]["error_msg"].stringValue
+                
+                if error.errorCode == 0 {
+                    controller.topics[0].title = newTitle
+                    OperationQueue.main.addOperation {
+                        controller.tableView.reloadData()
+                        
+                        if let delegate = controller.delegate as? TopicsListController {
+                            delegate.offset = 0
+                            delegate.getTopics()
+                        }
+                    }
+                } else {
+                    self.showErrorMessage(title: "Редактирование обсуждения", msg: "\nОшибка #\(error.errorCode): \(error.errorMsg)\n")
+                }
+            }
+            OperationQueue().addOperation(request)
+        }
+    }
+    
+    func deleteTopic() {
+        
+        if let controller = self as? TopicController {
+            let url = "/method/board.deleteTopic"
+            let parameters = [
+                "access_token": vkSingleton.shared.accessToken,
+                "group_id": controller.groupID,
+                "topic_id": controller.topicID,
+                "v": vkSingleton.shared.version
+            ]
+            
+            let request = GetServerDataOperation(url: url, parameters: parameters)
+            request.completionBlock = {
+                guard let data = request.data else { return }
+                
+                guard let json = try? JSON(data: data) else { print("json error"); return }
+                
+                let error = ErrorJson(json: JSON.null)
+                error.errorCode = json["error"]["error_code"].intValue
+                error.errorMsg = json["error"]["error_msg"].stringValue
+                
+                if error.errorCode == 0 {
+                    OperationQueue.main.addOperation {
+                        if let delegate = controller.delegate as? TopicsListController {
+                            delegate.offset = 0
+                            delegate.getTopics()
+                        }
+                        controller.navigationController?.popViewController(animated: true)
+                    }
+                } else {
+                    self.showErrorMessage(title: "Удаление обсуждения", msg: "\nОшибка #\(error.errorCode): \(error.errorMsg)\n")
+                }
+            }
+            OperationQueue().addOperation(request)
+        }
+    }
+    
     func addLinkToFave(object: AnyObject) {
         
         var text = ""
@@ -951,15 +1148,10 @@ extension UIViewController: VkOperationProtocol {
                 let error = ErrorJson(json: JSON.null)
                 error.errorCode = json["error"]["error_code"].intValue
                 error.errorMsg = json["error"]["error_msg"].stringValue
-                //print(json)
                 
                 if error.errorCode == 0 {
                     self.showSuccessMessage(title: "Приглашение в сообщество", msg: "Приглашение в сообщество «\(group.name)» успешно выслано \(friend.firstNameDat) \(friend.lastNameDat).")
-                } /*else if error.errorCode == 15 {
-                    self.showErrorMessage(title: "Ошибка приглашения", msg: "#15: \(friend.firstName) \(friend.lastName) запретил приглашать себя в сообщества.")
-                } else if error.errorCode == 103 {
-                    self.showErrorMessage(title: "Ошибка приглашения", msg: "#103: Превышен лимит!")
-                } */else {
+                } else {
                     self.showErrorMessage(title: "Ошибка приглашения", msg: "#\(error.errorCode): \(error.errorMsg)")
                 }
             }

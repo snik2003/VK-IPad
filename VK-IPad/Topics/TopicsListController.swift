@@ -155,7 +155,7 @@ class TopicsListController: UIViewController, UITableViewDelegate, UITableViewDa
                 let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
                 alertController2.addAction(cancelAction)
                 
-                let action1 = UIAlertAction(title: "По убыванию даты изменения     ", style: self.getAlertActionStyle(1)) { action in
+                let action1 = UIAlertAction(title: "По убыванию даты изменения", style: self.getAlertActionStyle(1)) { action in
                     
                     self.order = 1
                     self.topics.removeAll(keepingCapacity: false)
@@ -165,7 +165,7 @@ class TopicsListController: UIViewController, UITableViewDelegate, UITableViewDa
                 }
                 alertController2.addAction(action1)
                 
-                let action2 = UIAlertAction(title: "По убыванию даты создания     ", style: self.getAlertActionStyle(2)) { action in
+                let action2 = UIAlertAction(title: "По убыванию даты создания", style: self.getAlertActionStyle(2)) { action in
                     
                     self.order = 2
                     self.topics.removeAll(keepingCapacity: false)
