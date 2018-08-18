@@ -6,7 +6,7 @@
 //  Copyright © 2018 Sergey Nikitin. All rights reserved.
 //
 
-import Foundation
+import UIKit
 import SwiftyJSON
 
 class UserProfile {
@@ -409,5 +409,95 @@ extension UserProfile {
             }
         }
         return list
+    }
+    
+    func reportMenu(delegate: UIViewController) {
+        let alertController = UIAlertController(title: "Жалоба на пользователя", message: "Введите комментарий и укажите тип жалобы", preferredStyle: .alert)
+        
+        let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
+        alertController.addAction(cancelAction)
+        
+        alertController.addTextField(configurationHandler: { textField in
+            textField.placeholder = "Комментарий к жалобе"
+            textField.font = UIFont(name: "Verdana", size: 14)
+            textField.layer.borderColor = vkSingleton.shared.mainColor.cgColor
+            textField.layer.cornerRadius = 4
+            textField.resignFirstResponder()
+        })
+        
+        let action1 = UIAlertAction(title: "Порнография", style: .default) { action in
+            
+            if let textView = alertController.textFields?.first, let yourComment = textView.text {
+                self.reportUser(delegate: delegate, type: "porn", comment: yourComment)
+            } else {
+                self.reportUser(delegate: delegate, type: "porn", comment: "")
+            }
+        }
+        alertController.addAction(action1)
+        
+        let action2 = UIAlertAction(title: "Рассылка спама", style: .default) { action in
+            if let textView = alertController.textFields?.first, let yourComment = textView.text {
+                self.reportUser(delegate: delegate, type: "spam", comment: yourComment)
+            } else {
+                self.reportUser(delegate: delegate, type: "spam", comment: "")
+            }
+        }
+        alertController.addAction(action2)
+        
+        let action3 = UIAlertAction(title: "Оскорбительное поведение", style: .default) { action in
+            if let textView = alertController.textFields?.first, let yourComment = textView.text {
+                self.reportUser(delegate: delegate, type: "insult", comment: yourComment)
+            } else {
+                self.reportUser(delegate: delegate, type: "insult", comment: "")
+            }
+        }
+        alertController.addAction(action3)
+        
+        let action4 = UIAlertAction(title: "Реклама, засоряющая поиск", style: .default) { action in
+            if let textView = alertController.textFields?.first, let yourComment = textView.text {
+                self.reportUser(delegate: delegate, type: "advertisment", comment: yourComment)
+            } else {
+                self.reportUser(delegate: delegate, type: "advertisment", comment: "")
+            }
+        }
+        alertController.addAction(action4)
+        
+        if let popoverController = alertController.popoverPresentationController {
+            let bounds = delegate.view.bounds
+            popoverController.sourceView = delegate.view
+            popoverController.sourceRect = CGRect(x: bounds.midX, y: bounds.midY, width: 0, height: 0)
+            popoverController.permittedArrowDirections = []
+        }
+        
+        delegate.present(alertController, animated: true)
+    }
+    
+    func reportUser(delegate: UIViewController, type: String, comment: String) {
+        
+        let url = "/method/users.report"
+        let parameters = [
+            "access_token": vkSingleton.shared.accessToken,
+            "user_id": self.uid,
+            "type": type,
+            "comment": comment,
+            "v": vkSingleton.shared.version
+        ]
+        
+        let request = GetServerDataOperation(url: url, parameters: parameters)
+        request.completionBlock = {
+            guard let data = request.data else { return }
+            guard let json = try? JSON(data: data) else { print("json error"); return }
+            
+            let error = ErrorJson(json: JSON.null)
+            error.errorCode = json["error"]["error_code"].intValue
+            error.errorMsg = json["error"]["error_msg"].stringValue
+            
+            if error.errorCode == 0 {
+                delegate.showSuccessMessage(title: "Жалоба на пользователя", msg: "Ваша жалоба на пользователя успешно отправлена.")
+            } else {
+                delegate.showErrorMessage(title: "Жалоба на пользователя", msg: "#\(error.errorCode): \(error.errorMsg)")
+            }
+        }
+        OperationQueue().addOperation(request)
     }
 }

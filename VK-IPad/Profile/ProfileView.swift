@@ -413,6 +413,7 @@ class ProfileView: UIView {
         
         let action5 = UIAlertAction(title: "Пожаловаться", style: .destructive) { action in
             
+            self.user.reportMenu(delegate: self.delegate)
         }
         alertController.addAction(action5)
         
