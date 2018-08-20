@@ -33,6 +33,7 @@ class NewRecordController: UIViewController, UITableViewDelegate, UITableViewDat
     var closeComments = false
     var postponed = false
     var postponedDate = 0
+    var suggested = false
     
     @IBOutlet weak var attachButton: UIBarButtonItem!
     @IBOutlet weak var previewButton: UIBarButtonItem!
@@ -92,7 +93,7 @@ class NewRecordController: UIViewController, UITableViewDelegate, UITableViewDat
         tableView.contentInset = contentInsets
         tableView.scrollIndicatorInsets = contentInsets
         
-        tableView.scrollToRow(at: IndexPath(row: 3, section: 0), at: .top, animated: false)
+        tableView.scrollToRow(at: IndexPath(row: 4, section: 0), at: .top, animated: false)
     }
     
     @objc func keyboardWillBeHidden(notification: NSNotification) {
@@ -114,7 +115,7 @@ class NewRecordController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 7
+        return 8
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -122,18 +123,23 @@ class NewRecordController: UIViewController, UITableViewDelegate, UITableViewDat
         switch indexPath.row {
         case 0:
             return attachPanel.frame.height + 5
-        case 1,2:
+        case 1,3:
+            if suggested {
+                return 0
+            }
             return 40
-        case 3:
-            return 310
+        case 2:
+            return 0
         case 4:
-            return 20
+            return 310
         case 5:
+            return 20
+        case 6:
             if postponed && !setDate {
                 return 20
             }
             return 0
-        case 6:
+        case 7:
             if postponed && setDate {
                 return 250
             }
@@ -156,18 +162,25 @@ class NewRecordController: UIViewController, UITableViewDelegate, UITableViewDat
             
             cell.removeAllSubviews()
             
-            cell.delegate = self
-            cell.header = "Отложенная по времени запись"
-            cell.desc = ""
-            cell.cellWidth = self.width
-            cell.optSwitch.isOn = postponed
-            cell.optSwitch.addTarget(self, action: #selector(postponedSwitchValueChanged(sender:)), for: .valueChanged)
-            cell.configureCell()
-            
-            if mode == .edit, let record = record {
-                if record.postType != "postpone" {
-                    cell.headerLabel.isEnabled = false
-                    cell.optSwitch.isEnabled = false
+            if !suggested {
+                cell.delegate = self
+                cell.header = "Отложить публикацию записи"
+                cell.desc = ""
+                cell.cellWidth = self.width
+                cell.optSwitch.isOn = postponed
+                cell.optSwitch.addTarget(self, action: #selector(postponedSwitchValueChanged(sender:)), for: .valueChanged)
+                cell.configureCell()
+                
+                if mode == .edit, let record = record {
+                    if record.postType != "postpone" {
+                        cell.headerLabel.isEnabled = false
+                        cell.optSwitch.isEnabled = false
+                    }
+                    
+                    if record.postType == "suggest" && vkSingleton.shared.adminGroupID.contains(abs(record.ownerID)){
+                        cell.headerLabel.isEnabled = true
+                        cell.optSwitch.isEnabled = true
+                    }
                 }
             }
             
@@ -178,24 +191,16 @@ class NewRecordController: UIViewController, UITableViewDelegate, UITableViewDat
             let cell = tableView.dequeueReusableCell(withIdentifier: "switchCell") as! SwitchOptionCell
             
             cell.removeAllSubviews()
-            if let id = Int(self.ownerID) {
+            
+            /*if !suggested {
                 cell.delegate = self
-                if id > 0 {
-                    cell.header = "Публикация только для друзей"
-                    cell.optSwitch.isOn = onlyFriends
-                    cell.optSwitch.add(for: .valueChanged) {
-                        self.onlyFriends = cell.optSwitch.isOn
-                    }
-                } else {
-                    cell.header = "Добавить к записи мою подпись"
-                    cell.optSwitch.isOn = addSigner
-                    cell.optSwitch.add(for: .valueChanged) {
-                        self.addSigner = cell.optSwitch.isOn
-                    }
-                }
+                cell.header = "Запретить комментарии записи"
                 cell.desc = ""
                 cell.cellWidth = self.width
-                
+                cell.optSwitch.isOn = closeComments
+                cell.optSwitch.add(for: .valueChanged) {
+                    self.closeComments = cell.optSwitch.isOn
+                }
                 cell.configureCell()
                 
                 if mode == .edit, let record = record {
@@ -204,12 +209,50 @@ class NewRecordController: UIViewController, UITableViewDelegate, UITableViewDat
                         cell.optSwitch.isEnabled = false
                     }
                 }
-            }
+            }*/
             
             cell.selectionStyle = .none
             
             return cell
         case 3:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "switchCell") as! SwitchOptionCell
+            
+            cell.removeAllSubviews()
+            
+            if !suggested {
+                if let id = Int(self.ownerID) {
+                    cell.delegate = self
+                    if id > 0 {
+                        cell.header = "Публикация только для друзей"
+                        cell.optSwitch.isOn = onlyFriends
+                        cell.optSwitch.add(for: .valueChanged) {
+                            self.onlyFriends = cell.optSwitch.isOn
+                        }
+                    } else {
+                        cell.header = "Добавить к записи мою подпись"
+                        cell.optSwitch.isOn = addSigner
+                        cell.optSwitch.add(for: .valueChanged) {
+                            self.addSigner = cell.optSwitch.isOn
+                        }
+                    }
+                    cell.desc = ""
+                    cell.cellWidth = self.width
+                    
+                    cell.configureCell()
+                    
+                    if mode == .edit, let record = record {
+                        if record.postType != "postpone" && record.postType != "suggest" {
+                            cell.headerLabel.isEnabled = false
+                            cell.optSwitch.isEnabled = false
+                        }
+                    }
+                }
+            }
+            
+            cell.selectionStyle = .none
+            
+            return cell
+        case 4:
             let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
             
             cell.removeAllSubviews()
@@ -227,7 +270,7 @@ class NewRecordController: UIViewController, UITableViewDelegate, UITableViewDat
             cell.selectionStyle = .none
             
             return cell
-        case 4:
+        case 5:
             let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
             
             cell.removeAllSubviews()
@@ -255,7 +298,7 @@ class NewRecordController: UIViewController, UITableViewDelegate, UITableViewDat
             cell.selectionStyle = .none
             
             return cell
-        case 5:
+        case 6:
             let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
             
             cell.removeAllSubviews()
@@ -275,14 +318,14 @@ class NewRecordController: UIViewController, UITableViewDelegate, UITableViewDat
                     
                     self.setDate = true
                     self.tableView.reloadData()
-                    self.tableView.scrollToRow(at: IndexPath(row: 6, section: 0), at: .bottom, animated: false)
+                    self.tableView.scrollToRow(at: IndexPath(row: 7, section: 0), at: .bottom, animated: false)
                 }
             }
             
             cell.selectionStyle = .none
             
             return cell
-        case 6:
+        case 7:
             let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
             
             cell.removeAllSubviews()
@@ -320,7 +363,7 @@ class NewRecordController: UIViewController, UITableViewDelegate, UITableViewDat
                     self.postponedDate = Int(datePicker.date.timeIntervalSince1970)
                     self.setDate = false
                     self.tableView.reloadData()
-                    self.tableView.scrollToRow(at: IndexPath(row: 5, section: 0), at: .bottom, animated: false)
+                    self.tableView.scrollToRow(at: IndexPath(row: 6, section: 0), at: .bottom, animated: false)
                 }
             }
             
@@ -340,12 +383,29 @@ class NewRecordController: UIViewController, UITableViewDelegate, UITableViewDat
         
         textView.text = ""
         
+        if mode == .new {
+            if let controller = delegate as? GroupProfileViewController, controller.groupProfile.count > 0 {
+                let group = controller.groupProfile[0]
+                
+                if group.type == "page" {
+                    suggested = true
+                }
+            }
+        }
+        
         if mode == .edit, let record = record {
             textView.text = record.text
             
             if record.postType == "postpone" {
                 postponed = true
                 postponedDate = record.date
+            }
+            
+            if record.postType == "suggest" {
+                suggested = true
+                if vkSingleton.shared.adminGroupID.contains(abs(record.ownerID)) {
+                    suggested = false
+                }
             }
             
             if record.ownerID > 0 {
@@ -404,13 +464,29 @@ class NewRecordController: UIViewController, UITableViewDelegate, UITableViewDat
         
         var canPost = false
         
-        if mode == .edit, let record = record {
+        if mode == .edit {
+            let record = Record(json: JSON.null)
+            
+            print("fromID = \(self.record.fromID)")
             
             record.canComment = 0
             record.text = textView.text
             
+            record.ownerID = self.record.ownerID
+            record.fromID = self.record.fromID
+            record.postType = self.record.postType
+            record.date = self.record.date
+            record.friendsOnly = self.record.friendsOnly
+            record.signerID = self.record.signerID
+            
             if record.postType == "postpone" {
-                record.date = self.postponedDate
+                record.date = Int(Date().timeIntervalSince1970)
+                record.postType = "post"
+                
+                if postponed {
+                    record.postType = "postpone"
+                    record.date = self.postponedDate
+                }
                 
                 if record.ownerID > 0 {
                     if self.onlyFriends {
@@ -426,6 +502,27 @@ class NewRecordController: UIViewController, UITableViewDelegate, UITableViewDat
                     }
                 }
             }
+            
+            if record.postType == "suggest" {
+                record.date = Int(Date().timeIntervalSince1970)
+                record.postType = "post"
+                
+                if vkSingleton.shared.adminGroupID.contains(abs(record.ownerID)) {
+                    if addSigner {
+                        record.signerID = self.record.fromID
+                    } else {
+                        record.signerID = 0
+                    }
+                    
+                    record.fromID = self.record.ownerID
+                    
+                    if postponed {
+                        record.postType = "postpone"
+                        record.date = self.postponedDate
+                    }
+                }
+            }
+            
             
             record.attachments.removeAll(keepingCapacity: false)
             for object in attachPanel.attachArray {
@@ -484,7 +581,6 @@ class NewRecordController: UIViewController, UITableViewDelegate, UITableViewDat
             if let id = Int(ownerID) {
                 record.ownerID = id
                 
-                
                 if id > 0 {
                     if let fromID = Int(vkSingleton.shared.userID) {
                         record.fromID = fromID
@@ -509,6 +605,12 @@ class NewRecordController: UIViewController, UITableViewDelegate, UITableViewDat
                 record.date = self.postponedDate
             } else {
                 record.date = Int(Date().timeIntervalSince1970)
+            }
+            
+            if suggested {
+                if let id = Int(vkSingleton.shared.userID) {
+                    record.fromID = id
+                }
             }
             
             for object in attachPanel.attachArray {
@@ -566,7 +668,7 @@ class NewRecordController: UIViewController, UITableViewDelegate, UITableViewDat
             }
         }
         
-         if canPost {
+        if canPost {
             if let split = self.splitViewController {
                 let detail = split.viewControllers[split.viewControllers.endIndex - 1]
                 detail.childViewControllers[0].navigationController?.pushViewController(controller, animated: true)

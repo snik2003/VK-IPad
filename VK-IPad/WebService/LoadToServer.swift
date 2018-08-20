@@ -143,7 +143,7 @@ class LoadToServer {
                             guard let data = request.data else { return }
                             
                             let json3 = try! JSON(data: data)
-                            print(json3)
+                            //print(json3)
                             
                             let error = ErrorJson(json: JSON.null)
                             error.errorCode = json3["error"]["error_code"].intValue
@@ -228,7 +228,6 @@ extension LoadToServer {
             data, response, error in
             
             guard let json = try? JSON(data: data!) else { print("json error"); return }
-            print(json)
             
             let error = ErrorJson(json: JSON.null)
             error.errorMsg = json["error"].stringValue

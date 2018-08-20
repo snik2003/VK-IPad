@@ -60,7 +60,7 @@ extension Comment {
                 title = "Жалоба на комментарий к фотографии"
             }
         } else if delegate is VideoController {
-            title = "Жалоба на комментарий к видеозаписи"
+            title = "Жалоба на комментарий к видео"
         }
         
         
