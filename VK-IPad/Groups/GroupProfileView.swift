@@ -519,7 +519,7 @@ class GroupProfileView: UIView {
             if profile.contacts.count > 0 {
                 let action1 = UIAlertAction(title: "Контакты сообщества", style: .default) { action in
                     
-                    
+                    profile.showContactsView(delegate: self.delegate, startView: self.dopButton)
                 }
                 alertController.addAction(action1)
             }
@@ -1217,7 +1217,7 @@ class GroupProfileView: UIView {
     
     func setRecordsButton(view: UIView, topY: CGFloat) {
         
-        if profile.canPost == 1 {
+        if (profile.canPost == 1) {
             newRecordButton.setTitle("Новая запись", for: .normal)
             newRecordButton.setTitleColor(newRecordButton.tintColor, for: .normal)
             newRecordButton.setTitleColor(UIColor.black, for: .highlighted)
@@ -1233,13 +1233,34 @@ class GroupProfileView: UIView {
                 self.delegate.openNewRecordController(ownerID: "-\(self.profile.gid)", mode: .new, title: title)
             }
             
-            newRecordButton.frame = CGRect(x: 10, y: 5, width: 100, height: buttonHeight)
+            newRecordButton.frame = CGRect(x: 10, y: 5, width: 150, height: buttonHeight)
+            view.addSubview(newRecordButton)
+        } else if profile.type == "page" {
+            newRecordButton.setTitle("Предложить новость", for: .normal)
+            newRecordButton.setTitleColor(newRecordButton.tintColor, for: .normal)
+            newRecordButton.setTitleColor(UIColor.black, for: .highlighted)
+            newRecordButton.setTitleColor(UIColor.black, for: .selected)
+            newRecordButton.titleLabel?.font = UIFont(name: "Verdana", size: 13)!
+            newRecordButton.contentHorizontalAlignment = .left
+            newRecordButton.contentMode = .center
+            
+            newRecordButton.add(for: .touchUpInside) {
+                self.newRecordButton.buttonTouched()
+                
+                let title = "Предложить новость в сообщество"
+                self.delegate.openNewRecordController(ownerID: "-\(self.profile.gid)", mode: .new, title: title)
+            }
+            
+            newRecordButton.frame = CGRect(x: 10, y: 5, width: 150, height: buttonHeight)
             view.addSubview(newRecordButton)
         }
         
-        if delegate.postponedWall.count > 0 {
+        
+        
+        if profile.type == "group" && delegate.postponedWall.count > 0 {
             postponedButton.setTitle("Отложенные записи (\(delegate.postponedWall.count))", for: .normal)
             postponedButton.setTitle("Отложенные записи (\(delegate.postponedWall.count))", for: .selected)
+            
             postponedButton.titleLabel?.font = UIFont(name: "Verdana", size: 12)!
             postponedButton.titleLabel?.adjustsFontSizeToFitWidth = true
             postponedButton.titleLabel?.minimumScaleFactor = 0.6
@@ -1262,7 +1283,37 @@ class GroupProfileView: UIView {
                 
                 self.delegate.refreshWall(filter: "postponed")
             }
-            postponedButton.frame = CGRect(x: view.bounds.width / 2 - 80, y: 5, width: 160, height: buttonHeight)
+            postponedButton.frame = CGRect(x: view.bounds.width / 2 - 100, y: 5, width: 200, height: buttonHeight)
+            view.addSubview(postponedButton)
+        }
+        
+        if profile.type == "page" && delegate.suggestedWall.count > 0 {
+            postponedButton.setTitle("Предложенные записи (\(delegate.suggestedWall.count))", for: .normal)
+            postponedButton.setTitle("Предложенные записи (\(delegate.suggestedWall.count))", for: .selected)
+            
+            postponedButton.titleLabel?.font = UIFont(name: "Verdana", size: 12)!
+            postponedButton.titleLabel?.adjustsFontSizeToFitWidth = true
+            postponedButton.titleLabel?.minimumScaleFactor = 0.6
+            
+            postponedButton.isSelected = false
+            postponedButton.setTitleColor(UIColor.black, for: .normal)
+            postponedButton.clipsToBounds = true
+            postponedButton.backgroundColor = UIColor.lightGray
+            postponedButton.tintColor = UIColor.lightGray
+            postponedButton.layer.cornerRadius = 5
+            
+            postponedButton.add(for: .touchUpInside) {
+                self.postponedButton.buttonTouched()
+                self.delegate.offset = 0
+                
+                self.allRecordsButton.isSelected = false
+                self.ownerButton.isSelected = false
+                self.othersButton.isSelected = false
+                self.postponedButton.isSelected = true
+                
+                self.delegate.refreshWall(filter: "suggests")
+            }
+            postponedButton.frame = CGRect(x: view.bounds.width / 2 - 100, y: 5, width: 200, height: buttonHeight)
             view.addSubview(postponedButton)
         }
         

@@ -8,6 +8,7 @@
 
 import Foundation
 import SwiftyJSON
+import Popover
 
 class GroupProfile {
     var gid: Int = 0
@@ -161,5 +162,200 @@ extension GroupProfile {
         }
         
         return ""
+    }
+    
+    var contactList: String {
+        
+        var contactsIDs = ""
+        for contact in self.contacts {
+            if contactsIDs != "" {
+                contactsIDs = "\(contactsIDs),"
+            }
+            contactsIDs = "\(contactsIDs)\(contact.userID)"
+        }
+        return contactsIDs
+    }
+    
+    func showContactsView(delegate: UIViewController, startView: UIView) {
+        
+        let url = "/method/users.get"
+        let parameters = [
+            "access_token": vkSingleton.shared.accessToken,
+            "user_ids": self.contactList,
+            "fields": "id,first_name,last_name,last_seen,photo_max_orig,deactivated,online,sex",
+            "v": vkSingleton.shared.version
+        ]
+        
+        let getServerDataOperation = GetServerDataOperation(url: url, parameters: parameters)
+        getServerDataOperation.completionBlock = {
+            guard let data = getServerDataOperation.data else { return }
+            guard let json = try? JSON(data: data) else { print("json error"); return }
+            
+            let users = json["response"].compactMap { UserProfile(json: $0.1) }
+            
+            OperationQueue.main.addOperation {
+                let contactsView = UIView()
+            
+                var width: CGFloat = 0
+                var height: CGFloat = 20
+                
+                for contact in self.contacts {
+                    let user = users.filter({ $0.uid == "\(contact.userID)" })
+                    if user.count > 0 {
+                        let view = self.contactView(delegate: delegate, user: user[0], contact: contact, topY: height)
+                        contactsView.addSubview(view)
+                        height += view.frame.height
+                        if view.frame.width > width {
+                            width = view.frame.width
+                        }
+                    }
+                }
+                
+                
+                //height += 10
+                contactsView.frame = CGRect(x: 0, y: 0, width: width + 20, height: height)
+                
+                let bounds = startView.frame
+                let point = CGPoint(x: bounds.midX + 10, y: bounds.maxY + 10)
+                
+                let popoverOptions: [PopoverOption] = [
+                    //.arrowSize(CGSize.zero),
+                    .type(.down),
+                    .cornerRadius(6),
+                    .color(UIColor.white),
+                    .blackOverlayColor(UIColor.gray.withAlphaComponent(0.75))
+                ]
+                
+                let popover = Popover(options: popoverOptions)
+                popover.show(contactsView, point: point, inView: delegate.view)
+            }
+        }
+        OperationQueue().addOperation(getServerDataOperation)
+    }
+    
+    func contactView(delegate: UIViewController, user: UserProfile, contact: Contact, topY: CGFloat) -> UIView {
+        
+        let view = UIView()
+        
+        let maxWidth: CGFloat = 600
+        var width: CGFloat = 0
+        var height: CGFloat = 0
+        
+        let nameFont = UIFont(name: "Verdana-Bold", size: 14)!
+        let contactFont = UIFont(name: "Verdana", size: 12)!
+        
+        let getCacheImage = GetCacheImage(url: user.maxPhotoOrigURL, lifeTime: .avatarImage)
+        getCacheImage.completionBlock = {
+            OperationQueue.main.addOperation {
+                let avatarImage = UIImageView()
+                avatarImage.image = getCacheImage.outputImage
+                avatarImage.clipsToBounds = true
+                avatarImage.layer.cornerRadius = 19
+                avatarImage.frame = CGRect(x: 10, y: 5, width: 40, height: 40)
+                avatarImage.contentMode = .scaleAspectFill
+                view.addSubview(avatarImage)
+            }
+        }
+        OperationQueue().addOperation(getCacheImage)
+        
+        var start: CGFloat = 15
+        if contact.desc != "" {
+            start += 15
+        }
+        if contact.phone != "" {
+            start += 15
+        }
+        if contact.email != "" {
+            start += 15
+        }
+        var startX: CGFloat = 0
+        if start < 40 {
+            startX = (40 - start) / 2
+        }
+        
+        let nameLabel = UILabel()
+        nameLabel.attributedText = nil
+        nameLabel.text = "\(user.firstName) \(user.lastName)"
+        if user.onlineStatus == 1 {
+            if user.onlineMobile == 1 {
+                let fullString = "\(user.firstName) \(user.lastName) "
+                nameLabel.setOnlineMobileStatus(text: "\(fullString)", platform: user.platform)
+            } else {
+                let fullString = "\(user.firstName) \(user.lastName) ●"
+                let rangeOfColoredString = (fullString as NSString).range(of: "●")
+                let attributedString = NSMutableAttributedString(string: fullString)
+                
+                attributedString.setAttributes([NSAttributedStringKey.foregroundColor: nameLabel.tintColor], range: rangeOfColoredString)
+                
+                nameLabel.attributedText = attributedString
+            }
+        }
+        nameLabel.font = nameFont
+        //nameLabel.adjustsFontSizeToFitWidth = true
+        //nameLabel.minimumScaleFactor = 0.5
+        let size = delegate.getTextSize(text: nameLabel.text!, font: nameFont, maxWidth: maxWidth)
+        width = size.width
+        nameLabel.frame = CGRect(x: 60, y: 5 + startX, width: size.width, height: 15)
+        view.addSubview(nameLabel)
+        height += 20 + startX
+        
+        if contact.desc != "" {
+            let label = UILabel()
+            label.text = "\(contact.desc)"
+            label.font = contactFont
+            //label.adjustsFontSizeToFitWidth = true
+            //label.minimumScaleFactor = 0.5
+            let size = delegate.getTextSize(text: label.text!, font: contactFont, maxWidth: maxWidth)
+            if size.width > width {
+                width = size.width
+            }
+            label.frame = CGRect(x: 60, y: height, width: size.width, height: 15)
+            view.addSubview(label)
+            height += 15
+        }
+        
+        if contact.phone != "" {
+            let label = UILabel()
+            label.text = "\(contact.phone)"
+            label.font = contactFont
+            //label.adjustsFontSizeToFitWidth = true
+            //label.minimumScaleFactor = 0.5
+            let size = delegate.getTextSize(text: label.text!, font: contactFont, maxWidth: maxWidth)
+            if size.width > width {
+                width = size.width
+            }
+            label.frame = CGRect(x: 60, y: height, width: size.width, height: 15)
+            view.addSubview(label)
+            height += 15
+        }
+        
+        if contact.email != "" {
+            let label = UILabel()
+            label.text = "\(contact.email)"
+            label.font = contactFont
+            //label.adjustsFontSizeToFitWidth = true
+            //label.minimumScaleFactor = 0.5
+            let size = delegate.getTextSize(text: label.text!, font: contactFont, maxWidth: maxWidth)
+            if size.width > width {
+                width = size.width
+            }
+            label.frame = CGRect(x: 60, y: height, width: size.width, height: 15)
+            view.addSubview(label)
+            height += 15
+        }
+        
+        height = max(height, 50.0)
+        width = max(width, 200.0)
+        
+        view.frame = CGRect(x: 5, y: topY, width: 60 + width + 10, height: height)
+        
+        let tap = UITapGestureRecognizer()
+        tap.numberOfTapsRequired = 1
+        tap.add {
+            delegate.openProfileController(id: contact.userID, name: "\(user.firstName) \(user.lastName)")
+        }
+        view.addGestureRecognizer(tap)
+        view.isUserInteractionEnabled = true
+        return view
     }
 }

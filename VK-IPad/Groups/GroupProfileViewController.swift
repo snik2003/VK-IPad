@@ -26,6 +26,8 @@ class GroupProfileViewController: UITableViewController {
     var wallProfiles: [UserProfile] = []
     var wallGroups: [GroupProfile] = []
     
+    var suggestedWall: [Record] = []
+    
     var postponedWall: [Record] = []
     var postponedWallProfiles: [UserProfile] = []
     var postponedWallGroups: [GroupProfile] = []
@@ -71,7 +73,7 @@ class GroupProfileViewController: UITableViewController {
             cell.record = wall[indexPath.section]
             cell.cellWidth = self.tableView.frame.width
             cell.showLikesPanel = true
-            if self.filterRecords == "postponed" {
+            if self.filterRecords == "postponed" || self.filterRecords == "suggests" {
                 cell.showLikesPanel = false
             }
             
@@ -179,11 +181,10 @@ class GroupProfileViewController: UITableViewController {
         let getServerDataOperation2 = GetServerDataOperation(url: url2, parameters: parameters2)
         OperationQueue().addOperation(getServerDataOperation2)
         
-        
-        // парсим объект
         let parseGroupWall = ParseWall()
         parseGroupWall.addDependency(getServerDataOperation2)
         OperationQueue().addOperation(parseGroupWall)
+        
         
         let url3 = "/method/wall.get"
         let parameters3 = [
@@ -199,17 +200,35 @@ class GroupProfileViewController: UITableViewController {
         let getServerDataOperation3 = GetServerDataOperation(url: url3, parameters: parameters3)
         OperationQueue().addOperation(getServerDataOperation3)
         
-        
-        // парсим объект
         let parsePostponedGroupWall = ParseWall()
         parsePostponedGroupWall.addDependency(getServerDataOperation3)
         OperationQueue().addOperation(parsePostponedGroupWall)
         
-        // обновляем данные на UI
+        
+        let url4 = "/method/wall.get"
+        let parameters4 = [
+            "owner_id": "-\(groupID)",
+            "domain": "",
+            "access_token": vkSingleton.shared.accessToken,
+            "count": "100",
+            "filter": "suggests",
+            "extended": "1",
+            "v": vkSingleton.shared.version
+        ]
+        
+        let getServerDataOperation4 = GetServerDataOperation(url: url4, parameters: parameters4)
+        OperationQueue().addOperation(getServerDataOperation4)
+        
+        let parseSuggestedGroupWall = ParseWall()
+        parseSuggestedGroupWall.addDependency(getServerDataOperation4)
+        OperationQueue().addOperation(parseSuggestedGroupWall)
+        
+        
         let reloadTableController = ReloadGroupProfileController(controller: self)
         reloadTableController.addDependency(parseGroupWall)
         reloadTableController.addDependency(parseGroupProfile)
         reloadTableController.addDependency(parsePostponedGroupWall)
+        reloadTableController.addDependency(parseSuggestedGroupWall)
         OperationQueue.main.addOperation(reloadTableController)
     }
     
