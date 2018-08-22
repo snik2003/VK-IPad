@@ -20,6 +20,7 @@ class GroupProfileView: UIView {
     
     let usersMessageButton = UIButton()
     let ownerMessageButton = UIButton()
+    let contactsButton = UIButton()
     
     var allRecordsButton = UIButton()
     var ownerButton = UIButton()
@@ -259,6 +260,9 @@ class GroupProfileView: UIView {
         let leftX = 2 * delegate.tableView.bounds.width / 3
         
         var height2: CGFloat = 40
+        if profile.contacts.count > 0 {
+            height2 += 30
+        }
         if profile.membersCounter > 0 {
             let size = (width2 - 10 - 15) / 4
             height2 += size + 5
@@ -515,14 +519,6 @@ class GroupProfileView: UIView {
             
             let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
             alertController.addAction(cancelAction)
-            
-            if profile.contacts.count > 0 {
-                let action1 = UIAlertAction(title: "Контакты сообщества", style: .default) { action in
-                    
-                    profile.showContactsView(delegate: self.delegate, startView: self.dopButton)
-                }
-                alertController.addAction(action1)
-            }
             
             if profile.isAdmin == 1 {
                 let action1 = UIAlertAction(title: "Новая тема в «Обсуждения»", style: .default) { action in
@@ -849,6 +845,28 @@ class GroupProfileView: UIView {
         view.frame = CGRect(x: leftX, y: topY, width: width, height: maxHeight)
         self.addSubview(view)
         
+        var height: CGFloat = 0
+        
+        if self.profile.contacts.count > 0 {
+            contactsButton.setTitle("Контакты сообщества", for: .normal)
+            contactsButton.setTitleColor(contactsButton.titleLabel?.tintColor, for: .normal)
+            contactsButton.titleLabel?.font = UIFont(name: "Verdana", size: 14)
+            contactsButton.frame = CGRect(x: 10, y: 10, width: width - 20, height: 20)
+            view.addSubview(contactsButton)
+            
+            contactsButton.add(for: .touchUpInside) {
+                self.contactsButton.smallButtonTouched()
+                
+                let x = leftX + 10 + self.contactsButton.bounds.midX
+                let y = topY + 10 + self.contactsButton.bounds.maxY + 3
+                let point = CGPoint(x: x, y: y)
+                
+                self.profile.showContactsView(delegate: self.delegate, point: point)
+            }
+            
+            height += 30
+        }
+        
         let countButton = UIButton()
         if profile.type == "page" {
             countButton.setTitle(profile.membersCounter.subscribersAdder(), for: .normal)
@@ -857,7 +875,7 @@ class GroupProfileView: UIView {
         }
         countButton.setTitleColor(countButton.titleLabel?.tintColor, for: .normal)
         countButton.titleLabel?.font = UIFont(name: "Verdana", size: 13)
-        countButton.frame = CGRect(x: 10, y: 10, width: width - 20, height: 20)
+        countButton.frame = CGRect(x: 10, y: height + 10, width: width - 20, height: 20)
         view.addSubview(countButton)
         
         countButton.add(for: .touchUpInside) {
@@ -927,7 +945,7 @@ class GroupProfileView: UIView {
             self.delegate.present(alertController, animated: true)
         }
         
-        var height: CGFloat = 40
+        height += 40
         
         let url = "/method/groups.getMembers"
         let parameters = [

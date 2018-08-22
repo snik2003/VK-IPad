@@ -176,7 +176,7 @@ extension GroupProfile {
         return contactsIDs
     }
     
-    func showContactsView(delegate: UIViewController, startView: UIView) {
+    func showContactsView(delegate: UIViewController, point: CGPoint) {
         
         let url = "/method/users.get"
         let parameters = [
@@ -214,10 +214,7 @@ extension GroupProfile {
                 
                 //height += 10
                 contactsView.frame = CGRect(x: 0, y: 0, width: width + 20, height: height)
-                
-                let bounds = startView.frame
-                let point = CGPoint(x: bounds.midX + 10, y: bounds.maxY + 10)
-                
+            
                 let popoverOptions: [PopoverOption] = [
                     //.arrowSize(CGSize.zero),
                     .type(.down),
@@ -291,11 +288,9 @@ extension GroupProfile {
             }
         }
         nameLabel.font = nameFont
-        //nameLabel.adjustsFontSizeToFitWidth = true
-        //nameLabel.minimumScaleFactor = 0.5
         let size = delegate.getTextSize(text: nameLabel.text!, font: nameFont, maxWidth: maxWidth)
-        width = size.width
-        nameLabel.frame = CGRect(x: 60, y: 5 + startX, width: size.width, height: 15)
+        width = size.width + 20
+        nameLabel.frame = CGRect(x: 60, y: 5 + startX, width: size.width + 10, height: 15)
         view.addSubview(nameLabel)
         height += 20 + startX
         
@@ -303,8 +298,6 @@ extension GroupProfile {
             let label = UILabel()
             label.text = "\(contact.desc)"
             label.font = contactFont
-            //label.adjustsFontSizeToFitWidth = true
-            //label.minimumScaleFactor = 0.5
             let size = delegate.getTextSize(text: label.text!, font: contactFont, maxWidth: maxWidth)
             if size.width > width {
                 width = size.width
@@ -318,8 +311,6 @@ extension GroupProfile {
             let label = UILabel()
             label.text = "\(contact.phone)"
             label.font = contactFont
-            //label.adjustsFontSizeToFitWidth = true
-            //label.minimumScaleFactor = 0.5
             let size = delegate.getTextSize(text: label.text!, font: contactFont, maxWidth: maxWidth)
             if size.width > width {
                 width = size.width
@@ -333,8 +324,6 @@ extension GroupProfile {
             let label = UILabel()
             label.text = "\(contact.email)"
             label.font = contactFont
-            //label.adjustsFontSizeToFitWidth = true
-            //label.minimumScaleFactor = 0.5
             let size = delegate.getTextSize(text: label.text!, font: contactFont, maxWidth: maxWidth)
             if size.width > width {
                 width = size.width
