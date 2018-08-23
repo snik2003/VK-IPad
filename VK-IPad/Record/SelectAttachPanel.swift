@@ -47,6 +47,15 @@ class SelectAttachPanel: UIView, UIImagePickerControllerDelegate, UINavigationCo
                 ]
         }
         
+        if delegate is AddNewTopicController {
+            return [
+                3: "Прикрепить фотографию из профиля",
+                4: "Прикрепить фотографию с устройства",
+                5: "Сфотографировать с устройства",
+                6: "Прикрепить видеозапись из профиля",
+            ]
+        }
+        
         return [
             0: "Упомянуть себя в \(titleGen)",
             1: "Упомянуть друга в \(titleGen)",
@@ -86,7 +95,7 @@ class SelectAttachPanel: UIView, UIImagePickerControllerDelegate, UINavigationCo
         self.configure()
         
         var point: CGPoint
-        if delegate is NewRecordController {
+        if delegate is NewRecordController || delegate is AddNewTopicController {
             point = CGPoint(x: 100, y: delegate.view.frame.height - 46)
         } else {
             point = CGPoint(x: button.frame.midX, y: delegate.view.frame.height - 12 - button.frame.height)
@@ -100,7 +109,7 @@ class SelectAttachPanel: UIView, UIImagePickerControllerDelegate, UINavigationCo
         var topY: CGFloat = 0
         var count = 0
         
-        for key in 0...actions.keys.count - 1 {
+        for key in actions.keys.sorted() {
             count += 1
             
             let label = UILabel()
@@ -130,7 +139,7 @@ class SelectAttachPanel: UIView, UIImagePickerControllerDelegate, UINavigationCo
                             controller.commentView.textView.insertText(mention)
                         } else if let controller = self.delegate as? NewRecordController {
                             controller.textView.insertText(mention)
-                        }
+                        } 
                     }
                 }
                 
@@ -344,6 +353,8 @@ class SelectAttachPanel: UIView, UIImagePickerControllerDelegate, UINavigationCo
                         ViewControllerUtils().hideActivityIndicator()
                         if let controller = self.delegate as? NewRecordController {
                             controller.tableView.reloadData()
+                        } else if let controller = self.delegate as? AddNewTopicController {
+                            controller.tableView.reloadData()
                         }
                     }
                 }
@@ -357,6 +368,8 @@ class SelectAttachPanel: UIView, UIImagePickerControllerDelegate, UINavigationCo
                         self.attachPanel.reconfigure()
                         ViewControllerUtils().hideActivityIndicator()
                         if let controller = self.delegate as? NewRecordController {
+                            controller.tableView.reloadData()
+                        } else if let controller = self.delegate as? AddNewTopicController {
                             controller.tableView.reloadData()
                         }
                     }

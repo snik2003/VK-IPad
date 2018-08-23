@@ -25,6 +25,8 @@ class AttachPanel: UIView {
     var titleGen: String {
         if delegate is NewRecordController {
             return "записи"
+        } else if delegate is AddNewTopicController {
+            return "обсуждению"
         } /*else if delegate if DialogController {
             return "сообщению"
         } */else {
@@ -149,6 +151,8 @@ class AttachPanel: UIView {
                 self.reconfigure()
                 
                 if let controller = self.delegate as? NewRecordController {
+                    controller.tableView.reloadData()
+                } else if let controller = self.delegate as? AddNewTopicController {
                     controller.tableView.reloadData()
                 }
             }
@@ -280,6 +284,8 @@ class AttachPanel: UIView {
                             
                             if let controller = self.delegate as? NewRecordController {
                                 controller.tableView.reloadData()
+                            } else if let controller = self.delegate as? AddNewTopicController {
+                                controller.tableView.reloadData()
                             }
                         }
                         
@@ -320,6 +326,8 @@ class AttachPanel: UIView {
                         self.reconfigure()
                         
                         if let controller = self.delegate as? NewRecordController {
+                            controller.tableView.reloadData()
+                        } else if let controller = self.delegate as? AddNewTopicController {
                             controller.tableView.reloadData()
                         }
                     }

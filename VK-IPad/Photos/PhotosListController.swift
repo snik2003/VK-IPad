@@ -285,6 +285,13 @@ class PhotosListController: UIViewController, UITableViewDelegate, UITableViewDa
                 controller.attachPanel.removeFromSuperview()
                 controller.attachPanel.reconfigure()
                 controller.tableView.reloadData()
+            } else if let controller = delegate as? AddNewTopicController {
+                for photo in photos {
+                    controller.attachPanel.attachArray.append(photo)
+                }
+                controller.attachPanel.removeFromSuperview()
+                controller.attachPanel.reconfigure()
+                controller.tableView.reloadData()
             }
         }
         

@@ -290,6 +290,13 @@ class VideoListController: UIViewController, UITableViewDelegate, UITableViewDat
                 controller.attachPanel.removeFromSuperview()
                 controller.attachPanel.reconfigure()
                 controller.tableView.reloadData()
+            } else if let controller = delegate as? AddNewTopicController {
+                for video in videos {
+                    controller.attachPanel.attachArray.append(video)
+                }
+                controller.attachPanel.removeFromSuperview()
+                controller.attachPanel.reconfigure()
+                controller.tableView.reloadData()
             }
         }
         

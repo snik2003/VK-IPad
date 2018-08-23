@@ -290,7 +290,7 @@ extension GroupProfile {
         nameLabel.font = nameFont
         let size = delegate.getTextSize(text: nameLabel.text!, font: nameFont, maxWidth: maxWidth)
         width = size.width + 20
-        nameLabel.frame = CGRect(x: 60, y: 5 + startX, width: size.width + 10, height: 15)
+        nameLabel.frame = CGRect(x: 60, y: 5 + startX, width: size.width + 20, height: 15)
         view.addSubview(nameLabel)
         height += 20 + startX
         

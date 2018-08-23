@@ -521,9 +521,9 @@ class GroupProfileView: UIView {
             alertController.addAction(cancelAction)
             
             if profile.isAdmin == 1 {
-                let action1 = UIAlertAction(title: "Новая тема в «Обсуждения»", style: .default) { action in
+                let action1 = UIAlertAction(title: "Создать новое обсуждение", style: .default) { action in
                     
-                    
+                    self.delegate.openAddNewTopicController(groupID: "\(profile.gid)", title: "Создать новое обсуждение")
                 }
                 alertController.addAction(action1)
             }

@@ -141,14 +141,14 @@ class TopicsListController: UIViewController, UITableViewDelegate, UITableViewDa
             alertController.addAction(cancelAction)
             
             if canAddTopics == 1 {
-                let action1 = UIAlertAction(title: "Создать новую тему для обсуждения", style: .default) { action in
+                let action1 = UIAlertAction(title: "Создать новое обсуждение", style: .default) { action in
                     
-                    
+                    self.openAddNewTopicController(groupID: self.groupID, title: "Создать новое обсуждение")
                 }
                 alertController.addAction(action1)
             }
             
-            let action2 = UIAlertAction(title: "Изменить порядок сортировки тем", style: .default) { action in
+            let action2 = UIAlertAction(title: "Изменить порядок сортировки", style: .default) { action in
                 
                 let alertController2 = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
                 

@@ -446,7 +446,7 @@ class GroupsListController: UIViewController, UITableViewDelegate, UITableViewDa
         
         if let popoverController = alertController.popoverPresentationController {
             popoverController.barButtonItem = sender
-            popoverController.permittedArrowDirections = []
+            popoverController.permittedArrowDirections = [.up]
         }
         
         self.present(alertController, animated: true)

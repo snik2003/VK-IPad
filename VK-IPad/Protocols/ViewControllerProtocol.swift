@@ -393,6 +393,20 @@ extension UIViewController: ViewControllerProtocol {
         }
     }
     
+    func openAddNewTopicController(groupID: String, title: String) {
+        let controller = self.storyboard?.instantiateViewController(withIdentifier: "AddNewTopicController") as! AddNewTopicController
+        
+        controller.groupID = groupID
+        controller.title = title
+        controller.delegate = self
+        
+        if let split = self.splitViewController {
+            let detail = split.viewControllers[split.viewControllers.endIndex - 1]
+            controller.width = detail.view.bounds.width
+            detail.childViewControllers[0].navigationController?.pushViewController(controller, animated: true)
+        }
+    }
+    
     func openNewRecordController(ownerID: String, mode: Mode, title: String, record: Record? = nil) {
         let controller = self.storyboard?.instantiateViewController(withIdentifier: "NewRecordController") as! NewRecordController
         

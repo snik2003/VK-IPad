@@ -780,6 +780,57 @@ extension UIViewController: VkOperationProtocol {
         }
     }
     
+    func addTopic() {
+        
+        if let controller = self as? AddNewTopicController, let title = controller.titleView.text, let text = controller.textView.text {
+            
+            let url = "/method/board.addTopic"
+            var parameters = [
+                "access_token": vkSingleton.shared.accessToken,
+                "group_id": controller.groupID,
+                "title": title,
+                "text": text,
+                "attachments": controller.attachPanel.attachments,
+                "v": vkSingleton.shared.version
+            ]
+            
+            if controller.fromGroup {
+                parameters["from_group"] = "1"
+            }
+            
+            let request = GetServerDataOperation(url: url, parameters: parameters)
+            request.completionBlock = {
+                guard let data = request.data else { return }
+                
+                guard let json = try? JSON(data: data) else { print("json error"); return }
+                
+                let error = ErrorJson(json: JSON.null)
+                error.errorCode = json["error"]["error_code"].intValue
+                error.errorMsg = json["error"]["error_msg"].stringValue
+                
+                if error.errorCode == 0 {
+                    OperationQueue.main.addOperation {
+                        self.navigationController?.popViewController(animated: true)
+                        
+                        if let delegate = controller.delegate as? GroupProfileViewController, delegate.groupProfile.count > 0 {
+                            delegate.groupProfile[0].topicsCounter += 1
+                            delegate.setProfileView()
+                        } else if let delegate = controller.delegate as? TopicsListController {
+                            delegate.offset = 0
+                            delegate.getTopics()
+                        }
+                        
+                        let topicID = json["response"].stringValue
+                        controller.openTopicController(groupID: controller.groupID, topicID: topicID, title: title, delegate: self)
+                    }
+                } else {
+                    self.showErrorMessage(title: "Новое обсуждение", msg: "\nОшибка #\(error.errorCode): \(error.errorMsg)\n")
+                }
+            }
+            OperationQueue().addOperation(request)
+        }
+    }
+    
     func deleteTopic() {
         
         if let controller = self as? TopicController {
