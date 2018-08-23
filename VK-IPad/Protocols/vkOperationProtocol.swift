@@ -620,6 +620,67 @@ extension UIViewController: VkOperationProtocol {
         }
     }
     
+    func closeComments() {
+        
+        if let controller = self as? RecordController, controller.record.count > 0 {
+            
+            let record = controller.record[0]
+            
+            var url = ""
+            
+            if record.canComment == 1 {
+                url = "/method/wall.closeComments"
+            } else {
+                url = "/method/wall.openComments"
+            }
+            
+            let parameters = [
+                "access_token": vkSingleton.shared.accessToken,
+                "owner_id": "\(record.ownerID)",
+                "post_id": "\(record.id)",
+                "v": vkSingleton.shared.version
+            ]
+            
+            let request = GetServerDataOperation(url: url, parameters: parameters)
+            request.completionBlock = {
+                guard let data = request.data else { return }
+                
+                guard let json = try? JSON(data: data) else { print("json error"); return }
+                
+                let error = ErrorJson(json: JSON.null)
+                error.errorCode = json["error"]["error_code"].intValue
+                error.errorMsg = json["error"]["error_msg"].stringValue
+                
+                if error.errorCode == 0 {
+                    OperationQueue.main.addOperation {
+                        OperationQueue.main.addOperation {
+                            controller.tableView.removeFromSuperview()
+                            controller.commentView.removeFromSuperview()
+                            
+                            controller.configureTableView()
+                            
+                            if record.canComment == 1 {
+                                controller.record[0].canComment = 0
+                                
+                                controller.tableView.frame = CGRect(x: 0, y: 64, width: controller.view.bounds.width, height: controller.view.bounds.height)
+                                controller.view.addSubview(controller.tableView)
+                                controller.commentView.removeFromSuperview()
+                            } else {
+                                controller.record[0].canComment = 1
+                                controller.view.addSubview(controller.commentView)
+                            }
+                            
+                            controller.tableView.reloadData()
+                        }
+                    }
+                } else {
+                    self.showErrorMessage(title: "Редактирование параметров записи", msg: "\nОшибка #\(error.errorCode): \(error.errorMsg)\n")
+                }
+            }
+            OperationQueue().addOperation(request)
+        }
+    }
+    
     func fixTopic() {
         
         if let controller = self as? TopicController, controller.topics.count > 0 {

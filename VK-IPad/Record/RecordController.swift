@@ -82,7 +82,7 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
     }
     
     func configureTableView() {
-        tableView.frame = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height)
+        tableView.frame = CGRect(x: 0, y: 64, width: self.view.bounds.width, height: self.view.bounds.height)
         
         if !preview {
             commentView = DCCommentView(scrollView: self.tableView, frame: self.tableView.bounds)
@@ -923,6 +923,21 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
             alertController.addAction(action4)
         }
         
+        if record.postType == "post" && record.canDelete == 1 {
+            if record.canComment == 1 {
+                let action = UIAlertAction(title: "Закрыть комментирование", style: .destructive) { action in
+                    
+                    self.closeComments()
+                }
+                alertController.addAction(action)
+            } else {
+                let action = UIAlertAction(title: "Открыть комментирование", style: .default) { action in
+                    
+                    self.closeComments()
+                }
+                alertController.addAction(action)
+            }
+        }
         
         if record.postType == "postpone" {
             let action5 = UIAlertAction(title: "Опубликовать запись", style: .destructive) { action in
