@@ -40,4 +40,6 @@ final class vkSingleton {
     let onlineColor = UIColor(displayP3Red: 0/255, green: 193/255, blue: 255/255, alpha: 1)
     
     var myProfile: UserProfile!
+    
+    var supportGroupID = "-166099539"
 }

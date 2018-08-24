@@ -427,6 +427,20 @@ extension UIViewController: ViewControllerProtocol {
         }
     }
     
+    func openDialogController(ownerID: String, startID: Int) {
+        let controller = self.storyboard?.instantiateViewController(withIdentifier: "DialogController") as! DialogController
+        
+        controller.userID = ownerID
+        controller.startMessageID = startID
+        controller.delegate = self
+        
+        if let split = self.splitViewController {
+            let detail = split.viewControllers[split.viewControllers.endIndex - 1]
+            controller.width = detail.view.bounds.width
+            detail.childViewControllers[0].navigationController?.pushViewController(controller, animated: true)
+        }
+    }
+    
     func updateAppCounters() {
         if let splitVC = self.navigationController?.splitViewController, let detailVC = splitVC.viewControllers[0].childViewControllers[0] as? MenuViewController {
             detailVC.getUserInfo()

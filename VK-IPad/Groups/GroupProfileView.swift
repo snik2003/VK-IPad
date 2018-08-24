@@ -481,6 +481,8 @@ class GroupProfileView: UIView {
             
             usersMessageButton.add(for: .touchUpInside) {
                 self.usersMessageButton.buttonTouched()
+                
+                self.delegate.openDialogController(ownerID: "-\(self.delegate.groupID)", startID: -1)
             }
             
             usersMessageButton.frame = CGRect(x: startX + 10, y: topY + startY + buttonHeight + 5, width: width / 3 - 20, height: buttonHeight)

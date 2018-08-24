@@ -16,7 +16,7 @@ class AttachPanel: UIView {
     
     var delegate: UIViewController! {
         didSet {
-            if !(delegate is TopicController || delegate is NewRecordController) {
+            if !(delegate is TopicController || delegate is NewRecordController || delegate is DialogController) {
                 maxAttachCount = 2
             }
         }
@@ -27,9 +27,9 @@ class AttachPanel: UIView {
             return "записи"
         } else if delegate is AddNewTopicController {
             return "обсуждению"
-        } /*else if delegate if DialogController {
+        } else if delegate is DialogController {
             return "сообщению"
-        } */else {
+        } else {
             return "комментарию"
         }
     }
@@ -153,6 +153,8 @@ class AttachPanel: UIView {
                 if let controller = self.delegate as? NewRecordController {
                     controller.tableView.reloadData()
                 } else if let controller = self.delegate as? AddNewTopicController {
+                    controller.tableView.reloadData()
+                } else if let controller = self.delegate as? DialogController {
                     controller.tableView.reloadData()
                 }
             }
@@ -329,6 +331,8 @@ class AttachPanel: UIView {
                             controller.tableView.reloadData()
                         } else if let controller = self.delegate as? AddNewTopicController {
                             controller.tableView.reloadData()
+                        } else if let controller = self.delegate as? DialogController {
+                            controller.tableView.reloadData()
                         }
                     }
                     
@@ -371,6 +375,8 @@ class AttachPanel: UIView {
         } else if let controller = delegate as? VideoController {
             controller.commentView.attachCount = attachArray.count
         } else if let controller = delegate as? TopicController {
+            controller.commentView.attachCount = attachArray.count
+        } else if let controller = delegate as? DialogController {
             controller.commentView.attachCount = attachArray.count
         }
         

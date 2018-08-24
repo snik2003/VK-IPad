@@ -72,6 +72,9 @@
 		1772512F210A1E0C00B4C6FA /* PushSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1772512E210A1E0C00B4C6FA /* PushSettings.swift */; };
 		17725131210A1E4300B4C6FA /* ParsePushSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17725130210A1E4300B4C6FA /* ParsePushSettings.swift */; };
 		17725133210B2D8100B4C6FA /* PasswordController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17725132210B2D8100B4C6FA /* PasswordController.swift */; };
+		177BF2BF213023E8002A8905 /* DialogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 177BF2BE213023E8002A8905 /* DialogController.swift */; };
+		177BF2C12130316F002A8905 /* Dialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 177BF2C02130316F002A8905 /* Dialog.swift */; };
+		177BF2C321303A11002A8905 /* DialogTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 177BF2C221303A11002A8905 /* DialogTitleView.swift */; };
 		178D83C020FF707900AFB7EB /* TapGesture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178D83BF20FF707900AFB7EB /* TapGesture.swift */; };
 		178D83C2210097BB00AFB7EB /* PhotosListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178D83C1210097BB00AFB7EB /* PhotosListController.swift */; };
 		178D83C42100991000AFB7EB /* PhotoAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178D83C32100991000AFB7EB /* PhotoAlbum.swift */; };
@@ -195,6 +198,9 @@
 		1772512E210A1E0C00B4C6FA /* PushSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushSettings.swift; sourceTree = "<group>"; };
 		17725130210A1E4300B4C6FA /* ParsePushSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParsePushSettings.swift; sourceTree = "<group>"; };
 		17725132210B2D8100B4C6FA /* PasswordController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordController.swift; sourceTree = "<group>"; };
+		177BF2BE213023E8002A8905 /* DialogController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogController.swift; sourceTree = "<group>"; };
+		177BF2C02130316F002A8905 /* Dialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dialog.swift; sourceTree = "<group>"; };
+		177BF2C221303A11002A8905 /* DialogTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogTitleView.swift; sourceTree = "<group>"; };
 		178D83BF20FF707900AFB7EB /* TapGesture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TapGesture.swift; sourceTree = "<group>"; };
 		178D83C1210097BB00AFB7EB /* PhotosListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosListController.swift; sourceTree = "<group>"; };
 		178D83C32100991000AFB7EB /* PhotoAlbum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAlbum.swift; sourceTree = "<group>"; };
@@ -391,6 +397,7 @@
 				17B409E82106114A004CED46 /* FaveLinks.swift */,
 				1772512E210A1E0C00B4C6FA /* PushSettings.swift */,
 				17FDD8E4210F2F3C0064558A /* Topic.swift */,
+				177BF2C02130316F002A8905 /* Dialog.swift */,
 			);
 			path = Objects;
 			sourceTree = "<group>";
@@ -552,6 +559,8 @@
 		17C066FE21258C8B00037C39 /* Dialogs */ = {
 			isa = PBXGroup;
 			children = (
+				177BF2BE213023E8002A8905 /* DialogController.swift */,
+				177BF2C221303A11002A8905 /* DialogTitleView.swift */,
 			);
 			path = Dialogs;
 			sourceTree = "<group>";
@@ -719,6 +728,7 @@
 				174912EC20D300DD00FCF9F9 /* vkSingleton.swift in Sources */,
 				17996B5320DCDC6F003DA26B /* ReloadVideoListController.swift in Sources */,
 				17A1A5BF20D8E7FD00D9CE00 /* GroupProfileView.swift in Sources */,
+				177BF2BF213023E8002A8905 /* DialogController.swift in Sources */,
 				1731A5382113144E00023409 /* AttachPanel.swift in Sources */,
 				174912DD20D300DD00FCF9F9 /* Photos.swift in Sources */,
 				174912E920D300DD00FCF9F9 /* StartViewController.swift in Sources */,
@@ -791,6 +801,7 @@
 				178D83C42100991000AFB7EB /* PhotoAlbum.swift in Sources */,
 				174912EA20D300DD00FCF9F9 /* GetServerDataOperation.swift in Sources */,
 				179CFC4120DBE94900F2AB04 /* Sticker.swift in Sources */,
+				177BF2C321303A11002A8905 /* DialogTitleView.swift in Sources */,
 				174912EE20D300DD00FCF9F9 /* UsersController.swift in Sources */,
 				1731A5362110AFBA00023409 /* TableView.swift in Sources */,
 				178D83C2210097BB00AFB7EB /* PhotosListController.swift in Sources */,
@@ -808,6 +819,7 @@
 				17A1A5B920D8E37400D9CE00 /* GroupProfileViewController.swift in Sources */,
 				17CCB7FB20F63AB30051947A /* NotificationController.swift in Sources */,
 				17FDD8E5210F2F3C0064558A /* Topic.swift in Sources */,
+				177BF2C12130316F002A8905 /* Dialog.swift in Sources */,
 				173D666D20D3E4BE00EEBF46 /* Record.swift in Sources */,
 				17A1A5BB20D8E63000D9CE00 /* ParseGroupProfile.swift in Sources */,
 				174912FD20D303F400FCF9F9 /* ReloadUsersController.swift in Sources */,

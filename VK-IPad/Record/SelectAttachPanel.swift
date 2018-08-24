@@ -16,9 +16,9 @@ class SelectAttachPanel: UIView, UIImagePickerControllerDelegate, UINavigationCo
     var titleGen: String {
         if delegate is NewRecordController {
             return "тексте записи"
-        } /*else if delegate if DialogController {
+        } else if delegate is DialogController {
              return "сообщении"
-         } */else {
+        } else {
             return "комментарии"
         }
     }
@@ -26,9 +26,9 @@ class SelectAttachPanel: UIView, UIImagePickerControllerDelegate, UINavigationCo
     var titleAbl: String {
         if delegate is NewRecordController {
             return "записи"
-        } /*else if delegate if DialogController {
+        } else if delegate is DialogController {
              return "сообщению"
-         } */else {
+        } else {
             return "комментарию"
         }
     }
@@ -136,6 +136,8 @@ class SelectAttachPanel: UIView, UIImagePickerControllerDelegate, UINavigationCo
                         } else if let controller = self.delegate as? VideoController {
                             controller.commentView.textView.insertText(mention)
                         } else if let controller = self.delegate as? TopicController {
+                            controller.commentView.textView.insertText(mention)
+                        } else if let controller = self.delegate as? DialogController {
                             controller.commentView.textView.insertText(mention)
                         } else if let controller = self.delegate as? NewRecordController {
                             controller.textView.insertText(mention)
@@ -351,9 +353,12 @@ class SelectAttachPanel: UIView, UIImagePickerControllerDelegate, UINavigationCo
                         self.attachPanel.removeFromSuperview()
                         self.attachPanel.reconfigure()
                         ViewControllerUtils().hideActivityIndicator()
+                        
                         if let controller = self.delegate as? NewRecordController {
                             controller.tableView.reloadData()
                         } else if let controller = self.delegate as? AddNewTopicController {
+                            controller.tableView.reloadData()
+                        } else if let controller = self.delegate as? DialogController {
                             controller.tableView.reloadData()
                         }
                     }
@@ -367,9 +372,12 @@ class SelectAttachPanel: UIView, UIImagePickerControllerDelegate, UINavigationCo
                         self.attachPanel.removeFromSuperview()
                         self.attachPanel.reconfigure()
                         ViewControllerUtils().hideActivityIndicator()
+                        
                         if let controller = self.delegate as? NewRecordController {
                             controller.tableView.reloadData()
                         } else if let controller = self.delegate as? AddNewTopicController {
+                            controller.tableView.reloadData()
+                        } else if let controller = self.delegate as? DialogController {
                             controller.tableView.reloadData()
                         }
                     }

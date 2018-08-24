@@ -283,6 +283,12 @@ class VideoListController: UIViewController, UITableViewDelegate, UITableViewDat
                 }
                 controller.attachPanel.removeFromSuperview()
                 controller.attachPanel.reconfigure()
+            } else if let controller = delegate as? DialogController {
+                for video in videos {
+                    controller.attachPanel.attachArray.append(video)
+                }
+                controller.attachPanel.removeFromSuperview()
+                controller.attachPanel.reconfigure()
             } else if let controller = delegate as? NewRecordController {
                 for video in videos {
                     controller.attachPanel.attachArray.append(video)

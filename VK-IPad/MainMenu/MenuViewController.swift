@@ -126,6 +126,11 @@ class MenuViewController: UITableViewController {
             self.showChangeAccountForm()
         }
         
+        // написать разработчикам
+        if indexPath.section == 2 && indexPath.row == 2 {
+            self.openDialogController(ownerID: vkSingleton.shared.supportGroupID, startID: -1)
+        }
+        
         // выйти из учетной записи
         if indexPath.section == 2 && indexPath.row == 4 {
             self.exitAccountFunc()
@@ -365,7 +370,7 @@ extension UINavigationBar {
             OperationQueue.main.addOperation {
                 imageView.image = getCacheImage.outputImage
                 imageView.layer.cornerRadius = 20
-                imageView.layer.borderWidth = 1
+                imageView.layer.borderWidth = 1.4
                 imageView.layer.borderColor = UIColor.lightGray.cgColor
                 imageView.contentMode = .scaleAspectFill
                 imageView.clipsToBounds = true
@@ -379,7 +384,7 @@ extension UINavigationBar {
         let nameLabel = UILabel()
         nameLabel.text = "\(user.firstName) \(user.lastName)"
         nameLabel.textColor = UIColor.white
-        nameLabel.font = UIFont(name: "Verdana-Bold", size: 16)
+        nameLabel.font = UIFont(name: "Verdana-Bold", size: 15)
         nameLabel.adjustsFontSizeToFitWidth = true
         nameLabel.minimumScaleFactor = 0.5
         nameLabel.frame = CGRect(x: 50, y: 4, width: frame.width - 80, height: 20)

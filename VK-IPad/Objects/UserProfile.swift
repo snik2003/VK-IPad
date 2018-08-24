@@ -222,6 +222,31 @@ struct Relatives {
 
 extension UserProfile {
     
+    var statusLane: String {
+        var status = ""
+        if self.deactivated == "" {
+            if self.onlineStatus == 1 {
+                status = "онлайн"
+                if self.onlineMobile == 1 {
+                    status = "онлайн (моб.)"
+                }
+            } else {
+                if self.sex == 1 {
+                    status = "заходила \(self.lastSeen.toStringLastTime())"
+                } else {
+                    status = "заходил \(self.lastSeen.toStringLastTime())"
+                }
+            }
+        } else {
+            if self.deactivated == "deleted" {
+                status = "страница удалена"
+            } else {
+                status = "страница заблокирована"
+            }
+        }
+        return status
+    }
+    
     var familyStatus: String {
         switch relation {
         case 1:
