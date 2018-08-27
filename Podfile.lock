@@ -6,11 +6,14 @@ PODS:
   - DropDown (2.3.2)
   - FLAnimatedImage (1.0.12)
   - Popover (1.2.0)
-  - Realm (3.7.4):
-    - Realm/Headers (= 3.7.4)
-  - Realm/Headers (3.7.4)
-  - RealmSwift (3.7.4):
-    - Realm (= 3.7.4)
+  - Realm (3.7.6):
+    - Realm/Headers (= 3.7.6)
+  - Realm/Headers (3.7.6)
+  - RealmSwift (3.7.6):
+    - Realm (= 3.7.6)
+  - RxCocoa (4.2.0):
+    - RxSwift (~> 4.0)
+  - RxSwift (4.2.0)
   - SCLAlertView (0.8)
   - SmileLock (3.0.3)
   - SwiftMessages (4.1.4):
@@ -28,6 +31,8 @@ DEPENDENCIES:
   - FLAnimatedImage (~> 1.0)
   - Popover
   - RealmSwift (~> 3.0)
+  - RxCocoa
+  - RxSwift
   - SCLAlertView (~> 0.8)
   - SmileLock (~> 3.0)
   - SwiftMessages
@@ -45,6 +50,8 @@ SPEC REPOS:
     - Popover
     - Realm
     - RealmSwift
+    - RxCocoa
+    - RxSwift
     - SCLAlertView
     - SmileLock
     - SwiftMessages
@@ -59,14 +66,16 @@ SPEC CHECKSUMS:
   DropDown: 7f87abecc28f9b4edad810fe1211c5c018c257e5
   FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
   Popover: 28c1ac8e937ab2b3965bd2da7dd18324357abc41
-  Realm: a469bb59e33f9926102ccaea4349822c53b9117e
-  RealmSwift: a45861b21c180f5cf0f122144b9759fa8dde3e9e
+  Realm: 9eaecad54712d6246d08ba34c10f354e4715d7d3
+  RealmSwift: 1fe08b4ebaeeaacf17f9ba0343f7b25c9fc31fa6
+  RxCocoa: 0b54909c902e1e581212a03e690bbd94032d8baa
+  RxSwift: 99e10317ddfcc7fbe01356aafd118fde4a0be104
   SCLAlertView: 6a77bb2edfc65e04dbe57725546cb4107a506b85
   SmileLock: 247b62849cedca324e70ccfad5d01714602d739e
   SwiftMessages: 2c33fdee8b8f38dfc7e1036684456b505891da8c
   SwiftyJSON: c29297daf073d2aa016295d5809cdd68045c39b3
   SWRevealViewController: 6d3fd97f70112fd7cef9de14df4260eacce4c63a
 
-PODFILE CHECKSUM: 89b8601cb91f0a25bbf4f1622fd51c0af7924992
+PODFILE CHECKSUM: 0146fea6f341c73c7a8eed245e418091b32115cb
 
 COCOAPODS: 1.5.0
