@@ -12,12 +12,36 @@ class MessageCell: UITableViewCell {
 
     var delegate: DialogController!
     var dialog: Dialog!
-
+    var indexPath: IndexPath!
+    
+    var maxWidth: CGFloat {
+        return 2 / 3 * delegate.width
+    }
+    
+    func configureCell(calcHeight: Bool) -> CGFloat {
+        
+        removeAllSubviews()
+        
+        self.backgroundColor = vkSingleton.shared.dialogColor
+        
+        let view = MessageView()
+        view.tag = 250
+        view.delegate = delegate
+        view.cell = self
+        view.dialog = dialog
+        view.maxWidth = maxWidth
+        view.indexPath = indexPath
+        
+        let height = view.configureView(calcHeight: calcHeight)
+        
+        return height
+    }
+    
     func configureLoadMoreCell() {
         
         removeAllSubviews()
         
-        self.backgroundColor = delegate.tableView.backgroundColor
+        self.backgroundColor = vkSingleton.shared.dialogColor
         
         if delegate.dialogs.count < delegate.totalCount {
             

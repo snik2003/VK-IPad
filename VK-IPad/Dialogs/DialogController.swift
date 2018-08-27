@@ -41,7 +41,8 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        self.view.backgroundColor = vkSingleton.shared.dialogColor
+        
         self.attachPanel.delegate = self
         self.configureTableView()
         
@@ -59,18 +60,16 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        
-        
     }
     
     func configureTableView() {
         tableView.frame = CGRect(x: 0, y: 64, width: self.view.bounds.width, height: self.view.bounds.height)
-        
+        tableView.backgroundColor = vkSingleton.shared.dialogColor
         
         commentView = DCCommentView(scrollView: self.tableView, frame: self.tableView.bounds)
         commentView.delegate = self
         commentView.tintColor = vkSingleton.shared.mainColor
-            
+        
         commentView.sendImage = UIImage(named: "send2")
         commentView.stickerImage = UIImage(named: "sticker")
         commentView.stickerButton.addTarget(self, action: #selector(self.tapStickerButton(sender:)), for: .touchUpInside)
@@ -322,9 +321,20 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
             }
             return 5
         case 2:
-            return 50
+            if let height = heights[indexPath] {
+                return height
+            } else {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "messageCell") as! MessageCell
+            
+                cell.delegate = self
+                cell.dialog = self.dialogs[indexPath.row]
+                let height = cell.configureCell(calcHeight: true)
+                heights[indexPath] = height
+            
+                return height
+            }
         case 3:
-            return 30
+            return 60
         default:
             return 0
         }
@@ -344,11 +354,22 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
             cell.delegate = self
             cell.configureLoadMoreCell()
             
+            return cell
+        case 2:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "messageCell", for: indexPath) as! MessageCell
+            
+            cell.delegate = self
+            cell.dialog = self.dialogs[indexPath.row]
+            cell.indexPath = indexPath
+            let _ = cell.configureCell(calcHeight: false)
+            
             cell.selectionStyle = .none
             
             return cell
         default:
             let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+            
+            cell.backgroundColor = vkSingleton.shared.dialogColor
             
             return cell
         }

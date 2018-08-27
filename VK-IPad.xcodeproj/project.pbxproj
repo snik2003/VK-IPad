@@ -118,6 +118,7 @@
 		17CCB7FD20F75D1F0051947A /* NotificationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CCB7FC20F75D1F0051947A /* NotificationCell.swift */; };
 		17CD9399212EC95000078A9D /* AddNewTopicController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CD9398212EC95000078A9D /* AddNewTopicController.swift */; };
 		17D21E1321341E110053B91F /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D21E1221341E110053B91F /* MessageCell.swift */; };
+		17D21E1521342C970053B91F /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D21E1421342C970053B91F /* MessageView.swift */; };
 		17DD5DB820D7CBE20019938D /* AttachmentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17DD5DB720D7CBE20019938D /* AttachmentsView.swift */; };
 		17EBC3A120D51A46009130FC /* Attachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17EBC3A020D51A46009130FC /* Attachment.swift */; };
 		17EBC3A320D52C5D009130FC /* Video.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17EBC3A220D52C5D009130FC /* Video.swift */; };
@@ -246,6 +247,7 @@
 		17CCB7FC20F75D1F0051947A /* NotificationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCell.swift; sourceTree = "<group>"; };
 		17CD9398212EC95000078A9D /* AddNewTopicController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNewTopicController.swift; sourceTree = "<group>"; };
 		17D21E1221341E110053B91F /* MessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
+		17D21E1421342C970053B91F /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
 		17DD5DB720D7CBE20019938D /* AttachmentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentsView.swift; sourceTree = "<group>"; };
 		17EBC3A020D51A46009130FC /* Attachment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Attachment.swift; sourceTree = "<group>"; };
 		17EBC3A220D52C5D009130FC /* Video.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Video.swift; sourceTree = "<group>"; };
@@ -564,6 +566,7 @@
 				177BF2BE213023E8002A8905 /* DialogController.swift */,
 				177BF2C221303A11002A8905 /* DialogTitleView.swift */,
 				17D21E1221341E110053B91F /* MessageCell.swift */,
+				17D21E1421342C970053B91F /* MessageView.swift */,
 			);
 			path = Dialogs;
 			sourceTree = "<group>";
@@ -735,6 +738,7 @@
 				174912EC20D300DD00FCF9F9 /* vkSingleton.swift in Sources */,
 				17996B5320DCDC6F003DA26B /* ReloadVideoListController.swift in Sources */,
 				17A1A5BF20D8E7FD00D9CE00 /* GroupProfileView.swift in Sources */,
+				17D21E1521342C970053B91F /* MessageView.swift in Sources */,
 				177BF2BF213023E8002A8905 /* DialogController.swift in Sources */,
 				1731A5382113144E00023409 /* AttachPanel.swift in Sources */,
 				174912DD20D300DD00FCF9F9 /* Photos.swift in Sources */,

@@ -17,6 +17,8 @@ class AttachmentsView: UIView {
     
     func configureAttachView(attaches: [Attachment], maxSize: CGFloat, getRow: Bool) -> CGFloat {
         
+        var maxSize = maxSize
+        
         photos.removeAll(keepingCapacity: false)
         for attach in attaches {
             if attach.photo.count > 0 {
@@ -100,6 +102,8 @@ class AttachmentsView: UIView {
                         tap.add {
                             self.delegate.openPhotoViewController(numPhoto: 0, photos: self.photos)
                         }
+                        
+                        maxSize = width
                     }
                     topY += height + 2.5
                 }

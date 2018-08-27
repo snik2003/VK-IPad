@@ -35,9 +35,10 @@ final class vkSingleton {
     
     let appOpenedCountKey = "APP_OPENED_COUNT"
     
-    let mainColor = UIColor(displayP3Red: 5/255, green: 103/255, blue: 164/255, alpha: 1)
-    let backColor = UIColor(displayP3Red: 225/255, green: 225/255, blue: 225/255, alpha: 1)
-    let onlineColor = UIColor(displayP3Red: 0/255, green: 193/255, blue: 255/255, alpha: 1)
+    let mainColor = UIColor(red: 5/255, green: 103/255, blue: 164/255, alpha: 1)
+    let backColor = UIColor(red: 225/255, green: 225/255, blue: 225/255, alpha: 1)
+    let onlineColor = UIColor(red: 0/255, green: 193/255, blue: 255/255, alpha: 1)
+    let dialogColor = UIColor.white //UIColor(red: 205/255, green: 244/255, blue: 255/255, alpha: 1)
     
     var myProfile: UserProfile!
     
