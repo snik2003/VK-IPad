@@ -1270,4 +1270,32 @@ extension UIViewController: VkOperationProtocol {
             OperationQueue().addOperation(request)
         }
     }
+    
+    func getStartMessageID(userID: String) {
+        
+        let url = "/method/messages.getHistory"
+        let parameters = [
+            "access_token": vkSingleton.shared.accessToken,
+            "offset": "0",
+            "count": "1",
+            "user_id": userID,
+            "start_message_id": "-1",
+            "v": vkSingleton.shared.version
+        ]
+        
+        let getServerDataOperation = GetServerDataOperation(url: url, parameters: parameters)
+        getServerDataOperation.completionBlock = {
+            guard let data = getServerDataOperation.data else { return }
+            guard let json = try? JSON(data: data) else { print("json error"); return }
+            
+            let inRead = json["response"]["in_read"].intValue
+            let outRead = json["response"]["out_read"].intValue
+            let startID = max(inRead,outRead)
+            
+            OperationQueue.main.addOperation {
+                self.openDialogController(ownerID: userID, startID: startID)
+            }
+        }
+        OperationQueue().addOperation(getServerDataOperation)
+    }
 }

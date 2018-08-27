@@ -67,7 +67,7 @@ class ProfileView: UIView {
                     messageButton.add(for: .touchUpInside) {
                         self.messageButton.buttonTouched()
                         
-                        self.delegate.openDialogController(ownerID: profile.uid, startID: -1)
+                        self.delegate.getStartMessageID(userID: profile.uid)
                     }
                     
                     friendButton.titleLabel?.textAlignment = .center

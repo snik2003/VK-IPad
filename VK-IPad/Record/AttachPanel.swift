@@ -288,6 +288,8 @@ class AttachPanel: UIView {
                                 controller.tableView.reloadData()
                             } else if let controller = self.delegate as? AddNewTopicController {
                                 controller.tableView.reloadData()
+                            } else if let controller = self.delegate as? DialogController {
+                                controller.tableView.reloadData()
                             }
                         }
                         
