@@ -66,6 +66,8 @@ class AttachmentsView: UIView {
                     
                     if !getRow {
                         let photoImage = UIImageView()
+                        photoImage.image = UIImage(named: "nophoto")
+                        photoImage.contentMode = .scaleAspectFill
                         photoImage.tag = 250
                         
                         var url = photos[0].photo1280
@@ -122,6 +124,8 @@ class AttachmentsView: UIView {
                 
                 if !getRow {
                     let photoImage = UIImageView()
+                    photoImage.image = UIImage(named: "nophoto")
+                    photoImage.contentMode = .scaleAspectFill
                     photoImage.tag = 250
                     
                     var url = photos[0].photo1280
@@ -189,6 +193,8 @@ class AttachmentsView: UIView {
                     
                     if !getRow {
                         let photoImage1 = UIImageView()
+                        photoImage1.image = UIImage(named: "nophoto")
+                        photoImage1.contentMode = .scaleAspectFill
                         photoImage1.tag = 250
                         
                         var url1 = photos[index].photo1280
@@ -223,6 +229,8 @@ class AttachmentsView: UIView {
                         }
                         
                         let photoImage2 = UIImageView()
+                        photoImage2.image = UIImage(named: "nophoto")
+                        photoImage2.contentMode = .scaleAspectFill
                         photoImage2.tag = 250
                         
                         var url2 = photos[index+1].photo1280
@@ -291,6 +299,8 @@ class AttachmentsView: UIView {
                     
                     if !getRow {
                         let photoImage1 = UIImageView()
+                        photoImage1.image = UIImage(named: "nophoto")
+                        photoImage1.contentMode = .scaleAspectFill
                         photoImage1.tag = 250
                         
                         var url1 = photos[index].photo1280
@@ -325,6 +335,8 @@ class AttachmentsView: UIView {
                         }
                         
                         let photoImage2 = UIImageView()
+                        photoImage2.image = UIImage(named: "nophoto")
+                        photoImage2.contentMode = .scaleAspectFill
                         photoImage2.tag = 250
                         
                         var url2 = photos[index+1].photo1280

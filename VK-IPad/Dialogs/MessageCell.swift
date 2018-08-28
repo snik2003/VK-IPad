@@ -34,6 +34,12 @@ class MessageCell: UITableViewCell {
         
         let height = view.configureView(calcHeight: calcHeight)
         
+        if dialog.readState == 0 {
+            self.backgroundColor = UIColor.purple.withAlphaComponent(0.2)
+        } else {
+            self.backgroundColor = delegate.tableView.backgroundColor
+        }
+        
         return height
     }
     

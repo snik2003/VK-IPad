@@ -9,6 +9,7 @@
 import UIKit
 import DCCommentView
 import SwiftyJSON
+import WebKit
 import RxSwift
 import RxCocoa
 
@@ -16,7 +17,7 @@ enum DialogMode {
     case dialog
 }
 
-class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSource, DCCommentViewDelegate {
+class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSource, DCCommentViewDelegate, WKNavigationDelegate {
     
     var userID = ""
     
@@ -145,6 +146,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
         getServerDataOperation.completionBlock = {
             guard let data = getServerDataOperation.data else { return }
             guard let json = try? JSON(data: data) else { print("json error"); return }
+            //print(json)
             
             let dialogs = json["response"]["items"].compactMap { Dialog(json: $0.1) }
             for dialog in dialogs.reversed() {
@@ -163,6 +165,19 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
                     userIDs.append(self.userID)
                 } else if id < 0 {
                     groupIDs.append("\(abs(id))")
+                }
+            }
+            
+            for dialog in dialogs {
+                for attach in dialog.attachments {
+                    if attach.record.count > 0 {
+                        let record = attach.record[0]
+                        if record.fromID > 0 {
+                            userIDs.append("\(record.fromID)")
+                        } else if record.fromID < 0 {
+                            groupIDs.append("\(abs(record.fromID))")
+                        }
+                    }
                 }
             }
             
@@ -251,6 +266,19 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
                     userIDs.append(self.userID)
                 } else if id < 0 {
                     groupIDs.append("\(abs(id))")
+                }
+            }
+            
+            for dialog in dialogs {
+                for attach in dialog.attachments {
+                    if attach.record.count > 0 {
+                        let record = attach.record[0]
+                        if record.fromID > 0 {
+                            userIDs.append("\(record.fromID)")
+                        } else if record.fromID < 0 {
+                            groupIDs.append("\(abs(record.fromID))")
+                        }
+                    }
                 }
             }
             

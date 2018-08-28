@@ -185,6 +185,8 @@ class ProfileView: UIView {
                 var leftX: CGFloat = 10
                 for index in 0...min(4, photos.count-1) {
                     let photo = UIImageView()
+                    photo.image = UIImage(named: "nophoto")
+                    photo.contentMode = .scaleAspectFill
                     
                     let getCacheImage = GetCacheImage(url: photos[index].photo604, lifeTime: .avatarImage)
                     getCacheImage.completionBlock = {
@@ -916,6 +918,8 @@ class ProfileView: UIView {
     
     func setAvatarImage() {
         avatarImage.frame = CGRect(x: 10, y: 10, width: avatarHeight, height: avatarHeight)
+        avatarImage.image = UIImage(named: "nophoto")
+        avatarImage.contentMode = .scaleAspectFill
         
         if let profile = user {
             var hasCropPhoto = 1
