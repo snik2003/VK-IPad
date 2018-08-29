@@ -53,7 +53,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
         getDialog()
         
         if userID == vkSingleton.shared.supportGroupID {
-            let feedbackText = "Здесь Вы можете оставить отзыв о приложении «ВКлючайся!»:\n\nзадать любой вопрос по функционалу приложения,\nсообщить об обнаруженной ошибке или внести\nпредложение по усовершенствованию приложения.\n\nМы будем рады любому отзыву и обязательно ответим Вам.\n\nЖдём ваших отзывов! 😊"
+            let feedbackText = "Здесь Вы можете оставить отзыв о приложении «ВКлючайся!»:\n\nзадать любой вопрос по функционалу приложения,\nсообщить об обнаруженной ошибке или внести\nпредложение по усовершенствованию приложения.\n\nМы будем рады любому отзыву и обязательно ответим Вам.\n\nЖдём ваших сообщений! 😊"
             
             self.showSuccessMessage(title: "Друзья!", msg: feedbackText)
         }
@@ -179,10 +179,30 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
                         }
                     }
                 }
+                
+                for dialog2 in dialog.fwdMessages {
+                    
+                    if dialog2.userID > 0 {
+                        userIDs.append("\(dialog2.userID)")
+                    } else if dialog2.userID < 0 {
+                        groupIDs.append("\(abs(dialog2.userID))")
+                    }
+                    
+                    for attach in dialog2.attachments {
+                        if attach.record.count > 0 {
+                            let record = attach.record[0]
+                            if record.fromID > 0 {
+                                userIDs.append("\(record.fromID)")
+                            } else if record.fromID < 0 {
+                                groupIDs.append("\(abs(record.fromID))")
+                            }
+                        }
+                    }
+                }
             }
             
             let userList = userIDs.map { $0 }.joined(separator: ", ")
-            var code = "var a = API.users.get({\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"user_ids\":\"\(userList)\",\"fields\":\"id,first_name,last_name,last_seen,photo_max_orig,photo_max,deactivated,first_name_abl,first_name_gen,online,can_write_private_message,sex\",\"v\":\"\(vkSingleton.shared.version)\"});\n "
+            var code = "var a = API.users.get({\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"user_ids\":\"\(userList)\",\"fields\":\"id,first_name,last_name,last_seen,photo_max_orig,photo_max,deactivated,first_name_abl,first_name_gen,last_name_gen,online,can_write_private_message,sex\",\"v\":\"\(vkSingleton.shared.version)\"});\n "
             
             let groupList = groupIDs.map { $0 }.joined(separator: ",")
             code = "\(code) var b = API.groups.getById({\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"group_ids\":\"\(groupList)\",\"fields\":\"activity,counters,cover,description,has_photo,member_status,site,status,members_count,is_favorite,can_post,is_hidden_from_feed\",\"v\":\"\(vkSingleton.shared.version)\"});\n "
@@ -280,10 +300,29 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
                         }
                     }
                 }
+                
+                for dialog2 in dialog.fwdMessages {
+                    if dialog2.userID > 0 {
+                        userIDs.append("\(dialog2.userID)")
+                    } else if dialog2.userID < 0 {
+                        groupIDs.append("\(abs(dialog2.userID))")
+                    }
+                    
+                    for attach in dialog2.attachments {
+                        if attach.record.count > 0 {
+                            let record = attach.record[0]
+                            if record.fromID > 0 {
+                                userIDs.append("\(record.fromID)")
+                            } else if record.fromID < 0 {
+                                groupIDs.append("\(abs(record.fromID))")
+                            }
+                        }
+                    }
+                }
             }
             
             let userList = userIDs.map { $0 }.joined(separator: ", ")
-            var code = "var a = API.users.get({\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"user_ids\":\"\(userList)\",\"fields\":\"id,first_name,last_name,last_seen,photo_max_orig,photo_max,deactivated,first_name_abl,first_name_gen,online,can_write_private_message,sex\",\"v\":\"\(vkSingleton.shared.version)\"});\n "
+            var code = "var a = API.users.get({\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"user_ids\":\"\(userList)\",\"fields\":\"id,first_name,last_name,last_seen,photo_max_orig,photo_max,deactivated,first_name_abl,first_name_gen,last_name_gen,online,can_write_private_message,sex\",\"v\":\"\(vkSingleton.shared.version)\"});\n "
             
             let groupList = groupIDs.map { $0 }.joined(separator: ",")
             code = "\(code) var b = API.groups.getById({\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"group_ids\":\"\(groupList)\",\"fields\":\"activity,counters,cover,description,has_photo,member_status,site,status,members_count,is_favorite,can_post,is_hidden_from_feed\",\"v\":\"\(vkSingleton.shared.version)\"});\n "

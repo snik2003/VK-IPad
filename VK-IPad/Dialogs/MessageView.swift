@@ -14,10 +14,12 @@ class MessageView: UIView {
 
     private struct Constants {
         static let bodyFont = UIFont(name: "Verdana", size: 15)!
+        static let fwdFont = UIFont(name: "Verdana", size: 12)!
         static let dateFont = UIFont(name: "Verdana", size: 12)!
         
         static let inBackColor = UIColor(red: 244/255, green: 223/255, blue: 200/255, alpha: 1)
         static let outBackColor = UIColor(red: 200/255, green: 200/255, blue: 238/255, alpha: 1)
+        static let fwdBackColor = UIColor(red: 234/255, green: 255/255, blue: 214/255, alpha: 1)
     }
     
     var delegate: DialogController!
@@ -25,9 +27,15 @@ class MessageView: UIView {
     var indexPath: IndexPath!
     var dialog: Dialog!
     
+    var forward = false
+    
     var maxWidth: CGFloat = 0
     
+    let avatarImage = UIImageView()
     let bodyView = UIView()
+    
+    let fwdView = UIView()
+    var fwdHeight: CGFloat = 0
     
     func configureView(calcHeight: Bool) -> CGFloat {
         
@@ -35,6 +43,7 @@ class MessageView: UIView {
         
         var height: CGFloat = 0
         let width: CGFloat = delegate.width
+        
         
         if !calcHeight {
             var avatarURL = ""
@@ -52,19 +61,20 @@ class MessageView: UIView {
                     avatarName = groups[0].name
                 }
             }
-            let avatarImage = UIImageView()
-            avatarImage.tag = 250
+            avatarImage.image = UIImage(named: "nophoto")
+            avatarImage.contentMode = .scaleAspectFill
+            
             let getCacheImage = GetCacheImage(url: avatarURL, lifeTime: .avatarImage)
             let setImageToRow = SetImageToRowOfTableView(cell: cell, imageView: avatarImage, indexPath: indexPath, tableView: delegate.tableView)
             setImageToRow.addDependency(getCacheImage)
             OperationQueue().addOperation(getCacheImage)
             OperationQueue.main.addOperation(setImageToRow)
             OperationQueue.main.addOperation {
-                avatarImage.layer.cornerRadius = 20
-                avatarImage.clipsToBounds = true
-                avatarImage.contentMode = .scaleAspectFill
-                avatarImage.layer.borderColor = UIColor.lightGray.cgColor
-                avatarImage.layer.borderWidth = 0.5
+                self.avatarImage.layer.cornerRadius = 20
+                self.avatarImage.clipsToBounds = true
+                self.avatarImage.contentMode = .scaleAspectFill
+                self.avatarImage.layer.borderColor = UIColor.lightGray.cgColor
+                self.avatarImage.layer.borderWidth = 0.5
             }
             
             if dialog.out == 0 {
@@ -103,6 +113,9 @@ class MessageView: UIView {
                 leftX = maxWidth - 60 - (label.frame.width + 20)
                 bodyView.backgroundColor = Constants.outBackColor
             }
+            if forward {
+                bodyView.backgroundColor = Constants.fwdBackColor
+            }
             bodyView.frame = CGRect(x: leftX, y: height, width: label.frame.width + 20, height: label.frame.height)
             bodyView.configureMessageView()
             self.addSubview(bodyView)
@@ -121,10 +134,17 @@ class MessageView: UIView {
             var leftX: CGFloat = 0
             if dialog.out == 0 {
                 leftX = 60
-                aView.configureViewWithPhotos(color: Constants.inBackColor)
+                if !forward {
+                    aView.configureViewWithPhotos(color: Constants.inBackColor)
+                }
             } else {
                 leftX = maxWidth - 60 - aView.frame.width
-                aView.configureViewWithPhotos(color: Constants.outBackColor)
+                if !forward {
+                    aView.configureViewWithPhotos(color: Constants.outBackColor)
+                }
+            }
+            if forward {
+                aView.configureViewWithPhotos(color: Constants.fwdBackColor)
             }
             aView.frame = CGRect(x: leftX, y: height, width: aView.frame.width, height: aHeight)
             aView.clipsToBounds = true
@@ -149,8 +169,72 @@ class MessageView: UIView {
             
             if attach.record.count > 0 {
                 let recordHeight = setRecord(attach.record[0], maxWidth: maxWidth, topY: height, calc: calcHeight)
-                height += recordHeight
+                height += recordHeight + 2
             }
+        }
+        
+        if dialog.fwdMessages.count > 0 {
+            height += 12
+            fwdView.tag = 250
+            fwdHeight = 0
+        }
+        
+        for dialog in self.dialog.fwdMessages {
+            if !calcHeight {
+                let label = UILabel()
+                var avatarName = ""
+                if dialog.fromID > 0 {
+                    let users = delegate.users.filter({ $0.uid == "\(dialog.fromID)" })
+                    if users.count > 0 {
+                        avatarName = " от \(users[0].firstNameGen) \(users[0].lastNameGen)"
+                    }
+                } else if dialog.fromID < 0 {
+                    avatarName = " от сообщества"
+                }
+                label.text = "Пересланное сообщение\(avatarName)"
+                label.font = Constants.fwdFont
+                label.numberOfLines = 1
+                label.textAlignment = .right
+                label.textColor = UIColor.gray
+                label.frame = CGRect(x: 20, y: fwdHeight + 2, width: maxWidth - 40, height: 20)
+                fwdView.addSubview(label)
+            }
+            fwdHeight += 25
+            
+            let view = MessageView()
+            view.delegate = self.delegate
+            view.cell = self.cell
+            view.dialog = dialog
+            view.maxWidth = self.maxWidth - 90
+            view.indexPath = self.indexPath
+            view.forward = true
+            
+            let fwdHeight1 = view.configureView(calcHeight: calcHeight)
+            
+            if !calcHeight {
+                view.frame = CGRect(x: 0, y: fwdHeight, width: view.maxWidth, height: fwdHeight1)
+                fwdView.addSubview(view)
+            }
+            
+            fwdHeight += fwdHeight1
+        }
+        
+        if dialog.fwdMessages.count > 0 {
+            if !calcHeight {
+                var leftX: CGFloat = 0
+                if dialog.out == 0 {
+                    leftX = 60
+                    fwdView.backgroundColor = Constants.inBackColor
+                } else {
+                    leftX = width - 60 - maxWidth
+                    fwdView.backgroundColor = Constants.outBackColor
+                }
+                fwdView.frame = CGRect(x: leftX, y: height, width: maxWidth, height: fwdHeight)
+                fwdView.configureViewWithFwd()
+                cell.addSubview(fwdView)
+                fwdView.bringSubview(toFront: cell)
+            }
+            height += fwdHeight - 10
         }
         
         if !calcHeight {
@@ -158,12 +242,17 @@ class MessageView: UIView {
             label.text = dialog.date.toStringLastTime()
             label.font = Constants.dateFont
             label.numberOfLines = 1
-            label.isEnabled = false
+            if !forward {
+                label.isEnabled = false
+            } else {
+                label.isEnabled = true
+                label.textColor = UIColor.gray
+            }
             if dialog.out == 0 {
-                label.frame = CGRect(x: 63, y: height, width: maxWidth - 66, height: 20)
+                label.frame = CGRect(x: 63, y: height, width: maxWidth - 66, height: 16)
                 label.textAlignment = .left
             } else {
-                label.frame = CGRect(x: 3, y: height, width: maxWidth - 66, height: 20)
+                label.frame = CGRect(x: 3, y: height, width: maxWidth - 66, height: 16)
                 label.textAlignment = .right
             }
             self.addSubview(label)
@@ -178,12 +267,23 @@ class MessageView: UIView {
             } else {
                 leftX = width - maxWidth
             }
-            self.frame = CGRect(x: leftX, y: 12, width: maxWidth, height: height)
+            
+            var topY: CGFloat = 12
+            if forward {
+                topY = 0
+            }
+            
+            self.frame = CGRect(x: leftX, y: topY, width: maxWidth, height: height)
             cell.addSubview(self)
+            cell.bringSubview(toFront: fwdView)
         }
         
         height = max(height,60)
-        return height + 24
+        if !forward {
+            height += 24
+        }
+        
+        return height
     }
     
     func setVideo(_ attach: Attachment, maxWidth: CGFloat, topY: CGFloat, calc: Bool) -> CGFloat {
@@ -203,11 +303,18 @@ class MessageView: UIView {
                 if dialog.out == 0 {
                     leftX = 60
                     view.configureViewWithVideo(color: Constants.inBackColor)
-                    view.backgroundColor = Constants.inBackColor
+                    if !forward {
+                        view.backgroundColor = Constants.inBackColor
+                    }
                 } else {
                     leftX = 0
                     view.configureViewWithVideo(color: Constants.outBackColor)
-                    view.backgroundColor = Constants.outBackColor
+                    if !forward {
+                        view.backgroundColor = Constants.outBackColor
+                    }
+                }
+                if forward {
+                    view.backgroundColor = Constants.fwdBackColor
                 }
                 view.frame = CGRect(x: leftX, y: topY, width: videoWidth, height: videoHeight + 33)
                 self.addSubview(view)
@@ -357,11 +464,18 @@ class MessageView: UIView {
                 if dialog.out == 0 {
                     leftX = 60
                     view.configureViewWithPhotos(color: Constants.inBackColor)
-                    view.backgroundColor = Constants.inBackColor
+                    if !forward {
+                        view.backgroundColor = Constants.inBackColor
+                    }
                 } else {
                     leftX = maxWidth - 60 - width
                     view.configureViewWithPhotos(color: Constants.outBackColor)
-                    view.backgroundColor = Constants.outBackColor
+                    if !forward {
+                        view.backgroundColor = Constants.outBackColor
+                    }
+                }
+                if forward {
+                    view.backgroundColor = Constants.fwdBackColor
                 }
                 view.frame = CGRect(x: leftX, y: topY, width: width, height: height)
                 view.configureViewWithDoc()
@@ -489,10 +603,17 @@ class MessageView: UIView {
             var leftX: CGFloat = 0
             if dialog.out == 0 {
                 leftX = 60
-                view.backgroundColor = Constants.inBackColor
+                if !forward {
+                    view.backgroundColor = Constants.inBackColor
+                }
             } else {
                 leftX = maxWidth - 60 - width
-                view.backgroundColor = Constants.outBackColor
+                if !forward {
+                    view.backgroundColor = Constants.outBackColor
+                }
+            }
+            if forward {
+                view.backgroundColor = Constants.fwdBackColor
             }
             view.frame = CGRect(x: leftX, y: topY, width: width, height: height)
             view.configureViewWithDoc()
@@ -534,6 +655,12 @@ extension UIView {
     }
     
     func configureViewWithDoc() {
+        self.layer.borderColor = UIColor.gray.cgColor
+        self.layer.borderWidth = 2
+        self.layer.cornerRadius = 6
+    }
+    
+    func configureViewWithFwd() {
         self.layer.borderColor = UIColor.gray.cgColor
         self.layer.borderWidth = 2
         self.layer.cornerRadius = 6

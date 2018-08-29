@@ -24,6 +24,7 @@ class Dialog {
     var body = ""
     
     var attachments: [Attachment] = []
+    var fwdMessages: [Dialog] = []
     
     var attachCount = 0
     
@@ -42,6 +43,11 @@ class Dialog {
         self.body = json["body"].stringValue
         
         self.attachments = json["attachments"].compactMap({ Attachment(json: $0.1) })
+        self.fwdMessages = json["fwd_messages"].compactMap({ Dialog(json: $0.1) })
+        
+        if self.fromID == 0 {
+            self.fromID = self.userID
+        }
         
         for attach in self.attachments {
             if attach.photo.count > 0 {
