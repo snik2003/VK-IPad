@@ -89,7 +89,9 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
     }
     
     func didSendComment(_ text: String!) {
+        commentView.endEditing(true)
         
+        self.sendMessage(message: text)
     }
     
     @objc func tapAccessoryButton(sender: UIButton) {
@@ -366,6 +368,109 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
         OperationQueue().addOperation(getServerDataOperation)
     }
     
+    func loadNewMessages(messageID: Int) {
+        
+        heights.removeAll(keepingCapacity: false)
+        
+        let url = "/method/messages.getHistory"
+        let parameters = [
+            "access_token": vkSingleton.shared.accessToken,
+            "offset": "0",
+            "count": "1",
+            "peer_id": "\(userID)",
+            "start_message_id": "\(messageID)",
+            "v": vkSingleton.shared.version
+        ]
+        
+        let getServerDataOperation = GetServerDataOperation(url: url, parameters: parameters)
+        getServerDataOperation.completionBlock = {
+            guard let data = getServerDataOperation.data else { return }
+            guard let json = try? JSON(data: data) else { print("json error"); return }
+            
+            let dialogs = json["response"]["items"].compactMap { Dialog(json: $0.1) }
+            
+            var userIDs: [String] = []
+            var groupIDs: [String] = []
+            
+            for dialog in dialogs {
+                if dialog.id == messageID {
+                    self.dialogs.append(dialog)
+                    self.totalCount += 1
+                }
+                
+                for attach in dialog.attachments {
+                    if attach.record.count > 0 {
+                        let record = attach.record[0]
+                        if record.fromID > 0 {
+                            userIDs.append("\(record.fromID)")
+                        } else if record.fromID < 0 {
+                            groupIDs.append("\(abs(record.fromID))")
+                        }
+                    }
+                }
+                
+                for dialog2 in dialog.fwdMessages {
+                    if dialog2.userID > 0 {
+                        userIDs.append("\(dialog2.userID)")
+                    } else if dialog2.userID < 0 {
+                        groupIDs.append("\(abs(dialog2.userID))")
+                    }
+                    
+                    for attach in dialog2.attachments {
+                        if attach.record.count > 0 {
+                            let record = attach.record[0]
+                            if record.fromID > 0 {
+                                userIDs.append("\(record.fromID)")
+                            } else if record.fromID < 0 {
+                                groupIDs.append("\(abs(record.fromID))")
+                            }
+                        }
+                    }
+                }
+            }
+            
+            let userList = userIDs.map { $0 }.joined(separator: ", ")
+            var code = "var a = API.users.get({\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"user_ids\":\"\(userList)\",\"fields\":\"id,first_name,last_name,last_seen,photo_max_orig,photo_max,deactivated,first_name_abl,first_name_gen,last_name_gen,online,can_write_private_message,sex\",\"v\":\"\(vkSingleton.shared.version)\"});\n "
+            
+            let groupList = groupIDs.map { $0 }.joined(separator: ",")
+            code = "\(code) var b = API.groups.getById({\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"group_ids\":\"\(groupList)\",\"fields\":\"activity,counters,cover,description,has_photo,member_status,site,status,members_count,is_favorite,can_post,is_hidden_from_feed\",\"v\":\"\(vkSingleton.shared.version)\"});\n "
+            
+            code = "\(code) return [a,b];"
+            
+            let url2 = "/method/execute"
+            let parameters2 = [
+                "access_token": vkSingleton.shared.accessToken,
+                "code": code,
+                "v": vkSingleton.shared.version
+            ]
+            
+            let getServerDataOperation2 = GetServerDataOperation(url: url2, parameters: parameters2)
+            getServerDataOperation2.completionBlock = {
+                guard let data = getServerDataOperation2.data else { return }
+                guard let json = try? JSON(data: data) else { print("json error"); return }
+                //print(json)
+                
+                let users = json["response"][0].compactMap { UserProfile(json: $0.1) }
+                for user in users {
+                    self.users.append(user)
+                }
+                
+                let groups = json["response"][1].compactMap { GroupProfile(json: $0.1) }
+                for group in groups {
+                    self.groups.append(group)
+                }
+                
+                OperationQueue.main.addOperation {
+                    self.tableView.reloadData()
+                    self.tableView.separatorStyle = .none
+                    self.tableView.scrollToRow(at: IndexPath(row: 0, section: 3), at: .bottom, animated: false)
+                }
+            }
+            OperationQueue().addOperation(getServerDataOperation2)
+        }
+        OperationQueue().addOperation(getServerDataOperation)
+    }
+    
     func numberOfSections(in tableView: UITableView) -> Int {
         return 4
     }
@@ -448,5 +553,54 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
             titleView.delegate = self
             titleView.configure()
         }
+    }
+    
+    func sendMessage(message: String, stickerID: Int = 0) {
+        
+        let url = "/method/messages.send"
+        var parameters: [String: Any] = [
+            "access_token": vkSingleton.shared.accessToken,
+            "peer_id": userID,
+            "message": message,
+            "attachment": attachPanel.attachments,
+            "v": vkSingleton.shared.version
+        ]
+        
+        if stickerID != 0 {
+            parameters["sticker_id"] = stickerID
+        }
+        
+        let request = GetServerDataOperation(url: url, parameters: parameters)
+        request.completionBlock = {
+            guard let data = request.data else { return }
+            guard let json = try? JSON(data: data) else { print("json error"); return }
+            print(json)
+            
+            let error = ErrorJson(json: JSON.null)
+            error.errorCode = json["error"]["error_code"].intValue
+            error.errorMsg = json["error"]["error_msg"].stringValue
+            
+            if error.errorCode == 0 {
+                let messID = json["response"].intValue
+                
+                OperationQueue.main.addOperation {
+                    self.offset = 0
+                    
+                    self.commentView.textView.text = ""
+                    self.attachPanel.attachArray.removeAll(keepingCapacity: false)
+                    self.attachPanel.replyID = 0
+                    
+                    self.loadNewMessages(messageID: messID)
+                }
+            } else {
+                if stickerID > 0 {
+                    self.showErrorMessage(title: "Ошибка при отправке стикера", msg: "Данный набор стикеров необходимо активировать в полной версии сайта (https://vk.com/stickers?tab=free).")
+                } else {
+                    self.showErrorMessage(title: "Отправка сообщения", msg: "#\(error.errorCode): \(error.errorMsg)")
+                }
+            }
+            self.setOfflineStatus(dependence: request)
+        }
+        OperationQueue().addOperation(request)
     }
 }

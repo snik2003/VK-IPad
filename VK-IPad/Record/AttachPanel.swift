@@ -155,7 +155,7 @@ class AttachPanel: UIView {
                 } else if let controller = self.delegate as? AddNewTopicController {
                     controller.tableView.reloadData()
                 } else if let controller = self.delegate as? DialogController {
-                    controller.tableView.reloadData()
+                    controller.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .fade)
                 }
             }
             showButton.frame = CGRect(x: width - 20 - 150, y: top + 5, width: 150, height: 20)
@@ -289,7 +289,7 @@ class AttachPanel: UIView {
                             } else if let controller = self.delegate as? AddNewTopicController {
                                 controller.tableView.reloadData()
                             } else if let controller = self.delegate as? DialogController {
-                                controller.tableView.reloadData()
+                                controller.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .fade)
                             }
                         }
                         
@@ -334,7 +334,7 @@ class AttachPanel: UIView {
                         } else if let controller = self.delegate as? AddNewTopicController {
                             controller.tableView.reloadData()
                         } else if let controller = self.delegate as? DialogController {
-                            controller.tableView.reloadData()
+                            controller.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .fade)
                         }
                     }
                     

@@ -289,7 +289,7 @@ class VideoListController: UIViewController, UITableViewDelegate, UITableViewDat
                 }
                 controller.attachPanel.removeFromSuperview()
                 controller.attachPanel.reconfigure()
-                controller.tableView.reloadData()
+                controller.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .fade)
             } else if let controller = delegate as? NewRecordController {
                 for video in videos {
                     controller.attachPanel.attachArray.append(video)

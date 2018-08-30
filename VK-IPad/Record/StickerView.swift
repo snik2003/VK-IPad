@@ -92,8 +92,9 @@ class StickerView: UIView {
                             controller.createComment(text: "", stickerID: sButton.tag)
                         } else if let controller = self.delegate as? TopicController {
                             controller.createComment(text: "", stickerID: sButton.tag)
+                        } else if let controller = self.delegate as? DialogController {
+                            controller.sendMessage(message: "", stickerID: sButton.tag)
                         }
-                        
                         
                         self.popover.dismiss()
                     }

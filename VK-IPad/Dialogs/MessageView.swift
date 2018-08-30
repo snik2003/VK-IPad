@@ -164,6 +164,11 @@ class MessageView: UIView {
                 height += docHeight + 2
             }
             
+            let linkHeight = setLink(attach, maxWidth: maxWidth, topY: height, calc: calcHeight)
+            if linkHeight > 0 {
+                height += linkHeight + 2
+            }
+            
             let stickerHeight = setSticker(attach, maxWidth: maxWidth, topY: height, calc: calcHeight)
             height += stickerHeight
             
@@ -479,6 +484,85 @@ class MessageView: UIView {
                 }
                 view.frame = CGRect(x: leftX, y: topY, width: width, height: height)
                 view.configureViewWithDoc()
+                self.addSubview(view)
+            }
+        }
+        
+        return height
+    }
+    
+    func setLink(_ attach: Attachment, maxWidth: CGFloat, topY: CGFloat, calc: Bool) -> CGFloat {
+        
+        var height: CGFloat = 0
+        
+        if attach.type == "link" && attach.link.count > 0 {
+            
+            height += 50
+            
+            if !calc {
+                let view = UIView()
+                let maxSize = maxWidth
+                
+                let linkImage = UIImageView()
+                linkImage.frame = CGRect(x: 10, y: 5, width: 40, height: 40)
+                if attach.link[0].url.containsIgnoringCase(find: "itunes.apple.com") {
+                    linkImage.image = UIImage(named: "itunes")
+                } else {
+                    linkImage.image = UIImage(named: "link")
+                }
+                
+                let titleLabel = UILabel()
+                titleLabel.frame = CGRect(x: 60, y: linkImage.frame.midY - 16, width: maxSize - 70, height: 16)
+                if attach.link[0].title != "" {
+                    titleLabel.text = attach.link[0].title
+                } else {
+                    if attach.link[0].caption != "" {
+                        titleLabel.text = attach.link[0].caption
+                    } else {
+                        if attach.link[0].description != "" {
+                            titleLabel.text = attach.link[0].description
+                        } else {
+                            titleLabel.text = "Вложенная ссылка:"
+                            titleLabel.isEnabled = false
+                        }
+                    }
+                }
+                titleLabel.font = UIFont(name: "Verdana", size: 12)!
+                
+                let linkLabel = UILabel()
+                linkLabel.frame = CGRect(x: 60, y: linkImage.frame.midY, width: maxSize - 70, height: 16)
+                if let url = URL(string: attach.link[0].url), let host = url.host {
+                    linkLabel.text = host
+                } else {
+                    linkLabel.text = attach.link[0].url
+                }
+                linkLabel.textColor = linkLabel.tintColor
+                linkLabel.font = UIFont(name: "Verdana", size: 12)!
+                
+                view.addSubview(linkImage)
+                view.addSubview(titleLabel)
+                view.addSubview(linkLabel)
+                
+                let tapLink = UITapGestureRecognizer()
+                view.isUserInteractionEnabled = true
+                view.addGestureRecognizer(tapLink)
+                tapLink.add {
+                    self.delegate.openBrowserController(url: attach.link[0].url)
+                }
+                
+                var leftX: CGFloat = 0
+                if dialog.out == 0 {
+                    leftX = 60
+                    view.backgroundColor = Constants.inBackColor
+                } else {
+                    leftX = maxWidth - 60 - maxSize
+                    view.backgroundColor = Constants.outBackColor
+                }
+                if forward {
+                    view.backgroundColor = Constants.fwdBackColor
+                }
+                view.frame = CGRect(x: leftX, y: topY, width: maxSize, height: height)
+                view.configureViewWithFwd()
                 self.addSubview(view)
             }
         }

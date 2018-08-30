@@ -359,7 +359,7 @@ class SelectAttachPanel: UIView, UIImagePickerControllerDelegate, UINavigationCo
                         } else if let controller = self.delegate as? AddNewTopicController {
                             controller.tableView.reloadData()
                         } else if let controller = self.delegate as? DialogController {
-                            controller.tableView.reloadData()
+                            controller.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .fade)
                         }
                     }
                 }
@@ -378,7 +378,7 @@ class SelectAttachPanel: UIView, UIImagePickerControllerDelegate, UINavigationCo
                         } else if let controller = self.delegate as? AddNewTopicController {
                             controller.tableView.reloadData()
                         } else if let controller = self.delegate as? DialogController {
-                            controller.tableView.reloadData()
+                            controller.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .fade)
                         }
                     }
                 }
