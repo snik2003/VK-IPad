@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import BEMCheckBox
 
 class MessageCell: UITableViewCell {
 
@@ -33,6 +34,59 @@ class MessageCell: UITableViewCell {
         view.indexPath = indexPath
         
         let height = view.configureView(calcHeight: calcHeight)
+        
+        if delegate.mode == .select && !calcHeight {
+            let markCheck = BEMCheckBox()
+            markCheck.tag = 250
+            markCheck.onTintColor = vkSingleton.shared.mainColor
+            markCheck.onCheckColor = vkSingleton.shared.mainColor
+            markCheck.lineWidth = 3
+            markCheck.on = dialog.isSelected
+            
+            markCheck.add(for: .valueChanged) {
+                self.dialog.isSelected = markCheck.on
+                self.delegate.tableView.reloadRows(at: [self.indexPath], with: .automatic)
+                
+                let count = self.delegate.dialogs.filter({ $0.isSelected }).count
+                if count > 0 {
+                    self.delegate.panel.deleteButton.setTitle("Удалить (\(count))", for: .normal)
+                    self.delegate.panel.resendButton.setTitle("Переслать (\(count))", for: .normal)
+                    self.delegate.panel.importantButton.setTitle("Пометить как «Важное» (\(count))", for: .normal)
+                    
+                    self.delegate.panel.deleteButton.isEnabled = true
+                    self.delegate.panel.resendButton.isEnabled = true
+                    self.delegate.panel.importantButton.isEnabled = true
+                } else {
+                    self.delegate.panel.deleteButton.setTitle("Удалить", for: .normal)
+                    self.delegate.panel.resendButton.setTitle("Переслать", for: .normal)
+                    self.delegate.panel.importantButton.setTitle("Пометить как «Важное»", for: .normal)
+                    
+                    self.delegate.panel.deleteButton.isEnabled = false
+                    self.delegate.panel.resendButton.isEnabled = false
+                    self.delegate.panel.importantButton.isEnabled = false
+                }
+            }
+            
+            var leftX: CGFloat = 0
+            if dialog.out == 0 {
+                leftX = delegate.width - 30 - 20
+            } else {
+                leftX = 20
+            }
+            markCheck.frame = CGRect(x: leftX, y: height/2 - 20, width: 30, height: 30)
+            
+            let fadeView = UIView()
+            fadeView.tag = 250
+            if dialog.isSelected {
+                fadeView.backgroundColor = vkSingleton.shared.backColor.withAlphaComponent(0.75)
+            } else {
+                fadeView.backgroundColor = UIColor.clear
+            }
+            fadeView.frame = CGRect(x: 0, y: 0, width: delegate.width, height: height)
+            self.addSubview(fadeView)
+            
+            self.addSubview(markCheck)
+        }
         
         if dialog.readState == 0 {
             self.backgroundColor = UIColor.purple.withAlphaComponent(0.2)

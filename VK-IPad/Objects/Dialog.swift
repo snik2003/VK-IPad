@@ -28,6 +28,8 @@ class Dialog {
     
     var attachCount = 0
     
+    var isSelected = false
+    
     init(json: JSON) {
         self.id = json["id"].intValue
         self.userID = json["user_id"].intValue

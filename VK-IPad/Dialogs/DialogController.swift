@@ -15,6 +15,7 @@ import RxCocoa
 
 enum DialogMode {
     case dialog
+    case select
 }
 
 class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSource, DCCommentViewDelegate, WKNavigationDelegate {
@@ -29,6 +30,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
     var tableView = UITableView()
     var commentView: DCCommentView!
     var attachPanel = AttachPanel()
+    var panel = SelectMessagesPanel()
     
     var dialogs: [Dialog] = []
     var users: [UserProfile] = []
@@ -39,6 +41,15 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
     var count = 50
     var totalCount = 0
     var mode = DialogMode.dialog
+    
+    var selectedMessages: String {
+        let dialogs = self.dialogs.filter({ $0.isSelected })
+        var selected: [String] = []
+        for dialog in dialogs {
+            selected.append("\(dialog.id)")
+        }
+        return selected.map { $0 }.joined(separator: ",")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -91,37 +102,43 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
     func didSendComment(_ text: String!) {
         commentView.endEditing(true)
         
-        self.sendMessage(message: text)
+        if self.mode == .dialog {
+            self.sendMessage(message: text)
+        }
     }
     
     @objc func tapAccessoryButton(sender: UIButton) {
         commentView.endEditing(true)
         commentView.accessoryButton.buttonTouched()
         
-        let selectView = SelectAttachPanel()
-        
-        selectView.delegate = self
-        selectView.attachPanel = self.attachPanel
-        selectView.button = self.commentView.accessoryButton
-        
-        selectView.ownerID = "\(userID)"
-        
-        selectView.show()
+        if self.mode == .dialog {
+            let selectView = SelectAttachPanel()
+            
+            selectView.delegate = self
+            selectView.attachPanel = self.attachPanel
+            selectView.button = self.commentView.accessoryButton
+            
+            selectView.ownerID = "\(userID)"
+            
+            selectView.show()
+        }
     }
     
     @objc func tapStickerButton(sender: UIButton) {
         commentView.endEditing(true)
         commentView.stickerButton.buttonTouched()
         
-        let stickerView = StickerView()
-        stickerView.width = 320
-        stickerView.height = stickerView.width + 70
-        
-        stickerView.delegate = self
-        stickerView.button = self.commentView.stickerButton
-        stickerView.numProd = 1
-        
-        stickerView.show()
+        if self.mode == .dialog {
+            let stickerView = StickerView()
+            stickerView.width = 320
+            stickerView.height = stickerView.width + 70
+            
+            stickerView.delegate = self
+            stickerView.button = self.commentView.stickerButton
+            stickerView.numProd = 1
+            
+            stickerView.show()
+        }
     }
     
     func getDialog() {
@@ -506,7 +523,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
                 return height
             }
         case 3:
-            return 60
+            return 70
         default:
             return 0
         }
@@ -534,6 +551,10 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
             cell.dialog = self.dialogs[indexPath.row]
             cell.indexPath = indexPath
             let _ = cell.configureCell(calcHeight: false)
+            
+            let doubleTap = UITapGestureRecognizer(target: self, action: #selector(goSelectMode))
+            doubleTap.numberOfTapsRequired = 2
+            cell.addGestureRecognizer(doubleTap)
             
             cell.selectionStyle = .none
             
@@ -563,6 +584,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
             "peer_id": userID,
             "message": message,
             "attachment": attachPanel.attachments,
+            "forward_messages": selectedMessages,
             "v": vkSingleton.shared.version
         ]
         
@@ -586,6 +608,8 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
                 OperationQueue.main.addOperation {
                     self.offset = 0
                     
+                    self.clearSelectedMessages()
+                    
                     self.commentView.textView.text = ""
                     self.attachPanel.attachArray.removeAll(keepingCapacity: false)
                     self.attachPanel.replyID = 0
@@ -602,5 +626,20 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
             self.setOfflineStatus(dependence: request)
         }
         OperationQueue().addOperation(request)
+    }
+    
+    func clearSelectedMessages() {
+        for dialog in self.dialogs {
+            dialog.isSelected = false
+        }
+    }
+    
+    @objc func goSelectMode() {
+        if mode == .dialog {
+            mode = .select
+            
+            panel.delegate = self
+            panel.reconfigure()
+        }
     }
 }

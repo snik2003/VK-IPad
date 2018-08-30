@@ -393,7 +393,9 @@ class MessageView: UIView {
                 titleLabel.isUserInteractionEnabled = true
                 titleLabel.addGestureRecognizer(tap)
                 tap.add {
-                    self.delegate.openVideoController(ownerID: "\(attach.video[0].ownerID)", vid: "\(attach.video[0].id)", accessKey: attach.video[0].accessKey, title: "Видеозапись")
+                    if self.delegate.mode == .dialog {
+                        self.delegate.openVideoController(ownerID: "\(attach.video[0].ownerID)", vid: "\(attach.video[0].id)", accessKey: attach.video[0].accessKey, title: "Видеозапись")
+                    }
                 }
                 view.addSubview(titleLabel)
             }
@@ -547,7 +549,9 @@ class MessageView: UIView {
                 view.isUserInteractionEnabled = true
                 view.addGestureRecognizer(tapLink)
                 tapLink.add {
-                    self.delegate.openBrowserController(url: attach.link[0].url)
+                    if self.delegate.mode == .dialog {
+                        self.delegate.openBrowserController(url: attach.link[0].url)
+                    }
                 }
                 
                 var leftX: CGFloat = 0
