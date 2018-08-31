@@ -47,6 +47,7 @@ class DialogTitleView: UIView {
                     OperationQueue.main.addOperation {
                         self.user = users[0]
                         self.configureUserView()
+                        
                         self.delegate.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: self)
                         self.delegate.title = ""
                         
@@ -54,7 +55,7 @@ class DialogTitleView: UIView {
                         self.isUserInteractionEnabled = true
                         self.addGestureRecognizer(tap)
                         tap.add {
-                            self.delegate.openProfileController(id: id, name: "\(self.user.firstName) \(self.user.lastName)")
+                            self.delegate.tapDialogTitleView()
                         }
                     }
                 }

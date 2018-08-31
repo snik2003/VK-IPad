@@ -35,6 +35,25 @@ class MessageCell: UITableViewCell {
         
         let height = view.configureView(calcHeight: calcHeight)
         
+        if dialog.important == 1 {
+            let label = UILabel()
+            label.tag = 250
+            label.text = "«Важное»"
+            label.textAlignment = .center
+            label.textColor = UIColor.red
+            label.font = UIFont(name: "Verdana", size: 12)
+            label.numberOfLines = 1
+            label.isEnabled = true
+            
+            var leftX: CGFloat = 0
+            if dialog.out == 0 {
+                leftX = maxWidth + 60
+            }
+            label.frame = CGRect(x: leftX, y: 15, width: delegate.width - maxWidth - 60, height: 20)
+            self.addSubview(label)
+            
+        }
+        
         if delegate.mode == .select && !calcHeight {
             let markCheck = BEMCheckBox()
             markCheck.tag = 250
@@ -47,11 +66,16 @@ class MessageCell: UITableViewCell {
                 self.dialog.isSelected = markCheck.on
                 self.delegate.tableView.reloadRows(at: [self.indexPath], with: .automatic)
                 
-                let count = self.delegate.dialogs.filter({ $0.isSelected }).count
+                let dialogs = self.delegate.dialogs.filter({ $0.isSelected })
+                let count = dialogs.count
+                
                 if count > 0 {
                     self.delegate.panel.deleteButton.setTitle("Удалить (\(count))", for: .normal)
                     self.delegate.panel.resendButton.setTitle("Переслать (\(count))", for: .normal)
                     self.delegate.panel.importantButton.setTitle("Пометить как «Важное» (\(count))", for: .normal)
+                    if dialogs.filter({ $0.important == 1 }).count == count {
+                        self.delegate.panel.importantButton.setTitle("Снять пометку «Важное» (\(count))", for: .normal)
+                    }
                     
                     self.delegate.panel.deleteButton.isEnabled = true
                     self.delegate.panel.resendButton.isEnabled = true
@@ -88,7 +112,38 @@ class MessageCell: UITableViewCell {
             self.addSubview(markCheck)
         }
         
-        if dialog.readState == 0 {
+        if delegate.mode == .edit && !calcHeight {
+            let markCheck = BEMCheckBox()
+            markCheck.tag = 250
+            markCheck.onTintColor = vkSingleton.shared.mainColor
+            markCheck.onCheckColor = vkSingleton.shared.mainColor
+            markCheck.lineWidth = 3
+            markCheck.on = true
+            markCheck.isEnabled = false
+            
+            var leftX: CGFloat = 0
+            if dialog.out == 0 {
+                leftX = delegate.width - 30 - 20
+            } else {
+                leftX = 20
+            }
+            markCheck.frame = CGRect(x: leftX, y: height/2 - 20, width: 30, height: 30)
+            
+            let fadeView = UIView()
+            fadeView.tag = 250
+            if dialog.isSelected {
+                fadeView.backgroundColor = vkSingleton.shared.backColor.withAlphaComponent(0.75)
+            } else {
+                fadeView.backgroundColor = UIColor.clear
+            }
+            fadeView.frame = CGRect(x: 0, y: 0, width: delegate.width, height: height)
+            self.addSubview(fadeView)
+            if dialog.isSelected {
+                self.addSubview(markCheck)
+            }
+        }
+        
+        if dialog.readState == 0 && delegate.source == .all {
             self.backgroundColor = UIColor.purple.withAlphaComponent(0.2)
         } else {
             self.backgroundColor = delegate.tableView.backgroundColor
@@ -120,7 +175,11 @@ class MessageCell: UITableViewCell {
             countButton.frame = CGRect(x: 0, y: 10, width: delegate.view.bounds.width, height: 30)
             countButton.add(for: .touchUpInside) {
                 countButton.buttonTouched()
-                self.delegate.loadMoreMessages()
+                if self.delegate.source == .all {
+                    self.delegate.loadMoreMessages()
+                } else if self.delegate.source == .important {
+                    self.delegate.loadMoreImportantMessages()
+                }
             }
             self.addSubview(countButton)
         }

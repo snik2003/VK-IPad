@@ -13,6 +13,7 @@ class Dialog {
     var id = 0
     var userID = 0
     var fromID = 0
+    var peerID = 0
     var date = 0
     var readState = 0
     var out = 0
@@ -34,6 +35,7 @@ class Dialog {
         self.id = json["id"].intValue
         self.userID = json["user_id"].intValue
         self.fromID = json["from_id"].intValue
+        self.peerID = json["peer_id"].intValue
         self.date = json["date"].intValue
         self.readState = json["read_state"].intValue
         self.out = json["out"].intValue
@@ -51,10 +53,52 @@ class Dialog {
             self.fromID = self.userID
         }
         
+        if self.body == "" {
+            self.body = json["text"].stringValue
+        }
+        
         for attach in self.attachments {
             if attach.photo.count > 0 {
                 self.attachCount += 1
             }
         }
+    }
+}
+
+extension Dialog: Equatable {
+    
+    static func == (lhs: Dialog, rhs: Dialog) -> Bool {
+        if lhs.id == rhs.id && lhs.fromID == rhs.fromID {
+            return true
+        }
+        return false
+    }
+    
+    var canEdit: Bool {
+        if self.out == 0 {
+            return false
+        }
+        
+        if Int(Date().timeIntervalSince1970) - self.date >= 24 * 60 * 60 {
+            return false
+        }
+        
+        if self.body == "" {
+            for attach in self.attachments {
+                if attach.type == "sticker" && attach.sticker.count > 0 {
+                    return false
+                }
+                
+                if attach.type == "wall" && attach.record.count > 0 {
+                    return false
+                }
+                
+                if attach.type == "doc" && attach.doc.count > 0 {
+                    return false
+                }
+            }
+        }
+        
+        return true
     }
 }

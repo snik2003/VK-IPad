@@ -1264,7 +1264,7 @@ extension UIViewController: VkOperationProtocol {
                 if error.errorCode == 0 {
                     self.showSuccessMessage(title: "Приглашение в сообщество", msg: "Приглашение в сообщество «\(group.name)» успешно выслано \(friend.firstNameDat) \(friend.lastNameDat).")
                 } else {
-                    self.showErrorMessage(title: "Ошибка приглашения", msg: "#\(error.errorCode): \(error.errorMsg)")
+                    self.showErrorMessage(title: "Ошибка приглашения", msg: "\nОшибка #\(error.errorCode): \(error.errorMsg)\n")
                 }
             }
             OperationQueue().addOperation(request)
@@ -1297,5 +1297,96 @@ extension UIViewController: VkOperationProtocol {
             }
         }
         OperationQueue().addOperation(getServerDataOperation)
+    }
+    
+    func deleteMessages(forAll: Bool = false, spam: Bool = false) {
+        
+        if let controller = self as? DialogController {
+            
+            let url = "/method/messages.delete"
+            var parameters = [
+                "access_token": vkSingleton.shared.accessToken,
+                "message_ids": controller.selectedMessages,
+                "v": vkSingleton.shared.version
+            ]
+            
+            if spam {
+                parameters["spam"] = "1"
+            }
+            
+            if forAll {
+                parameters["delete_for_all"] = "1"
+            }
+            
+            let request = GetServerDataOperation(url: url, parameters: parameters)
+            request.completionBlock = {
+                guard let data = request.data else { return }
+                guard let json = try? JSON(data: data) else { print("json error"); return }
+                //print(json)
+                
+                let error = ErrorJson(json: JSON.null)
+                error.errorCode = json["error"]["error_code"].intValue
+                error.errorMsg = json["error"]["error_msg"].stringValue
+                
+                if error.errorCode == 0 {
+                    OperationQueue.main.addOperation {
+                        controller.mode = .dialog
+                        controller.clearSelectedMessages()
+                        controller.panel.reconfigure()
+                    }
+                } else {
+                    self.showErrorMessage(title: "Удаление сообщения", msg: "\nОшибка #\(error.errorCode): \(error.errorMsg)\n")
+                }
+                self.setOfflineStatus(dependence: request)
+            }
+            OperationQueue().addOperation(request)
+        }
+    }
+    
+    func setImportantMessage(setOn: Bool = true) {
+        
+        if let controller = self as? DialogController {
+            
+            let url = "/method/messages.markAsImportant"
+            var parameters = [
+                "access_token": vkSingleton.shared.accessToken,
+                "message_ids": controller.selectedMessages,
+                "v": vkSingleton.shared.version
+            ]
+            
+            if setOn {
+                parameters["important"] = "1"
+            } else {
+                parameters["important"] = "0"
+            }
+            
+            let request = GetServerDataOperation(url: url, parameters: parameters)
+            request.completionBlock = {
+                guard let data = request.data else { return }
+                guard let json = try? JSON(data: data) else { print("json error"); return }
+                //print(json)
+                
+                let error = ErrorJson(json: JSON.null)
+                error.errorCode = json["error"]["error_code"].intValue
+                error.errorMsg = json["error"]["error_msg"].stringValue
+                
+                if error.errorCode == 0 {
+                    OperationQueue.main.addOperation {
+                        if setOn {
+                            controller.setImportantSelectedMessages()
+                        } else {
+                            controller.unsetImportantSelectedMessages()
+                        }
+                        controller.mode = .dialog
+                        controller.clearSelectedMessages()
+                        controller.panel.reconfigure()
+                    }
+                } else {
+                    self.showErrorMessage(title: "«Важные» сообщения", msg: "\nОшибка #\(error.errorCode): \(error.errorMsg)\n")
+                }
+                self.setOfflineStatus(dependence: request)
+            }
+            OperationQueue().addOperation(request)
+        }
     }
 }

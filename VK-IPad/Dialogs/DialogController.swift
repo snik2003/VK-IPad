@@ -13,9 +13,14 @@ import WebKit
 import RxSwift
 import RxCocoa
 
+enum DialogSource {
+    case all
+    case important
+}
 enum DialogMode {
     case dialog
     case select
+    case edit
 }
 
 class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSource, DCCommentViewDelegate, WKNavigationDelegate {
@@ -29,6 +34,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
     
     var tableView = UITableView()
     var commentView: DCCommentView!
+    var titleView = DialogTitleView()
     var attachPanel = AttachPanel()
     var panel = SelectMessagesPanel()
     
@@ -41,6 +47,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
     var count = 50
     var totalCount = 0
     var mode = DialogMode.dialog
+    var source = DialogSource.all
     
     var selectedMessages: String {
         let dialogs = self.dialogs.filter({ $0.isSelected })
@@ -102,7 +109,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
     func didSendComment(_ text: String!) {
         commentView.endEditing(true)
         
-        if self.mode == .dialog {
+        if self.mode == .dialog && source == .all {
             self.sendMessage(message: text)
         }
     }
@@ -143,6 +150,9 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
     
     func getDialog() {
         
+        dialogs.removeAll(keepingCapacity: false)
+        users.removeAll(keepingCapacity: false)
+        groups.removeAll(keepingCapacity: false)
         heights.removeAll(keepingCapacity: false)
         ViewControllerUtils().showActivityIndicator(uiView: self.view)
         
@@ -250,7 +260,6 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
                     self.tableView.separatorStyle = .none
                     self.tableView.scrollToRow(at: IndexPath(row: 0, section: 3), at: .bottom, animated: false)
                     
-                    //print("count = \(self.dialogs.count), total = \(self.totalCount)")
                     if unread > 0 {
                         // помечаем непрочитанные сообщения как прочитанные
                     }
@@ -258,6 +267,56 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
                 }
             }
             OperationQueue().addOperation(getServerDataOperation2)
+        }
+        OperationQueue().addOperation(getServerDataOperation)
+    }
+    
+    func getImportantMessages() {
+        
+        dialogs.removeAll(keepingCapacity: false)
+        users.removeAll(keepingCapacity: false)
+        groups.removeAll(keepingCapacity: false)
+        heights.removeAll(keepingCapacity: false)
+        ViewControllerUtils().showActivityIndicator(uiView: self.view)
+        
+        let url = "/method/messages.getImportantMessages"
+        let parameters = [
+            "access_token": vkSingleton.shared.accessToken,
+            "offset": "\(offset)",
+            "count": "200",
+            "peer_id": "\(userID)",
+            "fields": "id,first_name,last_name,last_seen,photo_max_orig,photo_max,deactivated,first_name_abl,first_name_gen,last_name_gen,online,can_write_private_message,sex",
+            "extended": "1",
+            "v": vkSingleton.shared.version
+        ]
+        
+        let getServerDataOperation = GetServerDataOperation(url: url, parameters: parameters)
+        getServerDataOperation.completionBlock = {
+            guard let data = getServerDataOperation.data else { return }
+            guard let json = try? JSON(data: data) else { print("json error"); return }
+            //print(json)
+            
+            self.totalCount = json["response"]["messages"]["count"].intValue
+            
+            let dialogs = json["response"]["messages"]["items"].compactMap { Dialog(json: $0.1) }
+            for dialog in dialogs.reversed() {
+                if "\(dialog.peerID)" == self.userID {
+                    self.dialogs.append(dialog)
+                } else {
+                    self.totalCount -= 1
+                }
+            }
+            
+            self.users = json["response"]["profiles"].compactMap { UserProfile(json: $0.1) }
+            self.groups = json["response"]["groups"].compactMap { GroupProfile(json: $0.1) }
+            
+            OperationQueue.main.addOperation {
+                self.offset += 200
+                self.tableView.reloadData()
+                self.tableView.separatorStyle = .none
+                self.tableView.scrollToRow(at: IndexPath(row: 0, section: 3), at: .bottom, animated: false)
+                ViewControllerUtils().hideActivityIndicator()
+            }
         }
         OperationQueue().addOperation(getServerDataOperation)
     }
@@ -371,8 +430,6 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
                     self.groups.append(group)
                 }
                 
-                
-                
                 OperationQueue.main.addOperation {
                     self.tableView.reloadData()
                     self.tableView.separatorStyle = .none
@@ -381,6 +438,62 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
                 }
             }
             OperationQueue().addOperation(getServerDataOperation2)
+        }
+        OperationQueue().addOperation(getServerDataOperation)
+    }
+    
+    func loadMoreImportantMessages() {
+        
+        heights.removeAll(keepingCapacity: false)
+        ViewControllerUtils().showActivityIndicator(uiView: self.view)
+        
+        let url = "/method/messages.getImportantMessages"
+        let parameters = [
+            "access_token": vkSingleton.shared.accessToken,
+            "offset": "\(offset)",
+            "count": "200",
+            "peer_id": "\(userID)",
+            "fields": "id,first_name,last_name,last_seen,photo_max_orig,photo_max,deactivated,first_name_abl,first_name_gen,last_name_gen,online,can_write_private_message,sex",
+            "extended": "1",
+            "v": vkSingleton.shared.version
+        ]
+        
+        let getServerDataOperation = GetServerDataOperation(url: url, parameters: parameters)
+        getServerDataOperation.completionBlock = {
+            guard let data = getServerDataOperation.data else { return }
+            guard let json = try? JSON(data: data) else { print("json error"); return }
+            //print(json)
+            
+            self.totalCount = json["response"]["messages"]["count"].intValue
+            
+            var newCount = self.dialogs.count
+            let dialogs = json["response"]["messages"]["items"].compactMap { Dialog(json: $0.1) }
+            for dialog in dialogs {
+                if "\(dialog.peerID)" == self.userID && !self.dialogs.contains(dialog) {
+                    self.dialogs.insert(dialog, at: 0)
+                } else {
+                    self.totalCount -= 1
+                }
+            }
+            newCount = self.dialogs.count - newCount
+            
+            let users = json["response"]["profiles"].compactMap { UserProfile(json: $0.1) }
+            for user in users {
+                self.users.append(user)
+            }
+            
+            let groups = json["response"]["groups"].compactMap { GroupProfile(json: $0.1) }
+            for group in groups {
+                self.groups.append(group)
+            }
+            
+            OperationQueue.main.addOperation {
+                self.offset += 200
+                self.tableView.reloadData()
+                self.tableView.separatorStyle = .none
+                self.tableView.scrollToRow(at: IndexPath(row: newCount+1, section: 2), at: .bottom, animated: false)
+                ViewControllerUtils().hideActivityIndicator()
+            }
         }
         OperationQueue().addOperation(getServerDataOperation)
     }
@@ -552,9 +665,13 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
             cell.indexPath = indexPath
             let _ = cell.configureCell(calcHeight: false)
             
-            let doubleTap = UITapGestureRecognizer(target: self, action: #selector(goSelectMode))
+            let doubleTap = UITapGestureRecognizer(target: self, action: #selector(goSelectMode(sender:)))
             doubleTap.numberOfTapsRequired = 2
             cell.addGestureRecognizer(doubleTap)
+            
+            let longTap = UILongPressGestureRecognizer(target: self, action: #selector(goEditMode(sender:)))
+            longTap.minimumPressDuration = 0.6
+            cell.addGestureRecognizer(longTap)
             
             cell.selectionStyle = .none
             
@@ -563,6 +680,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
             let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
             
             cell.backgroundColor = vkSingleton.shared.dialogColor
+            cell.selectionStyle = .none
             
             return cell
         }
@@ -570,9 +688,8 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
     
     func setDialogTitle() {
         OperationQueue.main.addOperation {
-            let titleView = DialogTitleView()
-            titleView.delegate = self
-            titleView.configure()
+            self.titleView.delegate = self
+            self.titleView.configure()
         }
     }
     
@@ -596,7 +713,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
         request.completionBlock = {
             guard let data = request.data else { return }
             guard let json = try? JSON(data: data) else { print("json error"); return }
-            print(json)
+            //print(json)
             
             let error = ErrorJson(json: JSON.null)
             error.errorCode = json["error"]["error_code"].intValue
@@ -628,18 +745,122 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
         OperationQueue().addOperation(request)
     }
     
+    func setImportantSelectedMessages() {
+        for dialog in self.dialogs {
+            if dialog.isSelected {
+                dialog.important = 1
+            }
+        }
+    }
+    
+    func unsetImportantSelectedMessages() {
+        for dialog in self.dialogs {
+            if dialog.isSelected {
+                dialog.important = 0
+            }
+        }
+    }
+    
     func clearSelectedMessages() {
         for dialog in self.dialogs {
             dialog.isSelected = false
         }
     }
     
-    @objc func goSelectMode() {
+    @objc func goSelectMode(sender: UITapGestureRecognizer) {
         if mode == .dialog {
-            mode = .select
-            
-            panel.delegate = self
-            panel.reconfigure()
+            if sender.state == .ended {
+                let buttonPosition: CGPoint = sender.location(in: self.tableView)
+                
+                if let indexPath = self.tableView.indexPathForRow(at: buttonPosition), indexPath.section == 2 {
+                    if mode == .dialog {
+                        mode = .select
+                        
+                        panel.delegate = self
+                        if indexPath.row < tableView.numberOfRows(inSection: 2) - 1 {
+                            panel.indexPath = IndexPath(row: indexPath.row + 1, section: 2)
+                        } else {
+                            panel.indexPath = IndexPath(row: 0, section: 3)
+                        }
+                        panel.reconfigure()
+                    }
+                }
+            }
         }
+    }
+    
+    @objc func goEditMode(sender: UILongPressGestureRecognizer) {
+        if mode == .dialog {
+            if sender.state == .ended {
+                let buttonPosition: CGPoint = sender.location(in: self.tableView)
+                
+                if let indexPath = self.tableView.indexPathForRow(at: buttonPosition), indexPath.section == 2 {
+                    dialogs[indexPath.row].isSelected = true
+                    mode = .edit
+                    
+                    panel.delegate = self
+                    panel.dialog = dialogs[indexPath.row]
+                    if indexPath.row < tableView.numberOfRows(inSection: 2) - 1 {
+                        panel.indexPath = IndexPath(row: indexPath.row + 1, section: 2)
+                    } else {
+                        panel.indexPath = IndexPath(row: 0, section: 3)
+                    }
+                    panel.reconfigure()
+                }
+            }
+        }
+    }
+    
+    func tapDialogTitleView() {
+        
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        
+        let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
+        alertController.addAction(cancelAction)
+        
+        if let id = Int(self.userID), id > 0 {
+            let action1 = UIAlertAction(title: "Открыть профиль собеседника", style: .default) { action in
+                
+                self.openProfileController(id: id, name: "")
+            }
+            alertController.addAction(action1)
+        }
+        
+        
+        if mode == .dialog {
+            if let id = Int(self.userID), id > 0 {
+                if self.source == .all {
+                    let action2 = UIAlertAction(title: "Показать важные сообщения", style: .default) { action in
+                        
+                        self.title = "Важные сообщения"
+                        self.source = .important
+                        self.offset = 0
+                        
+                        self.getImportantMessages()
+                    }
+                    alertController.addAction(action2)
+                } else {
+                    let action2 = UIAlertAction(title: "Показать вcе сообщения", style: .default) { action in
+                        
+                        self.title = ""
+                        self.source = .all
+                        self.offset = 0
+                        
+                        self.getDialog()
+                    }
+                    alertController.addAction(action2)
+                }
+            }
+        }
+        
+        
+        if let popoverController = alertController.popoverPresentationController {
+            let bounds = self.titleView.bounds
+            popoverController.sourceView = self.titleView
+            popoverController.sourceRect = CGRect(x: bounds.maxX - 18, y: bounds.maxY + 5, width: 0, height: 0)
+            popoverController.permittedArrowDirections = [.up]
+        }
+        
+        self.present(alertController, animated: true)
     }
 }
