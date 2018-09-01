@@ -43,4 +43,6 @@ final class vkSingleton {
     var myProfile: UserProfile!
     
     var supportGroupID = "-166099539"
+    
+    var forwardMessages: [String] = []
 }

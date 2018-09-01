@@ -52,6 +52,7 @@ class AttachPanel: UIView {
     var attachArray: [AnyObject] = []
     var link = ""
     var attachments = ""
+    var forwards = ""
     
     var width: CGFloat = 0
     
@@ -111,7 +112,12 @@ class AttachPanel: UIView {
         }
         
         attachments = ""
-        if attachArray.count > 0 || link != "" {
+        
+        if delegate is DialogController && vkSingleton.shared.forwardMessages.count > 0 {
+            forwards = vkSingleton.shared.forwardMessages.map { $0 }.joined(separator: ",")
+        }
+        
+        if attachArray.count > 0 || link != "" || forwards != "" {
             let view = UIView()
             view.tag = 250
             view.backgroundColor = UIColor.white.withAlphaComponent(0.85)
@@ -123,6 +129,9 @@ class AttachPanel: UIView {
             
             var count = attachArray.count
             if link != "" {
+                count += 1
+            }
+            if forwards != "" {
                 count += 1
             }
             
@@ -305,7 +314,6 @@ class AttachPanel: UIView {
                     nameLabel.tag = 250
                     nameLabel.text = "Внешняя ссылка:  \(link)"
                     nameLabel.font = UIFont(name: "Verdana", size: 14)!
-                    //nameLabel.textColor = nameLabel.tintColor
                     nameLabel.frame = CGRect(x: 20, y: top, width: width - 40 - 120, height: 40)
                     nameLabel.prepareTextForPublish2(self.delegate, cell: nil)
                     view.addSubview(nameLabel)
@@ -342,6 +350,51 @@ class AttachPanel: UIView {
                     view.addSubview(xButton)
                     
                     top += 40
+                }
+                
+                if forwards != "" {
+                    let count = vkSingleton.shared.forwardMessages.count
+                    
+                    let imageView = UIImageView()
+                    imageView.tag = 250
+                    imageView.image = UIImage(named: "comments")
+                    imageView.contentMode = .scaleAspectFill
+                    imageView.clipsToBounds = true
+                    imageView.layer.borderColor = UIColor.lightGray.cgColor
+                    imageView.layer.borderWidth = 0//0.5
+                    imageView.frame = CGRect(x: 20, y: top + 5, width: 30, height: 30)
+                    view.addSubview(imageView)
+                    
+                    let fwdLabel = UILabel()
+                    fwdLabel.tag = 250
+                    fwdLabel.text = "Вложено для пересылки \(count.messageAdder())"
+                    fwdLabel.font = UIFont(name: "Verdana", size: 14)!
+                    fwdLabel.textColor = fwdLabel.tintColor
+                    fwdLabel.frame = CGRect(x: 60, y: top, width: width - 40 - 120, height: 40)
+                    fwdLabel.prepareTextForPublish2(self.delegate, cell: nil)
+                    view.addSubview(fwdLabel)
+                    
+                    let xButton = UIButton()
+                    xButton.tag = 250
+                    xButton.setTitle("✘ Удалить", for: .normal)
+                    xButton.setTitleColor(UIColor.red, for: .normal)
+                    xButton.titleLabel?.font = UIFont(name: "Verdana", size: 14)!
+                    xButton.contentHorizontalAlignment = .right
+                    
+                    xButton.add(for: .touchUpInside) {
+                        vkSingleton.shared.forwardMessages.removeAll(keepingCapacity: false)
+                        
+                        self.forwards = ""
+                        self.removeFromSuperview()
+                        self.reconfigure()
+                    }
+                    
+                    xButton.frame = CGRect(x: width - 20 - 120, y: top, width: 120, height: 40)
+                    view.addSubview(xButton)
+                    
+                    top += 40
+                } else {
+                    forwards = ""
                 }
             } else {
                 top += 30
@@ -380,6 +433,9 @@ class AttachPanel: UIView {
             controller.commentView.attachCount = attachArray.count
         } else if let controller = delegate as? DialogController {
             controller.commentView.attachCount = attachArray.count
+            if forwards != "" {
+                controller.commentView.attachCount += 1
+            }
         }
         
         self.frame = CGRect(x: 0, y: 64, width: width + 20, height: height)

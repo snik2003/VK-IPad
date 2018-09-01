@@ -82,7 +82,7 @@ class SelectMessagesPanel: UIView {
             resendButton.titleLabel?.minimumScaleFactor = 0.5
             resendButton.add(for: .touchUpInside) {
                 self.resendButton.buttonTouched()
-                
+                self.resendSelectedMessages()
             }
             let x2: CGFloat = 120 + (width - 120) * 0.25
             resendButton.frame = CGRect(x: x2, y: 10, width: (width - 120) * 0.25, height: 30)
@@ -161,7 +161,7 @@ class SelectMessagesPanel: UIView {
             resendButton.titleLabel?.minimumScaleFactor = 0.5
             resendButton.add(for: .touchUpInside) {
                 self.resendButton.buttonTouched()
-                
+                self.resendSelectedMessages()
             }
             let x2: CGFloat = 120 + (width - 120) * 0.333
             resendButton.frame = CGRect(x: x2, y: 10, width: (width - 120) * 0.333, height: 30)
@@ -299,6 +299,47 @@ class SelectMessagesPanel: UIView {
         if let popoverController = alertController.popoverPresentationController {
             let bounds = self.importantButton.bounds
             popoverController.sourceView = self.importantButton
+            popoverController.sourceRect = CGRect(x: bounds.midX, y: bounds.minY - 20, width: 0, height: 0)
+            popoverController.permittedArrowDirections = [.down]
+        }
+        
+        self.delegate.present(alertController, animated: true)
+    }
+    
+    func resendSelectedMessages() {
+        
+        let dialogs = delegate.dialogs.filter({ $0.isSelected })
+        let count = dialogs.count
+        
+        let alertController = UIAlertController(title: "Вы пометили \(count.messageAdder())", message: "Выберите необходимое действие:", preferredStyle: .actionSheet)
+        
+        
+        let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
+        alertController.addAction(cancelAction)
+        
+        
+        let action1 = UIAlertAction(title: "Переслать \(count.messageAdder())", style: .default) { action in
+            
+            for dialog in dialogs {
+                vkSingleton.shared.forwardMessages.append("\(dialog.id)")
+            }
+            
+            self.delegate.mode = .dialog
+            self.delegate.clearSelectedMessages()
+            
+            self.reconfigure()
+            
+            self.delegate.tableView.reloadData()
+            self.delegate.tableView.scrollToRow(at: self.indexPath, at: .bottom, animated: false)
+            
+            self.delegate.attachPanel.reconfigure()
+        }
+        alertController.addAction(action1)
+        
+        
+        if let popoverController = alertController.popoverPresentationController {
+            let bounds = self.resendButton.bounds
+            popoverController.sourceView = self.resendButton
             popoverController.sourceRect = CGRect(x: bounds.midX, y: bounds.minY - 20, width: 0, height: 0)
             popoverController.permittedArrowDirections = [.down]
         }

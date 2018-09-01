@@ -51,6 +51,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
     
     var selectedMessages: String {
         let dialogs = self.dialogs.filter({ $0.isSelected })
+        
         var selected: [String] = []
         for dialog in dialogs {
             selected.append("\(dialog.id)")
@@ -58,12 +59,16 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
         return selected.map { $0 }.joined(separator: ",")
     }
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = vkSingleton.shared.dialogColor
         
-        self.attachPanel.delegate = self
         self.configureTableView()
+        
+        self.attachPanel.delegate = self
+        self.attachPanel.width = width - 20
+        self.attachPanel.reconfigure()
         
         self.tableView.separatorStyle = .none
         
@@ -701,9 +706,12 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
             "peer_id": userID,
             "message": message,
             "attachment": attachPanel.attachments,
-            "forward_messages": selectedMessages,
             "v": vkSingleton.shared.version
         ]
+        
+        if attachPanel.forwards != "" {
+            parameters["forward_messages"] = attachPanel.forwards
+        }
         
         if stickerID != 0 {
             parameters["sticker_id"] = stickerID
@@ -725,10 +733,12 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
                 OperationQueue.main.addOperation {
                     self.offset = 0
                     
+                    vkSingleton.shared.forwardMessages.removeAll(keepingCapacity: false)
                     self.clearSelectedMessages()
                     
                     self.commentView.textView.text = ""
                     self.attachPanel.attachArray.removeAll(keepingCapacity: false)
+                    self.attachPanel.forwards = ""
                     self.attachPanel.replyID = 0
                     
                     self.loadNewMessages(messageID: messID)
