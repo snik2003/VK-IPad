@@ -48,7 +48,12 @@ class SelectMessagesPanel: UIView {
                 self.delegate.mode = .dialog
                 self.delegate.clearSelectedMessages()
                 
+                self.delegate.attachPanel.attachArray.removeAll(keepingCapacity: false)
+                self.delegate.commentView.textView.text = ""
+                vkSingleton.shared.forwardMessages.removeAll(keepingCapacity: false)
+                
                 self.reconfigure()
+                self.delegate.attachPanel.reconfigure()
                 
                 self.delegate.tableView.reloadData()
                 self.delegate.tableView.scrollToRow(at: self.indexPath, at: .bottom, animated: false)
@@ -125,7 +130,13 @@ class SelectMessagesPanel: UIView {
                 self.delegate.mode = .dialog
                 self.delegate.clearSelectedMessages()
                 
+                self.delegate.commentView.textView.text = ""
+                self.delegate.attachPanel.attachArray.removeAll(keepingCapacity: false)
+                self.delegate.attachPanel.forwards = ""
+                vkSingleton.shared.forwardMessages.removeAll(keepingCapacity: false)
+                
                 self.reconfigure()
+                self.delegate.attachPanel.reconfigure()
                 
                 self.delegate.tableView.reloadData()
                 self.delegate.tableView.scrollToRow(at: self.indexPath, at: .bottom, animated: false)
@@ -174,7 +185,7 @@ class SelectMessagesPanel: UIView {
             editButton.titleLabel?.minimumScaleFactor = 0.5
             editButton.add(for: .touchUpInside) {
                 self.editButton.buttonTouched()
-                
+                self.editSelectedMessage()
             }
             let x3: CGFloat = 120 + (width - 120) * 0.5
             editButton.frame = CGRect(x: x3, y: 10, width: (width - 120) * 0.25, height: 30)
@@ -394,6 +405,58 @@ class SelectMessagesPanel: UIView {
         if let popoverController = alertController.popoverPresentationController {
             let bounds = self.importantButton.bounds
             popoverController.sourceView = self.importantButton
+            popoverController.sourceRect = CGRect(x: bounds.midX, y: bounds.minY - 20, width: 0, height: 0)
+            popoverController.permittedArrowDirections = [.down]
+        }
+        
+        self.delegate.present(alertController, animated: true)
+    }
+    
+    func editSelectedMessage() {
+        
+        let dialogs = delegate.dialogs.filter({ $0.isSelected })
+        let count = dialogs.count
+        
+        let alertController = UIAlertController(title: "Вы пометили \(count.messageAdder())", message: "Выберите необходимое действие:", preferredStyle: .actionSheet)
+        
+        
+        let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
+        alertController.addAction(cancelAction)
+        
+        
+        let action1 = UIAlertAction(title: "Изменить сообщение", style: .destructive) { action in
+            
+            self.editButton.isEnabled = false
+            self.deleteButton.isEnabled = false
+            self.resendButton.isEnabled = false
+            self.importantButton.isEnabled = false
+            
+            self.delegate.attachPanel.forwards = ""
+            self.delegate.attachPanel.editID = self.dialog.id
+            self.delegate.commentView.textView.text = self.dialog.body
+            vkSingleton.shared.forwardMessages.removeAll(keepingCapacity: false)
+            
+            self.delegate.attachPanel.attachArray.removeAll(keepingCapacity: false)
+            for attach in self.dialog.attachments {
+                if attach.photo.count > 0 {
+                    self.delegate.attachPanel.attachArray.append(attach.photo[0])
+                }
+                if attach.video.count > 0 {
+                    self.delegate.attachPanel.attachArray.append(attach.video[0])
+                }
+                if attach.doc.count > 0 {
+                    self.delegate.attachPanel.attachArray.append(attach.doc[0])
+                }
+            }
+            
+            self.delegate.attachPanel.reconfigure()
+        }
+        alertController.addAction(action1)
+        
+        
+        if let popoverController = alertController.popoverPresentationController {
+            let bounds = self.editButton.bounds
+            popoverController.sourceView = self.editButton
             popoverController.sourceRect = CGRect(x: bounds.midX, y: bounds.minY - 20, width: 0, height: 0)
             popoverController.permittedArrowDirections = [.down]
         }

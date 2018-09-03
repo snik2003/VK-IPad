@@ -132,13 +132,17 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
         if self.mode == .dialog && source == .all {
             self.sendMessage(message: text)
         }
+        
+        if self.mode == .edit {
+            self.editMessage(message: text)
+        }
     }
     
     @objc func tapAccessoryButton(sender: UIButton) {
         commentView.endEditing(true)
         commentView.accessoryButton.buttonTouched()
         
-        if self.mode == .dialog {
+        if self.mode == .dialog || self.attachPanel.editID > 0 {
             let selectView = SelectAttachPanel()
             
             selectView.delegate = self
@@ -696,7 +700,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
                 cell.dialog = self.dialogs[indexPath.row]
                 let height = cell.configureCell(calcHeight: true)
                 heights[indexPath] = height
-            
+                
                 return height
             }
         case 3:
@@ -808,6 +812,59 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
                 } else {
                     self.showErrorMessage(title: "Отправка сообщения", msg: "#\(error.errorCode): \(error.errorMsg)")
                 }
+            }
+            self.setOfflineStatus(dependence: request)
+        }
+        OperationQueue().addOperation(request)
+    }
+    
+    func editMessage(message: String) {
+        
+        let url = "/method/messages.edit"
+        let parameters = [
+            "access_token": vkSingleton.shared.accessToken,
+            "peer_id": userID,
+            "message_id": "\(attachPanel.editID)",
+            "message": message,
+            "attachment": attachPanel.attachments,
+            "keep_forward_messages": "1",
+            "keep_snippets": "1",
+            "v": vkSingleton.shared.version
+        ]
+        
+        let request = GetServerDataOperation(url: url, parameters: parameters)
+        request.completionBlock = {
+            guard let data = request.data else { return }
+            guard let json = try? JSON(data: data) else { print("json error"); return }
+            //print(json)
+            
+            let error = ErrorJson(json: JSON.null)
+            error.errorCode = json["error"]["error_code"].intValue
+            error.errorMsg = json["error"]["error_msg"].stringValue
+            
+            if error.errorCode == 0 {
+                OperationQueue.main.addOperation {
+                    self.offset = 0
+                    
+                    self.mode = .dialog
+                    self.panel.reconfigure()
+                    
+                    vkSingleton.shared.forwardMessages.removeAll(keepingCapacity: false)
+                    self.clearSelectedMessages()
+                    
+                    self.commentView.textView.text = ""
+                    self.attachPanel.attachArray.removeAll(keepingCapacity: false)
+                    self.attachPanel.forwards = ""
+                    self.attachPanel.editID = 0
+                    self.attachPanel.reconfigure()
+                    
+                    self.dialogs.removeAll(keepingCapacity: false)
+                    self.tableView.reloadData()
+                    
+                    self.getDialog()
+                }
+            } else {
+                self.showErrorMessage(title: "Редактирования сообщения", msg: "#\(error.errorCode): \(error.errorMsg)")
             }
             self.setOfflineStatus(dependence: request)
         }
