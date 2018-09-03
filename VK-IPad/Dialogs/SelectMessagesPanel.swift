@@ -72,7 +72,6 @@ class SelectMessagesPanel: UIView {
             deleteButton.frame = CGRect(x: x1, y: 10, width: (width - 120) * 0.25, height: 30)
             self.addSubview(deleteButton)
             
-            
             resendButton.setTitle("Переслать", for: .normal)
             resendButton.isEnabled = false
             resendButton.setTitleColor(UIColor.white, for: .normal)

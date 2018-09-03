@@ -16,6 +16,7 @@ import RxCocoa
 enum DialogSource {
     case all
     case important
+    case preview
 }
 enum DialogMode {
     case dialog
@@ -72,13 +73,22 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
         
         self.tableView.separatorStyle = .none
         
-        setDialogTitle()
-        getDialog()
-        
-        if userID == vkSingleton.shared.supportGroupID {
-            let feedbackText = "Здесь Вы можете оставить отзыв о приложении «ВКлючайся!»:\n\nзадать любой вопрос по функционалу приложения,\nсообщить об обнаруженной ошибке или внести\nпредложение по усовершенствованию приложения.\n\nМы будем рады любому отзыву и обязательно ответим Вам.\n\nЖдём ваших сообщений! 😊"
+        if self.source == .preview {
+            let count = vkSingleton.shared.forwardMessages.count
+            self.title = "Вложенные для пересылки сообщения (\(count))"
             
-            self.showSuccessMessage(title: "Друзья!", msg: feedbackText)
+            navigationItem.rightBarButtonItem = nil
+            getPreviewMessages()
+        } else {
+            setDialogTitle()
+            getDialog()
+        
+        
+            if userID == vkSingleton.shared.supportGroupID {
+                let feedbackText = "Здесь Вы можете оставить отзыв о приложении «ВКлючайся!»:\n\nзадать любой вопрос по функционалу приложения,\nсообщить об обнаруженной ошибке или внести\nпредложение по усовершенствованию приложения.\n\nМы будем рады любому отзыву и обязательно ответим Вам.\n\nЖдём ваших сообщений! 😊"
+                
+                self.showSuccessMessage(title: "Друзья!", msg: feedbackText)
+            }
         }
     }
 
@@ -108,7 +118,12 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
         
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         tableView.register(MessageCell.self, forCellReuseIdentifier: "messageCell")
-        self.view.addSubview(commentView)
+        
+        if source == .preview {
+            self.view.addSubview(tableView)
+        } else {
+            self.view.addSubview(commentView)
+        }
     }
     
     func didSendComment(_ text: String!) {
@@ -314,6 +329,50 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
             
             self.users = json["response"]["profiles"].compactMap { UserProfile(json: $0.1) }
             self.groups = json["response"]["groups"].compactMap { GroupProfile(json: $0.1) }
+            
+            OperationQueue.main.addOperation {
+                self.offset += 200
+                self.tableView.reloadData()
+                self.tableView.separatorStyle = .none
+                self.tableView.scrollToRow(at: IndexPath(row: 0, section: 3), at: .bottom, animated: false)
+                ViewControllerUtils().hideActivityIndicator()
+            }
+        }
+        OperationQueue().addOperation(getServerDataOperation)
+    }
+    
+    func getPreviewMessages() {
+        
+        dialogs.removeAll(keepingCapacity: false)
+        users.removeAll(keepingCapacity: false)
+        groups.removeAll(keepingCapacity: false)
+        heights.removeAll(keepingCapacity: false)
+        ViewControllerUtils().showActivityIndicator(uiView: self.view)
+        
+        let forwards = vkSingleton.shared.forwardMessages.sorted().map { $0 }.joined(separator: ",")
+        
+        let url = "/method/messages.getById"
+        let parameters = [
+            "access_token": vkSingleton.shared.accessToken,
+            "message_ids": forwards,
+            "extended": "1",
+            "fields": "id,first_name,last_name,last_seen,photo_max_orig,photo_max,deactivated,first_name_abl,first_name_gen,last_name_gen,online,can_write_private_message,sex",
+            "v": vkSingleton.shared.version
+        ]
+        
+        let getServerDataOperation = GetServerDataOperation(url: url, parameters: parameters)
+        getServerDataOperation.completionBlock = {
+            guard let data = getServerDataOperation.data else { return }
+            guard let json = try? JSON(data: data) else { print("json error"); return }
+            print(json)
+            
+            self.totalCount = json["response"]["count"].intValue
+            
+            self.dialogs = json["response"]["items"].compactMap { Dialog(json: $0.1) }
+            self.users = json["response"]["profiles"].compactMap { UserProfile(json: $0.1) }
+            self.groups = json["response"]["groups"].compactMap { GroupProfile(json: $0.1) }
+            
+            self.users.append(vkSingleton.shared.myProfile)
             
             OperationQueue.main.addOperation {
                 self.offset += 200
@@ -778,7 +837,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
     }
     
     @objc func goSelectMode(sender: UITapGestureRecognizer) {
-        if mode == .dialog {
+        if mode == .dialog && source != .preview {
             if sender.state == .ended {
                 let buttonPosition: CGPoint = sender.location(in: self.tableView)
                 
@@ -800,7 +859,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
     }
     
     @objc func goEditMode(sender: UILongPressGestureRecognizer) {
-        if mode == .dialog {
+        if mode == .dialog && source != .preview {
             if sender.state == .ended {
                 let buttonPosition: CGPoint = sender.location(in: self.tableView)
                 
@@ -872,5 +931,43 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
         }
         
         self.present(alertController, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        if source == .preview {
+            return true
+        }
+        return false
+    }
+    
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        
+        if source == .preview && indexPath.section == 2 {
+            let deleteAction = UITableViewRowAction(style: .destructive, title: "Удалить\nиз вложения") { (rowAction, indexPath) in
+                
+                let dialog = self.dialogs[indexPath.row]
+                
+                self.dialogs.remove(object: dialog)
+                self.totalCount -= 1
+                vkSingleton.shared.forwardMessages.remove(object: "\(dialog.id)")
+                
+                self.title = "Вложенные для пересылки сообщения"
+                let count = vkSingleton.shared.forwardMessages.count
+                if count > 0 {
+                    self.title = "Вложенные для пересылки сообщения (\(count))"
+                }
+                
+                self.tableView.reloadData()
+                if let controller = self.delegate as? DialogController {
+                    controller.attachPanel.forwards = ""
+                    controller.attachPanel.reconfigure()
+                }
+            }
+            deleteAction.backgroundColor = .red
+            
+            return [deleteAction]
+        }
+        
+        return []
     }
 }

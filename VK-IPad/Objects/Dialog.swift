@@ -50,7 +50,13 @@ class Dialog {
         self.fwdMessages = json["fwd_messages"].compactMap({ Dialog(json: $0.1) })
         
         if self.fromID == 0 {
-            self.fromID = self.userID
+            if self.out == 0 {
+                self.fromID = self.userID
+            } else {
+                if let id = Int(vkSingleton.shared.userID) {
+                    self.fromID = id
+                }
+            }
         }
         
         if self.body == "" {

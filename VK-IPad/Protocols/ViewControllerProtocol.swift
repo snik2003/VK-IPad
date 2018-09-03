@@ -427,11 +427,12 @@ extension UIViewController: ViewControllerProtocol {
         }
     }
     
-    func openDialogController(ownerID: String, startID: Int) {
+    func openDialogController(ownerID: String, startID: Int, source: DialogSource = .all) {
         let controller = self.storyboard?.instantiateViewController(withIdentifier: "DialogController") as! DialogController
         
         controller.userID = ownerID
         controller.startMessageID = startID
+        controller.source = source
         controller.delegate = self
         
         if let split = self.splitViewController {

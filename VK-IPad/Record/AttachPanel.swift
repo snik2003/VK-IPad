@@ -113,8 +113,10 @@ class AttachPanel: UIView {
         
         attachments = ""
         
-        if delegate is DialogController && vkSingleton.shared.forwardMessages.count > 0 {
-            forwards = vkSingleton.shared.forwardMessages.map { $0 }.joined(separator: ",")
+        if let controller = delegate as? DialogController, controller.source != .preview {
+            if vkSingleton.shared.forwardMessages.count > 0 {
+                forwards = vkSingleton.shared.forwardMessages.sorted().map { $0 }.joined(separator: ",")
+            }
         }
         
         if attachArray.count > 0 || link != "" || forwards != "" {
@@ -365,14 +367,29 @@ class AttachPanel: UIView {
                     imageView.frame = CGRect(x: 20, y: top + 5, width: 30, height: 30)
                     view.addSubview(imageView)
                     
-                    let fwdLabel = UILabel()
-                    fwdLabel.tag = 250
-                    fwdLabel.text = "Вложено для пересылки \(count.messageAdder())"
-                    fwdLabel.font = UIFont(name: "Verdana", size: 14)!
-                    fwdLabel.textColor = fwdLabel.tintColor
-                    fwdLabel.frame = CGRect(x: 60, y: top, width: width - 40 - 120, height: 40)
-                    fwdLabel.prepareTextForPublish2(self.delegate, cell: nil)
-                    view.addSubview(fwdLabel)
+                    let nameLabel = UILabel()
+                    nameLabel.tag = 250
+                    nameLabel.text = "Вложено для пересылки \(count.messageAdder())"
+                    nameLabel.font = UIFont(name: "Verdana", size: 14)!
+                    nameLabel.textColor = nameLabel.tintColor
+                    nameLabel.frame = CGRect(x: 60, y: top, width: width - 40 - 120, height: 40)
+                    nameLabel.prepareTextForPublish2(self.delegate, cell: nil)
+                    view.addSubview(nameLabel)
+                    
+                    let tap1 = UITapGestureRecognizer()
+                    nameLabel.isUserInteractionEnabled = true
+                    nameLabel.addGestureRecognizer(tap1)
+                    tap1.add {
+                        self.delegate.openDialogController(ownerID: vkSingleton.shared.userID, startID: 0, source: .preview)
+                    }
+                    
+                    let tap2 = UITapGestureRecognizer()
+                    imageView.isUserInteractionEnabled = true
+                    imageView.addGestureRecognizer(tap2)
+                    tap2.add {
+                        self.delegate.openDialogController(ownerID: vkSingleton.shared.userID, startID: 0, source: .preview)
+                    }
+                    
                     
                     let xButton = UIButton()
                     xButton.tag = 250
