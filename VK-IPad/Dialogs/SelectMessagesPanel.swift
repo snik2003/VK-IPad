@@ -111,8 +111,6 @@ class SelectMessagesPanel: UIView {
         
         if delegate.mode == .edit {
             
-            importantButton.removeFromSuperview()
-            
             let width: CGFloat = delegate.width - 40
             let height: CGFloat = 50
             self.frame = CGRect(x: 0, y: 0, width: width, height: height)
@@ -147,7 +145,7 @@ class SelectMessagesPanel: UIView {
                 self.deleteSelectedMessages()
             }
             let x1: CGFloat = 120
-            deleteButton.frame = CGRect(x: x1, y: 10, width: (width - 120) * 0.333, height: 30)
+            deleteButton.frame = CGRect(x: x1, y: 10, width: (width - 120) * 0.25, height: 30)
             self.addSubview(deleteButton)
             
             
@@ -162,12 +160,12 @@ class SelectMessagesPanel: UIView {
                 self.resendButton.buttonTouched()
                 self.resendSelectedMessages()
             }
-            let x2: CGFloat = 120 + (width - 120) * 0.333
-            resendButton.frame = CGRect(x: x2, y: 10, width: (width - 120) * 0.333, height: 30)
+            let x2: CGFloat = 120 + (width - 120) * 0.25
+            resendButton.frame = CGRect(x: x2, y: 10, width: (width - 120) * 0.25, height: 30)
             self.addSubview(resendButton)
             
             
-            editButton.setTitle("Редактировать", for: .normal)
+            editButton.setTitle("Изменить", for: .normal)
             editButton.isEnabled = dialog.canEdit
             editButton.setTitleColor(UIColor.white, for: .normal)
             editButton.setTitleColor(UIColor.lightGray, for: .disabled)
@@ -178,9 +176,26 @@ class SelectMessagesPanel: UIView {
                 self.editButton.buttonTouched()
                 
             }
-            let x3: CGFloat = 120 + (width - 120) * 0.666
-            editButton.frame = CGRect(x: x3, y: 10, width: (width - 120) * 0.333, height: 30)
+            let x3: CGFloat = 120 + (width - 120) * 0.5
+            editButton.frame = CGRect(x: x3, y: 10, width: (width - 120) * 0.25, height: 30)
             self.addSubview(editButton)
+            
+            
+            importantButton.setTitle("Копировать", for: .normal)
+            importantButton.isEnabled = true
+            importantButton.setTitleColor(UIColor.white, for: .normal)
+            importantButton.setTitleColor(UIColor.lightGray, for: .disabled)
+            importantButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 15)
+            importantButton.titleLabel?.adjustsFontSizeToFitWidth = true
+            importantButton.titleLabel?.minimumScaleFactor = 0.5
+            importantButton.add(for: .touchUpInside) {
+                self.importantButton.buttonTouched()
+                self.copySelectedMessage()
+            }
+            let x4: CGFloat = 120 + (width - 120) * 0.75
+            importantButton.frame = CGRect(x: x4, y: 10, width: (width - 120) * 0.25, height: 30)
+            self.addSubview(importantButton)
+            
             
             show()
             
@@ -339,6 +354,46 @@ class SelectMessagesPanel: UIView {
         if let popoverController = alertController.popoverPresentationController {
             let bounds = self.resendButton.bounds
             popoverController.sourceView = self.resendButton
+            popoverController.sourceRect = CGRect(x: bounds.midX, y: bounds.minY - 20, width: 0, height: 0)
+            popoverController.permittedArrowDirections = [.down]
+        }
+        
+        self.delegate.present(alertController, animated: true)
+    }
+    
+    func copySelectedMessage() {
+        
+        let dialogs = delegate.dialogs.filter({ $0.isSelected })
+        let count = dialogs.count
+        
+        let alertController = UIAlertController(title: "Вы пометили \(count.messageAdder())", message: "Выберите необходимое действие:", preferredStyle: .actionSheet)
+        
+        
+        let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
+        alertController.addAction(cancelAction)
+        
+        
+        let action1 = UIAlertAction(title: "Копировать текст сообщения", style: .default) { action in
+            
+            self.delegate.mode = .dialog
+            self.delegate.clearSelectedMessages()
+        
+            self.reconfigure()
+        
+            self.delegate.tableView.reloadData()
+            self.delegate.tableView.scrollToRow(at: self.indexPath, at: .bottom, animated: false)
+        
+            UIPasteboard.general.string = self.dialog.body
+            if let string = UIPasteboard.general.string {
+                self.delegate.showInfoMessage(title: "Скопированное сообщение:" , msg: "\(string)")
+            }
+        }
+        alertController.addAction(action1)
+        
+        
+        if let popoverController = alertController.popoverPresentationController {
+            let bounds = self.importantButton.bounds
+            popoverController.sourceView = self.importantButton
             popoverController.sourceRect = CGRect(x: bounds.midX, y: bounds.minY - 20, width: 0, height: 0)
             popoverController.permittedArrowDirections = [.down]
         }
