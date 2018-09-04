@@ -24,6 +24,7 @@ class SelectMessagesPanel: UIView {
         .color(vkSingleton.shared.mainColor)]
     
     var editButton = UIButton()
+    var copyButton = UIButton()
     var resendButton = UIButton()
     var deleteButton = UIButton()
     var importantButton = UIButton()
@@ -33,6 +34,7 @@ class SelectMessagesPanel: UIView {
         if delegate.mode == .select {
             
             editButton.removeFromSuperview()
+            copyButton.removeFromSuperview()
             
             let width: CGFloat = delegate.width - 40
             let height: CGFloat = 50
@@ -116,6 +118,8 @@ class SelectMessagesPanel: UIView {
         
         if delegate.mode == .edit {
             
+            importantButton.removeFromSuperview()
+            
             let width: CGFloat = delegate.width - 40
             let height: CGFloat = 50
             self.frame = CGRect(x: 0, y: 0, width: width, height: height)
@@ -192,20 +196,20 @@ class SelectMessagesPanel: UIView {
             self.addSubview(editButton)
             
             
-            importantButton.setTitle("Копировать", for: .normal)
-            importantButton.isEnabled = true
-            importantButton.setTitleColor(UIColor.white, for: .normal)
-            importantButton.setTitleColor(UIColor.lightGray, for: .disabled)
-            importantButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 15)
-            importantButton.titleLabel?.adjustsFontSizeToFitWidth = true
-            importantButton.titleLabel?.minimumScaleFactor = 0.5
-            importantButton.add(for: .touchUpInside) {
-                self.importantButton.buttonTouched()
+            copyButton.setTitle("Копировать", for: .normal)
+            copyButton.isEnabled = true
+            copyButton.setTitleColor(UIColor.white, for: .normal)
+            copyButton.setTitleColor(UIColor.lightGray, for: .disabled)
+            copyButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 15)
+            copyButton.titleLabel?.adjustsFontSizeToFitWidth = true
+            copyButton.titleLabel?.minimumScaleFactor = 0.5
+            copyButton.add(for: .touchUpInside) {
+                self.copyButton.buttonTouched()
                 self.copySelectedMessage()
             }
             let x4: CGFloat = 120 + (width - 120) * 0.75
-            importantButton.frame = CGRect(x: x4, y: 10, width: (width - 120) * 0.25, height: 30)
-            self.addSubview(importantButton)
+            copyButton.frame = CGRect(x: x4, y: 10, width: (width - 120) * 0.25, height: 30)
+            self.addSubview(copyButton)
             
             
             show()
@@ -403,8 +407,8 @@ class SelectMessagesPanel: UIView {
         
         
         if let popoverController = alertController.popoverPresentationController {
-            let bounds = self.importantButton.bounds
-            popoverController.sourceView = self.importantButton
+            let bounds = self.copyButton.bounds
+            popoverController.sourceView = self.copyButton
             popoverController.sourceRect = CGRect(x: bounds.midX, y: bounds.minY - 20, width: 0, height: 0)
             popoverController.permittedArrowDirections = [.down]
         }
