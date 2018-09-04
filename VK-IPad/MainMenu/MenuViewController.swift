@@ -57,7 +57,7 @@ class MenuViewController: UITableViewController {
         
         // Мои сообщения
         if indexPath.section == 0 && indexPath.row == 2 {
-            
+            self.openDialogsController()
         }
         
         // Новости

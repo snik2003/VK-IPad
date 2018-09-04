@@ -1905,6 +1905,65 @@
             </objects>
             <point key="canvasLocation" x="4844.8023426061491" y="2480.859375"/>
         </scene>
+        <!--Dialogs Controller-->
+        <scene sceneID="Lbd-Nw-GwF">
+            <objects>
+                <viewController storyboardIdentifier="DialogsController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="PbS-bd-rvS" customClass="DialogsController" customModule="VK_IPad" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="HBx-bf-4ym">
+                        <rect key="frame" x="0.0" y="0.0" width="1366" height="1024"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <searchBar contentMode="redraw" searchBarStyle="minimal" translatesAutoresizingMaskIntoConstraints="NO" id="c7X-gD-tLV">
+                                <rect key="frame" x="0.0" y="64" width="1366" height="56"/>
+                                <color key="barTintColor" red="0.019607843140000001" green="0.4039215686" blue="0.64313725489999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </searchBar>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Szz-yH-f7l">
+                                <rect key="frame" x="0.0" y="120" width="1366" height="836"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </tableView>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="wO3-ci-RPW">
+                                <rect key="frame" x="20" y="976" width="1326" height="29"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="28" id="doW-PV-8m2"/>
+                                </constraints>
+                                <segments>
+                                    <segment title="Все беседы" width="150"/>
+                                    <segment title="Беседы с непрочитанными сообщениями"/>
+                                    <segment title="Важные Беседы" width="180"/>
+                                </segments>
+                                <color key="tintColor" red="0.019607843140000001" green="0.4039215686" blue="0.64313725489999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <connections>
+                                    <action selector="changeFilterWithSender:" destination="PbS-bd-rvS" eventType="valueChanged" id="N1h-e4-PZQ"/>
+                                </connections>
+                            </segmentedControl>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="dJz-RQ-XY1" firstAttribute="trailing" secondItem="Szz-yH-f7l" secondAttribute="trailing" id="6Dw-LV-UEr"/>
+                            <constraint firstItem="dJz-RQ-XY1" firstAttribute="trailing" secondItem="wO3-ci-RPW" secondAttribute="trailing" constant="20" id="91A-V7-eiS"/>
+                            <constraint firstItem="Szz-yH-f7l" firstAttribute="leading" secondItem="dJz-RQ-XY1" secondAttribute="leading" id="MgT-Oi-bK3"/>
+                            <constraint firstItem="wO3-ci-RPW" firstAttribute="leading" secondItem="dJz-RQ-XY1" secondAttribute="leading" constant="20" id="N8e-py-KG7"/>
+                            <constraint firstItem="dJz-RQ-XY1" firstAttribute="trailing" secondItem="c7X-gD-tLV" secondAttribute="trailing" id="ecy-Cw-XXN"/>
+                            <constraint firstItem="dJz-RQ-XY1" firstAttribute="bottom" secondItem="wO3-ci-RPW" secondAttribute="bottom" constant="20" id="gAZ-Xf-ROM"/>
+                            <constraint firstItem="c7X-gD-tLV" firstAttribute="top" secondItem="dJz-RQ-XY1" secondAttribute="top" id="oyI-M1-PbN"/>
+                            <constraint firstItem="Szz-yH-f7l" firstAttribute="top" secondItem="c7X-gD-tLV" secondAttribute="bottom" id="tXa-7l-5P1"/>
+                            <constraint firstItem="wO3-ci-RPW" firstAttribute="top" secondItem="Szz-yH-f7l" secondAttribute="bottom" constant="20" id="tmb-yF-KHR"/>
+                            <constraint firstItem="c7X-gD-tLV" firstAttribute="leading" secondItem="dJz-RQ-XY1" secondAttribute="leading" id="z8j-p8-YMk"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="dJz-RQ-XY1"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="If2-f9-4vW"/>
+                    <connections>
+                        <outlet property="searchBar" destination="c7X-gD-tLV" id="VV4-j4-r8v"/>
+                        <outlet property="segmentedControl" destination="wO3-ci-RPW" id="6k9-b0-ZDq"/>
+                        <outlet property="tableView" destination="Szz-yH-f7l" id="ke2-vj-AKL"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="xle-4f-rVX" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="5489" y="1079"/>
+        </scene>
         <!--Navigation Controller-->
         <scene sceneID="Qml-ee-xnc">
             <objects>
@@ -1932,6 +1991,31 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AmW-bi-7oa" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="4844.8023426061491" y="1787.6953124999998"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="X6F-sg-FrR">
+            <objects>
+                <navigationController storyboardIdentifier="DialogsNavigation" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="iSo-Dt-cKk" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="yc9-Ld-ds3">
+                        <rect key="frame" x="0.0" y="20" width="1366" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="barTintColor" red="0.019607843140000001" green="0.4039215686" blue="0.64313725489999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <textAttributes key="titleTextAttributes">
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </textAttributes>
+                        <textAttributes key="largeTitleTextAttributes">
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </textAttributes>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="PbS-bd-rvS" kind="relationship" relationship="rootViewController" id="6Oz-7e-Ux5"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="oiU-PN-6yR" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4845.6808199121515" y="1078.7109375"/>
         </scene>
     </scenes>
     <resources>

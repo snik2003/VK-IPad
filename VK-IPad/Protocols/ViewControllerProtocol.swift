@@ -442,6 +442,32 @@ extension UIViewController: ViewControllerProtocol {
         }
     }
     
+    func openDialogsController() {
+        let appearance = SCLAlertView.SCLAppearance(
+            kTitleTop: 32.0,
+            kWindowWidth: 400,
+            kTitleFont: UIFont(name: "Verdana-Bold", size: 14)!,
+            kTextFont: UIFont(name: "Verdana", size: 15)!,
+            kButtonFont: UIFont(name: "Verdana", size: 16)!,
+            showCloseButton: false,
+            showCircularIcon: true
+        )
+        let alertView = SCLAlertView(appearance: appearance)
+        
+        alertView.addButton("Да, хочу перейти") {
+            let controller = self.storyboard?.instantiateViewController(withIdentifier: "DialogsController") as! DialogsController
+            
+            if let split = self.splitViewController {
+                let detail = split.viewControllers[split.viewControllers.endIndex - 1]
+                detail.childViewControllers[0].navigationController?.pushViewController(controller, animated: true)
+            }
+        }
+        
+        alertView.addButton("Нет, я передумал") {}
+        
+        alertView.showWarning("Подтверждение!", subTitle: "Данное действие изменит ваш статус в сети!\n\nВы действительно хотите перейти в раздел «Сообщения»?")
+    }
+    
     func updateAppCounters() {
         if let splitVC = self.navigationController?.splitViewController, let detailVC = splitVC.viewControllers[0].childViewControllers[0] as? MenuViewController {
             detailVC.getUserInfo()

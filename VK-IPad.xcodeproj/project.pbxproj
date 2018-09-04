@@ -89,6 +89,9 @@
 		17996B5120DCDBC0003DA26B /* ParseVideos.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17996B5020DCDBC0003DA26B /* ParseVideos.swift */; };
 		17996B5320DCDC6F003DA26B /* ReloadVideoListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17996B5220DCDC6F003DA26B /* ReloadVideoListController.swift */; };
 		179CFC4120DBE94900F2AB04 /* Sticker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179CFC4020DBE94900F2AB04 /* Sticker.swift */; };
+		17A151E6213EA474006BC369 /* DialogsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A151E5213EA474006BC369 /* DialogsController.swift */; };
+		17A151E8213EB0D3006BC369 /* DialogsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A151E7213EB0D3006BC369 /* DialogsCell.swift */; };
+		17A151EA213EB775006BC369 /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A151E9213EB775006BC369 /* Conversation.swift */; };
 		17A1A5B720D8D31200D9CE00 /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A1A5B620D8D31200D9CE00 /* Button.swift */; };
 		17A1A5B920D8E37400D9CE00 /* GroupProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A1A5B820D8E37400D9CE00 /* GroupProfileViewController.swift */; };
 		17A1A5BB20D8E63000D9CE00 /* ParseGroupProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A1A5BA20D8E63000D9CE00 /* ParseGroupProfile.swift */; };
@@ -218,6 +221,9 @@
 		17996B5020DCDBC0003DA26B /* ParseVideos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParseVideos.swift; sourceTree = "<group>"; };
 		17996B5220DCDC6F003DA26B /* ReloadVideoListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReloadVideoListController.swift; sourceTree = "<group>"; };
 		179CFC4020DBE94900F2AB04 /* Sticker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sticker.swift; sourceTree = "<group>"; };
+		17A151E5213EA474006BC369 /* DialogsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogsController.swift; sourceTree = "<group>"; };
+		17A151E7213EB0D3006BC369 /* DialogsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogsCell.swift; sourceTree = "<group>"; };
+		17A151E9213EB775006BC369 /* Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
 		17A1A5B620D8D31200D9CE00 /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
 		17A1A5B820D8E37400D9CE00 /* GroupProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupProfileViewController.swift; sourceTree = "<group>"; };
 		17A1A5BA20D8E63000D9CE00 /* ParseGroupProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParseGroupProfile.swift; sourceTree = "<group>"; };
@@ -404,6 +410,7 @@
 				1772512E210A1E0C00B4C6FA /* PushSettings.swift */,
 				17FDD8E4210F2F3C0064558A /* Topic.swift */,
 				177BF2C02130316F002A8905 /* Dialog.swift */,
+				17A151E9213EB775006BC369 /* Conversation.swift */,
 			);
 			path = Objects;
 			sourceTree = "<group>";
@@ -570,6 +577,8 @@
 				17D21E1221341E110053B91F /* MessageCell.swift */,
 				17D21E1421342C970053B91F /* MessageView.swift */,
 				17D21E16213829490053B91F /* SelectMessagesPanel.swift */,
+				17A151E5213EA474006BC369 /* DialogsController.swift */,
+				17A151E7213EB0D3006BC369 /* DialogsCell.swift */,
 			);
 			path = Dialogs;
 			sourceTree = "<group>";
@@ -762,12 +771,14 @@
 				17FDD8EB211061890064558A /* ParseComments.swift in Sources */,
 				174912F520D300DD00FCF9F9 /* AppDelegate.swift in Sources */,
 				17B409F62109F961004CED46 /* OptionsController.swift in Sources */,
+				17A151E6213EA474006BC369 /* DialogsController.swift in Sources */,
 				174912E320D300DD00FCF9F9 /* Date.swift in Sources */,
 				17B134A920DAD7090058E1A8 /* RecordController.swift in Sources */,
 				174912DE20D300DD00FCF9F9 /* UserProfile.swift in Sources */,
 				17B134A320DA8B720058E1A8 /* PhotoViewCell.swift in Sources */,
 				173D667B20D40FCE00EEBF46 /* URLsInLabels.swift in Sources */,
 				17CCB7F920F4E89A0051947A /* Notification.swift in Sources */,
+				17A151E8213EB0D3006BC369 /* DialogsCell.swift in Sources */,
 				1772512B210A110300B4C6FA /* CheckOptionCell.swift in Sources */,
 				17B409E92106114A004CED46 /* FaveLinks.swift in Sources */,
 				17725131210A1E4300B4C6FA /* ParsePushSettings.swift in Sources */,
@@ -800,6 +811,7 @@
 				17C8653E211D9C000081E8A9 /* LoadToServer.swift in Sources */,
 				174912F720D300DD00FCF9F9 /* ViewControllerUtils.swift in Sources */,
 				17B409F02108822E004CED46 /* UserInfoController.swift in Sources */,
+				17A151EA213EB775006BC369 /* Conversation.swift in Sources */,
 				17FDD8EF2110629C0064558A /* ReloadTopicController.swift in Sources */,
 				17B134A720DACD110058E1A8 /* Likes.swift in Sources */,
 				178D83C821009FBF00AFB7EB /* ParsePhotoAlbums.swift in Sources */,
