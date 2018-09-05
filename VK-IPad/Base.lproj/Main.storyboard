@@ -1928,9 +1928,8 @@
                                     <constraint firstAttribute="height" constant="28" id="doW-PV-8m2"/>
                                 </constraints>
                                 <segments>
-                                    <segment title="Все беседы" width="150"/>
+                                    <segment title="Все беседы"/>
                                     <segment title="Беседы с непрочитанными сообщениями"/>
-                                    <segment title="Важные Беседы" width="180"/>
                                 </segments>
                                 <color key="tintColor" red="0.019607843140000001" green="0.4039215686" blue="0.64313725489999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <connections>

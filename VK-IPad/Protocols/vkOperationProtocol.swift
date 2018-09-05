@@ -1389,4 +1389,51 @@ extension UIViewController: VkOperationProtocol {
             OperationQueue().addOperation(request)
         }
     }
+    
+    func setImportantConversation() {
+        
+        if let controller = self as? DialogController, let groupID = Int(controller.userID) {
+            
+            let conversation = controller.conversation[0]
+            
+            let url = "/method/messages.markAsImportantConversation"
+            var parameters = [
+                "access_token": vkSingleton.shared.accessToken,
+                "peer_id": "\(conversation.peerID)",
+                "group_id": "\(abs(groupID))",
+                "v": vkSingleton.shared.version
+            ]
+            
+            if conversation.important == 0 {
+                parameters["important"] = "1"
+            } else {
+                parameters["important"] = "0"
+            }
+            
+            let request = GetServerDataOperation(url: url, parameters: parameters)
+            request.completionBlock = {
+                guard let data = request.data else { return }
+                guard let json = try? JSON(data: data) else { print("json error"); return }
+                //print(json)
+                
+                let error = ErrorJson(json: JSON.null)
+                error.errorCode = json["error"]["error_code"].intValue
+                error.errorMsg = json["error"]["error_msg"].stringValue
+                
+                if error.errorCode == 0 {
+                    if conversation.important == 0 {
+                        controller.conversation[0].important = 1
+                    } else {
+                        controller.conversation[0].important = 0
+                    }
+                    
+                    self.showInfoMessage(title: "Пометка беседы как важная", msg: "\nБеседа успешно помечена как Важная.\n")
+                } else {
+                    self.showErrorMessage(title: "Пометка беседы как важная", msg: "\nОшибка #\(error.errorCode): \(error.errorMsg)\n")
+                }
+                self.setOfflineStatus(dependence: request)
+            }
+            OperationQueue().addOperation(request)
+        }
+    }
 }

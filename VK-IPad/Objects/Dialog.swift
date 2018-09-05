@@ -31,6 +31,14 @@ class Dialog {
     
     var isSelected = false
     
+    var chatID = 0
+    var adminID = 0
+    var action = ""
+    var actionID = 0
+    var actionEmail = ""
+    var actionText = ""
+    
+    
     init(json: JSON) {
         self.id = json["id"].intValue
         self.userID = json["user_id"].intValue
@@ -48,6 +56,13 @@ class Dialog {
         
         self.attachments = json["attachments"].compactMap({ Attachment(json: $0.1) })
         self.fwdMessages = json["fwd_messages"].compactMap({ Dialog(json: $0.1) })
+        
+        self.chatID = json["chat_id"].intValue
+        self.adminID = json["admin_id"].intValue
+        self.action = json["action"].stringValue
+        self.actionID = json["action_mid"].intValue
+        self.actionEmail = json["action_email"].stringValue
+        self.actionText = json["action_text"].stringValue
         
         if self.fromID == 0 {
             if self.out == 0 {
@@ -106,5 +121,48 @@ extension Dialog: Equatable {
         }
         
         return true
+    }
+    
+    var attachString: String {
+        
+        var mess = ""
+        
+        if attachments.count > 0 {
+            if attachments.count == 1 {
+                if attachments[0].photo.count > 0 {
+                    mess = "\(mess)[Фотография]"
+                } else if attachments[0].video.count > 0 {
+                    mess = "\(mess)[Видеозапись]"
+                } else if attachments[0].doc.count > 0 {
+                    mess = "\(mess)[Документ]"
+                } else if attachments[0].audio.count > 0 {
+                    mess = "\(mess)[Аудиозапись]"
+                } else if attachments[0].record.count > 0 {
+                    mess = "\(mess)[Запись со стены]"
+                } else if attachments[0].link.count > 0 {
+                    mess = "\(mess)[Внешняя ссылка]"
+                } else if attachments[0].poll.count > 0 {
+                    mess = "\(mess)[Опрос]"
+                } else if attachments[0].sticker.count > 0 {
+                    mess = "\(mess)[Стикер]"
+                }
+            } else {
+                mess = "\(mess)[\(attachments.count.attachAdder())]"
+            }
+        } else {
+            if fwdMessages.count > 0 {
+                mess = "\(mess)[\(fwdMessages.count.attachAdder())]"
+            }
+        }
+        
+        return mess
+    }
+    
+    var lastMessage: String {
+        
+        var mess = body.replacingOccurrences(of: "\n", with: " ").prepareTextForPublic()
+        
+        if mess != "" { mess = "\(mess)  " }
+        return "\(mess)\(attachString)"
     }
 }

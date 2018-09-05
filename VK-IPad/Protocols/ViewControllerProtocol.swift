@@ -427,10 +427,11 @@ extension UIViewController: ViewControllerProtocol {
         }
     }
     
-    func openDialogController(ownerID: String, startID: Int, source: DialogSource = .all) {
+    func openDialogController(ownerID: String, chatID: Int = 0, startID: Int, source: DialogSource = .all) {
         let controller = self.storyboard?.instantiateViewController(withIdentifier: "DialogController") as! DialogController
         
         controller.userID = ownerID
+        controller.chatID = chatID
         controller.startMessageID = startID
         controller.source = source
         controller.delegate = self

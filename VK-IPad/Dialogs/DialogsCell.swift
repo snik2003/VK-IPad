@@ -22,6 +22,14 @@ class DialogsCell: UITableViewCell {
         
         self.removeAllSubviews()
         self.drawAvatar()
+        self.drawLastMessageView()
+        self.setUnreadValue(value: conversation.unreadCount)
+        
+        if conversation.readState {
+            self.backgroundColor = delegate.tableView.backgroundColor
+        } else {
+            self.backgroundColor = UIColor.purple.withAlphaComponent(0.2)
+        }
     }
     
     func drawAvatar() {
@@ -74,8 +82,12 @@ class DialogsCell: UITableViewCell {
         } else if conversation.type == "chat" {
             avatarURL = conversation.chatSettings.photo100
             avatarName = conversation.chatSettings.title
-            status = conversation.chatSettings.membersCount.membersAdder()
+            status = "групповой чат (\(conversation.chatSettings.membersCount.membersAdder()))"
             statusColor = .black
+            
+            if avatarURL == "" {
+                avatarURL = "https://vk.com/images/community_100.png"
+            }
         }
         
         let avatarImage = UIImageView()
@@ -93,7 +105,7 @@ class DialogsCell: UITableViewCell {
             avatarImage.clipsToBounds = true
             avatarImage.contentMode = .scaleAspectFill
             avatarImage.layer.borderColor = UIColor.lightGray.cgColor
-            avatarImage.layer.borderWidth = 0.8
+            avatarImage.layer.borderWidth = 0 //0.8
         }
         
         avatarImage.frame = CGRect(x: 10, y: 5, width: 70, height: 70)
@@ -103,19 +115,102 @@ class DialogsCell: UITableViewCell {
         nameLabel.tag = 250
         nameLabel.text = avatarName
         nameLabel.font = UIFont(name: "Verdana-Bold", size: 14)
-        nameLabel.frame = CGRect(x: 90, y: 5, width: self.bounds.width - 100, height: 20)
+        nameLabel.frame = CGRect(x: 90, y: 0, width: self.bounds.width - 160, height: 20)
         self.addSubview(nameLabel)
         
         let statusLabel = UILabel()
         statusLabel.tag = 250
         statusLabel.text = status
         statusLabel.textColor = statusColor
-        statusLabel.isEnabled = true
-        if statusColor != .blue {
-            statusLabel.isEnabled = false
+        statusLabel.isEnabled = false
+        if statusColor == .blue {
+            statusLabel.isEnabled = true
         }
-        statusLabel.font = UIFont(name: "Verdana", size: 12)
-        statusLabel.frame = CGRect(x: 90, y: 22, width: self.bounds.width - 100, height: 18)
+        statusLabel.font = UIFont(name: "Verdana", size: 11)
+        statusLabel.frame = CGRect(x: 90, y: 18, width: self.bounds.width - 160, height: 17)
         self.addSubview(statusLabel)
+    }
+    
+    func drawLastMessageView() {
+        
+        let width: CGFloat = self.bounds.width - 160
+        
+        let view = UIView()
+        view.tag = 250
+        
+        var url = ""
+        if dialog.fromID > 0 {
+            if let user = self.users.filter({ $0.uid == "\(dialog.fromID)" }).first {
+                url = user.photo100
+            }
+        } else if dialog.fromID < 0 {
+            if let group = self.groups.filter({ $0.gid == abs(dialog.fromID) }).first {
+                url = group.photo100
+            }
+        }
+        
+        let avatarImage = UIImageView()
+        avatarImage.image = UIImage(named: "nophoto")
+        avatarImage.contentMode = .scaleAspectFill
+        
+        let getCacheImage = GetCacheImage(url: url, lifeTime: .avatarImage)
+        let setImageToRow = SetImageToRowOfTableView(cell: self, imageView: avatarImage, indexPath: indexPath, tableView: delegate.tableView)
+        setImageToRow.addDependency(getCacheImage)
+        OperationQueue().addOperation(getCacheImage)
+        OperationQueue.main.addOperation(setImageToRow)
+        OperationQueue.main.addOperation {
+            avatarImage.layer.cornerRadius = 20
+            avatarImage.clipsToBounds = true
+            avatarImage.contentMode = .scaleAspectFill
+            avatarImage.layer.borderColor = UIColor.lightGray.cgColor
+            avatarImage.layer.borderWidth = 0 //0.4
+        }
+        
+        avatarImage.frame = CGRect(x: 0, y: 2, width: 40, height: 40)
+        view.addSubview(avatarImage)
+        
+        let messLabel = UILabel()
+        messLabel.text = dialog.lastMessage
+        messLabel.font = UIFont(name: "Verdana", size: 12)
+        messLabel.numberOfLines = 0
+        messLabel.frame = CGRect(x: 45, y: 0, width: width - 50, height: 30)
+        view.addSubview(messLabel)
+        
+        let dateLabel = UILabel()
+        dateLabel.text = "отправлено \(dialog.date.toStringLastTime())"
+        dateLabel.isEnabled = false
+        dateLabel.font = UIFont(name: "Verdana", size: 10)
+        dateLabel.frame = CGRect(x: 45, y: 28, width: width - 50, height: 15)
+        view.addSubview(dateLabel)
+        
+        view.frame = CGRect(x: 90, y: 35, width: width, height: 45)
+        self.addSubview(view)
+    }
+    
+    func setUnreadValue(value: Int) {
+        
+        if value > 0 {
+            let view = UIView()
+            view.tag = 250
+            view.backgroundColor = vkSingleton.shared.mainColor
+            view.layer.borderWidth = 0.5
+            view.layer.borderColor = UIColor.lightGray.cgColor
+            view.layer.cornerRadius = 12
+            view.frame = CGRect(x: frame.width-60, y: frame.height/2-12, width: 40, height: 24)
+            self.addSubview(view)
+            
+            let label = UILabel()
+            label.tag = 250
+            label.backgroundColor = UIColor.clear
+            label.text = "\(value)"
+            if value >= 100 {
+                label.text = "99+"
+            }
+            label.textColor = UIColor.white
+            label.textAlignment = .center
+            label.font = UIFont(name: "Verdana-Bold", size: 14)
+            label.frame = CGRect(x: frame.width-60, y: frame.height/2-10, width: 40, height: 20)
+            self.addSubview(label)
+        }
     }
 }

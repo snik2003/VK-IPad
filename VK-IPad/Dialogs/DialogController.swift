@@ -27,6 +27,7 @@ enum DialogMode {
 class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSource, DCCommentViewDelegate, WKNavigationDelegate {
     
     var userID = ""
+    var chatID = 0
     
     var delegate: UIViewController!
     
@@ -39,6 +40,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
     var attachPanel = AttachPanel()
     var panel = SelectMessagesPanel()
     
+    var conversation: [Conversation2] = []
     var dialogs: [Dialog] = []
     var users: [UserProfile] = []
     var groups: [GroupProfile] = []
@@ -80,9 +82,9 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
             navigationItem.rightBarButtonItem = nil
             getPreviewMessages()
         } else {
+            print("chat_id = \(self.chatID)")
             setDialogTitle()
             getDialog()
-        
         
             if userID == vkSingleton.shared.supportGroupID {
                 let feedbackText = "Здесь Вы можете оставить отзыв о приложении «ВКлючайся!»:\n\nзадать любой вопрос по функционалу приложения,\nсообщить об обнаруженной ошибке или внести\nпредложение по усовершенствованию приложения.\n\nМы будем рады любому отзыву и обязательно ответим Вам.\n\nЖдём ваших сообщений! 😊"
@@ -172,6 +174,27 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
         }
     }
     
+    func getConversation() {
+        
+        let url = "/method/messages.getConversationsById"
+        let parameters = [
+            "access_token": vkSingleton.shared.accessToken,
+            "peer_ids": "\(userID)",
+            "extended": "0",
+            "v": vkSingleton.shared.version
+        ]
+        
+        let getServerDataOperation = GetServerDataOperation(url: url, parameters: parameters)
+        getServerDataOperation.completionBlock = {
+            guard let data = getServerDataOperation.data else { return }
+            guard let json = try? JSON(data: data) else { print("json error"); return }
+            //print(json)
+            
+            self.conversation = json["response"]["items"].compactMap { Conversation2(json: $0.1) }
+        }
+        OperationQueue().addOperation(getServerDataOperation)
+    }
+    
     func getDialog() {
         
         dialogs.removeAll(keepingCapacity: false)
@@ -197,9 +220,13 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
         
         let getServerDataOperation = GetServerDataOperation(url: url, parameters: parameters)
         getServerDataOperation.completionBlock = {
+            if self.conversation.count == 0 {
+                self.getConversation()
+            }
+            
             guard let data = getServerDataOperation.data else { return }
             guard let json = try? JSON(data: data) else { print("json error"); return }
-            //print(json)
+            print(json)
             
             let dialogs = json["response"]["items"].compactMap { Dialog(json: $0.1) }
             for dialog in dialogs.reversed() {
@@ -939,24 +966,31 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
     
     func tapDialogTitleView() {
         
-        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        
-        let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
-        alertController.addAction(cancelAction)
-        
-        if let id = Int(self.userID), id > 0 {
-            let action1 = UIAlertAction(title: "Открыть профиль собеседника", style: .default) { action in
-                
-                self.openProfileController(id: id, name: "")
+        if let userID = Int(self.userID) {
+            let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+            
+            let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
+            alertController.addAction(cancelAction)
+            
+            
+            if userID > 0 {
+                let action1 = UIAlertAction(title: "Открыть профиль собеседника", style: .default) { action in
+                    
+                    self.openProfileController(id: userID, name: "")
+                }
+                alertController.addAction(action1)
+            } else if userID < 0 {
+                let action1 = UIAlertAction(title: "Перейти на страницу сообщества", style: .default) { action in
+                    
+                    self.openProfileController(id: userID, name: "")
+                }
+                alertController.addAction(action1)
             }
-            alertController.addAction(action1)
-        }
         
         
-        if mode == .dialog {
-            if let id = Int(self.userID), id > 0 {
+            if mode == .dialog && userID > 0 {
                 if self.source == .all {
-                    let action2 = UIAlertAction(title: "Показать важные сообщения", style: .default) { action in
+                    let action3 = UIAlertAction(title: "Показать важные сообщения", style: .default) { action in
                         
                         self.title = "Важные сообщения"
                         self.source = .important
@@ -964,9 +998,9 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
                         
                         self.getImportantMessages()
                     }
-                    alertController.addAction(action2)
+                    alertController.addAction(action3)
                 } else {
-                    let action2 = UIAlertAction(title: "Показать вcе сообщения", style: .default) { action in
+                    let action3 = UIAlertAction(title: "Показать вcе сообщения", style: .default) { action in
                         
                         self.title = ""
                         self.source = .all
@@ -974,20 +1008,54 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
                         
                         self.getDialog()
                     }
-                    alertController.addAction(action2)
+                    alertController.addAction(action3)
                 }
             }
+        
+        
+            if let popoverController = alertController.popoverPresentationController {
+                let bounds = self.titleView.bounds
+                popoverController.sourceView = self.titleView
+                popoverController.sourceRect = CGRect(x: bounds.maxX - 18, y: bounds.maxY + 5, width: 0, height: 0)
+                popoverController.permittedArrowDirections = [.up]
+            }
+        
+            self.present(alertController, animated: true)
         }
+    }
+    
+    func tapChatTitleView() {
         
-        
-        if let popoverController = alertController.popoverPresentationController {
-            let bounds = self.titleView.bounds
-            popoverController.sourceView = self.titleView
-            popoverController.sourceRect = CGRect(x: bounds.maxX - 18, y: bounds.maxY + 5, width: 0, height: 0)
-            popoverController.permittedArrowDirections = [.up]
+        if chatID > 0 {
+            let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+            
+            let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
+            alertController.addAction(cancelAction)
+            
+            
+            let action1 = UIAlertAction(title: "Добавить в «Избранное»", style: .default) { action in
+                
+                
+            }
+            alertController.addAction(action1)
+            
+            
+            let action2 = UIAlertAction(title: "Участники группового чата", style: .default) { action in
+                
+                
+            }
+            alertController.addAction(action2)
+            
+            
+            if let popoverController = alertController.popoverPresentationController {
+                let bounds = self.titleView.bounds
+                popoverController.sourceView = self.titleView
+                popoverController.sourceRect = CGRect(x: bounds.maxX - 18, y: bounds.maxY + 5, width: 0, height: 0)
+                popoverController.permittedArrowDirections = [.up]
+            }
+            
+            self.present(alertController, animated: true)
         }
-        
-        self.present(alertController, animated: true)
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {

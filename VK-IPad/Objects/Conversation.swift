@@ -16,6 +16,7 @@ class Conversation {
     var inRead = 0
     var outRead = 0
     var unreadCount = 0
+    var lastMessageID = 0
     var important = 0
     var unanswered = 0
     
@@ -34,6 +35,7 @@ class Conversation {
         self.localID = json["conversation"]["peer"]["local_id"].intValue
         self.inRead = json["conversation"]["in_read"].intValue
         self.outRead = json["conversation"]["out_read"].intValue
+        self.lastMessageID = json["conversation"]["last_message_id"].intValue
         self.unreadCount = json["conversation"]["unread_count"].intValue
         self.important = json["conversation"]["important"].intValue
         self.unanswered = json["conversation"]["unanswered"].intValue
@@ -57,6 +59,56 @@ class Conversation {
     }
 }
 
+class Conversation2 {
+    var peerID = 0
+    var type = ""
+    var localID = 0
+    var inRead = 0
+    var outRead = 0
+    var lastMessageID = 0
+    var unreadCount = 0
+    var important = 0
+    var unanswered = 0
+    
+    var disabledUntil = 0
+    var disabledForever = 0
+    var noSound = 0
+    
+    var canWrite = 0
+    var canWriteReason = 0
+    
+    var chatSettings: ChatSettings!
+    
+    init(json: JSON) {
+        self.peerID = json["peer"]["id"].intValue
+        self.type = json["peer"]["type"].stringValue
+        self.localID = json["peer"]["local_id"].intValue
+        self.inRead = json["in_read"].intValue
+        self.outRead = json["out_read"].intValue
+        self.lastMessageID = json["last_message_id"].intValue
+        self.unreadCount = json["unread_count"].intValue
+        self.important = json["important"].intValue
+        self.unanswered = json["unanswered"].intValue
+        
+        self.disabledUntil = json["push_settings"]["disabled_until"].intValue
+        self.disabledForever = json["push_settings"]["disabled_forever"].intValue
+        self.noSound = json["push_settings"]["no_sound"].intValue
+        
+        self.canWrite = json["can_write"]["allowed"].intValue
+        self.canWriteReason = json["can_write"]["reason"].intValue
+        
+        self.chatSettings = ChatSettings(json: JSON.null)
+        self.chatSettings.membersCount = json["chat_settings"]["members_count"].intValue
+        self.chatSettings.title = json["chat_settings"]["title"].stringValue
+        self.chatSettings.pinnedMessage = json["chat_settings"]["pinned_message"].compactMap { Dialog(json: $0.1) }
+        self.chatSettings.state = json["chat_settings"]["state"].stringValue
+        self.chatSettings.photo50 = json["chat_settings"]["photo"]["photo_50"].stringValue
+        self.chatSettings.photo100 = json["chat_settings"]["photo"]["photo_100"].stringValue
+        self.chatSettings.photo200 = json["chat_settings"]["photo"]["photo_200"].stringValue
+        self.chatSettings.isGroupChannel = json["chat_settings"]["members_count"].intValue
+    }
+}
+
 struct ChatSettings {
     var membersCount = 0
     var title = ""
@@ -76,5 +128,22 @@ struct ChatSettings {
         self.photo100 = json["photo"]["photo_100"].stringValue
         self.photo200 = json["photo"]["photo_200"].stringValue
         self.isGroupChannel = json["members_count"].intValue
+    }
+}
+
+
+extension Conversation {
+    
+    var readState: Bool {
+        
+        if unreadCount > 0 {
+            return false
+        }
+        
+        if outRead != lastMessageID {
+            return false
+        }
+        
+        return true
     }
 }

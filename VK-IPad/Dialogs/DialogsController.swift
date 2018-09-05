@@ -117,6 +117,10 @@ class DialogsController: UIViewController, UITableViewDelegate, UITableViewDataS
             if cell.conversation.type == "user" || cell.conversation.type == "group" {
                 self.openDialogController(ownerID: "\(dialog.peerID)", startID: dialog.id)
             }
+            
+            if cell.conversation.type == "chat" {
+                self.openDialogController(ownerID: "\(dialog.peerID)", chatID: cell.conversation.localID, startID: dialog.id)
+            }
         }
         cell.isUserInteractionEnabled = true
         cell.addGestureRecognizer(tap)
@@ -182,7 +186,7 @@ class DialogsController: UIViewController, UITableViewDelegate, UITableViewDataS
                     dialog.deleted = json["response"]["items"][index]["last_message"]["deleted"].intValue
                     dialog.randomID = json["response"]["items"][index]["last_message"]["random_id"].intValue
                     dialog.title = json["response"]["items"][index]["last_message"]["title"].stringValue
-                    dialog.body = json["response"]["items"][index]["last_message"]["body"].stringValue
+                    dialog.body = json["response"]["items"][index]["last_message"]["text"].stringValue
                     
                     dialog.attachments = json["response"]["items"][index]["last_message"]["attachments"].compactMap({ Attachment(json: $0.1) })
                     dialog.fwdMessages = json["response"]["items"][index]["last_message"]["fwd_messages"].compactMap({ Dialog(json: $0.1) })
