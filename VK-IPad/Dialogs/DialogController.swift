@@ -1033,11 +1033,13 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
             alertController.addAction(cancelAction)
             
             
-            let action1 = UIAlertAction(title: "Добавить в «Избранное»", style: .default) { action in
-                
-                
+            if conversation.count > 0 {
+                let action1 = UIAlertAction(title: "Добавить в «Избранное»", style: .default) { action in
+                    
+                    self.addLinkToFave(object: self.conversation[0])
+                }
+                alertController.addAction(action1)
             }
-            alertController.addAction(action1)
             
             
             let action2 = UIAlertAction(title: "Участники группового чата", style: .default) { action in

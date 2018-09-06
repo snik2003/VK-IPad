@@ -955,6 +955,10 @@ extension UIViewController: VkOperationProtocol {
             
             text = "Обсуждение «\(topic.title)»"
             link = "https://vk.com/topic-\(controller.groupID)_\(controller.topicID)"
+        } else if let conversation = object as? Conversation2 {
+            
+            text = "Групповой чат: «\(conversation.chatSettings.title)»"
+            link = "https://vk.com/myownlink999_chat_\(conversation.localID)"
         }
         
         let url = "/method/fave.addLink"
