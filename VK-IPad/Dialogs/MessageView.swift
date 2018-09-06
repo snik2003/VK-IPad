@@ -180,7 +180,7 @@ class MessageView: UIView {
         }
         
         if dialog.fwdMessages.count > 0 {
-            height += 12
+            //height += 1
             fwdView.tag = 250
             fwdHeight = 0
         }
@@ -202,7 +202,9 @@ class MessageView: UIView {
                 label.numberOfLines = 1
                 label.textAlignment = .right
                 label.textColor = UIColor.gray
-                label.frame = CGRect(x: 20, y: fwdHeight + 2, width: maxWidth - 40, height: 20)
+                label.adjustsFontSizeToFitWidth = true
+                label.minimumScaleFactor = 0.5
+                label.frame = CGRect(x: 10, y: fwdHeight + 2, width: maxWidth - 20, height: 20)
                 fwdView.addSubview(label)
             }
             fwdHeight += 25
@@ -232,15 +234,14 @@ class MessageView: UIView {
                     leftX = 60
                     fwdView.backgroundColor = Constants.inBackColor
                 } else {
-                    leftX = width - 60 - maxWidth
+                    leftX = -60 //width - 60 - maxWidth
                     fwdView.backgroundColor = Constants.outBackColor
                 }
                 fwdView.frame = CGRect(x: leftX, y: height, width: maxWidth, height: fwdHeight)
                 fwdView.configureViewWithFwd()
-                cell.addSubview(fwdView)
-                fwdView.bringSubview(toFront: cell)
+                self.addSubview(fwdView)
             }
-            height += fwdHeight - 10
+            height += fwdHeight //- 10
         }
         
         if !calcHeight {
@@ -281,7 +282,7 @@ class MessageView: UIView {
             
             self.frame = CGRect(x: leftX, y: topY, width: maxWidth, height: height)
             cell.addSubview(self)
-            cell.bringSubview(toFront: fwdView)
+            self.sendSubview(toBack: fwdView)
         }
         
         height = max(height,60)
