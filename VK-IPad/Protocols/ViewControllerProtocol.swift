@@ -631,44 +631,21 @@ extension UIViewController: ViewControllerProtocol {
                 }
                 
                 res = 0
-            } /*else if type == "myownlinkchat" {
+            } else if type == "myownlinkchat" {
                 
                 var accs = str1.components(separatedBy: "_")
                 for index in 0...accs.count-1 {
                     accs[index] = accs[index].replacingOccurrences(of: "[A-Z,a-z,А-Я,а-я]", with: "", options: .regularExpression, range: nil)
                 }
+                
                 if accs.count == 3 {
                     if let chatID = Int(accs[2]) {
-                        let url = "/method/messages.getHistory"
-                        let parameters = [
-                            "access_token": vkSingleton.shared.accessToken,
-                            "offset": "0",
-                            "count": "1",
-                            "user_id": "\(2000000000 + chatID)",
-                            "start_message_id": "-1",
-                            "v": vkSingleton.shared.version
-                        ]
-                        
-                        let getServerDataOperation = GetServerDataOperation(url: url, parameters: parameters)
-                        OperationQueue().addOperation(getServerDataOperation)
-                        
-                        let parseDialog = ParseDialogHistory()
-                        parseDialog.completionBlock = {
-                            var startID = parseDialog.inRead
-                            if parseDialog.outRead > startID {
-                                startID = parseDialog.outRead
-                            }
-                            OperationQueue.main.addOperation {
-                                self.openDialogController(userID: "\(2000000000 + chatID)", chatID: "\(chatID)", startID: startID, attachment: "", messIDs: [], image: nil)
-                            }
-                        }
-                        parseDialog.addDependency(getServerDataOperation)
-                        OperationQueue().addOperation(parseDialog)
+                        self.getStartMessageID(userID: "\(2000000000 + chatID)")
                     }
                 }
                 
                 res = 0
-            }*/ else if type == "topic" {
+            } else if type == "topic" {
                 
                 var accs = str1.components(separatedBy: "_")
                 for index in 0...accs.count-1 {

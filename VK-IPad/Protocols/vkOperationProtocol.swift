@@ -1293,7 +1293,12 @@ extension UIViewController: VkOperationProtocol {
             let startID = max(inRead,outRead)
             
             OperationQueue.main.addOperation {
-                self.openDialogController(ownerID: userID, startID: startID)
+                if let id = Int(userID), id > 2000000000 {
+                    let chatID = id - 2000000000
+                    self.openDialogController(ownerID: userID, chatID: chatID, startID: startID)
+                } else {
+                    self.openDialogController(ownerID: userID, startID: startID)
+                }
             }
         }
         OperationQueue().addOperation(getServerDataOperation)
