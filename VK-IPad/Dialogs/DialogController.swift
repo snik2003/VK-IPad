@@ -322,7 +322,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
                     self.tableView.scrollToRow(at: IndexPath(row: 0, section: 3), at: .bottom, animated: false)
                     
                     if unread > 0 {
-                        // помечаем непрочитанные сообщения как прочитанные
+                        self.markAsReadMessages()
                     }
                     ViewControllerUtils().hideActivityIndicator()
                 }
@@ -720,6 +720,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
                     self.tableView.reloadData()
                     self.tableView.separatorStyle = .none
                     self.tableView.scrollToRow(at: IndexPath(row: 0, section: 3), at: .bottom, animated: false)
+                    self.markAsReadMessages()
                 }
             }
             OperationQueue().addOperation(getServerDataOperation2)

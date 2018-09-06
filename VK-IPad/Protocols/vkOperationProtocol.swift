@@ -1445,4 +1445,21 @@ extension UIViewController: VkOperationProtocol {
             OperationQueue().addOperation(request)
         }
     }
+    
+    func markAsReadMessages() {
+        
+        if AppConfig.shared.readMessageInDialog {
+            if let controller = self as? DialogController {
+                let url = "/method/messages.markAsRead"
+                let parameters = [
+                    "access_token": vkSingleton.shared.accessToken,
+                    "peer_id": controller.userID,
+                    "v": vkSingleton.shared.version
+                ]
+                
+                let request = GetServerDataOperation(url: url, parameters: parameters)
+                OperationQueue().addOperation(request)
+            }
+        }
+    }
 }
