@@ -249,6 +249,16 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
             }
             
             for dialog in dialogs {
+                if self.chatID > 0 {
+                    if !userIDs.contains("\(dialog.fromID)") {
+                        userIDs.append("\(dialog.fromID)")
+                    }
+                    
+                    if dialog.actionID > 0 && !userIDs.contains("\(dialog.actionID)") {
+                        userIDs.append("\(dialog.actionID)")
+                    }
+                }
+                
                 for attach in dialog.attachments {
                     if attach.record.count > 0 {
                         let record = attach.record[0]
@@ -282,7 +292,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
             }
             
             let userList = userIDs.map { $0 }.joined(separator: ", ")
-            var code = "var a = API.users.get({\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"user_ids\":\"\(userList)\",\"fields\":\"id,first_name,last_name,last_seen,photo_max_orig,photo_max,deactivated,first_name_abl,first_name_gen,last_name_gen,online,can_write_private_message,sex\",\"v\":\"\(vkSingleton.shared.version)\"});\n "
+            var code = "var a = API.users.get({\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"user_ids\":\"\(userList)\",\"fields\":\"id,first_name,last_name,last_seen,photo_max_orig,photo_max,deactivated,first_name_abl,first_name_gen,last_name_gen,first_name_acc,last_name_acc,online,can_write_private_message,sex\",\"v\":\"\(vkSingleton.shared.version)\"});\n "
             
             let groupList = groupIDs.map { $0 }.joined(separator: ",")
             code = "\(code) var b = API.groups.getById({\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"group_ids\":\"\(groupList)\",\"fields\":\"activity,counters,cover,description,has_photo,member_status,site,status,members_count,is_favorite,can_post,is_hidden_from_feed\",\"v\":\"\(vkSingleton.shared.version)\"});\n "
@@ -437,6 +447,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
         getServerDataOperation.completionBlock = {
             guard let data = getServerDataOperation.data else { return }
             guard let json = try? JSON(data: data) else { print("json error"); return }
+            print(json)
             
             let dialogs = json["response"]["items"].compactMap { Dialog(json: $0.1) }
             
@@ -463,6 +474,16 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
             }
             
             for dialog in dialogs {
+                if self.chatID > 0 {
+                    if !userIDs.contains("\(dialog.fromID)") {
+                        userIDs.append("\(dialog.fromID)")
+                    }
+                    
+                    if dialog.actionID > 0 && !userIDs.contains("\(dialog.actionID)") {
+                        userIDs.append("\(dialog.actionID)")
+                    }
+                }
+                
                 for attach in dialog.attachments {
                     if attach.record.count > 0 {
                         let record = attach.record[0]
@@ -495,7 +516,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
             }
             
             let userList = userIDs.map { $0 }.joined(separator: ", ")
-            var code = "var a = API.users.get({\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"user_ids\":\"\(userList)\",\"fields\":\"id,first_name,last_name,last_seen,photo_max_orig,photo_max,deactivated,first_name_abl,first_name_gen,last_name_gen,online,can_write_private_message,sex\",\"v\":\"\(vkSingleton.shared.version)\"});\n "
+            var code = "var a = API.users.get({\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"user_ids\":\"\(userList)\",\"fields\":\"id,first_name,last_name,last_seen,photo_max_orig,photo_max,deactivated,first_name_abl,first_name_gen,last_name_gen,first_name_acc,last_name_acc,online,can_write_private_message,sex\",\"v\":\"\(vkSingleton.shared.version)\"});\n "
             
             let groupList = groupIDs.map { $0 }.joined(separator: ",")
             code = "\(code) var b = API.groups.getById({\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"group_ids\":\"\(groupList)\",\"fields\":\"activity,counters,cover,description,has_photo,member_status,site,status,members_count,is_favorite,can_post,is_hidden_from_feed\",\"v\":\"\(vkSingleton.shared.version)\"});\n "
@@ -623,6 +644,16 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
                     self.totalCount += 1
                 }
                 
+                if self.chatID > 0 {
+                    if !userIDs.contains("\(dialog.fromID)") {
+                        userIDs.append("\(dialog.fromID)")
+                    }
+                    
+                    if dialog.actionID > 0 && !userIDs.contains("\(dialog.actionID)") {
+                        userIDs.append("\(dialog.actionID)")
+                    }
+                }
+                
                 for attach in dialog.attachments {
                     if attach.record.count > 0 {
                         let record = attach.record[0]
@@ -655,7 +686,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
             }
             
             let userList = userIDs.map { $0 }.joined(separator: ", ")
-            var code = "var a = API.users.get({\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"user_ids\":\"\(userList)\",\"fields\":\"id,first_name,last_name,last_seen,photo_max_orig,photo_max,deactivated,first_name_abl,first_name_gen,last_name_gen,online,can_write_private_message,sex\",\"v\":\"\(vkSingleton.shared.version)\"});\n "
+            var code = "var a = API.users.get({\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"user_ids\":\"\(userList)\",\"fields\":\"id,first_name,last_name,last_seen,photo_max_orig,photo_max,deactivated,first_name_abl,first_name_gen,last_name_gen,first_name_acc,last_name_acc,online,can_write_private_message,sex\",\"v\":\"\(vkSingleton.shared.version)\"});\n "
             
             let groupList = groupIDs.map { $0 }.joined(separator: ",")
             code = "\(code) var b = API.groups.getById({\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"group_ids\":\"\(groupList)\",\"fields\":\"activity,counters,cover,description,has_photo,member_status,site,status,members_count,is_favorite,can_post,is_hidden_from_feed\",\"v\":\"\(vkSingleton.shared.version)\"});\n "
@@ -1042,11 +1073,36 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
             }
             
             
-            let action2 = UIAlertAction(title: "Участники группового чата", style: .default) { action in
+            let action2 = UIAlertAction(title: "Участники групповой беседы", style: .default) { action in
                 
                 
             }
             alertController.addAction(action2)
+            
+            
+            if mode == .dialog {
+                if self.source == .all {
+                    let action3 = UIAlertAction(title: "Показать важные сообщения", style: .default) { action in
+                        
+                        self.title = "Важные сообщения"
+                        self.source = .important
+                        self.offset = 0
+                        
+                        self.getImportantMessages()
+                    }
+                    alertController.addAction(action3)
+                } else {
+                    let action3 = UIAlertAction(title: "Показать вcе сообщения", style: .default) { action in
+                        
+                        self.title = ""
+                        self.source = .all
+                        self.offset = 0
+                        
+                        self.getDialog()
+                    }
+                    alertController.addAction(action3)
+                }
+            }
             
             
             if let popoverController = alertController.popoverPresentationController {

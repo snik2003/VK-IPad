@@ -82,7 +82,7 @@ class DialogsCell: UITableViewCell {
         } else if conversation.type == "chat" {
             avatarURL = conversation.chatSettings.photo100
             avatarName = conversation.chatSettings.title
-            status = "групповой чат (\(conversation.chatSettings.membersCount.membersAdder()))"
+            status = "групповая беседа (\(conversation.chatSettings.membersCount.membersAdder()))"
             statusColor = .black
             
             if avatarURL == "" {

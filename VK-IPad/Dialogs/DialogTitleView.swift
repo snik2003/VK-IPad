@@ -265,7 +265,7 @@ class DialogTitleView: UIView {
         
         
         let statusLabel = UILabel()
-        statusLabel.text = "Групповой чат (\(conversation.chatSettings.membersCount.membersAdder()))"
+        statusLabel.text = "Групповая беседа (\(conversation.chatSettings.membersCount.membersAdder()))"
         statusLabel.adjustsFontSizeToFitWidth = true
         statusLabel.minimumScaleFactor = 0.4
         statusLabel.textAlignment = .right

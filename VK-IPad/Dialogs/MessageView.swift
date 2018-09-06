@@ -16,6 +16,7 @@ class MessageView: UIView {
         static let bodyFont = UIFont(name: "Verdana", size: 15)!
         static let fwdFont = UIFont(name: "Verdana", size: 12)!
         static let dateFont = UIFont(name: "Verdana", size: 12)!
+        static let actionFont = UIFont(name: "Verdana", size: 13)!
         
         static let inBackColor = UIColor(red: 244/255, green: 223/255, blue: 200/255, alpha: 1)
         static let outBackColor = UIColor(red: 200/255, green: 200/255, blue: 238/255, alpha: 1)
@@ -717,6 +718,148 @@ class MessageView: UIView {
             view.isUserInteractionEnabled = true
             view.addGestureRecognizer(tap)
         }
+        
+        return height
+    }
+    
+    func configureActionView(calcHeight: Bool) -> CGFloat {
+        
+        self.backgroundColor = UIColor.clear
+        
+        var height: CGFloat = 0
+        let width: CGFloat = delegate.width
+        
+        
+        if !calcHeight {
+            if let user = delegate.users.filter({ $0.uid == "\(dialog.fromID)" }).first {
+                
+                let date = "\(dialog.date.toStringLastTime())\n"
+                
+                var actUser = UserProfile(json: JSON.null)
+                if dialog.actionID > 0, let user = delegate.users.filter({ $0.uid == "\(dialog.actionID)" }).first {
+                    actUser = user
+                }
+                
+                
+                let tap = UITapGestureRecognizer()
+                var text = "\(date) служебное сообщение: \(dialog.action)"
+                if dialog.action == "chat_kick_user" {
+                    if dialog.actionID == dialog.fromID {
+                        if user.sex == 1 {
+                            text = "\(date) \(user.firstName) \(user.lastName) покинула беседу"
+                        } else {
+                            text = "\(date) \(user.firstName) \(user.lastName) покинул беседу"
+                        }
+                        
+                        tap.add {
+                            self.delegate.openProfileController(id: self.dialog.fromID, name: "")
+                        }
+                    } else if dialog.actionID > 0 {
+                        if user.sex == 1 {
+                            text = "\(date) \(user.firstName) \(user.lastName) иcключила \(actUser.firstNameAcc) \(actUser.lastNameAcc) из беседы"
+                        } else {
+                            text = "\(date) \(user.firstName) \(user.lastName) иcключил \(actUser.firstNameAcc) \(actUser.lastNameAcc) из беседы"
+                        }
+                        
+                        tap.add {
+                            self.delegate.openProfileController(id: self.dialog.actionID, name: "")
+                        }
+                    }
+                } else if dialog.action == "chat_invite_user" {
+                    if dialog.actionID == dialog.fromID {
+                        if user.sex == 1 {
+                            text = "\(date) \(user.firstName) \(user.lastName) присоединилась к беседе"
+                        } else {
+                            text = "\(date) \(user.firstName) \(user.lastName) присоединился к беседе"
+                        }
+                        
+                        tap.add {
+                            self.delegate.openProfileController(id: self.dialog.fromID, name: "")
+                        }
+                    } else if dialog.actionID > 0 {
+                        if user.sex == 1 {
+                            text = "\(date) \(user.firstName) \(user.lastName) пригласила в беседу \(actUser.firstNameAcc) \(actUser.lastNameAcc)"
+                        } else {
+                            text = "\(date) \(user.firstName) \(user.lastName) пригласил в беседу \(actUser.firstNameAcc) \(actUser.lastNameAcc)"
+                        }
+                        
+                        tap.add {
+                            self.delegate.openProfileController(id: self.dialog.actionID, name: "")
+                        }
+                    }
+                } else if dialog.action == "chat_invite_user_by_link" {
+                    if user.sex == 1 {
+                        text = "\(date) \(user.firstName) \(user.lastName) присоединилась к беседе по ссылке"
+                    } else {
+                        text = "\(date) \(user.firstName) \(user.lastName) присоединился к беседе по ссылке"
+                    }
+                    
+                    tap.add {
+                        self.delegate.openProfileController(id: self.dialog.fromID, name: "")
+                    }
+                } else if dialog.action == "chat_create" {
+                    if user.sex == 1 {
+                        text = "\(date) \(user.firstName) \(user.lastName) создала беседу с названием «\(dialog.actionText)»"
+                    } else {
+                        text = "\(date) \(user.firstName) \(user.lastName) создал беседу с названием «\(dialog.actionText)»"
+                    }
+                } else if dialog.action == "chat_title_update" {
+                    if user.sex == 1 {
+                        text = "\(date) \(user.firstName) \(user.lastName) изменила название беседы на «\(dialog.actionText)»"
+                    } else {
+                        text = "\(date) \(user.firstName) \(user.lastName) изменил название беседы на «\(dialog.actionText)»"
+                    }
+                } else if dialog.action == "chat_photo_update" {
+                    if user.sex == 1 {
+                        text = "\(date) \(user.firstName) \(user.lastName) обновила главную фотографию беседы"
+                    } else {
+                        text = "\(date) \(user.firstName) \(user.lastName) обновил главную фотографию беседы"
+                    }
+                    
+                    if dialog.attachments.count > 0 && dialog.attachments[0].photo.count > 0 {
+                        let photo = dialog.attachments[0].photo[0]
+                        tap.add {
+                            self.delegate.openPhotoViewController(numPhoto: 0, photos: [photo])
+                        }
+                    }
+                } else if dialog.action == "chat_photo_remove" {
+                    if user.sex == 1 {
+                        text = "\(date) \(user.firstName) \(user.lastName) удалила главную фотографию беседы"
+                    } else {
+                        text = "\(date) \(user.firstName) \(user.lastName) удалил главную фотографию беседы"
+                    }
+                } else if dialog.action == "chat_pin_message" {
+                    if user.sex == 1 {
+                        text = "\(date) \(actUser.firstName) \(actUser.lastName) закрепила сообщение в беседе"
+                    } else {
+                        text = "\(date) \(actUser.firstName) \(actUser.lastName) закрепил сообщение в беседе"
+                    }
+                } else if dialog.action == "chat_unpin_message" {
+                    if user.sex == 1 {
+                        text = "\(date) \(actUser.firstName) \(actUser.lastName) открепила сообщение в беседе"
+                    } else {
+                        text = "\(date) \(actUser.firstName) \(actUser.lastName) открепил сообщение в беседе"
+                    }
+                }
+                
+                let actLabel = UILabel()
+                actLabel.text = text
+                actLabel.font = Constants.actionFont
+                actLabel.textAlignment = .center
+                actLabel.isEnabled = false
+                actLabel.numberOfLines = 0
+                actLabel.frame = CGRect(x: 0, y: 0, width: width-120, height: 34)
+                self.addSubview(actLabel)
+                
+                actLabel.isUserInteractionEnabled = true
+                actLabel.addGestureRecognizer(tap)
+                
+                self.frame = CGRect(x: 60, y: 8, width: width - 120, height: 34)
+                cell.addSubview(self)
+            }
+        }
+        
+        height += 50
         
         return height
     }
