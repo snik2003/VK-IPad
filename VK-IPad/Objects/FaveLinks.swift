@@ -39,15 +39,15 @@ extension FaveLinks: Equatable {
         let parameters = [
             "access_token": vkSingleton.shared.accessToken,
             "link_id": self.id,
-            "v": vkSingleton.shared.version
+            "v": "5.80"
         ]
         
         let request = GetServerDataOperation(url: url, parameters: parameters)
         
         request.completionBlock = {
             guard let data = request.data else { return }
-            
             guard let json = try? JSON(data: data) else { print("json error"); return }
+            //print(json)
             
             let error = ErrorJson(json: JSON.null)
             error.errorCode = json["error"]["error_code"].intValue
