@@ -42,11 +42,11 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
                     "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S",
                     "T", "U", "V", "W", "X", "Y", "Z" ]
 
-    var chatTitle = ""
     var chatUsers: [Int] = []
     var chatButton = UIBarButtonItem()
     var chatMarkCheck: [IndexPath: BEMCheckBox] = [:]
     var chatAdminID = ""
+    var chat: Conversation2!
     
     var count = 1000
     var offset = 0
@@ -273,22 +273,38 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
             reloadTableController.addDependency(parseFriends)
             OperationQueue.main.addOperation(reloadTableController)
         } else if type == "chat_users" {
-            OperationQueue.main.addOperation {
-                self.sortedFriends = self.friends
-                self.users = self.friends
+            url = "/method/messages.getChat"
+            parameters = [
+                "access_token": vkSingleton.shared.accessToken,
+                "chat_id": chat.localID,
+                "fields": "id, first_name, last_name, last_seen, photo_max_orig, photo_max, deactivated, first_name_abl, first_name_gen, online,  can_write_private_message, sex",
+                "v": vkSingleton.shared.version
+            ]
+            
+            let getServerDataOperation = GetServerDataOperation(url: url, parameters: parameters)
+            getServerDataOperation.completionBlock = {
+                guard let data = getServerDataOperation.data else { return }
+                guard let json = try? JSON(data: data) else { print("json error"); return }
+                print(json)
                 
-                self.segmentedControl.setTitle("Участники: \(self.users.count)", forSegmentAt: 0)
-                var onlineCount = 0
-                for user in self.users {
-                    if user.onlineStatus == 1 {
-                        onlineCount += 1
-                    }
+                
+                self.chatAdminID = json["response"]["admin_id"].stringValue
+                self.friends = json["response"]["users"].compactMap { Friends(json: $0.1) }
+                self.sortedFriends = self.friends
+                self.users = self.sortedFriends
+                
+                OperationQueue.main.addOperation {
+                    let onlineCount = self.users.filter({ $0.onlineStatus == 1 }).count
+                    
+                    self.segmentedControl.setTitle("Участники: \(self.users.count)", forSegmentAt: 0)
+                    self.segmentedControl.setTitle("Онлайн: \(onlineCount)", forSegmentAt: 1)
+                    
+                    self.tableView.separatorStyle = .singleLine
+                    self.tableView.reloadData()
+                    ViewControllerUtils().hideActivityIndicator()
                 }
-                self.segmentedControl.setTitle("Онлайн: \(onlineCount)", forSegmentAt: 1)
-                self.tableView.separatorStyle = .singleLine
-                self.tableView.reloadData()
-                ViewControllerUtils().hideActivityIndicator()
             }
+            opq.addOperation(getServerDataOperation)
         }
     }
 
@@ -868,12 +884,18 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
                 if chatAdminID == user.userID {
                     let adminLabel = UILabel()
                     adminLabel.tag = 200
-                    adminLabel.text = "создатель\nчата"
-                    adminLabel.font = UIFont(name: "Verdana", size: 9)!
+                    adminLabel.text = "создатель\nбеседы"
+                    adminLabel.font = UIFont(name: "Verdana", size: 12)!
                     adminLabel.numberOfLines = 2
                     adminLabel.textAlignment = .center
                     adminLabel.textColor = UIColor.red
-                    adminLabel.frame = CGRect(x: cell.bounds.width - 70, y: 5, width: 50, height: cell.bounds.height-10)
+                    
+                    adminLabel.layer.borderColor = UIColor.red.cgColor
+                    adminLabel.layer.borderWidth = 0.8
+                    adminLabel.layer.cornerRadius = 6
+                    
+                    adminLabel.frame = CGRect(x: cell.bounds.width - 120, y: 9, width: 100, height: 32)
+                    
                     cell.addSubview(adminLabel)
                 }
                 

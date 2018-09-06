@@ -226,7 +226,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
             
             guard let data = getServerDataOperation.data else { return }
             guard let json = try? JSON(data: data) else { print("json error"); return }
-            print(json)
+            //print(json)
             
             let dialogs = json["response"]["items"].compactMap { Dialog(json: $0.1) }
             for dialog in dialogs.reversed() {
@@ -405,7 +405,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
         getServerDataOperation.completionBlock = {
             guard let data = getServerDataOperation.data else { return }
             guard let json = try? JSON(data: data) else { print("json error"); return }
-            print(json)
+            //print(json)
             
             self.totalCount = json["response"]["count"].intValue
             
@@ -447,7 +447,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
         getServerDataOperation.completionBlock = {
             guard let data = getServerDataOperation.data else { return }
             guard let json = try? JSON(data: data) else { print("json error"); return }
-            print(json)
+            //print(json)
             
             let dialogs = json["response"]["items"].compactMap { Dialog(json: $0.1) }
             
@@ -1057,25 +1057,32 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
     
     func tapChatTitleView() {
         
-        if chatID > 0 {
+        if chatID > 0 && conversation.count > 0 {
             let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
             
             let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
             alertController.addAction(cancelAction)
             
             
-            if conversation.count > 0 {
-                let action1 = UIAlertAction(title: "Добавить в «Избранное»", style: .default) { action in
-                    
-                    self.addLinkToFave(object: self.conversation[0])
-                }
-                alertController.addAction(action1)
+            let action1 = UIAlertAction(title: "Добавить в «Избранное»", style: .default) { action in
+                
+                self.addLinkToFave(object: self.conversation[0])
             }
+            alertController.addAction(action1)
             
             
             let action2 = UIAlertAction(title: "Участники групповой беседы", style: .default) { action in
                 
+                let usersController = self.storyboard?.instantiateViewController(withIdentifier: "UsersController") as! UsersController
                 
+                usersController.userID = vkSingleton.shared.userID
+                usersController.type = "chat_users"
+                usersController.source = ""
+                usersController.chat = self.conversation[0]
+                usersController.title = "Участники беседы «\(self.conversation[0].chatSettings.title)»"
+                
+                let detailVC = self.splitViewController!.viewControllers[self.splitViewController!.viewControllers.endIndex - 1]
+                detailVC.childViewControllers[0].navigationController?.pushViewController(usersController, animated: true)
             }
             alertController.addAction(action2)
             

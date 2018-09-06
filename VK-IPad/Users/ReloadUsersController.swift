@@ -87,7 +87,7 @@ class ReloadUsersController: Operation {
                 }
             }
             controller.segmentedControl.setTitle("Онлайн: \(onlineCount)", forSegmentAt: 1)
-        }   else if type == "members" {
+        } else if type == "members" {
             guard let parseFriends = dependencies.first as? ParseFriendList else { return }
             
             if controller.offset == 0 {
