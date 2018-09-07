@@ -82,7 +82,6 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
             navigationItem.rightBarButtonItem = nil
             getPreviewMessages()
         } else {
-            print("chat_id = \(self.chatID)")
             setDialogTitle()
             getDialog()
         
