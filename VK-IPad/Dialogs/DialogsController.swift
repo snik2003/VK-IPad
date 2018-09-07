@@ -41,7 +41,7 @@ class DialogsController: UIViewController, UITableViewDelegate, UITableViewDataS
 
         OperationQueue.main.addOperation {
             let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: nil)
-            let updateButton = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: nil)
+            let updateButton = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(self.refreshConversation))
             self.navigationItem.rightBarButtonItems = [addButton, updateButton]
             
             self.title = self.segmentedControl.titleForSegment(at: 0)
@@ -128,7 +128,6 @@ class DialogsController: UIViewController, UITableViewDelegate, UITableViewDataS
         return cell
     }
     
-    
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         
         if indexPath.section == tableView.numberOfSections-1 && offset < totalCount {
@@ -141,6 +140,11 @@ class DialogsController: UIViewController, UITableViewDelegate, UITableViewDataS
         if isRefresh == false {
             self.getConversations()
         }
+    }
+    
+    @objc func refreshConversation() {
+        self.offset = 0
+        self.getConversations()
     }
     
     func getConversations() {
@@ -163,7 +167,7 @@ class DialogsController: UIViewController, UITableViewDelegate, UITableViewDataS
         getServerDataOperation.completionBlock = {
             guard let data = getServerDataOperation.data else { return }
             guard let json = try? JSON(data: data) else { print("json error"); return }
-            print(json)
+            //print(json)
             
             self.totalCount = json["response"]["count"].intValue
             self.unreadCount = json["response"]["unread_count"].intValue
