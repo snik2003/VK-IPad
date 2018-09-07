@@ -600,9 +600,13 @@ class VideoCell: UITableViewCell {
         
         self.addSubview(repostsButton)
         
-        repostsButton.add(for: .touchUpInside) {
-            self.repostsButton.smallButtonTouched()
+        let tap = UITapGestureRecognizer()
+        tap.add {
+            self.repostsButton.buttonTouched()
+            self.repostObject(sender: tap)
         }
+        repostsButton.isUserInteractionEnabled = true
+        repostsButton.addGestureRecognizer(tap)
         
         commentsButton.tag = 250
         commentsButton.frame = CGRect(x: 20 + 3 * buttonWidth, y: topY, width: buttonWidth, height: likesHeight)
@@ -728,6 +732,80 @@ class VideoCell: UITableViewCell {
             }
             OperationQueue().addOperation(request)
         }
+    }
+    
+    func repostObject(sender: UITapGestureRecognizer) {
+        
+        let point = sender.location(in: self)
+        
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        
+        let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
+        alertController.addAction(cancelAction)
+        
+        let action1 = UIAlertAction(title: "Скопировать ссылку в буфер", style: .default) { action in
+            
+            let link = "https://vk.com/video\(self.video.ownerID)_\(self.video.id)"
+            
+            UIPasteboard.general.string = link
+            if let string = UIPasteboard.general.string {
+                self.delegate.showInfoMessage(title: "Ссылка на видеозапись помещена в буфер обмена:" , msg: "\(string)")
+            }
+        }
+        alertController.addAction(action1)
+        
+        
+        let action2 = UIAlertAction(title: "Вложить в личное сообщение", style: .default) { action in
+            
+            vkSingleton.shared.repostObject = self.video
+            self.delegate.showInfoMessage(title: "Репост видеозаписи", msg: "Перейдите в нужный диалог для отправки вашему собеседнику видеозаписи «\(self.video.title)»")
+        }
+        alertController.addAction(action2)
+        
+        
+        let action3 = UIAlertAction(title: "Опубликовать на своей стене", style: .default) { action in
+            
+            self.delegate.repost(object: self.video)
+        }
+        alertController.addAction(action3)
+        
+        
+        if vkSingleton.shared.adminGroups.count > 0 {
+            let action4 = UIAlertAction(title: "Опубликовать в сообществе", style: .default) { action in
+                
+                let alertController2 = UIAlertController(title: "Выберите сообщество:", message: nil, preferredStyle: .actionSheet)
+                
+                let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
+                alertController2.addAction(cancelAction)
+                
+                
+                for group in vkSingleton.shared.adminGroups {
+                    let action = UIAlertAction(title: group.name, style: .default) { action in
+                        
+                        self.delegate.repostInGroup(object: self.video, groupID: group.gid)
+                    }
+                    alertController2.addAction(action)
+                }
+                
+                if let popoverController = alertController2.popoverPresentationController {
+                    popoverController.sourceView = self
+                    popoverController.sourceRect = CGRect(x: point.x, y: point.y - 10, width: 0, height: 0)
+                    popoverController.permittedArrowDirections = [.up,.down]
+                }
+                
+                self.delegate.present(alertController2, animated: true)
+            }
+            alertController.addAction(action4)
+        }
+        
+        
+        if let popoverController = alertController.popoverPresentationController {
+            popoverController.sourceView = self
+            popoverController.sourceRect = CGRect(x: point.x, y: point.y - 10, width: 0, height: 0)
+            popoverController.permittedArrowDirections = [.up,.down]
+        }
+        
+        delegate.present(alertController, animated: true)
     }
 }
 

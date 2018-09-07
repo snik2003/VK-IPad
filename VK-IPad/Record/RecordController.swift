@@ -843,7 +843,7 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
                 
                 UIPasteboard.general.string = link
                 if let string = UIPasteboard.general.string {
-                    self.showInfoMessage(title: "Ссылка на пост:" , msg: "\(string)")
+                    self.showInfoMessage(title: "Ссылка на запись:" , msg: "\(string)")
                 }
             } else if self.type == "photo" {
                 let link = "https://vk.com/photo\(record.ownerID)_\(record.id)"
@@ -966,7 +966,8 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
         }
         
         
-        if record.postType == "suggest" && vkSingleton.shared.adminGroupID.contains(abs(record.ownerID)) {
+        if record.postType == "suggest" &&
+            vkSingleton.shared.adminGroups.filter({ $0.gid == abs(record.ownerID) }).count > 0 {
             let action5 = UIAlertAction(title: "Опубликовать запись", style: .default) { action in
                 
                 let title = "Опубликовать предложенную запись"

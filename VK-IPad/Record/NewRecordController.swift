@@ -177,7 +177,8 @@ class NewRecordController: UIViewController, UITableViewDelegate, UITableViewDat
                         cell.optSwitch.isEnabled = false
                     }
                     
-                    if record.postType == "suggest" && vkSingleton.shared.adminGroupID.contains(abs(record.ownerID)){
+                    if record.postType == "suggest" &&
+                        vkSingleton.shared.adminGroups.filter({ $0.gid == abs(record.ownerID) }).count > 0 {
                         cell.headerLabel.isEnabled = true
                         cell.optSwitch.isEnabled = true
                     }
@@ -403,7 +404,7 @@ class NewRecordController: UIViewController, UITableViewDelegate, UITableViewDat
             
             if record.postType == "suggest" {
                 suggested = true
-                if vkSingleton.shared.adminGroupID.contains(abs(record.ownerID)) {
+                if vkSingleton.shared.adminGroups.filter({ $0.gid == abs(record.ownerID) }).count > 0 {
                     suggested = false
                 }
             }
@@ -507,7 +508,7 @@ class NewRecordController: UIViewController, UITableViewDelegate, UITableViewDat
                 record.date = Int(Date().timeIntervalSince1970)
                 record.postType = "post"
                 
-                if vkSingleton.shared.adminGroupID.contains(abs(record.ownerID)) {
+                if vkSingleton.shared.adminGroups.filter({ $0.gid == abs(record.ownerID) }).count > 0 {
                     if addSigner {
                         record.signerID = self.record.fromID
                     } else {

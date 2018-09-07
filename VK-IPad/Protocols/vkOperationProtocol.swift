@@ -1462,4 +1462,50 @@ extension UIViewController: VkOperationProtocol {
             }
         }
     }
+    
+    func repostObject(message: String, object: String, groupID: Int = 0) {
+        
+        var ownerID = vkSingleton.shared.userID
+        
+        let url = "/method/wall.repost"
+        var parameters = [
+            "access_token": vkSingleton.shared.accessToken,
+            "message": message,
+            "object": object,
+            "v": vkSingleton.shared.version
+        ]
+        
+        if groupID > 0 {
+            parameters["group_id"] = "\(groupID)"
+            ownerID = "-\(groupID)"
+        }
+        
+        let request = GetServerDataOperation(url: url, parameters: parameters)
+        request.completionBlock = {
+            guard let data = request.data else { return }
+            guard let json = try? JSON(data: data) else { print("json error"); return }
+            //print(json)
+            
+            let error = ErrorJson(json: JSON.null)
+            error.errorCode = json["error"]["error_code"].intValue
+            error.errorMsg = json["error"]["error_msg"].stringValue
+            
+            if error.errorCode == 0 {
+                let success = json["response"]["success"].intValue
+                let postID = json["response"]["post_id"].intValue
+                
+                if success == 1 {
+                    OperationQueue.main.addOperation {
+                        if let id = Int(ownerID) {
+                            self.openWallRecord(ownerID: id, postID: postID, accessKey: "", type: "post")
+                        }
+                    }
+                }
+            } else {
+                self.showErrorMessage(title: "Репост на свою стену", msg: "\nОшибка #\(error.errorCode): \(error.errorMsg)\n")
+            }
+            self.setOfflineStatus(dependence: request)
+        }
+        OperationQueue().addOperation(request)
+    }
 }

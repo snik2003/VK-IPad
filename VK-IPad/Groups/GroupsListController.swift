@@ -424,7 +424,7 @@ class GroupsListController: UIViewController, UITableViewDelegate, UITableViewDa
         let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
         alertController.addAction(cancelAction)
         
-        if vkSingleton.shared.adminGroupID.count > 0 {
+        if vkSingleton.shared.adminGroups.count > 0 {
             let action1 = UIAlertAction(title: "Поиск нового сообщества", style: .default) { action in
                 
                 self.openGroupsListController(uid: vkSingleton.shared.userID, title: "Поиск сообщества", type: "search")
@@ -432,7 +432,7 @@ class GroupsListController: UIViewController, UITableViewDelegate, UITableViewDa
             alertController.addAction(action1)
         }
         
-        if vkSingleton.shared.adminGroupID.count > 0 {
+        if vkSingleton.shared.adminGroups.count > 0 {
             let action2 = UIAlertAction(title: "Управление сообществами", style: .default) { action in
                 
                 self.openGroupsListController(uid: vkSingleton.shared.userID, title: "Управление сообществами", type: "admin")

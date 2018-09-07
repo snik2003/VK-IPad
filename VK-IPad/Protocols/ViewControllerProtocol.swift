@@ -1059,6 +1059,107 @@ extension UIViewController: ViewControllerProtocol {
             }
         }
     }
+    
+    func repost(object: AnyObject) {
+        
+        var title = "Введите сопровождающий текст:"
+        var attachment = ""
+        if let record = object as? Record {
+            title = "Вы собираетесь опубликовать на своей стене запись \(record.title)\n"
+            attachment = "wall\(record.ownerID)_\(record.id)"
+        } else if let photo = object as? Photo {
+            title = "Вы собираетесь опубликовать на своей стене фотографию \(photo.title)\n"
+            attachment = "photo\(photo.ownerID)_\(photo.id)"
+        } else if let video = object as? Video {
+            title = "Вы собираетесь опубликовать на своей стене видеозапись «\(video.title)»\n"
+            attachment = "video\(video.ownerID)_\(video.id)"
+        }
+        
+        let appearance = SCLAlertView.SCLAppearance(
+            kTitleTop: 32.0,
+            kWindowWidth: 400,
+            kTitleFont: UIFont(name: "Verdana-Bold", size: 14)!,
+            kTextFont: UIFont(name: "Verdana", size: 15)!,
+            kButtonFont: UIFont(name: "Verdana", size: 16)!,
+            showCloseButton: false,
+            showCircularIcon: true
+        )
+        
+        let alert = SCLAlertView(appearance: appearance)
+        
+        let textView = UITextView(frame: CGRect(x: 0, y: 0, width: 376, height: 100))
+        
+        textView.layer.borderColor = UIColor.gray.cgColor
+        textView.layer.borderWidth = 0.8
+        textView.layer.cornerRadius = 6
+        textView.backgroundColor = vkSingleton.shared.backColor.withAlphaComponent(0.5)
+        textView.font = UIFont(name: "Verdana", size: 13)
+        textView.placeholder = "Введите сопровождающий текст"
+        textView.text = ""
+        
+        alert.customSubview = textView
+        
+        alert.addButton("Опубликовать на своей стене") {
+            
+            self.repostObject(message: textView.text, object: attachment)
+        }
+        
+        alert.addButton("Отмена") {}
+        
+        alert.showInfo(title, subTitle: "")
+    }
+    
+    func repostInGroup(object: AnyObject, groupID: Int) {
+        
+        var title = "Введите сопровождающий текст:"
+        var attachment = ""
+        
+        if let group = vkSingleton.shared.adminGroups.filter({ $0.gid == groupID }).first {
+            if let record = object as? Record {
+                title = "Вы собираетесь опубликовать на стене сообщества «\(group.name)» запись \(record.title)\n"
+                attachment = "wall\(record.ownerID)_\(record.id)"
+            } else if let photo = object as? Photo {
+                title = "Вы собираетесь опубликовать на стене сообщества «\(group.name)» фотографию \(photo.title)\n"
+                attachment = "photo\(photo.ownerID)_\(photo.id)"
+            } else if let video = object as? Video {
+                title = "Вы собираетесь опубликовать на стене сообщества «\(group.name)» видеозапись «\(video.title)»\n"
+                attachment = "video\(video.ownerID)_\(video.id)"
+            }
+        }
+        
+        let appearance = SCLAlertView.SCLAppearance(
+            kTitleTop: 32.0,
+            kWindowWidth: 400,
+            kTitleFont: UIFont(name: "Verdana-Bold", size: 14)!,
+            kTextFont: UIFont(name: "Verdana", size: 15)!,
+            kButtonFont: UIFont(name: "Verdana", size: 16)!,
+            showCloseButton: false,
+            showCircularIcon: true
+        )
+        
+        let alert = SCLAlertView(appearance: appearance)
+        
+        let textView = UITextView(frame: CGRect(x: 0, y: 0, width: 376, height: 100))
+        
+        textView.layer.borderColor = UIColor.gray.cgColor
+        textView.layer.borderWidth = 0.8
+        textView.layer.cornerRadius = 6
+        textView.backgroundColor = vkSingleton.shared.backColor.withAlphaComponent(0.5)
+        textView.font = UIFont(name: "Verdana", size: 13)
+        textView.placeholder = "Введите сопровождающий текст"
+        textView.text = ""
+        
+        alert.customSubview = textView
+        
+        alert.addButton("Опубликовать на стене сообщества") {
+            
+            self.repostObject(message: textView.text, object: attachment, groupID: groupID)
+        }
+        
+        alert.addButton("Отмена") {}
+        
+        alert.showInfo(title, subTitle: "")
+    }
 }
 
 

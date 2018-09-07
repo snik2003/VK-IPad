@@ -907,7 +907,7 @@ class CommentCell: UITableViewCell {
             leftX += size.width + 20
         }
         
-        if "\(comment.fromID)" == vkSingleton.shared.userID || (comment.fromID < 0 && vkSingleton.shared.adminGroupID.contains(abs(comment.fromID))) {
+        if "\(comment.fromID)" == vkSingleton.shared.userID || (comment.fromID < 0 && vkSingleton.shared.adminGroups.filter({ $0.gid == abs(comment.fromID) }).count > 0) {
             
             if Int(Date().timeIntervalSince1970) - comment.date <= 24 * 60 * 60 && !comment.isSticker {
                 let button1 = UIButton()

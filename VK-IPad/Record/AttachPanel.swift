@@ -67,6 +67,17 @@ class AttachPanel: UIView {
             width = self.delegate.view.bounds.width - 20
         }
         
+        if let record = vkSingleton.shared.repostObject as? Record {
+            self.attachArray.append(record)
+            vkSingleton.shared.repostObject = nil
+        } else if let photo = vkSingleton.shared.repostObject as? Photo {
+            self.attachArray.append(photo)
+            vkSingleton.shared.repostObject = nil
+        } else if let video = vkSingleton.shared.repostObject as? Video {
+            self.attachArray.append(video)
+            vkSingleton.shared.repostObject = nil
+        }
+        
         if replyID != 0 {
             let view = UIView()
             view.tag = 250
@@ -233,12 +244,7 @@ class AttachPanel: UIView {
                             }
                             OperationQueue().addOperation(getCacheImage)
                             
-                            var text = ""
-                            if photo.text != "" {
-                                text = "«\(photo.text)»"
-                            }
-                            
-                            nameLabel.text = "Фотография \(text)"
+                            nameLabel.text = "Фотография \(photo.title)"
                             
                             let tap1 = UITapGestureRecognizer()
                             nameLabel.isUserInteractionEnabled = true
@@ -252,6 +258,26 @@ class AttachPanel: UIView {
                             imageView.addGestureRecognizer(tap2)
                             tap2.add {
                                 self.delegate.openWallRecord(ownerID: photo.ownerID, postID: photo.id, accessKey: photo.accessKey, type: "photo")
+                            }
+                        } else if let record = attachArray[index] as? Record {
+                            imageView.image = UIImage(named: "not_mention")
+                            imageView.layer.cornerRadius = 15
+                            imageView.layer.borderWidth = 0
+                            
+                            nameLabel.text = "Запись со стены \(record.title)"
+                            
+                            let tap1 = UITapGestureRecognizer()
+                            nameLabel.isUserInteractionEnabled = true
+                            nameLabel.addGestureRecognizer(tap1)
+                            tap1.add {
+                                self.delegate.openWallRecord(ownerID: record.ownerID, postID: record.id, accessKey: "", type: "post")
+                            }
+                            
+                            let tap2 = UITapGestureRecognizer()
+                            imageView.isUserInteractionEnabled = true
+                            imageView.addGestureRecognizer(tap2)
+                            tap2.add {
+                                self.delegate.openWallRecord(ownerID: record.ownerID, postID: record.id, accessKey: "", type: "post")
                             }
                         } else if let doc = attachArray[index] as? Document {
                             
@@ -503,37 +529,26 @@ class AttachPanel: UIView {
     
     func formStringAttachments() -> String {
         
-        var str = ""
+        var strArray: [String] = []
         
         for attach in attachArray {
             if let photo = attach as? Photo {
-                if str != "" {
-                    str = "\(str),"
-                }
-                str = "\(str)photo\(photo.ownerID)_\(photo.id)"
+                strArray.append("photo\(photo.ownerID)_\(photo.id)")
             }
             
             if let video = attach as? Video {
-                if str != "" {
-                    str = "\(str),"
-                }
-                str = "\(str)video\(video.ownerID)_\(video.id)"
+                strArray.append("video\(video.ownerID)_\(video.id)")
             }
             
             if let doc = attach as? Document {
-                if str != "" {
-                    str = "\(str),"
-                }
-                str = "\(str)doc\(doc.ownerID)_\(doc.id)"
+                strArray.append("doc\(doc.ownerID)_\(doc.id)")
+            }
+            
+            if let record = attach as? Record {
+                strArray.append("wall\(record.ownerID)_\(record.id)")
             }
         }
         
-        if link != "" {
-            if str != "" {
-                str = "\(str),"
-            }
-            str = "\(str)\(link)"
-        }
-        return str
+        return strArray.joined(separator: ",")
     }
 }

@@ -22,7 +22,7 @@ final class vkSingleton {
     //var avatarURL: String = ""
     
     var groupToken: [Int: String] = [:]
-    var adminGroupID: [Int] = []
+    var adminGroups: [GroupProfile] = []
     var commentFromGroup = 0
     
     var deviceToken = ""
@@ -45,4 +45,5 @@ final class vkSingleton {
     var supportGroupID = "-166099539"
     
     var forwardMessages: [String] = []
+    var repostObject: AnyObject?
 }

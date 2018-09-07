@@ -174,7 +174,7 @@ class MenuViewController: UITableViewController {
         
         code = "\(code) var c = API.groups.getInvites({\"count\":\"100\",\"extended\":\"1\",\"fields\":\"id,first_name,last_name,photo_100,sex\",\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"v\":\"\(vkSingleton.shared.version)\"});\n"
         
-        code = "\(code) var d = API.groups.get({\"user_id\":\"\(vkSingleton.shared.userID)\",\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"filter\":\"moder\",\"v\":\"\(vkSingleton.shared.version)\"});\n"
+        code = "\(code) var d = API.groups.get({\"user_id\":\"\(vkSingleton.shared.userID)\",\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"filter\":\"moder\",\"extended\":\"1\",\"fields\":\"id,name\",\"v\":\"\(vkSingleton.shared.version)\"});\n"
         
         code = "\(code) var stat = API.stats.trackVisitor({\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"v\":\"\(vkSingleton.shared.version)\"}); \n"
         
@@ -196,7 +196,7 @@ class MenuViewController: UITableViewController {
             guard let data = getServerDataOperation.data else { return }
             
             guard let json = try? JSON(data: data) else { print("json error"); return }
-            //print(json["response"][1]["items"])
+            //print(json["response"][3]["items"])
             
             let userProfile = json["response"][4].compactMap { UserProfile(json: $0.1) }
             
@@ -231,21 +231,12 @@ class MenuViewController: UITableViewController {
                 }
             }
             
-            
-            
             OperationQueue.main.addOperation {
                 self.notificationsCell.setBadgeValue(value: countNewNots)
                 self.groupsCell.setBadgeValue(value: groups.count)
             }
             
-            let count = json["response"][3]["count"].intValue
-            vkSingleton.shared.adminGroupID.removeAll(keepingCapacity: false)
-            if count > 0 {
-                for index in 0...count-1 {
-                    let groupID = json["response"][3]["items"][index].intValue
-                    vkSingleton.shared.adminGroupID.append(groupID)
-                }
-            }
+            vkSingleton.shared.adminGroups = json["response"][3]["items"].compactMap { GroupProfile(json: $0.1) }
         }
         OperationQueue().addOperation(getServerDataOperation)
     }

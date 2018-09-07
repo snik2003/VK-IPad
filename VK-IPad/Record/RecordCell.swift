@@ -1169,9 +1169,13 @@ class RecordCell: UITableViewCell {
             
             self.addSubview(repostsButton)
             
-            repostsButton.add(for: .touchUpInside) {
-                self.repostsButton.smallButtonTouched()
+            let tap = UITapGestureRecognizer()
+            tap.add {
+                self.repostsButton.buttonTouched()
+                self.repostObject(sender: tap)
             }
+            repostsButton.isUserInteractionEnabled = true
+            repostsButton.addGestureRecognizer(tap)
             
             commentsButton.tag = 250
             commentsButton.frame = CGRect(x: leftX + 3 * buttonWidth, y: topY, width: buttonWidth, height: likesHeight)
@@ -1624,5 +1628,101 @@ extension RecordCell {
                 delegate.present(alertController, animated: true)
             }
         }
+    }
+    
+    func repostObject(sender: UITapGestureRecognizer) {
+        
+        let point = sender.location(in: self)
+        
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        
+        let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
+        alertController.addAction(cancelAction)
+        
+        let action1 = UIAlertAction(title: "Скопировать ссылку в буфер", style: .default) { action in
+            
+            if let controller = self.delegate as? RecordController, controller.type == "photo" {
+                let link = "https://vk.com/photo\(self.record.ownerID)_\(self.record.id)"
+                
+                UIPasteboard.general.string = link
+                if let string = UIPasteboard.general.string {
+                    self.delegate.showInfoMessage(title: "Ссылка на фотографию помещена в буфер обмена" , msg: "\(string)")
+                }
+            } else {
+                let link = "https://vk.com/wall\(self.record.ownerID)_\(self.record.id)"
+                
+                UIPasteboard.general.string = link
+                if let string = UIPasteboard.general.string {
+                    self.delegate.showInfoMessage(title: "Ссылка на запись помещена в буфер обмена:" , msg: "\(string)")
+                }
+            }
+        }
+        alertController.addAction(action1)
+        
+        
+        let action2 = UIAlertAction(title: "Вложить в личное сообщение", style: .default) { action in
+            
+            if let controller = self.delegate as? RecordController, let photo = controller.photo {
+                vkSingleton.shared.repostObject = photo
+                self.delegate.showInfoMessage(title: "Репост фотографии", msg: "Перейдите в нужный диалог для отправки  вашему собеседнику фотографии \(photo.title)")
+            } else {
+                vkSingleton.shared.repostObject = self.record
+                self.delegate.showInfoMessage(title: "Репост записи со стены", msg: "Перейдите в нужный диалог для отправки вашему собеседнику записи \(self.record.title)")
+            }
+        }
+        alertController.addAction(action2)
+        
+        
+        let action3 = UIAlertAction(title: "Опубликовать на своей стене", style: .default) { action in
+            
+            if let controller = self.delegate as? RecordController, let photo = controller.photo {
+                self.delegate.repost(object: photo)
+            } else {
+                self.delegate.repost(object: self.record)
+            }
+        }
+        alertController.addAction(action3)
+        
+        
+        if vkSingleton.shared.adminGroups.count > 0 {
+            let action4 = UIAlertAction(title: "Опубликовать в сообществе", style: .default) { action in
+                
+                let alertController2 = UIAlertController(title: "Выберите сообщество:", message: nil, preferredStyle: .actionSheet)
+                
+                let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
+                alertController2.addAction(cancelAction)
+                
+                
+                for group in vkSingleton.shared.adminGroups {
+                    let action = UIAlertAction(title: group.name, style: .default) { action in
+                        
+                        if let controller = self.delegate as? RecordController, let photo = controller.photo {
+                            self.delegate.repostInGroup(object: photo, groupID: group.gid)
+                        } else {
+                            self.delegate.repostInGroup(object: self.record, groupID: group.gid)
+                        }
+                    }
+                    alertController2.addAction(action)
+                }
+                
+                if let popoverController = alertController2.popoverPresentationController {
+                    popoverController.sourceView = self
+                    popoverController.sourceRect = CGRect(x: point.x, y: point.y - 10, width: 0, height: 0)
+                    popoverController.permittedArrowDirections = [.up,.down]
+                }
+                
+                self.delegate.present(alertController2, animated: true)
+            }
+            alertController.addAction(action4)
+        }
+        
+        
+        if let popoverController = alertController.popoverPresentationController {
+            popoverController.sourceView = self
+            popoverController.sourceRect = CGRect(x: point.x, y: point.y - 10, width: 0, height: 0)
+            popoverController.permittedArrowDirections = [.up,.down]
+        }
+        
+        delegate.present(alertController, animated: true)
     }
 }
