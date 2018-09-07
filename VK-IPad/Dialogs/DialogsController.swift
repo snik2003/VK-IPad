@@ -155,7 +155,7 @@ class DialogsController: UIViewController, UITableViewDelegate, UITableViewDataS
             "count": "\(count)",
             "filter": filter.rawValue,
             "extended": "1",
-            "fields": "id,first_name,last_name,last_seen,photo_max_orig,photo_max,deactivated,first_name_abl,first_name_gen,last_name_gen,online,can_write_private_message,sex,photo_100",
+            "fields": "id,first_name,last_name,last_seen,photo_max_orig,photo_max,deactivated,first_name_abl,first_name_gen,last_name_gen,first_name_acc,last_name_acc,online,can_write_private_message,sex,photo_100",
             "v": vkSingleton.shared.version
         ]
         
@@ -163,7 +163,7 @@ class DialogsController: UIViewController, UITableViewDelegate, UITableViewDataS
         getServerDataOperation.completionBlock = {
             guard let data = getServerDataOperation.data else { return }
             guard let json = try? JSON(data: data) else { print("json error"); return }
-            //print(json)
+            print(json)
             
             self.totalCount = json["response"]["count"].intValue
             self.unreadCount = json["response"]["unread_count"].intValue
@@ -190,6 +190,12 @@ class DialogsController: UIViewController, UITableViewDelegate, UITableViewDataS
                     
                     dialog.attachments = json["response"]["items"][index]["last_message"]["attachments"].compactMap({ Attachment(json: $0.1) })
                     dialog.fwdMessages = json["response"]["items"][index]["last_message"]["fwd_messages"].compactMap({ Dialog(json: $0.1) })
+                    
+                    let json2 = json["response"]["items"][index]["last_message"]["action"]
+                    dialog.action = json2["type"].stringValue
+                    dialog.actionID = json2["member_id"].intValue
+                    dialog.actionEmail = json2["email"].stringValue
+                    dialog.actionText = json2["text"].stringValue
                     
                     dialogs.append(dialog)
                 }

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SwiftyJSON
 
 class DialogsCell: UITableViewCell {
 
@@ -22,7 +23,13 @@ class DialogsCell: UITableViewCell {
         
         self.removeAllSubviews()
         self.drawAvatar()
-        self.drawLastMessageView()
+        
+        if dialog.action == "" {
+            self.drawLastMessageView()
+        } else {
+            self.drawLastActionView()
+        }
+        
         self.setUnreadValue(value: conversation.unreadCount)
         
         if conversation.readState {
@@ -173,6 +180,143 @@ class DialogsCell: UITableViewCell {
         messLabel.text = dialog.lastMessage
         messLabel.font = UIFont(name: "Verdana", size: 12)
         messLabel.numberOfLines = 0
+        messLabel.frame = CGRect(x: 45, y: 0, width: width - 50, height: 30)
+        view.addSubview(messLabel)
+        
+        let dateLabel = UILabel()
+        dateLabel.text = "отправлено \(dialog.date.toStringLastTime())"
+        dateLabel.isEnabled = false
+        dateLabel.font = UIFont(name: "Verdana", size: 10)
+        dateLabel.frame = CGRect(x: 45, y: 28, width: width - 50, height: 15)
+        view.addSubview(dateLabel)
+        
+        view.frame = CGRect(x: 90, y: 35, width: width, height: 45)
+        self.addSubview(view)
+    }
+    
+    func drawLastActionView() {
+        
+        let width: CGFloat = self.bounds.width - 160
+        
+        let view = UIView()
+        view.tag = 250
+        
+        var url = ""
+        if dialog.fromID > 0 {
+            if let user = self.users.filter({ $0.uid == "\(dialog.fromID)" }).first {
+                url = user.photo100
+            }
+        } else if dialog.fromID < 0 {
+            if let group = self.groups.filter({ $0.gid == abs(dialog.fromID) }).first {
+                url = group.photo100
+            }
+        }
+        
+        let avatarImage = UIImageView()
+        avatarImage.image = UIImage(named: "nophoto")
+        avatarImage.contentMode = .scaleAspectFill
+        
+        let getCacheImage = GetCacheImage(url: url, lifeTime: .avatarImage)
+        let setImageToRow = SetImageToRowOfTableView(cell: self, imageView: avatarImage, indexPath: indexPath, tableView: delegate.tableView)
+        setImageToRow.addDependency(getCacheImage)
+        OperationQueue().addOperation(getCacheImage)
+        OperationQueue.main.addOperation(setImageToRow)
+        OperationQueue.main.addOperation {
+            avatarImage.layer.cornerRadius = 20
+            avatarImage.clipsToBounds = true
+            avatarImage.contentMode = .scaleAspectFill
+            avatarImage.layer.borderColor = UIColor.lightGray.cgColor
+            avatarImage.layer.borderWidth = 0 //0.4
+        }
+        
+        avatarImage.frame = CGRect(x: 0, y: 2, width: 40, height: 40)
+        view.addSubview(avatarImage)
+        
+        var text = "Служебное сообщение..."
+        if let user = self.users.filter({ $0.uid == "\(dialog.fromID)" }).first {
+        
+            var actUser = UserProfile(json: JSON.null)
+            if dialog.actionID > 0, let user = self.users.filter({ $0.uid == "\(dialog.actionID)" }).first {
+                actUser = user
+            }
+            
+            if dialog.action == "chat_kick_user" {
+                if dialog.actionID == dialog.fromID {
+                    if user.sex == 1 {
+                        text = "\(user.firstName) \(user.lastName) покинула беседу"
+                    } else {
+                        text = "\(user.firstName) \(user.lastName) покинул беседу"
+                    }
+                } else if dialog.actionID > 0 {
+                    if user.sex == 1 {
+                        text = "\(user.firstName) \(user.lastName) иcключила \(actUser.firstNameAcc) \(actUser.lastNameAcc) из беседы"
+                    } else {
+                        text = "\(user.firstName) \(user.lastName) иcключил \(actUser.firstNameAcc) \(actUser.lastNameAcc) из беседы"
+                    }
+                }
+            } else if dialog.action == "chat_invite_user" {
+                if dialog.actionID == dialog.fromID {
+                    if user.sex == 1 {
+                        text = "\(user.firstName) \(user.lastName) присоединилась к беседе"
+                    } else {
+                        text = "\(user.firstName) \(user.lastName) присоединился к беседе"
+                    }
+                } else if dialog.actionID > 0 {
+                    if user.sex == 1 {
+                        text = "\(user.firstName) \(user.lastName) пригласила в беседу \(actUser.firstNameAcc) \(actUser.lastNameAcc)"
+                    } else {
+                        text = "\(user.firstName) \(user.lastName) пригласил в беседу \(actUser.firstNameAcc) \(actUser.lastNameAcc)"
+                    }
+                }
+            } else if dialog.action == "chat_invite_user_by_link" {
+                if user.sex == 1 {
+                    text = "\(user.firstName) \(user.lastName) присоединилась к беседе по ссылке"
+                } else {
+                    text = "\(user.firstName) \(user.lastName) присоединился к беседе по ссылке"
+                }
+            } else if dialog.action == "chat_create" {
+                if user.sex == 1 {
+                    text = "\(user.firstName) \(user.lastName) создала беседу с названием «\(dialog.actionText)»"
+                } else {
+                    text = "\(user.firstName) \(user.lastName) создал беседу с названием «\(dialog.actionText)»"
+                }
+            } else if dialog.action == "chat_title_update" {
+                if user.sex == 1 {
+                    text = "\(user.firstName) \(user.lastName) изменила название беседы на «\(dialog.actionText)»"
+                } else {
+                    text = "\(user.firstName) \(user.lastName) изменил название беседы на «\(dialog.actionText)»"
+                }
+            } else if dialog.action == "chat_photo_update" {
+                if user.sex == 1 {
+                    text = "\(user.firstName) \(user.lastName) обновила главную фотографию беседы"
+                } else {
+                    text = "\(user.firstName) \(user.lastName) обновил главную фотографию беседы"
+                }
+            } else if dialog.action == "chat_photo_remove" {
+                if user.sex == 1 {
+                    text = "\(user.firstName) \(user.lastName) удалила главную фотографию беседы"
+                } else {
+                    text = "\(user.firstName) \(user.lastName) удалил главную фотографию беседы"
+                }
+            } else if dialog.action == "chat_pin_message" {
+                if user.sex == 1 {
+                    text = "\(actUser.firstName) \(actUser.lastName) закрепила сообщение в беседе"
+                } else {
+                    text = "\(actUser.firstName) \(actUser.lastName) закрепил сообщение в беседе"
+                }
+            } else if dialog.action == "chat_unpin_message" {
+                if user.sex == 1 {
+                    text = "\(actUser.firstName) \(actUser.lastName) открепила сообщение в беседе"
+                } else {
+                    text = "\(actUser.firstName) \(actUser.lastName) открепил сообщение в беседе"
+                }
+            }
+        }
+        let messLabel = UILabel()
+        messLabel.text = text
+        messLabel.font = UIFont(name: "Verdana", size: 12)
+        messLabel.numberOfLines = 0
+        messLabel.isEnabled = false
         messLabel.frame = CGRect(x: 45, y: 0, width: width - 50, height: 30)
         view.addSubview(messLabel)
         
