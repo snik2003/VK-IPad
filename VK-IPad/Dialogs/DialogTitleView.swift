@@ -205,6 +205,8 @@ class DialogTitleView: UIView {
             statusLabel.frame = CGRect(x: 0, y: 21, width: 350, height: 16)
         } else if !isTimer {
             statusLabel.textAlignment = .left
+            statusLabel.textColor = UIColor.white
+            statusLabel.font = offlineFont
             statusLabel.text = "печатает новое сообщение"
             statusLabel.frame = CGRect(x: 160, y: 21, width: 190, height: 16)
             
