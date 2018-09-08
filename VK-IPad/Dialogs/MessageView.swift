@@ -603,7 +603,7 @@ class MessageView: UIView {
                 artistLabel.tag = 250
                 artistLabel.frame = CGRect(x: 60, y: musicImage.frame.midY - 16, width: maxSize - 50, height: 16)
                 artistLabel.text = attach.audio[0].artist
-                artistLabel.font = UIFont(name: "Verdana", size: 14)!
+                artistLabel.font = UIFont(name: "Verdana", size: 13)!
                 
                 let titleLabel = UILabel()
                 titleLabel.tag = 250

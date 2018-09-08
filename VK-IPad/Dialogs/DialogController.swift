@@ -1044,6 +1044,25 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
             }
         
         
+            if dialogs.count < totalCount {
+                if self.source == .all {
+                    let action4 = UIAlertAction(title: "Догрузить сообщений в беседу", style: .default) { action in
+                        
+                        self.loadMoreMessages()
+                    }
+                    alertController.addAction(action4)
+                }
+                
+                if self.source == .important {
+                    let action4 = UIAlertAction(title: "Догрузить сообщений в беседу", style: .default) { action in
+                        
+                        self.loadMoreImportantMessages()
+                    }
+                    alertController.addAction(action4)
+                }
+            }
+            
+            
             if let popoverController = alertController.popoverPresentationController {
                 let bounds = self.titleView.bounds
                 popoverController.sourceView = self.titleView
@@ -1108,6 +1127,25 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
                         self.getDialog()
                     }
                     alertController.addAction(action3)
+                }
+            }
+            
+            
+            if dialogs.count < totalCount {
+                if self.source == .all {
+                    let action4 = UIAlertAction(title: "Догрузить сообщений в беседу", style: .default) { action in
+                        
+                        self.loadMoreMessages()
+                    }
+                    alertController.addAction(action4)
+                }
+                
+                if self.source == .important {
+                    let action4 = UIAlertAction(title: "Догрузить сообщений в беседу", style: .default) { action in
+                        
+                        self.loadMoreImportantMessages()
+                    }
+                    alertController.addAction(action4)
                 }
             }
             
