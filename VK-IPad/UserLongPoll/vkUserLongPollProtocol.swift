@@ -130,37 +130,29 @@ extension MenuViewController: vkUserLongPollProtocol {
             for vc in viewControllers {
                 if let controller = vc as? DialogController {
                     var typing = false
-    
+                    var deleteIDs: [Int] = []
+                    var spamIDs: [Int] = []
+                    
                     for update in vkUserLongPoll.shared.updates {
-                        if update.elements[0] == 8 {
-                            if controller.userID == "\(abs(update.elements[1]))" {
-                                for user in controller.users.filter({ $0.uid == controller.userID }) {
-                                    
-                                    user.onlineStatus = 1
-                                    let platform = update.elements[2] % 256
-                                    if platform > 0 && platform != 7 {
-                                        user.onlineMobile = 1
-                                    }
-                                    
-                                    OperationQueue.main.addOperation {
-                                        if controller.chatID == 0 {
-                                            controller.titleView.user = user
-                                            controller.titleView.configureUserView()
-                                        }
-                                    }
+                        if update.elements[0] == 2 {
+                            let flags = update.elements[2]
+                            var summands: [Int] = []
+                            for number in [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 65536, 131072] {
+                                if flags & number != 0 {
+                                    summands.append(number)
                                 }
                             }
-                        } else if update.elements[0] == 9 {
-                            if controller.userID == "\(abs(update.elements[1]))" {
-                                for user in controller.users.filter({ $0.uid == controller.userID }) {
-                                    user.onlineStatus = 0
-                                    user.lastSeen = update.elements[3]
-                                        
-                                    OperationQueue.main.addOperation {
-                                        if controller.chatID == 0 {
-                                            controller.titleView.user = user
-                                            controller.titleView.configureUserView()
-                                        }
+                            
+                            for dialog in controller.dialogs.filter({ $0.id == update.elements[1] }) {
+                                if summands.contains(131072) || summands.contains(128) {
+                                    if !deleteIDs.contains(dialog.id) {
+                                        deleteIDs.append(dialog.id)
+                                    }
+                                }
+                                
+                                if summands.contains(64) {
+                                    if !spamIDs.contains(dialog.id) {
+                                        spamIDs.append(dialog.id)
                                     }
                                 }
                             }
@@ -174,8 +166,11 @@ extension MenuViewController: vkUserLongPollProtocol {
                                 if let id = controller.dialogs.last?.id {
                                     controller.startMessageID = id
                                 }
-                                controller.offset = 0
-                                controller.getDialog()
+                                
+                                OperationQueue.main.addOperation {
+                                    controller.offset = 0
+                                    controller.getDialog()
+                                }
                             }
                         } else if update.elements[0] == 6 {
                             if controller.userID == "\(update.elements[1])" {
@@ -203,6 +198,38 @@ extension MenuViewController: vkUserLongPollProtocol {
                                     }
                                 }
                             }
+                        } else if update.elements[0] == 8 {
+                            if controller.userID == "\(abs(update.elements[1]))" {
+                                for user in controller.users.filter({ $0.uid == controller.userID }) {
+                                    
+                                    user.onlineStatus = 1
+                                    let platform = update.elements[2] % 256
+                                    if platform > 0 && platform != 7 {
+                                        user.onlineMobile = 1
+                                    }
+                                    
+                                    OperationQueue.main.addOperation {
+                                        if controller.chatID == 0 {
+                                            controller.titleView.user = user
+                                            controller.titleView.configureUserView()
+                                        }
+                                    }
+                                }
+                            }
+                        } else if update.elements[0] == 9 {
+                            if controller.userID == "\(abs(update.elements[1]))" {
+                                for user in controller.users.filter({ $0.uid == controller.userID }) {
+                                    user.onlineStatus = 0
+                                    user.lastSeen = update.elements[3]
+                                    
+                                    OperationQueue.main.addOperation {
+                                        if controller.chatID == 0 {
+                                            controller.titleView.user = user
+                                            controller.titleView.configureUserView()
+                                        }
+                                    }
+                                }
+                            }
                         } else if update.elements[0] == 61 {
                             if controller.userID == "\(update.elements[1])" {
                                 typing = true
@@ -224,6 +251,42 @@ extension MenuViewController: vkUserLongPollProtocol {
                                 controller.titleView.typing = false
                                 controller.titleView.setTyping()
                             }
+                        }
+                    }
+                    
+                    if deleteIDs.count > 0 {
+                        var mess = "\(deleteIDs.count.messageAdder()) успешно удалено из диалога"
+                        if deleteIDs.count > 1 {
+                            mess = "\(deleteIDs.count.messageAdder()) успешно удалены из диалога"
+                        }
+                        
+                        var userID = Int(controller.userID)!
+                        if userID > 2000000000 {
+                            userID = Int(vkSingleton.shared.userID)!
+                        }
+                        
+                        
+                        OperationQueue.main.addOperation {
+                            controller.offset = 0
+                            controller.getDialog()
+                            print(mess)
+                        }
+                    }
+                    
+                    if spamIDs.count > 0 {
+                        var mess = "\(spamIDs.count.messageAdder()) успешно помечено как спам"
+                        if spamIDs.count > 1 {
+                            mess = "\(spamIDs.count.messageAdder()) успешно помечены как спам"
+                        }
+                        
+                        var userID = Int(controller.userID)!
+                        if userID > 2000000000 {
+                            userID = Int(vkSingleton.shared.userID)!
+                        }
+                        
+                        
+                        OperationQueue.main.addOperation {
+                            print(mess)
                         }
                     }
                 }
