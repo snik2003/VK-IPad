@@ -621,6 +621,28 @@ class RecordCell: UITableViewCell {
         self.addSubview(artistLabel)
         self.addSubview(titleLabel)
         
+        let tap1 = UITapGestureRecognizer()
+        musicImage.isUserInteractionEnabled = true
+        musicImage.addGestureRecognizer(tap1)
+        
+        let tap2 = UITapGestureRecognizer()
+        titleLabel.isUserInteractionEnabled = true
+        titleLabel.addGestureRecognizer(tap2)
+        
+        let tap3 = UITapGestureRecognizer()
+        artistLabel.isUserInteractionEnabled = true
+        artistLabel.addGestureRecognizer(tap3)
+        
+        tap1.add {
+            self.delegate.showErrorMessage(title: "Аудиозапись", msg: "К сожалению, администрация ВКонтакте ограничила доступ к прослушиванию аудиозаписей.")
+        }
+        tap2.add {
+            self.delegate.showErrorMessage(title: "Аудиозапись", msg: "К сожалению, администрация ВКонтакте ограничила доступ к прослушиванию аудиозаписей.")
+        }
+        tap3.add {
+            self.delegate.showErrorMessage(title: "Аудиозапись", msg: "К сожалению, администрация ВКонтакте ограничила доступ к прослушиванию аудиозаписей.")
+        }
+        
         topY += 40
         
         return topY

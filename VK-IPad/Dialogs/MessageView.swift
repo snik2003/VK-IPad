@@ -160,6 +160,11 @@ class MessageView: UIView {
                 height += videoHeight + 2
             }
             
+            let audioHeight = setAudio(attach, maxWidth: maxWidth, topY: height, calc: calcHeight)
+            if audioHeight > 0 {
+                height += audioHeight + 2
+            }
+            
             let docHeight = setDocument(attach, maxWidth: maxWidth, topY: height, calc: calcHeight)
             if docHeight > 0 {
                 height += docHeight + 2
@@ -554,6 +559,68 @@ class MessageView: UIView {
                     if self.delegate.mode == .dialog {
                         self.delegate.openBrowserController(url: attach.link[0].url)
                     }
+                }
+                
+                var leftX: CGFloat = 0
+                if dialog.out == 0 {
+                    leftX = 60
+                    view.backgroundColor = Constants.inBackColor
+                } else {
+                    leftX = maxWidth - 60 - maxSize
+                    view.backgroundColor = Constants.outBackColor
+                }
+                if forward {
+                    view.backgroundColor = Constants.fwdBackColor
+                }
+                view.frame = CGRect(x: leftX, y: topY, width: maxSize, height: height)
+                view.configureViewWithFwd()
+                self.addSubview(view)
+            }
+        }
+        
+        return height
+    }
+    
+    func setAudio(_ attach: Attachment, maxWidth: CGFloat, topY: CGFloat, calc: Bool) -> CGFloat {
+        
+        var height: CGFloat = 0
+        
+        if attach.type == "audio" && attach.audio.count > 0 {
+            
+            height += 50
+            
+            if !calc {
+                let view = UIView()
+                let maxSize: CGFloat = 350
+                
+                let musicImage = UIImageView()
+                musicImage.tag = 250
+                
+                musicImage.frame = CGRect(x: 10, y: 5, width: 40, height: 40)
+                musicImage.image = UIImage(named: "music")
+                
+                let artistLabel = UILabel()
+                artistLabel.tag = 250
+                artistLabel.frame = CGRect(x: 60, y: musicImage.frame.midY - 16, width: maxSize - 50, height: 16)
+                artistLabel.text = attach.audio[0].artist
+                artistLabel.font = UIFont(name: "Verdana", size: 14)!
+                
+                let titleLabel = UILabel()
+                titleLabel.tag = 250
+                titleLabel.frame = CGRect(x: 60, y: musicImage.frame.midY, width: maxSize - 50, height: 16)
+                titleLabel.text = attach.audio[0].title
+                titleLabel.textColor = titleLabel.tintColor
+                titleLabel.font = UIFont(name: "Verdana", size: 13)!
+                
+                view.addSubview(musicImage)
+                view.addSubview(artistLabel)
+                view.addSubview(titleLabel)
+                
+                let tapLink = UITapGestureRecognizer()
+                view.isUserInteractionEnabled = true
+                view.addGestureRecognizer(tapLink)
+                tapLink.add {
+                    self.delegate.showErrorMessage(title: "Аудиозапись", msg: "К сожалению, администрация ВКонтакте ограничила доступ к прослушиванию аудиозаписей.")
                 }
                 
                 var leftX: CGFloat = 0
