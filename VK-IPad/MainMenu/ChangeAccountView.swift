@@ -95,10 +95,10 @@ class ChangeAccountView: UIView {
                         
                         vkSingleton.shared.accessToken = self.delegate.getAccessTokenFromRealm(userID: Int(vkSingleton.shared.userID)!)
                         
-                        /*vkUserLongPoll.shared.request.cancel()
-                         vkUserLongPoll.shared.firstLaunch = true
+                        vkUserLongPoll.shared.request.cancel()
+                        vkUserLongPoll.shared.firstLaunch = true
                          
-                         for id in vkGroupLongPoll.shared.request.keys {
+                         /*for id in vkGroupLongPoll.shared.request.keys {
                          if let request = vkGroupLongPoll.shared.request[id] {
                          request.cancel()
                          vkGroupLongPoll.shared.firstLaunch[id] = true

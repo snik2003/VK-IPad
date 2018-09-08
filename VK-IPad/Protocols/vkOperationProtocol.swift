@@ -1508,4 +1508,23 @@ extension UIViewController: VkOperationProtocol {
         }
         OperationQueue().addOperation(request)
     }
+    
+    func startTyping() {
+        
+        if let controller = self as? DialogController {
+            if AppConfig.shared.showTextEditInDialog {
+                
+                let url = "/method/messages.setActivity"
+                let parameters = [
+                    "access_token": vkSingleton.shared.accessToken,
+                    "user_id": controller.userID,
+                    "type": "typing",
+                    "v": vkSingleton.shared.version
+                ]
+                
+                let request = GetServerDataOperation(url: url, parameters: parameters)
+                OperationQueue().addOperation(request)
+            }
+        }
+    }
 }

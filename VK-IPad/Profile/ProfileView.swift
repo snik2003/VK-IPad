@@ -42,7 +42,7 @@ class ProfileView: UIView {
             avatarHeight = delegate.tableView.bounds.width * 0.3
             var avatarViewHeight = avatarHeight + 30 + 10 + 3 * buttonHeight
             if delegate.userID == vkSingleton.shared.userID {
-                avatarViewHeight = avatarHeight + 30 + buttonHeight
+                avatarViewHeight = avatarHeight + 30 + 5 + 2 * buttonHeight
             }
             if profile.deactivated != "" {
                 avatarViewHeight = avatarHeight + 20
@@ -58,18 +58,6 @@ class ProfileView: UIView {
             
             if profile.deactivated == "" {
                 if delegate.userID != vkSingleton.shared.userID {
-                    messageButton.layer.borderColor = UIColor.lightGray.cgColor
-                    messageButton.layer.borderWidth = 0.6
-                    messageButton.layer.cornerRadius = 5
-                    messageButton.clipsToBounds = true
-                    messageButton.setTitle("Написать сообщение", for: .normal)
-                    
-                    messageButton.add(for: .touchUpInside) {
-                        self.messageButton.buttonTouched()
-                        
-                        self.delegate.getStartMessageID(userID: profile.uid)
-                    }
-                    
                     friendButton.titleLabel?.textAlignment = .center
                     friendButton.layer.borderColor = UIColor.lightGray.cgColor
                     friendButton.layer.borderWidth = 0.6
@@ -82,26 +70,41 @@ class ProfileView: UIView {
                         self.tapFriendButton()
                     }
                     
-                    if profile.canWritePrivateMessage == 1 {
-                        messageButton.isEnabled = true
-                        messageButton.backgroundColor = vkSingleton.shared.mainColor
-                    } else {
-                        messageButton.isEnabled = false
-                        messageButton.backgroundColor = UIColor.lightGray
-                    }
-                    
                     updateFriendButton()
                     
-                    messageButton.titleLabel?.font = UIFont(name: "Verdana-Bold", size: 12)!
                     friendButton.titleLabel?.font = UIFont(name: "Verdana-Bold", size: 12)!
                     
-                    
                     friendButton.frame = CGRect(x: 10, y: avatarImage.frame.maxY+10, width: avatarHeight, height: buttonHeight)
-                    messageButton.frame = CGRect(x: 10, y: friendButton.frame.maxY+5, width: avatarHeight, height: buttonHeight)
-                    
                     avatarView.addSubview(friendButton)
-                    avatarView.addSubview(messageButton)
                 }
+                
+                messageButton.layer.borderColor = UIColor.lightGray.cgColor
+                messageButton.layer.borderWidth = 0.6
+                messageButton.layer.cornerRadius = 5
+                messageButton.clipsToBounds = true
+                
+                messageButton.setTitle("Написать сообщение", for: .normal)
+                messageButton.titleLabel?.font = UIFont(name: "Verdana-Bold", size: 12)!
+                
+                if profile.canWritePrivateMessage == 1 {
+                    messageButton.isEnabled = true
+                    messageButton.backgroundColor = vkSingleton.shared.mainColor
+                } else {
+                    messageButton.isEnabled = false
+                    messageButton.backgroundColor = UIColor.lightGray
+                }
+                
+                messageButton.add(for: .touchUpInside) {
+                    self.messageButton.buttonTouched()
+                    self.delegate.getStartMessageID(userID: profile.uid)
+                }
+                
+                if delegate.userID == vkSingleton.shared.userID {
+                    messageButton.frame = CGRect(x: 10, y: avatarImage.frame.maxY+10, width: avatarHeight, height: buttonHeight)
+                } else {
+                    messageButton.frame = CGRect(x: 10, y: friendButton.frame.maxY+5, width: avatarHeight, height: buttonHeight)
+                }
+                avatarView.addSubview(messageButton)
                 
                 additionalButton.layer.borderColor = UIColor.lightGray.cgColor
                 additionalButton.layer.borderWidth = 0.6
@@ -117,12 +120,7 @@ class ProfileView: UIView {
                     self.tapAdditionalButton()
                 }
                 
-                if delegate.userID == vkSingleton.shared.userID {
-                    additionalButton.frame = CGRect(x: 10, y: avatarImage.frame.maxY+10, width: avatarHeight, height: buttonHeight)
-                } else {
-                    additionalButton.frame = CGRect(x: 10, y: messageButton.frame.maxY+5, width: avatarHeight, height: buttonHeight)
-                }
-                
+                additionalButton.frame = CGRect(x: 10, y: messageButton.frame.maxY+5, width: avatarHeight, height: buttonHeight)
                 avatarView.addSubview(additionalButton)
             }
             

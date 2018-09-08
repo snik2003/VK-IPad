@@ -98,6 +98,9 @@
 		17A1A5BD20D8E6A700D9CE00 /* ParseWall.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A1A5BC20D8E6A700D9CE00 /* ParseWall.swift */; };
 		17A1A5BF20D8E7FD00D9CE00 /* GroupProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A1A5BE20D8E7FD00D9CE00 /* GroupProfileView.swift */; };
 		17A1A5C120D8EA4C00D9CE00 /* ReloadGroupProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A1A5C020D8EA4C00D9CE00 /* ReloadGroupProfileController.swift */; };
+		17AE66542142B5CE00D226E7 /* vkUserLongPoll.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17AE66532142B5CE00D226E7 /* vkUserLongPoll.swift */; };
+		17AE66562142B62200D226E7 /* GetLongPollServerRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17AE66552142B62200D226E7 /* GetLongPollServerRequest.swift */; };
+		17AE66582142B69600D226E7 /* vkUserLongPollProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17AE66572142B69600D226E7 /* vkUserLongPollProtocol.swift */; };
 		17B134A320DA8B720058E1A8 /* PhotoViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B134A220DA8B720058E1A8 /* PhotoViewCell.swift */; };
 		17B134A520DA8B840058E1A8 /* PhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B134A420DA8B840058E1A8 /* PhotoViewController.swift */; };
 		17B134A720DACD110058E1A8 /* Likes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B134A620DACD110058E1A8 /* Likes.swift */; };
@@ -230,6 +233,9 @@
 		17A1A5BC20D8E6A700D9CE00 /* ParseWall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParseWall.swift; sourceTree = "<group>"; };
 		17A1A5BE20D8E7FD00D9CE00 /* GroupProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupProfileView.swift; sourceTree = "<group>"; };
 		17A1A5C020D8EA4C00D9CE00 /* ReloadGroupProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReloadGroupProfileController.swift; sourceTree = "<group>"; };
+		17AE66532142B5CE00D226E7 /* vkUserLongPoll.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = vkUserLongPoll.swift; sourceTree = "<group>"; };
+		17AE66552142B62200D226E7 /* GetLongPollServerRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetLongPollServerRequest.swift; sourceTree = "<group>"; };
+		17AE66572142B69600D226E7 /* vkUserLongPollProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = vkUserLongPollProtocol.swift; sourceTree = "<group>"; };
 		17AF810F20D11D1F00FF1913 /* VK-IPad.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "VK-IPad.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		17B134A220DA8B720058E1A8 /* PhotoViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoViewCell.swift; sourceTree = "<group>"; };
 		17B134A420DA8B840058E1A8 /* PhotoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoViewController.swift; sourceTree = "<group>"; };
@@ -342,6 +348,7 @@
 		174912AE20D300DC00FCF9F9 /* VK-IPad */ = {
 			isa = PBXGroup;
 			children = (
+				17AE66522142B59E00D226E7 /* UserLongPoll */,
 				173D667D20D40FD900EEBF46 /* AdditionalFunction */,
 				17B409EE210881E5004CED46 /* Profile */,
 				173D666220D3C75000EEBF46 /* Groups */,
@@ -537,6 +544,16 @@
 				178D83CD2100AC2C00AFB7EB /* PhotoAlbumsListCell.swift */,
 			);
 			path = Photos;
+			sourceTree = "<group>";
+		};
+		17AE66522142B59E00D226E7 /* UserLongPoll */ = {
+			isa = PBXGroup;
+			children = (
+				17AE66532142B5CE00D226E7 /* vkUserLongPoll.swift */,
+				17AE66572142B69600D226E7 /* vkUserLongPollProtocol.swift */,
+				17AE66552142B62200D226E7 /* GetLongPollServerRequest.swift */,
+			);
+			path = UserLongPoll;
 			sourceTree = "<group>";
 		};
 		17AF810620D11D1F00FF1913 = {
@@ -821,12 +838,15 @@
 				173D667920D40FCE00EEBF46 /* UITextViewPlaceholder.swift in Sources */,
 				17996B5120DCDBC0003DA26B /* ParseVideos.swift in Sources */,
 				1700D24D20DE4156003C50A1 /* VideoController.swift in Sources */,
+				17AE66582142B69600D226E7 /* vkUserLongPollProtocol.swift in Sources */,
 				178D83CC2100A32900AFB7EB /* PhotosListCell.swift in Sources */,
 				173D666420D3C91300EEBF46 /* GroupsListController.swift in Sources */,
 				17A1A5BD20D8E6A700D9CE00 /* ParseWall.swift in Sources */,
 				174912F420D300DD00FCF9F9 /* MenuViewController.swift in Sources */,
 				17B409F2210889C7004CED46 /* RelativeCell.swift in Sources */,
 				178D83C42100991000AFB7EB /* PhotoAlbum.swift in Sources */,
+				17AE66542142B5CE00D226E7 /* vkUserLongPoll.swift in Sources */,
+				17AE66562142B62200D226E7 /* GetLongPollServerRequest.swift in Sources */,
 				174912EA20D300DD00FCF9F9 /* GetServerDataOperation.swift in Sources */,
 				179CFC4120DBE94900F2AB04 /* Sticker.swift in Sources */,
 				177BF2C321303A11002A8905 /* DialogTitleView.swift in Sources */,

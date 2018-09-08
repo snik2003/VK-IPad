@@ -139,6 +139,10 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
         }
     }
     
+    func didStartTypingComment() {
+        self.startTyping()
+    }
+    
     @objc func tapAccessoryButton(sender: UIButton) {
         commentView.endEditing(true)
         commentView.accessoryButton.buttonTouched()
@@ -849,11 +853,9 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
             error.errorMsg = json["error"]["error_msg"].stringValue
             
             if error.errorCode == 0 {
-                let messID = json["response"].intValue
+                //let messID = json["response"].intValue
                 
                 OperationQueue.main.addOperation {
-                    self.offset = 0
-                    
                     vkSingleton.shared.forwardMessages.removeAll(keepingCapacity: false)
                     self.clearSelectedMessages()
                     
@@ -861,8 +863,6 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
                     self.attachPanel.attachArray.removeAll(keepingCapacity: false)
                     self.attachPanel.forwards = ""
                     self.attachPanel.replyID = 0
-                    
-                    self.loadNewMessages(messageID: messID)
                 }
             } else {
                 if stickerID > 0 {

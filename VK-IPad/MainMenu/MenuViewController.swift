@@ -21,6 +21,14 @@ class MenuViewController: UITableViewController {
     @IBOutlet weak var groupsCell: UITableViewCell!
     @IBOutlet weak var changeAccountCell: UITableViewCell!
     
+    var navController: UINavigationController? {
+        if let split = self.splitViewController {
+            let detailVC = split.viewControllers[split.viewControllers.endIndex - 1]
+            return detailVC.childViewControllers[0].navigationController
+        }
+        return nil
+    }
+    
     var accounts: [vkAccount] = []
     let userDefaults = UserDefaults.standard
     
@@ -34,10 +42,15 @@ class MenuViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        getUserInfo()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        getLongPollServer()
+        getUserInfo()
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         
@@ -298,13 +311,11 @@ class MenuViewController: UITableViewController {
         
         alertView.addButton("Да, хочу выйти") {
             
-            /*self.unregisterDeviceOnPush()
-             if let request = vkUserLongPoll.shared.request {
-             request.cancel()
-             }
-             vkUserLongPoll.shared.firstLaunch = true
+            self.unregisterDeviceOnPush()
+            vkUserLongPoll.shared.request.cancel()
+            vkUserLongPoll.shared.firstLaunch = true
              
-             for id in vkGroupLongPoll.shared.request.keys {
+            /* for id in vkGroupLongPoll.shared.request.keys {
              if let request = vkGroupLongPoll.shared.request[id] {
              request.cancel()
              vkGroupLongPoll.shared.firstLaunch[id] = true

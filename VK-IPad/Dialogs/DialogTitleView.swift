@@ -19,6 +19,11 @@ class DialogTitleView: UIView {
     var user: UserProfile!
     var group: GroupProfile!
     
+    var typing = false
+    var isTimer = false
+    var timer = Timer()
+    var statusLabel = UILabel()
+    
     let nameFont = UIFont(name: "Verdana-Bold", size: 15)
     let onlineFont = UIFont(name: "Verdana-Bold", size: 11)
     let offlineFont = UIFont(name: "Verdana", size: 12)
@@ -167,12 +172,7 @@ class DialogTitleView: UIView {
         nameLabel.frame = CGRect(x: 0, y: 3, width: 350, height: 20)
         self.addSubview(nameLabel)
         
-        
-        let statusLabel = UILabel()
         statusLabel.text = user.statusLane
-        statusLabel.adjustsFontSizeToFitWidth = true
-        statusLabel.minimumScaleFactor = 0.4
-        statusLabel.textAlignment = .right
         if user.onlineStatus == 1 {
             statusLabel.textColor = vkSingleton.shared.onlineColor
             statusLabel.font = onlineFont
@@ -180,8 +180,56 @@ class DialogTitleView: UIView {
             statusLabel.textColor = UIColor.white
             statusLabel.font = offlineFont
         }
+        statusLabel.adjustsFontSizeToFitWidth = true
+        statusLabel.minimumScaleFactor = 0.4
+        statusLabel.textAlignment = .right
+        
         statusLabel.frame = CGRect(x: 0, y: 21, width: 350, height: 16)
         self.addSubview(statusLabel)
+    }
+    
+    func setTyping() {
+        if !typing {
+            isTimer = false
+            timer.invalidate()
+            statusLabel.text = user.statusLane
+            if user.onlineStatus == 1 {
+                statusLabel.textColor = vkSingleton.shared.onlineColor
+                statusLabel.font = onlineFont
+            } else {
+                statusLabel.textColor = UIColor.white
+                statusLabel.font = offlineFont
+            }
+            
+            statusLabel.textAlignment = .right
+            statusLabel.frame = CGRect(x: 0, y: 21, width: 350, height: 16)
+        } else if !isTimer {
+            statusLabel.textAlignment = .left
+            statusLabel.text = "печатает новое сообщение"
+            statusLabel.frame = CGRect(x: 160, y: 21, width: 190, height: 16)
+            
+            timer = Timer.scheduledTimer(timeInterval: 0.333, target: self, selector:
+                #selector(animateDots), userInfo: nil, repeats: true)
+            timer.fire()
+            isTimer = true
+        }
+    }
+    
+    @objc func animateDots() {
+        if typing {
+            switch statusLabel.text {
+            case "печатает новое сообщение":
+                statusLabel.text = "печатает новое сообщение."
+            case "печатает новое сообщение.":
+                statusLabel.text = "печатает новое сообщение.."
+            case "печатает новое сообщение..":
+                statusLabel.text = "печатает новое сообщение..."
+            case "печатает новое сообщение...":
+                statusLabel.text = "печатает новое сообщение"
+            default:
+                statusLabel.text = "печатает новое сообщение..."
+            }
+        }
     }
     
     func configureGroupView() {
