@@ -1050,7 +1050,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
         
             if dialogs.count < totalCount {
                 if self.source == .all {
-                    let action4 = UIAlertAction(title: "Догрузить сообщений в беседу", style: .default) { action in
+                    let action4 = UIAlertAction(title: "Догрузить сообщений в беседу", style: .destructive) { action in
                         
                         self.loadMoreMessages()
                     }
@@ -1058,7 +1058,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
                 }
                 
                 if self.source == .important {
-                    let action4 = UIAlertAction(title: "Догрузить сообщений в беседу", style: .default) { action in
+                    let action4 = UIAlertAction(title: "Догрузить сообщений в беседу", style: .destructive) { action in
                         
                         self.loadMoreImportantMessages()
                     }

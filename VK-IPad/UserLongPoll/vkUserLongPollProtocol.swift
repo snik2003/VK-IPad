@@ -91,7 +91,7 @@ extension MenuViewController: vkUserLongPollProtocol {
                         
                         print(json)
                         
-                        self.refreshUserInfo()
+                        self.getUserInfo()
                         self.handleUpdates()
                         
                         self.userLongPoll()

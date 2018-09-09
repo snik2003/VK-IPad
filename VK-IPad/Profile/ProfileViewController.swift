@@ -237,9 +237,14 @@ class ProfileViewController: UITableViewController, WKNavigationDelegate {
                 
                 self.refreshControl?.endRefreshing()
                 ViewControllerUtils().hideActivityIndicator()
+                
+                if let userInfo = vkSingleton.shared.pushInfo {
+                    vkSingleton.shared.pushInfo = nil
+                    if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+                        appDelegate.tapPushNotification(userInfo, controller: self)
+                    }
+                }
             }
-            
-            
         }
         OperationQueue().addOperation(getServerDataOperation)
     }
