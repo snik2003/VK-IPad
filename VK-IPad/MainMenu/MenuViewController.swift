@@ -50,17 +50,13 @@ class MenuViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-    }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
         
         getLongPollServer()
         getUserInfo()
         
         //self.mainController?.showMessageNotification(text: "Привет,Сережик,я соскучилась! 😍😘", userID: 451439315)
     }
-    
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         

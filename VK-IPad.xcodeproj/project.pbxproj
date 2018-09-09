@@ -236,6 +236,7 @@
 		17AE66532142B5CE00D226E7 /* vkUserLongPoll.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = vkUserLongPoll.swift; sourceTree = "<group>"; };
 		17AE66552142B62200D226E7 /* GetLongPollServerRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetLongPollServerRequest.swift; sourceTree = "<group>"; };
 		17AE66572142B69600D226E7 /* vkUserLongPollProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = vkUserLongPollProtocol.swift; sourceTree = "<group>"; };
+		17AE66592145527E00D226E7 /* VK-IPad.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "VK-IPad.entitlements"; sourceTree = "<group>"; };
 		17AF810F20D11D1F00FF1913 /* VK-IPad.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "VK-IPad.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		17B134A220DA8B720058E1A8 /* PhotoViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoViewCell.swift; sourceTree = "<group>"; };
 		17B134A420DA8B840058E1A8 /* PhotoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoViewController.swift; sourceTree = "<group>"; };
@@ -375,6 +376,7 @@
 				174912B920D300DC00FCF9F9 /* LaunchScreen.storyboard */,
 				174912BB20D300DC00FCF9F9 /* Main.storyboard */,
 				174912D820D300DC00FCF9F9 /* Info.plist */,
+				17AE66592145527E00D226E7 /* VK-IPad.entitlements */,
 				174912B320D300DC00FCF9F9 /* Assets.xcassets */,
 			);
 			path = "VK-IPad";
@@ -654,6 +656,11 @@
 				TargetAttributes = {
 					17AF810E20D11D1F00FF1913 = {
 						CreatedOnToolsVersion = 9.3;
+						SystemCapabilities = {
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -1032,7 +1039,9 @@
 			baseConfigurationReference = 92ED85805D6C190E02304F34 /* Pods-VK-IPad.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_ENTITLEMENTS = "VK-IPad/VK-IPad.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = WML363H532;
 				INFOPLIST_FILE = "VK-IPad/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -1040,8 +1049,10 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "Snik2003.VK-IPad";
+				PRODUCT_BUNDLE_IDENTIFIER = "snik2003.VK-IPad";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "1e8db3b2-a86a-48b5-8d78-afd41092f3a4";
+				PROVISIONING_PROFILE_SPECIFIER = "VK-IPad-Development";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 2;
 			};
@@ -1052,7 +1063,9 @@
 			baseConfigurationReference = 1380E5F9747FC22A8E1480B7 /* Pods-VK-IPad.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_ENTITLEMENTS = "VK-IPad/VK-IPad.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = WML363H532;
 				INFOPLIST_FILE = "VK-IPad/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -1060,8 +1073,10 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "Snik2003.VK-IPad";
+				PRODUCT_BUNDLE_IDENTIFIER = "snik2003.VK-IPad";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "11f741b8-943a-44fd-8ba1-e001e8f03287";
+				PROVISIONING_PROFILE_SPECIFIER = "VK-IPad-Distribution";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 2;
 			};
