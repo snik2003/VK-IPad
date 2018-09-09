@@ -25,7 +25,7 @@ class MessageCell: UITableViewCell {
         
         self.backgroundColor = vkSingleton.shared.dialogColor
         
-        let view = MessageView()
+        let view = vkMessageView()
         view.tag = 250
         view.delegate = delegate
         view.cell = self

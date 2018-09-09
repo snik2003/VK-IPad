@@ -10,7 +10,7 @@ import UIKit
 import WebKit
 import SwiftyJSON
 
-class MessageView: UIView {
+class vkMessageView: UIView {
 
     private struct Constants {
         static let bodyFont = UIFont(name: "Verdana", size: 15)!
@@ -214,7 +214,7 @@ class MessageView: UIView {
             }
             fwdHeight += 25
             
-            let view = MessageView()
+            let view = vkMessageView()
             view.delegate = self.delegate
             view.cell = self.cell
             view.dialog = dialog

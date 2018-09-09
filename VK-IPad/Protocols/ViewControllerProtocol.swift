@@ -12,6 +12,7 @@ import SCLAlertView
 import SwiftyJSON
 import Popover
 import Photos
+import SwiftMessages
 
 protocol ViewControllerProtocol {
     
@@ -1159,6 +1160,172 @@ extension UIViewController: ViewControllerProtocol {
         alert.addButton("Отмена") {}
         
         alert.showInfo(title, subTitle: "")
+    }
+    
+    func showMessageNotification(title: String = "", text: String, userID: Int, chatID: Int = 0, groupID: Int = 0, startID: Int = -1) {
+        
+        if userID > 0 {
+            
+            let url = "/method/users.get"
+            let parameters = [
+                "access_token": vkSingleton.shared.accessToken,
+                "user_id": "\(userID)",
+                "fields": "photo_50",
+                "v": vkSingleton.shared.version
+            ]
+            
+            let getServerDataOperation = GetServerDataOperation(url: url, parameters: parameters)
+            getServerDataOperation.completionBlock = {
+                guard let data = getServerDataOperation.data else { return }
+                guard let json = try? JSON(data: data) else { return }
+                
+                let users = json["response"].compactMap { UserProfile(json: $0.1) }
+                if users.count > 0 {
+                    let user = users[0]
+                    let name = "\(user.firstName) \(user.lastName)"
+                    
+                    let getCacheImage = GetCacheImage(url: user.photo50, lifeTime: .avatarImage)
+                    getCacheImage.completionBlock = {
+                        OperationQueue.main.addOperation {
+                            let image = getCacheImage.outputImage
+                            
+                            if chatID != 0 {
+                                let url = "/method/messages.getChat"
+                                let parameters = [
+                                    "access_token": vkSingleton.shared.accessToken,
+                                    "chat_id": "\(chatID)",
+                                    "v": vkSingleton.shared.version
+                                ]
+                                
+                                let getServerDataOperation = GetServerDataOperation(url: url, parameters: parameters)
+                                getServerDataOperation.completionBlock = {
+                                    guard let data = getServerDataOperation.data else { return }
+                                    guard let json = try? JSON(data: data) else { return }
+                                    
+                                    let chatTitle = json["response"]["title"].stringValue
+                                    OperationQueue.main.addOperation {
+                                        self.showMessageOnScreen(title: "Групповая беседа «\(chatTitle)»\n\(name)", text: text, image: image, userID: userID, chatID: chatID, groupID: groupID, startID: startID)
+                                    }
+                                }
+                                OperationQueue().addOperation(getServerDataOperation)
+                            } else {
+                                self.showMessageOnScreen(title: "\(name)", text: text, image: image, userID: userID, chatID: chatID, groupID: groupID, startID: startID)
+                            }
+                        }
+                    }
+                    OperationQueue().addOperation(getCacheImage)
+                } else {
+                    OperationQueue.main.addOperation {
+                        self.showMessageOnScreen(title: title, text: text, image: nil, userID: 0, chatID: chatID, groupID: groupID, startID: startID)
+                    }
+                }
+            }
+            OperationQueue().addOperation(getServerDataOperation)
+        } else {
+            let url = "/method/groups.getById"
+            let parameters = [
+                "access_token": vkSingleton.shared.accessToken,
+                "group_id": "\(abs(userID))",
+                "v": vkSingleton.shared.version
+            ]
+            
+            let getServerDataOperation = GetServerDataOperation(url: url, parameters: parameters)
+            getServerDataOperation.completionBlock = {
+                guard let data = getServerDataOperation.data else { return }
+                guard let json = try? JSON(data: data) else { return }
+                
+                let groups = json["response"].compactMap { GroupProfile(json: $0.1) }
+                if groups.count > 0 {
+                    let group = groups[0]
+                    let name = "\(group.name)"
+                    let url = group.photo50
+                    let getCacheImage = GetCacheImage(url: url, lifeTime: .avatarImage)
+                    getCacheImage.completionBlock = {
+                        OperationQueue.main.addOperation {
+                            let image = getCacheImage.outputImage
+                            self.showMessageOnScreen(title: "\(name)", text: text, image: image, userID: userID, chatID: 0, groupID: groupID, startID: startID)
+                        }
+                    }
+                    OperationQueue().addOperation(getCacheImage)
+                } else {
+                    OperationQueue.main.addOperation {
+                        self.showMessageOnScreen(title: title, text: text, image: nil, userID: 0, chatID: 0, groupID: 0, startID: startID)
+                    }
+                }
+            }
+            OperationQueue().addOperation(getServerDataOperation)
+        }
+    }
+    
+    func showMessageOnScreen(title: String, text: String, image: UIImage?, userID: Int, chatID: Int, groupID: Int, startID: Int) {
+        let view = MessageView.viewFromNib(layout: .tabView)
+        view.configureContent(title: title, body: text, iconImage: image, iconText: nil, buttonImage: nil, buttonTitle: "", buttonTapHandler: nil)
+        
+        if image != nil {
+            view.iconImageView?.clipsToBounds = true
+            view.iconImageView?.contentMode = .scaleAspectFill
+            view.iconImageView?.layer.cornerRadius = 25
+            view.iconImageView?.layer.borderColor = UIColor.lightGray.cgColor
+            view.iconImageView?.layer.borderWidth = 1.0
+        }
+        view.titleLabel?.font = UIFont(name: "Verdana-Bold", size: 14)!
+        view.titleLabel?.adjustsFontSizeToFitWidth = true
+        view.titleLabel?.minimumScaleFactor = 0.6
+        view.titleLabel?.textColor = UIColor.black
+        if chatID != 0 {
+            view.titleLabel?.numberOfLines = 2
+        }
+        
+        view.button?.isHidden = true
+        view.bodyLabel?.font = UIFont(name: "Verdana", size: 14)!
+        
+        let tap = UITapGestureRecognizer()
+        tap.numberOfTapsRequired = 1
+        if userID != 0 {
+            tap.add {
+                SwiftMessages.hideAll()
+                if groupID != 0 {
+                    if self.presentedViewController == nil {
+                        
+                    } else {
+                        
+                    }
+                } else {
+                    if chatID != 0 {
+                        if self.presentedViewController == nil {
+                            self.openDialogController(ownerID: "\(2000000000 + chatID)", chatID: chatID, startID: startID)
+                        } else {
+                            self.dismiss(animated: false) { () -> Void in
+                                self.openDialogController(ownerID: "\(2000000000 + chatID)", chatID: chatID, startID: startID)
+                            }
+                        }
+                    } else {
+                        if self.presentedViewController == nil {
+                            self.openDialogController(ownerID: "\(userID)", startID: startID)
+                        } else {
+                            self.dismiss(animated: false) { () -> Void in
+                                self.openDialogController(ownerID: "\(userID)", startID: startID)
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            tap.add {
+                SwiftMessages.hideAll()
+            }
+        }
+        view.addGestureRecognizer(tap)
+        view.isUserInteractionEnabled = true
+        
+        view.configureDropShadow()
+        var config = SwiftMessages.defaultConfig
+        config.presentationStyle = .top
+        config.presentationContext = .viewController(self)
+        config.duration = .seconds(seconds: 4)
+        config.interactiveHide = true
+        
+        SwiftMessages.show(config: config, view: view)
     }
 }
 

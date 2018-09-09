@@ -116,7 +116,51 @@ extension MenuViewController: vkUserLongPollProtocol {
         for update in vkUserLongPoll.shared.updates {
             
             if update.elements[0] == 4 {
+                let flags = update.elements[2]
+                var summands: [Int] = []
+                for number in [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 65536] {
+                    if flags & number != 0 {
+                        summands.append(number)
+                    }
+                }
                 
+                var text = update.text.prepareTextForPublic()
+                
+                if update.type != "" {
+                    if text != "" {
+                        text = "\(text)  "
+                    }
+                    
+                    if update.type == "photo" {
+                        text = "\(text)[Фотография]"
+                    } else if update.type == "video" {
+                        text = "\(text)[Видеозапись]"
+                    } else if update.type == "sticker" {
+                        text = "\(text)[Стикер]"
+                    } else if update.type == "wall" {
+                        text = "\(text)[Запись на стене]"
+                    } else if update.type == "gift" {
+                        text = "\(text)[Подарок]"
+                    } else if update.type == "doc" {
+                        text = "\(text)[Документ]"
+                    }
+                }
+                
+                var userID = update.elements[3]
+                if update.fromID != 0 {
+                    userID = update.fromID
+                }
+                
+                var chatID = 0
+                if update.elements[3] > 2000000000 {
+                    chatID = update.elements[3] - 2000000000
+                }
+                
+                if !summands.contains(2) && update.action == "" {
+                    OperationQueue.main.addOperation {
+                        self.mainController?.showMessageNotification(title: "Новое сообщение", text: text, userID: userID, chatID: chatID, groupID: 0, startID: update.elements[1])
+                    }
+                }
             }
             
             if update.elements[0] == 80 {
@@ -269,7 +313,7 @@ extension MenuViewController: vkUserLongPollProtocol {
                         OperationQueue.main.addOperation {
                             controller.offset = 0
                             controller.getDialog()
-                            print(mess)
+                            self.mainController?.showMessageNotification(text: mess, userID: userID)
                         }
                     }
                     
@@ -286,7 +330,7 @@ extension MenuViewController: vkUserLongPollProtocol {
                         
                         
                         OperationQueue.main.addOperation {
-                            print(mess)
+                            self.mainController?.showMessageNotification(text: mess, userID: userID)
                         }
                     }
                 }

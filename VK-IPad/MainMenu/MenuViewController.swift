@@ -29,6 +29,14 @@ class MenuViewController: UITableViewController {
         return nil
     }
     
+    var mainController: UIViewController? {
+        if let split = self.splitViewController {
+            let detailVC = split.viewControllers[split.viewControllers.endIndex - 1]
+            return detailVC.childViewControllers[0]
+        }
+        return nil
+    }
+    
     var accounts: [vkAccount] = []
     let userDefaults = UserDefaults.standard
     
@@ -49,6 +57,8 @@ class MenuViewController: UITableViewController {
         
         getLongPollServer()
         getUserInfo()
+        
+        //self.mainController?.showMessageNotification(text: "Привет,Сережик,я соскучилась! 😍😘", userID: 451439315)
     }
     
     override func didReceiveMemoryWarning() {
