@@ -82,6 +82,8 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
             navigationItem.rightBarButtonItem = nil
             getPreviewMessages()
         } else {
+            ViewControllerUtils().showActivityIndicator(uiView: self.view)
+            
             setDialogTitle()
             getDialog()
         
@@ -208,7 +210,6 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
         users.removeAll(keepingCapacity: false)
         groups.removeAll(keepingCapacity: false)
         heights.removeAll(keepingCapacity: false)
-        ViewControllerUtils().showActivityIndicator(uiView: self.view)
         
         let url = "/method/messages.getHistory"
         var parameters = [
@@ -1041,6 +1042,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
                         self.source = .all
                         self.offset = 0
                         
+                        ViewControllerUtils().showActivityIndicator(uiView: self.view)
                         self.getDialog()
                     }
                     alertController.addAction(action3)
@@ -1128,6 +1130,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
                         self.source = .all
                         self.offset = 0
                         
+                        ViewControllerUtils().showActivityIndicator(uiView: self.view)
                         self.getDialog()
                     }
                     alertController.addAction(action3)
