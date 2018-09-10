@@ -189,31 +189,33 @@ class DialogTitleView: UIView {
     }
     
     func setTyping() {
-        if !typing {
-            isTimer = false
-            timer.invalidate()
-            statusLabel.text = user.statusLane
-            if user.onlineStatus == 1 {
-                statusLabel.textColor = vkSingleton.shared.onlineColor
-                statusLabel.font = onlineFont
-            } else {
+        if let user = self.user {
+            if !typing {
+                isTimer = false
+                timer.invalidate()
+                statusLabel.text = user.statusLane
+                if user.onlineStatus == 1 {
+                    statusLabel.textColor = vkSingleton.shared.onlineColor
+                    statusLabel.font = onlineFont
+                } else {
+                    statusLabel.textColor = UIColor.white
+                    statusLabel.font = offlineFont
+                }
+                
+                statusLabel.textAlignment = .right
+                statusLabel.frame = CGRect(x: 0, y: 21, width: 350, height: 16)
+            } else if !isTimer {
+                statusLabel.textAlignment = .left
                 statusLabel.textColor = UIColor.white
                 statusLabel.font = offlineFont
+                statusLabel.text = "печатает новое сообщение"
+                statusLabel.frame = CGRect(x: 160, y: 21, width: 190, height: 16)
+                
+                timer = Timer.scheduledTimer(timeInterval: 0.333, target: self, selector:
+                    #selector(animateDots), userInfo: nil, repeats: true)
+                timer.fire()
+                isTimer = true
             }
-            
-            statusLabel.textAlignment = .right
-            statusLabel.frame = CGRect(x: 0, y: 21, width: 350, height: 16)
-        } else if !isTimer {
-            statusLabel.textAlignment = .left
-            statusLabel.textColor = UIColor.white
-            statusLabel.font = offlineFont
-            statusLabel.text = "печатает новое сообщение"
-            statusLabel.frame = CGRect(x: 160, y: 21, width: 190, height: 16)
-            
-            timer = Timer.scheduledTimer(timeInterval: 0.333, target: self, selector:
-                #selector(animateDots), userInfo: nil, repeats: true)
-            timer.fire()
-            isTimer = true
         }
     }
     
