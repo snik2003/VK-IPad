@@ -6,6 +6,8 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Alignment constraints to the first baseline" minToolsVersion="6.0"/>
+        <capability name="Baseline standard spacing" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -1941,6 +1943,7 @@
                         <constraints>
                             <constraint firstItem="dJz-RQ-XY1" firstAttribute="trailing" secondItem="Szz-yH-f7l" secondAttribute="trailing" id="6Dw-LV-UEr"/>
                             <constraint firstItem="dJz-RQ-XY1" firstAttribute="trailing" secondItem="wO3-ci-RPW" secondAttribute="trailing" constant="20" id="91A-V7-eiS"/>
+                            <constraint firstItem="wO3-ci-RPW" firstAttribute="firstBaseline" secondItem="Szz-yH-f7l" secondAttribute="baseline" constant="20" symbolType="layoutAnchor" id="HwZ-eh-hTh"/>
                             <constraint firstItem="Szz-yH-f7l" firstAttribute="leading" secondItem="dJz-RQ-XY1" secondAttribute="leading" id="MgT-Oi-bK3"/>
                             <constraint firstItem="wO3-ci-RPW" firstAttribute="leading" secondItem="dJz-RQ-XY1" secondAttribute="leading" constant="20" id="N8e-py-KG7"/>
                             <constraint firstItem="dJz-RQ-XY1" firstAttribute="trailing" secondItem="c7X-gD-tLV" secondAttribute="trailing" id="ecy-Cw-XXN"/>
@@ -1991,6 +1994,65 @@
             </objects>
             <point key="canvasLocation" x="4844.8023426061491" y="1787.6953124999998"/>
         </scene>
+        <!--Group Dialogs Controller-->
+        <scene sceneID="2i4-iX-LYz">
+            <objects>
+                <viewController storyboardIdentifier="GroupDialogsController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="e62-53-3cl" customClass="GroupDialogsController" customModule="VK_IPad" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="yc2-9c-DIH">
+                        <rect key="frame" x="0.0" y="0.0" width="1366" height="1024"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <searchBar contentMode="redraw" searchBarStyle="minimal" translatesAutoresizingMaskIntoConstraints="NO" id="9Nv-rh-IGd">
+                                <rect key="frame" x="0.0" y="64" width="1366" height="56"/>
+                                <color key="barTintColor" red="0.019607843140000001" green="0.4039215686" blue="0.64313725489999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </searchBar>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="cwx-1e-MJg">
+                                <rect key="frame" x="0.0" y="120" width="1366" height="836"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </tableView>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Wkx-gm-9mS">
+                                <rect key="frame" x="20" y="976" width="1326" height="29"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="28" id="Ipp-en-B43"/>
+                                </constraints>
+                                <segments>
+                                    <segment title="Все беседы"/>
+                                    <segment title="Непрочитанные беседы"/>
+                                    <segment title="Важные беседы"/>
+                                    <segment title="Неотвеченные беседы"/>
+                                </segments>
+                                <color key="tintColor" red="0.019607843140000001" green="0.4039215686" blue="0.64313725489999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </segmentedControl>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="Wkx-gm-9mS" firstAttribute="leading" secondItem="hdf-wa-fer" secondAttribute="leading" constant="20" id="2bH-Lg-Dto"/>
+                            <constraint firstItem="hdf-wa-fer" firstAttribute="bottom" secondItem="Wkx-gm-9mS" secondAttribute="bottom" constant="20" id="BlX-gY-MrK"/>
+                            <constraint firstItem="9Nv-rh-IGd" firstAttribute="top" secondItem="hdf-wa-fer" secondAttribute="top" id="Eqs-uv-yF7"/>
+                            <constraint firstItem="hdf-wa-fer" firstAttribute="trailing" secondItem="9Nv-rh-IGd" secondAttribute="trailing" id="Kmb-Zg-8V0"/>
+                            <constraint firstItem="Wkx-gm-9mS" firstAttribute="top" secondItem="cwx-1e-MJg" secondAttribute="bottom" constant="20" id="POn-dD-3aj"/>
+                            <constraint firstItem="hdf-wa-fer" firstAttribute="trailing" secondItem="cwx-1e-MJg" secondAttribute="trailing" id="QU7-qF-HH6"/>
+                            <constraint firstItem="hdf-wa-fer" firstAttribute="trailing" secondItem="Wkx-gm-9mS" secondAttribute="trailing" constant="20" id="Qld-YA-Zos"/>
+                            <constraint firstItem="9Nv-rh-IGd" firstAttribute="leading" secondItem="hdf-wa-fer" secondAttribute="leading" id="Tuj-6i-SoV"/>
+                            <constraint firstItem="cwx-1e-MJg" firstAttribute="leading" secondItem="hdf-wa-fer" secondAttribute="leading" id="UuL-je-tIo"/>
+                            <constraint firstItem="cwx-1e-MJg" firstAttribute="top" secondItem="9Nv-rh-IGd" secondAttribute="bottom" id="j9m-6v-ZD0"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="hdf-wa-fer"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="A9o-Oz-gD3">
+                        <barButtonItem key="backBarButtonItem" title="Назад" id="BA1-LR-zdt"/>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="searchBar" destination="9Nv-rh-IGd" id="v7B-Fk-eSS"/>
+                        <outlet property="segmentedControl" destination="Wkx-gm-9mS" id="jAE-xJ-Pb1"/>
+                        <outlet property="tableView" destination="cwx-1e-MJg" id="dwo-eE-SKl"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="8sh-vq-aiO" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="5489" y="343"/>
+        </scene>
         <!--Navigation Controller-->
         <scene sceneID="X6F-sg-FrR">
             <objects>
@@ -2015,6 +2077,32 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oiU-PN-6yR" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="4845.6808199121515" y="1078.7109375"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="Rlm-zz-qqn">
+            <objects>
+                <navigationController storyboardIdentifier="GroupDialogsNavigation" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="ykd-0m-XEO" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="teu-tx-ZAy">
+                        <rect key="frame" x="0.0" y="20" width="1366" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="barTintColor" red="0.019607843140000001" green="0.4039215686" blue="0.64313725489999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <textAttributes key="titleTextAttributes">
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </textAttributes>
+                        <textAttributes key="largeTitleTextAttributes">
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </textAttributes>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="e62-53-3cl" kind="relationship" relationship="rootViewController" id="WX4-Zb-oWZ"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="7I3-1b-erg" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4845" y="343"/>
         </scene>
     </scenes>
     <resources>

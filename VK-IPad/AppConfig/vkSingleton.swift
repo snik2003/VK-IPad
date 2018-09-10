@@ -21,7 +21,6 @@ final class vkSingleton {
     var accessToken: String = ""
     //var avatarURL: String = ""
     
-    var groupToken: [Int: String] = [:]
     var adminGroups: [GroupProfile] = []
     var commentFromGroup = 0
     

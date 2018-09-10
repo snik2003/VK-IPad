@@ -502,6 +502,7 @@ class GroupProfileView: UIView {
             
             ownerMessageButton.add(for: .touchUpInside) {
                 self.ownerMessageButton.buttonTouched()
+                self.delegate.openGroupDialogs()
             }
             
             ownerMessageButton.frame = CGRect(x: startX + 10, y: topY + startY + buttonHeight + 5 + buttonHeight + 5, width: width / 3 - 20, height: buttonHeight)
@@ -582,23 +583,6 @@ class GroupProfileView: UIView {
             }
             alertController.addAction(action4)
             
-            
-            let userDefaults = UserDefaults.standard
-            if profile.isAdmin == 1 {
-                if let _ = userDefaults.string(forKey: "\(vkSingleton.shared.userID)_groupToken_\(profile.gid)") {
-                    let action5 = UIAlertAction(title: "Забыть токен сообщества", style: .destructive) { action in
-                        
-                        userDefaults.removeObject(forKey: "\(vkSingleton.shared.userID)_groupToken_\(profile.gid)")
-                        vkSingleton.shared.groupToken[profile.gid] = nil
-                        
-                        /*if let request = vkGroupLongPoll.shared.request[profile.gid] {
-                            request.cancel()
-                            vkGroupLongPoll.shared.firstLaunch[profile.gid] = true
-                        }*/
-                    }
-                    alertController.addAction(action5)
-                }
-            }
             
             if let popoverController = alertController.popoverPresentationController {
                 popoverController.sourceView = self.dopButton

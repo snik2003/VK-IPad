@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import WebKit
 import SwiftyJSON
 
 class GroupProfileViewController: UITableViewController {
@@ -317,5 +318,90 @@ class GroupProfileViewController: UITableViewController {
             }
         }
         OperationQueue().addOperation(getServerDataOperation)
+    }
+    
+    func openGroupDialogs() {
+        let controller = self.storyboard?.instantiateViewController(withIdentifier: "GroupDialogsController") as! GroupDialogsController
+        
+        if groupProfile.count > 0 {
+            controller.group = groupProfile[0]
+        }
+        
+        if let split = self.splitViewController {
+            let detail = split.viewControllers[split.viewControllers.endIndex - 1]
+            detail.childViewControllers[0].navigationController?.pushViewController(controller, animated: true)
+        }
+    }
+}
+
+extension GroupProfileViewController: WKNavigationDelegate {
+    
+    func cleanCookies() {
+        HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
+        
+        WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { records in
+            records.forEach { record in
+                WKWebsiteDataStore.default().removeData(ofTypes: record.dataTypes, for: [record], completionHandler: {})
+            }
+        }
+    }
+    
+    func vkGroupAutorize() {
+        let webview = WKWebView(frame: self.view.frame)
+        webview.navigationDelegate = self
+        webview.backgroundColor = UIColor.white
+        self.view.addSubview(webview)
+        cleanCookies()
+        
+        if vkSingleton.shared.vkAppID.count > 0 {
+            var urlComponents = URLComponents()
+            
+            urlComponents.scheme = "https"
+            urlComponents.host = "oauth.vk.com"
+            urlComponents.path = "/authorize"
+            
+            urlComponents.queryItems = [
+                URLQueryItem(name: "client_id", value: "\(vkSingleton.shared.vkAppID[0])"),
+                URLQueryItem(name: "display", value: "mobile"),
+                URLQueryItem(name: "group_ids", value: "\(abs(self.groupID))"),
+                URLQueryItem(name: "redirect_uri", value: "https://oauth.vk.com/blank.html"),
+                URLQueryItem(name: "scope", value: "manage,messages,photos,docs"),
+                URLQueryItem(name: "response_type", value: "token"),
+                URLQueryItem(name: "v", value: vkSingleton.shared.version)
+            ]
+            
+            let request = URLRequest(url: urlComponents.url!)
+            webview.load(request)
+        }
+    }
+    
+    func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
+        
+        guard let url = navigationResponse.response.url, url.path == "/blank.html", let fragment = url.fragment  else {
+            decisionHandler(.allow)
+            
+            return
+        }
+        
+        let params = fragment
+            .components(separatedBy: "&")
+            .map { $0.components(separatedBy: "=") }
+            .reduce([String: String]()) { result, param in
+                var dict = result
+                let key = param[0]
+                let value = param[1]
+                dict[key] = value
+                return dict
+        }
+        
+        if let token = params["access_token_\(groupID)"] {
+            //vkSingleton.shared.groupToken[groupID] = token
+            UserDefaults.standard.set(token, forKey: "\(vkSingleton.shared.userID)_groupToken_\(groupID)")
+            self.openGroupDialogs()
+        }
+        
+        decisionHandler(.cancel)
+        webView.removeFromSuperview()
+        self.setOfflineStatus(dependence: nil)
     }
 }
