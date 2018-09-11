@@ -202,7 +202,7 @@ class GroupDialogsController: UIViewController, UITableViewDelegate, UITableView
         
         let tap = UITapGestureRecognizer()
         tap.add {
-            
+            self.openDialogController(ownerID: "\(dialog.peerID)", groupID: self.group.gid, startID: dialog.id)
         }
         cell.isUserInteractionEnabled = true
         cell.addGestureRecognizer(tap)

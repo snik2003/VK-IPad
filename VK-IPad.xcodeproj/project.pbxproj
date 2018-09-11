@@ -10,6 +10,8 @@
 		1700D24B20DE4104003C50A1 /* VideoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1700D24A20DE4104003C50A1 /* VideoCell.swift */; };
 		1700D24D20DE4156003C50A1 /* VideoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1700D24C20DE4156003C50A1 /* VideoController.swift */; };
 		1700D24F20DEAFF3003C50A1 /* ChangeAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1700D24E20DEAFF3003C50A1 /* ChangeAccountView.swift */; };
+		1704FB782147EDEF00A3B4CD /* vkGroupLongPoll.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1704FB772147EDEF00A3B4CD /* vkGroupLongPoll.swift */; };
+		1704FB7A2147EEB000A3B4CD /* vkGroupLongPollProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1704FB792147EEB000A3B4CD /* vkGroupLongPollProtocol.swift */; };
 		1731A5342110972300023409 /* StickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1731A5332110972300023409 /* StickerView.swift */; };
 		1731A5362110AFBA00023409 /* TableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1731A5352110AFBA00023409 /* TableView.swift */; };
 		1731A5382113144E00023409 /* AttachPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1731A5372113144E00023409 /* AttachPanel.swift */; };
@@ -146,6 +148,8 @@
 		1700D24A20DE4104003C50A1 /* VideoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCell.swift; sourceTree = "<group>"; };
 		1700D24C20DE4156003C50A1 /* VideoController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoController.swift; sourceTree = "<group>"; };
 		1700D24E20DEAFF3003C50A1 /* ChangeAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeAccountView.swift; sourceTree = "<group>"; };
+		1704FB772147EDEF00A3B4CD /* vkGroupLongPoll.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = vkGroupLongPoll.swift; sourceTree = "<group>"; };
+		1704FB792147EEB000A3B4CD /* vkGroupLongPollProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = vkGroupLongPollProtocol.swift; sourceTree = "<group>"; };
 		1731A5332110972300023409 /* StickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerView.swift; sourceTree = "<group>"; };
 		1731A5352110AFBA00023409 /* TableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableView.swift; sourceTree = "<group>"; };
 		1731A5372113144E00023409 /* AttachPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachPanel.swift; sourceTree = "<group>"; };
@@ -558,6 +562,8 @@
 				17AE66532142B5CE00D226E7 /* vkUserLongPoll.swift */,
 				17AE66572142B69600D226E7 /* vkUserLongPollProtocol.swift */,
 				17AE66552142B62200D226E7 /* GetLongPollServerRequest.swift */,
+				1704FB772147EDEF00A3B4CD /* vkGroupLongPoll.swift */,
+				1704FB792147EEB000A3B4CD /* vkGroupLongPollProtocol.swift */,
 			);
 			path = UserLongPoll;
 			sourceTree = "<group>";
@@ -796,6 +802,7 @@
 				174912F320D300DD00FCF9F9 /* ProfileViewController.swift in Sources */,
 				178D83CE2100AC2C00AFB7EB /* PhotoAlbumsListCell.swift in Sources */,
 				17A1A5B720D8D31200D9CE00 /* Button.swift in Sources */,
+				1704FB7A2147EEB000A3B4CD /* vkGroupLongPollProtocol.swift in Sources */,
 				1700D24B20DE4104003C50A1 /* VideoCell.swift in Sources */,
 				174912E720D300DD00FCF9F9 /* Int.swift in Sources */,
 				17FDD8EB211061890064558A /* ParseComments.swift in Sources */,
@@ -826,6 +833,7 @@
 				17424FEF20D591E800F52C4C /* Document.swift in Sources */,
 				17A1A5C120D8EA4C00D9CE00 /* ReloadGroupProfileController.swift in Sources */,
 				17CD9399212EC95000078A9D /* AddNewTopicController.swift in Sources */,
+				1704FB782147EDEF00A3B4CD /* vkGroupLongPoll.swift in Sources */,
 				173D666620D3C94500EEBF46 /* Groups.swift in Sources */,
 				174912ED20D300DD00FCF9F9 /* AppConfig.swift in Sources */,
 				17CA54C42146A71000A3E2EA /* GroupDialogsController.swift in Sources */,

@@ -1316,6 +1316,7 @@ extension UIViewController: VkOperationProtocol {
             var parameters = [
                 "access_token": vkSingleton.shared.accessToken,
                 "message_ids": controller.selectedMessages,
+                "group_id": "\(controller.groupID)",
                 "v": vkSingleton.shared.version
             ]
             
@@ -1401,7 +1402,7 @@ extension UIViewController: VkOperationProtocol {
     
     func setImportantConversation() {
         
-        if let controller = self as? DialogController, let groupID = Int(controller.userID) {
+        if let controller = self as? DialogController {
             
             let conversation = controller.conversation[0]
             
@@ -1409,7 +1410,7 @@ extension UIViewController: VkOperationProtocol {
             var parameters = [
                 "access_token": vkSingleton.shared.accessToken,
                 "peer_id": "\(conversation.peerID)",
-                "group_id": "\(abs(groupID))",
+                "group_id": "\(controller.groupID)",
                 "v": vkSingleton.shared.version
             ]
             
@@ -1430,13 +1431,16 @@ extension UIViewController: VkOperationProtocol {
                 error.errorMsg = json["error"]["error_msg"].stringValue
                 
                 if error.errorCode == 0 {
+                    var mess = ""
                     if conversation.important == 0 {
                         controller.conversation[0].important = 1
+                        mess = "\nБеседа успешно помечена как «Важная».\n"
                     } else {
                         controller.conversation[0].important = 0
+                        mess = "\nС беседы успешно снята пометка «Важная».\n"
                     }
                     
-                    self.showInfoMessage(title: "Пометка беседы как важная", msg: "\nБеседа успешно помечена как Важная.\n")
+                    self.showInfoMessage(title: "Пометка беседы как важная", msg: mess)
                 } else {
                     self.showErrorMessage(title: "Пометка беседы как важная", msg: "\nОшибка #\(error.errorCode): \(error.errorMsg)\n")
                 }
@@ -1450,10 +1454,12 @@ extension UIViewController: VkOperationProtocol {
         
         if AppConfig.shared.readMessageInDialog {
             if let controller = self as? DialogController {
+                
                 let url = "/method/messages.markAsRead"
                 let parameters = [
                     "access_token": vkSingleton.shared.accessToken,
                     "peer_id": controller.userID,
+                    "group_id": "\(controller.groupID)",
                     "v": vkSingleton.shared.version
                 ]
                 
@@ -1519,6 +1525,7 @@ extension UIViewController: VkOperationProtocol {
                     "access_token": vkSingleton.shared.accessToken,
                     "user_id": controller.userID,
                     "type": "typing",
+                    "group_id": "\(controller.groupID)",
                     "v": vkSingleton.shared.version
                 ]
                 

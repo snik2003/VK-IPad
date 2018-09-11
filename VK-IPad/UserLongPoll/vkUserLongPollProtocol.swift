@@ -9,7 +9,6 @@
 import UIKit
 import SwiftyJSON
 import Alamofire
-import SWRevealViewController
 
 protocol vkUserLongPollProtocol {
     func getLongPollServer()
@@ -89,7 +88,7 @@ extension MenuViewController: vkUserLongPollProtocol {
                         vkUserLongPoll.shared.ts = json["ts"].stringValue
                         vkUserLongPoll.shared.updates = json["updates"].compactMap { Updates(json: $0.1) }
                         
-                        print(json)
+                        //print(json)
                         
                         self.getUserInfo()
                         self.handleUpdates()
@@ -172,7 +171,7 @@ extension MenuViewController: vkUserLongPollProtocol {
         
         if let viewControllers = self.navController?.viewControllers {
             for vc in viewControllers {
-                if let controller = vc as? DialogController {
+                if let controller = vc as? DialogController, controller.groupID == 0 {
                     var typing = false
                     var deleteIDs: [Int] = []
                     var spamIDs: [Int] = []

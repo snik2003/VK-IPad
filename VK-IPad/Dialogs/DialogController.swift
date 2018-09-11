@@ -18,6 +18,7 @@ enum DialogSource {
     case important
     case preview
 }
+
 enum DialogMode {
     case dialog
     case select
@@ -28,6 +29,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
     
     var userID = ""
     var chatID = 0
+    var groupID = 0
     
     var delegate: UIViewController!
     
@@ -118,7 +120,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
         commentView.accessoryImage = UIImage(named: "attachment2")?.tint(tintColor: vkSingleton.shared.mainColor)
         commentView.accessoryButton.addTarget(self, action: #selector(self.tapAccessoryButton(sender:)), for: .touchUpInside)
             
-        setCommentFromGroupID(id: 0, controller: self)
+        setCommentFromGroupID(id: groupID, controller: self)
         
         tableView.delegate = self
         tableView.dataSource = self
@@ -190,6 +192,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
             "access_token": vkSingleton.shared.accessToken,
             "peer_ids": "\(userID)",
             "extended": "0",
+            "group_id": "\(groupID)",
             "v": vkSingleton.shared.version
         ]
         
@@ -218,6 +221,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
             "count": "\(count)",
             "peer_id": "\(userID)",
             "start_message_id": "-1",
+            "group_id": "\(groupID)",
             "v": vkSingleton.shared.version
         ]
         
@@ -244,10 +248,9 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
             self.totalCount = json["response"]["count"].intValue
             let unread = json["response"]["unread"].intValue
             
-            var userIDs: [String] = []
-            var groupIDs: [String] = []
+            var userIDs: [String] = [vkSingleton.shared.userID]
+            var groupIDs: [String] = ["\(self.groupID)"]
             
-            userIDs.append(vkSingleton.shared.userID)
             if let id = Int(self.userID) {
                 if id > 0 {
                     userIDs.append(self.userID)
@@ -257,14 +260,12 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
             }
             
             for dialog in dialogs {
-                if self.chatID > 0 {
-                    if !userIDs.contains("\(dialog.fromID)") {
-                        userIDs.append("\(dialog.fromID)")
-                    }
+                if !userIDs.contains("\(dialog.fromID)") {
+                    userIDs.append("\(dialog.fromID)")
+                }
                     
-                    if dialog.actionID > 0 && !userIDs.contains("\(dialog.actionID)") {
-                        userIDs.append("\(dialog.actionID)")
-                    }
+                if dialog.actionID > 0 && !userIDs.contains("\(dialog.actionID)") {
+                    userIDs.append("\(dialog.actionID)")
                 }
                 
                 for attach in dialog.attachments {
@@ -356,6 +357,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
             "peer_id": "\(userID)",
             "fields": "id,first_name,last_name,last_seen,photo_max_orig,photo_max,deactivated,first_name_abl,first_name_gen,last_name_gen,online,can_write_private_message,sex",
             "extended": "1",
+            "group_id": "\(groupID)",
             "v": vkSingleton.shared.version
         ]
         
@@ -406,6 +408,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
             "message_ids": forwards,
             "extended": "1",
             "fields": "id,first_name,last_name,last_seen,photo_max_orig,photo_max,deactivated,first_name_abl,first_name_gen,last_name_gen,online,can_write_private_message,sex",
+            "group_id": "\(groupID)",
             "v": vkSingleton.shared.version
         ]
         
@@ -448,6 +451,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
             "count": "\(count+1)",
             "peer_id": "\(userID)",
             "start_message_id": "\(startID)",
+            "group_id": "\(groupID)",
             "v": vkSingleton.shared.version
         ]
         
@@ -579,6 +583,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
             "peer_id": "\(userID)",
             "fields": "id,first_name,last_name,last_seen,photo_max_orig,photo_max,deactivated,first_name_abl,first_name_gen,last_name_gen,online,can_write_private_message,sex",
             "extended": "1",
+            "group_id": "\(groupID)",
             "v": vkSingleton.shared.version
         ]
         
@@ -633,6 +638,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
             "count": "1",
             "peer_id": "\(userID)",
             "start_message_id": "\(messageID)",
+            "group_id": "\(groupID)",
             "v": vkSingleton.shared.version
         ]
         
@@ -800,9 +806,11 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
             cell.indexPath = indexPath
             let _ = cell.configureCell(calcHeight: false)
             
-            let doubleTap = UITapGestureRecognizer(target: self, action: #selector(goSelectMode(sender:)))
-            doubleTap.numberOfTapsRequired = 2
-            cell.addGestureRecognizer(doubleTap)
+            if groupID == 0 {
+                let doubleTap = UITapGestureRecognizer(target: self, action: #selector(goSelectMode(sender:)))
+                doubleTap.numberOfTapsRequired = 2
+                cell.addGestureRecognizer(doubleTap)
+            }
             
             let longTap = UILongPressGestureRecognizer(target: self, action: #selector(goEditMode(sender:)))
             longTap.minimumPressDuration = 0.6
@@ -836,6 +844,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
             "peer_id": userID,
             "message": message,
             "attachment": attachPanel.attachments,
+            "group_id": "\(groupID)",
             "v": vkSingleton.shared.version
         ]
         
@@ -892,6 +901,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
             "attachment": attachPanel.attachments,
             "keep_forward_messages": "1",
             "keep_snippets": "1",
+            "group_id": "\(groupID)",
             "v": vkSingleton.shared.version
         ]
         
@@ -1010,7 +1020,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
             
             
             if userID > 0 {
-                let action1 = UIAlertAction(title: "Открыть профиль собеседника", style: .default) { action in
+                let action1 = UIAlertAction(title: "Перейти в профиль собеседника", style: .default) { action in
                     
                     self.openProfileController(id: userID, name: "")
                 }
@@ -1149,6 +1159,77 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
                 
                 if self.source == .important {
                     let action4 = UIAlertAction(title: "Догрузить сообщений в беседу", style: .default) { action in
+                        
+                        self.loadMoreImportantMessages()
+                    }
+                    alertController.addAction(action4)
+                }
+            }
+            
+            
+            if let popoverController = alertController.popoverPresentationController {
+                let bounds = self.titleView.bounds
+                popoverController.sourceView = self.titleView
+                popoverController.sourceRect = CGRect(x: bounds.maxX - 18, y: bounds.maxY + 5, width: 0, height: 0)
+                popoverController.permittedArrowDirections = [.up]
+            }
+            
+            self.present(alertController, animated: true)
+        }
+    }
+    
+    func tapGroupDialogTitleView() {
+        
+        if let userID = Int(self.userID) {
+            let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+            
+            let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
+            alertController.addAction(cancelAction)
+            
+            
+            
+            let action1 = UIAlertAction(title: "Перейти в профиль собеседника", style: .default) { action in
+                
+                self.openProfileController(id: userID, name: "")
+            }
+            alertController.addAction(action1)
+        
+            
+            let action2 = UIAlertAction(title: "Перейти на страницу сообщества", style: .default) { action in
+                    
+                self.openProfileController(id: -1 * self.groupID, name: "")
+            }
+            alertController.addAction(action2)
+            
+            
+            if conversation.count > 0 {
+                if conversation[0].important == 0 {
+                    let action3 = UIAlertAction(title: "Пометить беседу как важную", style: .default) { action in
+                        
+                        self.setImportantConversation()
+                    }
+                    alertController.addAction(action3)
+                    
+                } else {
+                    let action3 = UIAlertAction(title: "Отменить беседу как важную", style: .destructive) { action in
+                        
+                        self.setImportantConversation()
+                    }
+                    alertController.addAction(action3)
+                }
+            }
+            
+            if dialogs.count < totalCount {
+                if self.source == .all {
+                    let action4 = UIAlertAction(title: "Догрузить сообщений в беседу", style: .destructive) { action in
+                        
+                        self.loadMoreMessages()
+                    }
+                    alertController.addAction(action4)
+                }
+                
+                if self.source == .important {
+                    let action4 = UIAlertAction(title: "Догрузить сообщений в беседу", style: .destructive) { action in
                         
                         self.loadMoreImportantMessages()
                     }

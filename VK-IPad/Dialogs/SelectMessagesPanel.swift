@@ -165,7 +165,10 @@ class SelectMessagesPanel: UIView {
             
             
             resendButton.setTitle("Переслать", for: .normal)
-            resendButton.isEnabled = true
+            resendButton.isEnabled = false
+            if delegate.groupID == 0 {
+                resendButton.isEnabled = true
+            }
             resendButton.setTitleColor(UIColor.white, for: .normal)
             resendButton.setTitleColor(UIColor.lightGray, for: .disabled)
             resendButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 15)
@@ -198,6 +201,9 @@ class SelectMessagesPanel: UIView {
             
             copyButton.setTitle("Копировать", for: .normal)
             copyButton.isEnabled = true
+            if dialog.body == "" {
+                copyButton.isEnabled = false
+            }
             copyButton.setTitleColor(UIColor.white, for: .normal)
             copyButton.setTitleColor(UIColor.lightGray, for: .disabled)
             copyButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 15)

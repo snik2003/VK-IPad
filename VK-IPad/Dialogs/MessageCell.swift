@@ -81,8 +81,10 @@ class MessageCell: UITableViewCell {
                         }
                         
                         self.delegate.panel.deleteButton.isEnabled = true
-                        self.delegate.panel.resendButton.isEnabled = true
-                        self.delegate.panel.importantButton.isEnabled = true
+                        if self.delegate.groupID == 0 {
+                            self.delegate.panel.resendButton.isEnabled = true
+                            self.delegate.panel.importantButton.isEnabled = true
+                        }
                     } else {
                         self.delegate.panel.deleteButton.setTitle("Удалить", for: .normal)
                         self.delegate.panel.resendButton.setTitle("Переслать", for: .normal)

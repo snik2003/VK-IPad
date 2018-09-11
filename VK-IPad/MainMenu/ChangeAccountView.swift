@@ -98,12 +98,12 @@ class ChangeAccountView: UIView {
                         vkUserLongPoll.shared.request.cancel()
                         vkUserLongPoll.shared.firstLaunch = true
                          
-                         /*for id in vkGroupLongPoll.shared.request.keys {
-                         if let request = vkGroupLongPoll.shared.request[id] {
-                         request.cancel()
-                         vkGroupLongPoll.shared.firstLaunch[id] = true
-                         }
-                         }*/
+                        for id in vkGroupLongPoll.shared.request.keys {
+                            if let request = vkGroupLongPoll.shared.request[id] {
+                                request.cancel()
+                                vkGroupLongPoll.shared.firstLaunch[id] = true
+                            }
+                        }
                         
                         let controller = self.delegate.storyboard?.instantiateViewController(withIdentifier: "LoginViewController") as! LoginViewController
                         controller.changeAccount = true
@@ -159,15 +159,15 @@ class ChangeAccountView: UIView {
                 let alertView = SCLAlertView(appearance: appearance)
                 
                 alertView.addButton("Да, хочу добавить") {
-                    /*vkUserLongPoll.shared.request.cancel()
-                     vkUserLongPoll.shared.firstLaunch = true
+                    vkUserLongPoll.shared.request.cancel()
+                    vkUserLongPoll.shared.firstLaunch = true
                      
-                     for id in vkGroupLongPoll.shared.request.keys {
-                     if let request = vkGroupLongPoll.shared.request[id] {
-                     request.cancel()
-                     vkGroupLongPoll.shared.firstLaunch[id] = true
-                     }
-                     }*/
+                    for id in vkGroupLongPoll.shared.request.keys {
+                        if let request = vkGroupLongPoll.shared.request[id] {
+                            request.cancel()
+                            vkGroupLongPoll.shared.firstLaunch[id] = true
+                        }
+                    }
                     
                     self.delegate.performSegue(withIdentifier: "addAccountVK", sender: nil)
                 }

@@ -285,7 +285,7 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
             getServerDataOperation.completionBlock = {
                 guard let data = getServerDataOperation.data else { return }
                 guard let json = try? JSON(data: data) else { print("json error"); return }
-                print(json)
+                //print(json)
                 
                 
                 self.chatAdminID = json["response"]["admin_id"].stringValue

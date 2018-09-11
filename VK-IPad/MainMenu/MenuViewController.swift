@@ -193,7 +193,7 @@ class MenuViewController: UITableViewController {
         
         code = "\(code) var c = API.groups.getInvites({\"count\":\"100\",\"extended\":\"1\",\"fields\":\"id,first_name,last_name,photo_100,sex\",\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"v\":\"\(vkSingleton.shared.version)\"});\n"
         
-        code = "\(code) var d = API.groups.get({\"user_id\":\"\(vkSingleton.shared.userID)\",\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"filter\":\"moder\",\"extended\":\"1\",\"fields\":\"id,name\",\"v\":\"\(vkSingleton.shared.version)\"});\n"
+        code = "\(code) var d = API.groups.get({\"user_id\":\"\(vkSingleton.shared.userID)\",\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"filter\":\"moder\",\"extended\":\"1\",\"fields\":\"id,name,admin_level,type\",\"v\":\"\(vkSingleton.shared.version)\"});\n"
         
         code = "\(code) var stat = API.stats.trackVisitor({\"access_token\":\"\(vkSingleton.shared.accessToken)\",\"v\":\"\(vkSingleton.shared.version)\"}); \n"
         
@@ -256,6 +256,11 @@ class MenuViewController: UITableViewController {
             }
             
             vkSingleton.shared.adminGroups = json["response"][3]["items"].compactMap { GroupProfile(json: $0.1) }
+            for group in vkSingleton.shared.adminGroups {
+                if group.levelAdmin == 3 && group.type == "group" {
+                    self.getGroupLongPollServer(groupID: group.gid)
+                }
+            }
         }
         OperationQueue().addOperation(getServerDataOperation)
     }
@@ -321,12 +326,12 @@ class MenuViewController: UITableViewController {
             vkUserLongPoll.shared.request.cancel()
             vkUserLongPoll.shared.firstLaunch = true
              
-            /* for id in vkGroupLongPoll.shared.request.keys {
-             if let request = vkGroupLongPoll.shared.request[id] {
-             request.cancel()
-             vkGroupLongPoll.shared.firstLaunch[id] = true
-             }
-             }*/
+            for id in vkGroupLongPoll.shared.request.keys {
+                if let request = vkGroupLongPoll.shared.request[id] {
+                    request.cancel()
+                    vkGroupLongPoll.shared.firstLaunch[id] = true
+                }
+            }
             
             self.performSegue(withIdentifier: "logoutVK", sender: nil)
         }

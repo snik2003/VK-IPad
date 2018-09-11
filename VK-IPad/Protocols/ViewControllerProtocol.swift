@@ -428,11 +428,12 @@ extension UIViewController: ViewControllerProtocol {
         }
     }
     
-    func openDialogController(ownerID: String, chatID: Int = 0, startID: Int, source: DialogSource = .all) {
+    func openDialogController(ownerID: String, chatID: Int = 0, groupID: Int = 0, startID: Int, source: DialogSource = .all) {
         let controller = self.storyboard?.instantiateViewController(withIdentifier: "DialogController") as! DialogController
         
         controller.userID = ownerID
         controller.chatID = chatID
+        controller.groupID = groupID
         controller.startMessageID = startID
         controller.source = source
         controller.delegate = self
@@ -774,9 +775,9 @@ extension UIViewController: ViewControllerProtocol {
                             } else if let vc = controller as? TopicController {
                                 vc.commentView.fromGroupImage = avatarImage
                                 vc.commentView.fromGroupButton.addTarget(self, action: #selector(vc.tapFromGroupButton(sender:)), for: .touchUpInside)
-                            }/* else if let vc = controller as? DialogController {
+                            } else if let vc = controller as? DialogController {
                                 vc.commentView.fromGroupImage = avatarImage
-                            }*/
+                            }
                         }
                     }
                 }
@@ -812,9 +813,9 @@ extension UIViewController: ViewControllerProtocol {
                             } else if let vc = controller as? TopicController {
                                 vc.commentView.fromGroupImage = getCacheImage.outputImage
                                 vc.commentView.fromGroupButton.addTarget(self, action: #selector(vc.tapFromGroupButton(sender:)), for: .touchUpInside)
-                            }/* else if let vc = controller as? GroupDialogController {
+                            } else if let vc = controller as? DialogController {
                                 vc.commentView.fromGroupImage = getCacheImage.outputImage
-                            }*/
+                            }
                         }
                     }
                     OperationQueue().addOperation(getCacheImage)
@@ -953,6 +954,15 @@ extension UIViewController: ViewControllerProtocol {
                         if "\(ownerID)" == group.gid {
                             groups.append(group)
                         }
+                    }
+                }
+            }
+            
+            if let vc = self as? DialogController {
+                groups.removeAll(keepingCapacity: false)
+                for group in parseGroups.outputData {
+                    if "\(vc.groupID)" == group.gid {
+                        groups.append(group)
                     }
                 }
             }
@@ -1249,7 +1259,7 @@ extension UIViewController: ViewControllerProtocol {
                     OperationQueue().addOperation(getCacheImage)
                 } else {
                     OperationQueue.main.addOperation {
-                        self.showMessageOnScreen(title: title, text: text, image: nil, userID: 0, chatID: 0, groupID: 0, startID: startID)
+                        self.showMessageOnScreen(title: title, text: text, image: nil, userID: 0, chatID: 0, groupID: groupID, startID: startID)
                     }
                 }
             }
@@ -1286,9 +1296,11 @@ extension UIViewController: ViewControllerProtocol {
                 SwiftMessages.hideAll()
                 if groupID != 0 {
                     if self.presentedViewController == nil {
-                        
+                        self.openDialogController(ownerID: "\(userID)", groupID: groupID, startID: startID)
                     } else {
-                        
+                        self.dismiss(animated: false) { () -> Void in
+                            self.openDialogController(ownerID: "\(userID)", groupID: groupID, startID: startID)
+                        }
                     }
                 } else {
                     if chatID != 0 {
