@@ -415,7 +415,7 @@ class GroupProfileView: UIView {
         if profile.canMessage == 1 {
             startY = (dopHeight - buttonHeight - 5 - buttonHeight) / 2
         }
-        if profile.isAdmin == 1 {
+        if profile.isAdmin == 1 && profile.canMessage == 1 {
             startY = (dopHeight - buttonHeight - 5 - buttonHeight - 5 - buttonHeight) / 2
         }
         
@@ -489,7 +489,7 @@ class GroupProfileView: UIView {
             coverView.addSubview(usersMessageButton)
         }
         
-        if profile.isAdmin == 1 {
+        if profile.isAdmin == 1 && profile.canMessage == 1 {
             ownerMessageButton.setTitle("Сообщения сообщества", for: .normal)
             ownerMessageButton.titleLabel?.font = UIFont(name: "Verdana-Bold", size: 12)!
             ownerMessageButton.setTitleColor(UIColor.white, for: .normal)
