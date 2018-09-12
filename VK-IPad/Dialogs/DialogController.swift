@@ -1099,7 +1099,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
         
             if dialogs.count < totalCount {
                 if self.source == .all {
-                    let action4 = UIAlertAction(title: "Догрузить сообщений в беседу", style: .destructive) { action in
+                    let action4 = UIAlertAction(title: "Дозагрузить сообщения в беседу", style: .destructive) { action in
                         
                         self.loadMoreMessages()
                     }
@@ -1107,7 +1107,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
                 }
                 
                 if self.source == .important {
-                    let action4 = UIAlertAction(title: "Догрузить сообщений в беседу", style: .destructive) { action in
+                    let action4 = UIAlertAction(title: "Дозагрузить сообщения в беседу", style: .destructive) { action in
                         
                         self.loadMoreImportantMessages()
                     }
@@ -1282,52 +1282,24 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
                     }
                     alertController.addAction(action5)
                 } else {
-                    let action5 = UIAlertAction(title: "Изменить фотографию беседы", style: .default){ action in
-                        
-                        let alertController2 = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-                        
-                        let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
-                        alertController2.addAction(cancelAction)
-                        
-                        
-                        let action1 = UIAlertAction(title: "Загрузить с устройства", style: .default) { action in
-                            
-                            
-                        }
-                        alertController2.addAction(action1)
-                        
-                        
-                        let action2 = UIAlertAction(title: "Сфотографировать", style: .default) { action in
-                            
-                            
-                        }
-                        alertController2.addAction(action2)
-                        
-                        
-                        if let popoverController = alertController2.popoverPresentationController {
-                            let bounds = self.titleView.bounds
-                            popoverController.sourceView = self.titleView
-                            popoverController.sourceRect = CGRect(x: bounds.maxX - 18, y: bounds.maxY + 5, width: 0, height: 0)
-                            popoverController.permittedArrowDirections = [.up]
-                        }
-                        
-                        self.present(alertController2, animated: true)
-                    }
-                    alertController.addAction(action5)
-                    
-                    
                     let action6 = UIAlertAction(title: "Удалить фотографию беседы", style: .destructive){ action in
                         
                         
                     }
                     alertController.addAction(action6)
                 }
+            } else {
+                let action10 = UIAlertAction(title: "Покинуть групповую беседу", style: .destructive) { action in
+                    
+                    self.removeFromChat()
+                }
+                alertController.addAction(action10)
             }
             
             
             if dialogs.count < totalCount {
                 if self.source == .all {
-                    let action4 = UIAlertAction(title: "Догрузить сообщений в беседу", style: .destructive) { action in
+                    let action4 = UIAlertAction(title: "Дозагрузить сообщения в беседу", style: .destructive) { action in
                         
                         self.loadMoreMessages()
                     }
@@ -1335,7 +1307,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
                 }
                 
                 if self.source == .important {
-                    let action4 = UIAlertAction(title: "Догрузить сообщений в беседу", style: .destructive) { action in
+                    let action4 = UIAlertAction(title: "Дозагрузить сообщения в беседу", style: .destructive) { action in
                         
                         self.loadMoreImportantMessages()
                     }
@@ -1398,7 +1370,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
             
             if dialogs.count < totalCount {
                 if self.source == .all {
-                    let action4 = UIAlertAction(title: "Догрузить сообщений в беседу", style: .destructive) { action in
+                    let action4 = UIAlertAction(title: "Дозагрузить сообщения в беседу", style: .destructive) { action in
                         
                         self.loadMoreMessages()
                     }
@@ -1406,7 +1378,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
                 }
                 
                 if self.source == .important {
-                    let action4 = UIAlertAction(title: "Догрузить сообщений в беседу", style: .destructive) { action in
+                    let action4 = UIAlertAction(title: "Дозагрузить сообщения в беседу", style: .destructive) { action in
                         
                         self.loadMoreImportantMessages()
                     }

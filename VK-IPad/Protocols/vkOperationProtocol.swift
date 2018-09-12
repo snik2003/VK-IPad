@@ -1649,6 +1649,41 @@ extension UIViewController: VkOperationProtocol {
         }
     }
     
+    func removeFromChat() {
+        
+        if let controller = self as? DialogController {
+            
+            let url = "/method/messages.removeChatUser"
+            let parameters = [
+                "access_token": vkSingleton.shared.accessToken,
+                "chat_id": "\(controller.chatID)",
+                "user_id": vkSingleton.shared.userID,
+                "v": vkSingleton.shared.version
+            ]
+            
+            let request = GetServerDataOperation(url: url, parameters: parameters)
+            
+            request.completionBlock = {
+                guard let data = request.data else { return }
+                guard let json = try? JSON(data: data) else { print("json error"); return }
+                
+                let error = ErrorJson(json: JSON.null)
+                error.errorCode = json["error"]["error_code"].intValue
+                error.errorMsg = json["error"]["error_msg"].stringValue
+                //print(json)
+                
+                if error.errorCode == 0 {
+                    OperationQueue.main.addOperation {
+                        self.navigationController?.popViewController(animated: true)
+                    }
+                } else {
+                    self.showErrorMessage(title: "Покинуть групповую беседу", msg: "\nОшибка #\(error.errorCode): \(error.errorMsg)\n")
+                }
+            }
+            OperationQueue().addOperation(request)
+        }
+    }
+    
     func editChat(newTitle: String) {
         
         if let controller = self as? DialogController {
