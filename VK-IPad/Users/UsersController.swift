@@ -46,6 +46,7 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
     var chatButton = UIBarButtonItem()
     var chatMarkCheck: [IndexPath: BEMCheckBox] = [:]
     var chatAdminID = ""
+    
     var chat: Conversation2!
     
     var count = 1000
@@ -74,18 +75,7 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
             if self.type == "requests" {
                 self.deleteButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(self.tapDeleteAllRequests(sender:)))
                 self.navigationItem.rightBarButtonItem = self.deleteButton
-            }
-            
-            if self.source == "create_chat" {
-                self.tableView.allowsMultipleSelection = true
-            } else {
-                self.tableView.allowsMultipleSelection = false
-            }
-            
-            if self.type == "requests" {
                 self.tableView.isEditing = true
-            } else {
-                self.tableView.isEditing = false
             }
         }
         
@@ -363,26 +353,6 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
         self.present(alertController, animated: true)
     }
     
-    @objc func tapCancelButton(sender: UIBarButtonItem) {
-    
-        self.navigationController?.popViewController(animated: true)
-    }
-    
-    @objc func tapOKButton(sender: UIBarButtonItem) {
-        
-        var users = ""
-        for user in chatUsers {
-            if users != "" {
-                users = "\(users),"
-            }
-            users = "\(users)\(user)"
-        }
-        /*if let vc = delegate as? DialogsController {
-            self.createChat(userIDs: users, title: chatTitle, controller: vc)
-        }*/
-        self.navigationController?.popViewController(animated: true)
-    }
-    
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         isSearch = true
     }
@@ -594,51 +564,6 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
                 if index == indexPath {
                     let user = sections[indexPath.section].users[indexPath.row]
                     
-                    /*if source == "add_mention" {
-                        let mention = "[id\(user.userID)|\(user.firstName) \(user.lastName)]"
-                        if let vc = delegate as? NewRecordController {
-                            vc.textView.insertText(mention)
-                        }
-                        self.navigationController?.popViewController(animated: true)
-                    } else if source == "add_comment_mention" {
-                        let mention = "[id\(user.userID)|\(user.firstName) \(user.lastName)]"
-                        if let vc = delegate as? NewCommentController {
-                            vc.textView.insertText(mention)
-                        }
-                        self.navigationController?.popViewController(animated: true)
-                    } else if source == "add_topic_mention" {
-                        let mention = "[id\(user.userID)|\(user.firstName) \(user.lastName)]"
-                        if let vc = delegate as? AddTopicController {
-                            vc.textView.insertText(mention)
-                        }
-                        self.navigationController?.popViewController(animated: true)
-                    } else if source == "add_dialog" {
-                        
-                        self.openDialog(userID: user.userID, attachment: attachment)
-                    } else if source == "invite" {
-                        if let vc = delegate as? GroupProfileController2 {
-                            self.inviteInGroup(groupID: "\(vc.groupID)", userID: user.userID, name: "\(user.firstName) \(user.lastName)")
-                        }
-                    } else if source == "add_to_chat" {
-                        if let vc = delegate as? DialogController {
-                            self.addUserToChat(chatID: vc.chatID, userID: user.userID, controller: vc)
-                        }
-                        self.navigationController?.popViewController(animated: true)
-                    } else if source == "create_chat" {
-                        if let id  = Int(user.userID), !self.chatUsers.contains(id) {
-                            self.chatUsers.append(id)
-                            if chatUsers.count > 0 {
-                                chatButton.isEnabled = true
-                                chatButton.title = "Готово (\(chatUsers.count))"
-                            } else {
-                                chatButton.isEnabled = false
-                                chatButton.title = "Готово"
-                            }
-                            self.tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
-                            self.chatMarkCheck[indexPath]?.setOn(true, animated: true)
-                        }
-                    } else {*/
-                    
                     if source == "add_mention" {
                         let mention = "[id\(user.userID)|\(user.firstName) \(user.lastName)]"
                         
@@ -657,34 +582,13 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
                         self.navigationController?.popViewController(animated: true)
                     } else if source == "invite" {
                         self.delegate.inviteFriendInGroup(friend: user)
+                    } else if source == "add_to_chat" {
+                        if let controller = delegate as? DialogController {
+                            controller.addUserToChat(user: user)
+                        }
                     } else {
                         self.openProfileController(id: Int(user.userID)!, name: "\(user.firstName) \(user.lastName)")
                     }
-                }
-            }
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        if let visibleIndexPath = tableView.indexPathsForVisibleRows {
-            for index in visibleIndexPath {
-                if index == indexPath {
-                    /*let user = sections[indexPath.section].users[indexPath.row]
-                    
-                    if source == "create_chat" {
-                        if let id  = Int(user.userID), self.chatUsers.contains(id) {
-                            chatUsers.remove(object: id)
-                            if chatUsers.count > 0 {
-                                chatButton.isEnabled = true
-                                chatButton.title = "Готово (\(chatUsers.count))"
-                            } else {
-                                chatButton.isEnabled = false
-                                chatButton.title = "Готово"
-                            }
-                            self.tableView.deselectRow(at: indexPath, animated: false)
-                            self.chatMarkCheck[indexPath]?.setOn(false, animated: true)
-                        }
-                    }*/
                 }
             }
         }
@@ -791,12 +695,15 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
         }
         
         if type == "chat_users" && chatAdminID == vkSingleton.shared.userID {
-            let deleteAction = UITableViewRowAction(style: .destructive, title: "Удалить\nиз чата") { (rowAction, indexPath) in
-                /*if let delegate = self.delegate as? DialogController {
+            let deleteAction = UITableViewRowAction(style: .destructive, title: "Исключить\nиз беседы") { (rowAction, indexPath) in
+                
+                print(self.delegate)
+                print(self.chatAdminID)
+                if let controller = self.delegate as? DialogController {
                     let user = self.sections[indexPath.section].users[indexPath.row]
-                    self.removeFromChat(chatID: delegate.chatID, userID: user.userID, controller: delegate)
-                }*/
-                self.navigationController?.popViewController(animated: true)
+                    controller.removeUserFromChat(user: user)
+                }
+                
             }
             deleteAction.backgroundColor = .red
             

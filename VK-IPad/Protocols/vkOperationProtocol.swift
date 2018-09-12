@@ -1534,4 +1534,153 @@ extension UIViewController: VkOperationProtocol {
             }
         }
     }
+    
+    func getLinkToChat(reset: String) {
+        
+        if let controller = self as? DialogController {
+            
+            let url = "/method/messages.getInviteLink"
+            let parameters = [
+                "access_token": vkSingleton.shared.accessToken,
+                "peer_id": controller.userID,
+                "reset": reset,
+                "v": vkSingleton.shared.version
+            ]
+            
+            let request = GetServerDataOperation(url: url, parameters: parameters)
+            
+            request.completionBlock = {
+                guard let data = request.data else { return }
+                
+                guard let json = try? JSON(data: data) else { print("json error"); return }
+                
+                let error = ErrorJson(json: JSON.null)
+                error.errorCode = json["error"]["error_code"].intValue
+                error.errorMsg = json["error"]["error_msg"].stringValue
+                //print(json)
+                
+                if error.errorCode == 0 {
+                    let link = json["response"]["link"].stringValue
+                    UIPasteboard.general.string = link
+                    if let string = UIPasteboard.general.string {
+                        self.showInfoMessage(title: "Ссылка для приглашения в беседу", msg: "Ссылка скопирована в буфер обмена:\n\n\(string)")
+                    }
+                } else {
+                    self.showErrorMessage(title: "Ошибка получения ссылки", msg: "Вам недоступны ссылки для приглашения в эту групповую беседу.")
+                }
+            }
+            OperationQueue().addOperation(request)
+        }
+    }
+    
+    func addUserToChat(user: Friends) {
+        
+        if let controller = self as? DialogController {
+            
+            let url = "/method/messages.addChatUser"
+            let parameters = [
+                "access_token": vkSingleton.shared.accessToken,
+                "chat_id": "\(controller.chatID)",
+                "user_id": user.uid,
+                "v": vkSingleton.shared.version
+            ]
+            
+            let request = GetServerDataOperation(url: url, parameters: parameters)
+            
+            request.completionBlock = {
+                guard let data = request.data else { return }
+                guard let json = try? JSON(data: data) else { print("json error"); return }
+                
+                let error = ErrorJson(json: JSON.null)
+                error.errorCode = json["error"]["error_code"].intValue
+                error.errorMsg = json["error"]["error_msg"].stringValue
+                //print(json)
+                
+                if error.errorCode == 0 {
+                    OperationQueue.main.addOperation {
+                        controller.titleView.configure()
+                        self.navigationController?.popViewController(animated: true)
+                    }
+                    self.showInfoMessage(title: "Добавление в беседу друга", msg: "\(user.firstName) \(user.lastName) успешно добавлен в групповую беседу «\(controller.conversation[0].chatSettings.title)».")
+                    
+                } else {
+                    self.showErrorMessage(title: "Добавление в беседу друга", msg: "\nОшибка #\(error.errorCode): \(error.errorMsg)\n")
+                }
+            }
+            OperationQueue().addOperation(request)
+        }
+    }
+    
+    func removeUserFromChat(user: Friends) {
+        
+        if let controller = self as? DialogController {
+            
+            let url = "/method/messages.removeChatUser"
+            let parameters = [
+                "access_token": vkSingleton.shared.accessToken,
+                "chat_id": "\(controller.chatID)",
+                "user_id": user.uid,
+                "v": vkSingleton.shared.version
+            ]
+            
+            let request = GetServerDataOperation(url: url, parameters: parameters)
+            
+            request.completionBlock = {
+                guard let data = request.data else { return }
+                guard let json = try? JSON(data: data) else { print("json error"); return }
+                
+                let error = ErrorJson(json: JSON.null)
+                error.errorCode = json["error"]["error_code"].intValue
+                error.errorMsg = json["error"]["error_msg"].stringValue
+                //print(json)
+                
+                if error.errorCode == 0 {
+                    OperationQueue.main.addOperation {
+                        controller.titleView.configure()
+                        self.navigationController?.popViewController(animated: true)
+                    }
+                    self.showInfoMessage(title: "Удаление пользователя из беседы", msg: "\(user.firstName) \(user.lastName) успешно исключен из групповой беседы «\(controller.conversation[0].chatSettings.title)».")
+                    
+                } else {
+                    self.showErrorMessage(title: "Удаление пользователя из беседы", msg: "\nОшибка #\(error.errorCode): \(error.errorMsg)\n")
+                }
+            }
+            OperationQueue().addOperation(request)
+        }
+    }
+    
+    func editChat(newTitle: String) {
+        
+        if let controller = self as? DialogController {
+            
+            let url = "/method/messages.editChat"
+            let parameters = [
+                "access_token": vkSingleton.shared.accessToken,
+                "chat_id": "\(controller.chatID)",
+                "title": newTitle,
+                "v": vkSingleton.shared.version
+            ]
+            
+            let request = GetServerDataOperation(url: url, parameters: parameters)
+            
+            request.completionBlock = {
+                guard let data = request.data else { return }
+                guard let json = try? JSON(data: data) else { print("json error"); return }
+                
+                let error = ErrorJson(json: JSON.null)
+                error.errorCode = json["error"]["error_code"].intValue
+                error.errorMsg = json["error"]["error_msg"].stringValue
+                //print(json)
+                
+                if error.errorCode == 0 {
+                    OperationQueue.main.addOperation {
+                        controller.titleView.configure()
+                    }
+                } else {
+                    self.showErrorMessage(title: "Изменение названия беседы", msg: "\nОшибка #\(error.errorCode): \(error.errorMsg)\n")
+                }
+            }
+            OperationQueue().addOperation(request)
+        }
+    }
 }

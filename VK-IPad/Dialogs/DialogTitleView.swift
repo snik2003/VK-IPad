@@ -335,6 +335,10 @@ class DialogTitleView: UIView {
     
     func configureChatView() {
         
+        for subview in self.subviews {
+            subview.removeFromSuperview()
+        }
+        
         self.frame = CGRect(x: delegate.view.frame.width - 400, y: 8, width: 400, height: 40)
         
         var url = conversation.chatSettings.photo100

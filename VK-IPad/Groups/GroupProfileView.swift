@@ -611,9 +611,6 @@ class GroupProfileView: UIView {
                 сontroller.source = "invite"
                 сontroller.title = "Пригласить друзей"
                 
-                сontroller.navigationItem.hidesBackButton = true
-                let cancelButton = UIBarButtonItem(title: "Закрыть", style: .plain, target: сontroller, action: #selector(сontroller.tapCancelButton(sender:)))
-                сontroller.navigationItem.leftBarButtonItem = cancelButton
                 сontroller.delegate = self.delegate
                 
                 if let split = self.delegate.splitViewController {

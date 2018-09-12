@@ -42,6 +42,13 @@ class ReloadUsersController: Operation {
                 }
             }
             controller.segmentedControl.setTitle("Онлайн: \(onlineCount)", forSegmentAt: 1)
+            
+            if controller.source == "add_to_chat" {
+                if let controller2 = controller.delegate as? DialogController {
+                    controller.chatAdminID = controller2.adminID
+                }
+            }
+            
         } else if type == "followers" {
             guard let parseFriends = dependencies.first as? ParseFriendList else { return }
             

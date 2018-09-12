@@ -54,6 +54,8 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
     var mode = DialogMode.dialog
     var source = DialogSource.all
     
+    var adminID = ""
+    
     var selectedMessages: String {
         let dialogs = self.dialogs.filter({ $0.isSelected })
         
@@ -219,6 +221,25 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
             //print(json)
             
             self.conversation = json["response"]["items"].compactMap { Conversation2(json: $0.1) }
+            
+            if self.chatID > 0 {
+                let url = "/method/messages.getChat"
+                let parameters = [
+                    "access_token": vkSingleton.shared.accessToken,
+                    "chat_id": "\(self.chatID)",
+                    "v": vkSingleton.shared.version
+                ]
+                
+                let getServerDataOperation = GetServerDataOperation(url: url, parameters: parameters)
+                getServerDataOperation.completionBlock = {
+                    guard let data = getServerDataOperation.data else { return }
+                    guard let json = try? JSON(data: data) else { print("json error"); return }
+                    //print(json)
+                    
+                    self.adminID = json["response"]["admin_id"].stringValue
+                }
+                OperationQueue().addOperation(getServerDataOperation)
+            }
         }
         OperationQueue().addOperation(getServerDataOperation)
     }
@@ -1132,10 +1153,31 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
                 usersController.chat = self.conversation[0]
                 usersController.title = "Участники беседы «\(self.conversation[0].chatSettings.title)»"
                 
+                usersController.delegate = self
+                
                 let detailVC = self.splitViewController!.viewControllers[self.splitViewController!.viewControllers.endIndex - 1]
                 detailVC.childViewControllers[0].navigationController?.pushViewController(usersController, animated: true)
             }
             alertController.addAction(action2)
+            
+            
+            let action9 = UIAlertAction(title: "Добавить друзей в беседу", style: .default){ action in
+                
+                let usersController = self.storyboard?.instantiateViewController(withIdentifier: "UsersController") as! UsersController
+                
+                usersController.userID = vkSingleton.shared.userID
+                usersController.type = "friends"
+                usersController.source = "add_to_chat"
+                usersController.title = "Пригласить друзей в беседу «\(self.conversation[0].chatSettings.title)»"
+                
+                usersController.delegate = self
+                
+                if let split = self.splitViewController {
+                    let detail = split.viewControllers[split.viewControllers.endIndex - 1]
+                    detail.childViewControllers[0].navigationController?.pushViewController(usersController, animated: true)
+                }
+            }
+            alertController.addAction(action9)
             
             
             if mode == .dialog {
@@ -1164,9 +1206,128 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
             }
             
             
+            if adminID == vkSingleton.shared.userID {
+                let action7 = UIAlertAction(title: "Изменить название беседы", style: .default){ action in
+                    
+                    self.editChatTitle()
+                }
+                alertController.addAction(action7)
+                
+                
+                let action8 = UIAlertAction(title: "Ссылка-приглашение в беседу", style: .default){ action in
+                    
+                    let alertController2 = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+                    
+                    let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
+                    alertController2.addAction(cancelAction)
+                    
+                    
+                    let action1 = UIAlertAction(title: "Получить предыдущую ссылку", style: .default) { action in
+                        
+                        self.getLinkToChat(reset: "0")
+                    }
+                    alertController2.addAction(action1)
+                    
+                    
+                    let action2 = UIAlertAction(title: "Сгенерировать новую ссылку", style: .destructive) { action in
+                        
+                        self.getLinkToChat(reset: "1")
+                    }
+                    alertController2.addAction(action2)
+                    
+                    
+                    if let popoverController = alertController2.popoverPresentationController {
+                        let bounds = self.titleView.bounds
+                        popoverController.sourceView = self.titleView
+                        popoverController.sourceRect = CGRect(x: bounds.maxX - 18, y: bounds.maxY + 5, width: 0, height: 0)
+                        popoverController.permittedArrowDirections = [.up]
+                    }
+                    
+                    self.present(alertController2, animated: true)
+                }
+                alertController.addAction(action8)
+                
+                
+                if conversation[0].chatSettings.photo100 == "" {
+                    let action5 = UIAlertAction(title: "Установить фотографию беседы", style: .default){ action in
+                        
+                        let alertController2 = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+                        
+                        let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
+                        alertController2.addAction(cancelAction)
+                        
+                        
+                        let action1 = UIAlertAction(title: "Загрузить с устройства", style: .default) { action in
+                            
+                            
+                        }
+                        alertController2.addAction(action1)
+                        
+                        
+                        let action2 = UIAlertAction(title: "Сфотографировать", style: .default) { action in
+                            
+                            
+                        }
+                        alertController2.addAction(action2)
+                        
+                        
+                        if let popoverController = alertController2.popoverPresentationController {
+                            let bounds = self.titleView.bounds
+                            popoverController.sourceView = self.titleView
+                            popoverController.sourceRect = CGRect(x: bounds.maxX - 18, y: bounds.maxY + 5, width: 0, height: 0)
+                            popoverController.permittedArrowDirections = [.up]
+                        }
+                        
+                        self.present(alertController2, animated: true)
+                    }
+                    alertController.addAction(action5)
+                } else {
+                    let action5 = UIAlertAction(title: "Изменить фотографию беседы", style: .default){ action in
+                        
+                        let alertController2 = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+                        
+                        let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
+                        alertController2.addAction(cancelAction)
+                        
+                        
+                        let action1 = UIAlertAction(title: "Загрузить с устройства", style: .default) { action in
+                            
+                            
+                        }
+                        alertController2.addAction(action1)
+                        
+                        
+                        let action2 = UIAlertAction(title: "Сфотографировать", style: .default) { action in
+                            
+                            
+                        }
+                        alertController2.addAction(action2)
+                        
+                        
+                        if let popoverController = alertController2.popoverPresentationController {
+                            let bounds = self.titleView.bounds
+                            popoverController.sourceView = self.titleView
+                            popoverController.sourceRect = CGRect(x: bounds.maxX - 18, y: bounds.maxY + 5, width: 0, height: 0)
+                            popoverController.permittedArrowDirections = [.up]
+                        }
+                        
+                        self.present(alertController2, animated: true)
+                    }
+                    alertController.addAction(action5)
+                    
+                    
+                    let action6 = UIAlertAction(title: "Удалить фотографию беседы", style: .destructive){ action in
+                        
+                        
+                    }
+                    alertController.addAction(action6)
+                }
+            }
+            
+            
             if dialogs.count < totalCount {
                 if self.source == .all {
-                    let action4 = UIAlertAction(title: "Догрузить сообщений в беседу", style: .default) { action in
+                    let action4 = UIAlertAction(title: "Догрузить сообщений в беседу", style: .destructive) { action in
                         
                         self.loadMoreMessages()
                     }
@@ -1174,7 +1335,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
                 }
                 
                 if self.source == .important {
-                    let action4 = UIAlertAction(title: "Догрузить сообщений в беседу", style: .default) { action in
+                    let action4 = UIAlertAction(title: "Догрузить сообщений в беседу", style: .destructive) { action in
                         
                         self.loadMoreImportantMessages()
                     }
@@ -1301,5 +1462,31 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
         }
         
         return []
+    }
+    
+    func editChatTitle() {
+        let alert = UIAlertController(title: "Изменить название беседы", message: "Введите новое название групповой беседы:", preferredStyle: .alert)
+        
+        alert.addTextField { (textField) in
+            textField.text = self.conversation[0].chatSettings.title
+        }
+        
+        let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
+        alert.addAction(cancelAction)
+        
+        let action = UIAlertAction(title: "Готово", style: .default) { [weak alert] (_) in
+            if let text = alert?.textFields?.first?.text {
+                if text != "" {
+                    self.editChat(newTitle: text)
+                } else {
+                    self.showErrorMessage(title: "Ошибка редактирования беседы", msg: "Необходимо ввести новое название беседы.")
+                }
+            } else {
+                self.showErrorMessage(title: "Ошибка редактирования беседы", msg: "Необходимо ввести новое название беседы.")
+            }
+        }
+        alert.addAction(action)
+        
+        self.present(alert, animated: true, completion: nil)
     }
 }

@@ -288,21 +288,33 @@ class RecordCell: UITableViewCell {
         avatarImage.isUserInteractionEnabled = true
         avatarImage.addGestureRecognizer(tap1)
         tap1.add {
-            self.delegate.openProfileController(id: record.fromID, name: name)
+            if (record.postType == "postpone" || record.postType == "suggest") && !(self.delegate is RecordController) {
+                self.delegate.openWallRecord(ownerID: record.ownerID, postID: record.id, accessKey: "", type: "post")
+            } else {
+                self.delegate.openProfileController(id: record.fromID, name: name)
+            }
         }
         
         let tap2 = UITapGestureRecognizer()
         nameLabel.isUserInteractionEnabled = true
         nameLabel.addGestureRecognizer(tap2)
         tap2.add {
-            self.delegate.openProfileController(id: record.fromID, name: name)
+            if (record.postType == "postpone" || record.postType == "suggest") && !(self.delegate is RecordController) {
+                self.delegate.openWallRecord(ownerID: record.ownerID, postID: record.id, accessKey: "", type: "post")
+            } else {
+                self.delegate.openProfileController(id: record.fromID, name: name)
+            }
         }
         
         let tap3 = UITapGestureRecognizer()
         dateLabel.isUserInteractionEnabled = true
         dateLabel.addGestureRecognizer(tap3)
         tap3.add {
-            self.delegate.openProfileController(id: record.fromID, name: name)
+            if (record.postType == "postpone" || record.postType == "suggest") && !(self.delegate is RecordController) {
+                self.delegate.openWallRecord(ownerID: record.ownerID, postID: record.id, accessKey: "", type: "post")
+            } else {
+                self.delegate.openProfileController(id: record.fromID, name: name)
+            }
         }
         
         self.addSubview(avatarImage)

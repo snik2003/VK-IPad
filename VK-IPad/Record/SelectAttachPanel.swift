@@ -153,9 +153,6 @@ class SelectAttachPanel: UIView, UIImagePickerControllerDelegate, UINavigationCo
                     controller.source = "add_mention"
                     controller.title = "Упомянуть друга в \(self.titleGen)"
                     
-                    controller.navigationItem.hidesBackButton = true
-                    let cancelButton = UIBarButtonItem(title: "Отмена", style: .plain, target: controller, action: #selector(controller.tapCancelButton(sender:)))
-                    controller.navigationItem.leftBarButtonItem = cancelButton
                     controller.delegate = self.delegate
                     
                     if let split = self.delegate.splitViewController {
