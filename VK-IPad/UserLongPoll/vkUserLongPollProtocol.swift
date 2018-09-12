@@ -202,66 +202,38 @@ extension MenuViewController: vkUserLongPollProtocol {
                         } else if update.elements[0] == 4 {
                             if controller.userID == "\(update.elements[3])" {
                                 
-                                let mess = Dialog(json: JSON.null)
-                                
-                                if controller.chatID == 0 {
+                                if update.type == "" && update.fwdCount == 0 && controller.chatID == 0 {
+                                    
+                                    let mess = Dialog(json: JSON.null)
                                     mess.id = update.elements[1]
                                     mess.userID = update.elements[3]
                                     mess.body = update.text
                                     mess.date = update.elements[4]
                                     mess.emoji = update.emoji
                                     mess.title = update.title
-                                } else {
-                                    mess.id = update.elements[1]
-                                    mess.userID = update.fromID
-                                    mess.action = update.action
-                                    mess.actionID = update.actionID
-                                    mess.body = update.text
-                                    mess.date = update.elements[4]
-                                    mess.emoji = update.emoji
-                                    mess.title = update.title
+                                
+                                    let flags = update.elements[2]
+                                    var summands: [Int] = []
+                                    for number in [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 65536] {
+                                        if flags & number != 0 {
+                                            summands.append(number)
+                                        }
+                                    }
                                     
-                                    OperationQueue.main.addOperation {
-                                        if update.action == "chat_invite_user" ||
-                                            update.action == "chat_invite_user_by_link" {
-                                            if controller.titleView.conversation != nil {
-                                                controller.titleView.conversation.chatSettings.membersCount += 1
-                                                controller.titleView.configureChatView()
-                                            }
-                                        }
-                                        
-                                        if update.action == "chat_kick_user" {
-                                            if controller.titleView.conversation != nil {
-                                                controller.titleView.conversation.chatSettings.membersCount -= 1
-                                                controller.titleView.configureChatView()
-                                            }
-                                        }
+                                    if summands.contains(1) {
+                                        mess.readState = 0
+                                    } else {
+                                        mess.readState = 1
                                     }
-                                }
-                                
-                                let flags = update.elements[2]
-                                var summands: [Int] = []
-                                for number in [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 65536] {
-                                    if flags & number != 0 {
-                                        summands.append(number)
+                                    
+                                    if summands.contains(2) {
+                                        mess.out = 1
+                                        mess.fromID = Int(vkSingleton.shared.userID)!
+                                    } else {
+                                        mess.out = 0
+                                        mess.fromID = mess.userID
                                     }
-                                }
                                 
-                                if summands.contains(1) {
-                                    mess.readState = 0
-                                } else {
-                                    mess.readState = 1
-                                }
-                                
-                                if summands.contains(2) {
-                                    mess.out = 1
-                                    mess.fromID = Int(vkSingleton.shared.userID)!
-                                } else {
-                                    mess.out = 0
-                                    mess.fromID = mess.userID
-                                }
-                                
-                                if update.type == "" && update.fwdCount == 0 && controller.chatID == 0 {
                                     OperationQueue.main.addOperation {
                                         controller.dialogs.append(mess)
                                         controller.totalCount += 1
@@ -270,9 +242,9 @@ extension MenuViewController: vkUserLongPollProtocol {
                                     }
                                 } else {
                                     OperationQueue.main.addOperation {
-                                        controller.offset = 0
-                                        controller.startMessageID = update.elements[1]
-                                        controller.getDialog()
+                                        controller.totalCount += 1
+                                        controller.loadNewMessages(messageID: update.elements[1])
+                                        controller.tableView.scrollToRow(at: IndexPath(row: 0, section: 3), at: .bottom, animated: false)
                                     }
                                 }
                                 

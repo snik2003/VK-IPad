@@ -31,8 +31,8 @@ class MenuViewController: UITableViewController {
     
     var mainController: UIViewController? {
         if let split = self.splitViewController {
-            let detailVC = split.viewControllers[split.viewControllers.endIndex - 1]
-            return detailVC.childViewControllers[0]
+            let controller = split.viewControllers[split.viewControllers.endIndex - 1]
+            return controller.childViewControllers[0]
         }
         return nil
     }
@@ -256,11 +256,11 @@ class MenuViewController: UITableViewController {
             }
             
             vkSingleton.shared.adminGroups = json["response"][3]["items"].compactMap { GroupProfile(json: $0.1) }
-            for group in vkSingleton.shared.adminGroups {
+            /*for group in vkSingleton.shared.adminGroups {
                 if group.levelAdmin == 3 && group.type == "group" {
                     self.getGroupLongPollServer(groupID: group.gid)
                 }
-            }
+            }*/
         }
         OperationQueue().addOperation(getServerDataOperation)
     }

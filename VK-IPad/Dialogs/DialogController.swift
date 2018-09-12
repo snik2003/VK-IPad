@@ -64,11 +64,19 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
         return selected.map { $0 }.joined(separator: ",")
     }
     
+    var detailController: UIViewController? {
+        if let split = self.splitViewController {
+            let controller = split.viewControllers[0]
+            return controller.childViewControllers[0]
+        }
+        return nil
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = vkSingleton.shared.dialogColor
         
+        self.launchGroupLongPoll()
         self.configureTableView()
         
         self.attachPanel.delegate = self
@@ -103,6 +111,14 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    func launchGroupLongPoll() {
+        if groupID > 0 {
+            if let detail = self.detailController as? MenuViewController {
+                detail.getGroupLongPollServer(groupID: groupID)
+            }
+        }
     }
     
     func configureTableView() {
