@@ -336,7 +336,7 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
                 
                 if error.errorCode == 0 {
                     OperationQueue.main.addOperation {
-                        self.sections[0].users.removeAll(keepingCapacity: false)
+                        self.friends.removeAll(keepingCapacity: false)
                         self.tableView.reloadData()
                         
                         self.updateAppCounters()
@@ -725,7 +725,7 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
                     
                     if error.errorCode == 0 {
                         OperationQueue.main.addOperation {
-                            self.sections[indexPath.section].users.remove(at: indexPath.row)
+                            self.friends.remove(object: user)
                             self.tableView.reloadData()
                             
                             self.updateAppCounters()
