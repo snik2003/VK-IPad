@@ -81,6 +81,12 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
             } else {
                 self.tableView.allowsMultipleSelection = false
             }
+            
+            if self.type == "requests" {
+                self.tableView.isEditing = true
+            } else {
+                self.tableView.isEditing = false
+            }
         }
         
         refresh()
@@ -700,20 +706,18 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         
         if type == "requests" {
-            let deleteAction = UITableViewRowAction(style: .destructive, title: "Оставить в\nподписчиках") { (rowAction, indexPath) in
+            let joinAction = UITableViewRowAction(style: .normal, title: "Принять заявку\nв друзья") { (rowAction, indexPath) in
                 
                 let user = self.sections[indexPath.section].users[indexPath.row]
                 
-                let url = "/method/friends.delete"
-                
+                let url = "/method/friends.add"
                 let parameters = [
                     "access_token": vkSingleton.shared.accessToken,
-                    "user_id": user.uid,
+                    "user_id": "\(user.uid)",
                     "v": vkSingleton.shared.version
                 ]
                 
                 let request = GetServerDataOperation(url: url, parameters: parameters)
-                
                 request.completionBlock = {
                     guard let data = request.data else { return }
                     
@@ -731,14 +735,59 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
                             self.updateAppCounters()
                         }
                     } else {
-                        self.delegate.showErrorMessage(title: "Ошибка #\(error.errorCode)", msg: "\n\(error.errorMsg)\n")
+                        self.showErrorMessage(title: "Ошибка #\(error.errorCode)", msg: "\n\(error.errorMsg)\n")
+                    }
+                }
+                OperationQueue().addOperation(request)
+            }
+            joinAction.backgroundColor = .blue
+            
+            let gotoAction = UITableViewRowAction(style: .destructive, title: "Просмотреть\nпользователя") { (rowAction, indexPath) in
+                
+                let user = self.sections[indexPath.section].users[indexPath.row]
+                if let id = Int(user.uid) {
+                    self.openProfileController(id: id, name: "\(user.firstName) \(user.lastName)")
+                }
+            }
+            gotoAction.backgroundColor = .orange
+            
+            let deleteAction = UITableViewRowAction(style: .destructive, title: "Оставить в\nподписчиках") { (rowAction, indexPath) in
+                
+                let user = self.sections[indexPath.section].users[indexPath.row]
+                
+                let url = "/method/friends.delete"
+                let parameters = [
+                    "access_token": vkSingleton.shared.accessToken,
+                    "user_id": user.uid,
+                    "v": vkSingleton.shared.version
+                ]
+                
+                let request = GetServerDataOperation(url: url, parameters: parameters)
+                request.completionBlock = {
+                    guard let data = request.data else { return }
+                    
+                    guard let json = try? JSON(data: data) else { print("json error"); return }
+                    
+                    let error = ErrorJson(json: JSON.null)
+                    error.errorCode = json["error"]["error_code"].intValue
+                    error.errorMsg = json["error"]["error_msg"].stringValue
+                    
+                    if error.errorCode == 0 {
+                        OperationQueue.main.addOperation {
+                            self.friends.remove(object: user)
+                            self.tableView.reloadData()
+                            
+                            self.updateAppCounters()
+                        }
+                    } else {
+                        self.showErrorMessage(title: "Ошибка #\(error.errorCode)", msg: "\n\(error.errorMsg)\n")
                     }
                 }
                 OperationQueue().addOperation(request)
             }
             deleteAction.backgroundColor = .red
             
-            return [deleteAction]
+            return [joinAction, deleteAction, gotoAction]
         }
         
         if type == "chat_users" && chatAdminID == vkSingleton.shared.userID {
