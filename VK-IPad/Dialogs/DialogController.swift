@@ -10,8 +10,6 @@ import UIKit
 import DCCommentView
 import SwiftyJSON
 import WebKit
-import RxSwift
-import RxCocoa
 
 enum DialogSource {
     case all
@@ -74,9 +72,13 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
         return nil
     }
     
+    var pickerController = UIImagePickerController()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = vkSingleton.shared.dialogColor
+        
+        self.pickerController.delegate = self
         
         self.launchGroupLongPoll()
         self.configureTableView()
@@ -1259,14 +1261,29 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
                         
                         let action1 = UIAlertAction(title: "Загрузить с устройства", style: .default) { action in
                             
+                            self.pickerController.allowsEditing = false
+                            self.pickerController.sourceType = .photoLibrary
+                            self.pickerController.mediaTypes =  UIImagePickerController.availableMediaTypes(for: .photoLibrary)!
                             
+                            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+                            appDelegate.myOrientation = .all
+                            
+                            self.present(self.pickerController, animated: true)
                         }
                         alertController2.addAction(action1)
                         
                         
                         let action2 = UIAlertAction(title: "Сфотографировать", style: .default) { action in
                             
-                            
+                            if UIImagePickerController.isSourceTypeAvailable(.camera) {
+                                self.pickerController.sourceType = .camera
+                                self.pickerController.cameraCaptureMode = .photo
+                                self.pickerController.modalPresentationStyle = .currentContext
+                                
+                                self.delegate.present(self.pickerController, animated: true)
+                            } else {
+                                self.showErrorMessage(title: "Сфотографировать", msg: "Ошибка! Камера на устройстве не активна.")
+                            }
                         }
                         alertController2.addAction(action2)
                         
@@ -1284,7 +1301,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
                 } else {
                     let action6 = UIAlertAction(title: "Удалить фотографию беседы", style: .destructive){ action in
                         
-                        
+                        self.deleteChatPhoto()
                     }
                     alertController.addAction(action6)
                 }
@@ -1460,5 +1477,25 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
         alert.addAction(action)
         
         self.present(alert, animated: true, completion: nil)
+    }
+}
+
+extension DialogController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        appDelegate.myOrientation = .landscape
+        
+        picker.dismiss(animated: true, completion: nil)
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        
+        if let chosenImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            self.loadChatPhotoToServer(image: chosenImage)
+        }
+    
+        picker.dismiss(animated:true, completion: nil)
     }
 }

@@ -1718,4 +1718,104 @@ extension UIViewController: VkOperationProtocol {
             OperationQueue().addOperation(request)
         }
     }
+    
+    func deleteChatPhoto() {
+        
+        if let controller = self as? DialogController {
+            
+            let url = "/method/messages.deleteChatPhoto"
+            let parameters = [
+                "access_token": vkSingleton.shared.accessToken,
+                "chat_id": "\(controller.chatID)",
+                "v": vkSingleton.shared.version
+            ]
+            
+            let request = GetServerDataOperation(url: url, parameters: parameters)
+            
+            request.completionBlock = {
+                guard let data = request.data else { return }
+                guard let json = try? JSON(data: data) else { print("json error"); return }
+                
+                let error = ErrorJson(json: JSON.null)
+                error.errorCode = json["error"]["error_code"].intValue
+                error.errorMsg = json["error"]["error_msg"].stringValue
+                //print(json)
+                
+                if error.errorCode == 0 {
+                    OperationQueue.main.addOperation {
+                        controller.conversation[0].chatSettings.photo100 = ""
+                        controller.titleView.configure()
+                    }
+                } else {
+                    self.showErrorMessage(title: "Удаление фотографии беседы", msg: "\nОшибка #\(error.errorCode): \(error.errorMsg)\n")
+                }
+            }
+            OperationQueue().addOperation(request)
+        }
+    }
+    
+    func loadChatPhotoToServer(image: UIImage) {
+        
+        if let controller = self as? DialogController {
+            
+            var url = "/method/photos.getChatUploadServer"
+            var parameters = [
+                "access_token": vkSingleton.shared.accessToken,
+                "chat_id": "\(controller.chatID)",
+                "v": vkSingleton.shared.version
+            ]
+            
+            let request = GetServerDataOperation(url: url, parameters: parameters)
+            
+            request.completionBlock = {
+                guard let data = request.data else { return }
+                guard let json = try? JSON(data: data) else { print("json error"); return }
+                
+                let error = ErrorJson(json: JSON.null)
+                error.errorCode = json["error"]["error_code"].intValue
+                error.errorMsg = json["error"]["error_msg"].stringValue
+                
+                if error.errorCode == 0 {
+                    let uploadURL = json["response"]["upload_url"].stringValue
+                    
+                    LoadToServer().myImageUploadRequest(url: uploadURL, image: image, filename: "ChatPhoto", squareCrop: "") { json2,errJson in
+                        
+                        if errJson.errorMsg == "" {
+                            let response = json2["response"].stringValue
+                            
+                            url = "/method/messages.setChatPhoto"
+                            parameters = [
+                                "access_token": vkSingleton.shared.accessToken,
+                                "file": response,
+                                "v": vkSingleton.shared.version
+                            ]
+                            
+                            let request = GetServerDataOperation(url: url, parameters: parameters)
+                            
+                            request.completionBlock = {
+                                guard let data = request.data else { return }
+                                
+                                let json3 = try! JSON(data: data)
+                                let error = ErrorJson(json: JSON.null)
+                                error.errorCode = json3["error"]["error_code"].intValue
+                                error.errorMsg = json3["error"]["error_msg"].stringValue
+                                
+                                if error.errorCode == 0 {
+                                    controller.getConversation()
+                                    controller.titleView.configure()
+                                } else {
+                                    self.showErrorMessage(title: "Ошибка #\(error.errorCode)", msg: "\n\(error.errorMsg)\n")
+                                }
+                            }
+                            
+                            OperationQueue().addOperation(request)
+                        }
+                    }
+                } else {
+                    self.showErrorMessage(title: "Установка фотографии беседы", msg: "\nОшибка #\(error.errorCode): \(error.errorMsg)\n")
+                }
+            }
+            OperationQueue().addOperation(request)
+        }
+    }
 }
