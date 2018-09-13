@@ -111,6 +111,8 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        //self.showMessageNotification(text: "Привет! Все хорошо!", userID: 451439315)
     }
     
     override func didReceiveMemoryWarning() {
