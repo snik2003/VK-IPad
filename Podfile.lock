@@ -1,81 +1,64 @@
 PODS:
   - Alamofire (4.7.3)
   - BEMCheckBox (1.4.1)
-  - CMPhotoCropEditor (1.0.1)
   - DCCommentView (0.1.6)
   - DropDown (2.3.2)
   - FLAnimatedImage (1.0.12)
   - Popover (1.2.0)
-  - Realm (3.7.6):
-    - Realm/Headers (= 3.7.6)
-  - Realm/Headers (3.7.6)
-  - RealmSwift (3.7.6):
-    - Realm (= 3.7.6)
-  - RxCocoa (4.2.0):
-    - RxSwift (~> 4.0)
-  - RxSwift (4.2.0)
+  - Realm (3.9.0):
+    - Realm/Headers (= 3.9.0)
+  - Realm/Headers (3.9.0)
+  - RealmSwift (3.9.0):
+    - Realm (= 3.9.0)
   - SCLAlertView (0.8)
   - SmileLock (3.0.3)
-  - SwiftMessages (4.1.4):
-    - SwiftMessages/App (= 4.1.4)
-  - SwiftMessages/App (4.1.4)
+  - SwiftMessages (5.0.1):
+    - SwiftMessages/App (= 5.0.1)
+  - SwiftMessages/App (5.0.1)
   - SwiftyJSON (4.1.0)
-  - SWRevealViewController (2.3.0)
 
 DEPENDENCIES:
   - Alamofire (~> 4.5)
   - BEMCheckBox
-  - CMPhotoCropEditor
   - DCCommentView (~> 0.1)
   - DropDown
   - FLAnimatedImage (~> 1.0)
   - Popover
   - RealmSwift (~> 3.0)
-  - RxCocoa
-  - RxSwift
   - SCLAlertView (~> 0.8)
   - SmileLock (~> 3.0)
   - SwiftMessages
   - SwiftyJSON (~> 4.0)
-  - SWRevealViewController (~> 2.3)
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
     - Alamofire
     - BEMCheckBox
-    - CMPhotoCropEditor
     - DCCommentView
     - DropDown
     - FLAnimatedImage
     - Popover
     - Realm
     - RealmSwift
-    - RxCocoa
-    - RxSwift
     - SCLAlertView
     - SmileLock
     - SwiftMessages
     - SwiftyJSON
-    - SWRevealViewController
 
 SPEC CHECKSUMS:
   Alamofire: c7287b6e5d7da964a70935e5db17046b7fde6568
   BEMCheckBox: 5ba6e37ade3d3657b36caecc35c8b75c6c2b1a4e
-  CMPhotoCropEditor: 50010afad0ec87be9c49c98a99e65be90f23a249
   DCCommentView: 9b46fc2c78f64a28c72f482e5f7d75574b8ff5a8
   DropDown: 7f87abecc28f9b4edad810fe1211c5c018c257e5
   FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
   Popover: 28c1ac8e937ab2b3965bd2da7dd18324357abc41
-  Realm: 9eaecad54712d6246d08ba34c10f354e4715d7d3
-  RealmSwift: 1fe08b4ebaeeaacf17f9ba0343f7b25c9fc31fa6
-  RxCocoa: 0b54909c902e1e581212a03e690bbd94032d8baa
-  RxSwift: 99e10317ddfcc7fbe01356aafd118fde4a0be104
+  Realm: 3d36f208bf3aff8335dc3298742140182bde4edb
+  RealmSwift: aa4d11917bfcfaa3ed51f219102a487ecd895447
   SCLAlertView: 6a77bb2edfc65e04dbe57725546cb4107a506b85
   SmileLock: 247b62849cedca324e70ccfad5d01714602d739e
-  SwiftMessages: 2c33fdee8b8f38dfc7e1036684456b505891da8c
+  SwiftMessages: 32ce3cfc8388b41aae56ff4853cc752a20101147
   SwiftyJSON: c29297daf073d2aa016295d5809cdd68045c39b3
-  SWRevealViewController: 6d3fd97f70112fd7cef9de14df4260eacce4c63a
 
-PODFILE CHECKSUM: 0146fea6f341c73c7a8eed245e418091b32115cb
+PODFILE CHECKSUM: 5b4672a35aa5362b818bb8f41b09fcc6cef48ada
 
 COCOAPODS: 1.5.0
