@@ -1,6 +1,0 @@
-framework module CMPhotoCropEditor {
-  umbrella header "CMPhotoCropEditor-umbrella.h"
-
-  export *
-  module * { export * }
-}
