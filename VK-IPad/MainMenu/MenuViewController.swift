@@ -309,6 +309,13 @@ class MenuViewController: UITableViewController {
     }
     
     func exitAccountFunc() {
+        
+        var appID = ""
+        if let id = userDefaults.string(forKey: "vkAppID_\(vkSingleton.shared.userID)") {
+            appID = id
+        }
+        
+        //print("AppID = \(appID)")
         let appearance = SCLAlertView.SCLAppearance(
             kTitleTop: 32.0,
             kWindowWidth: 350,
@@ -326,7 +333,7 @@ class MenuViewController: UITableViewController {
             vkUserLongPoll.shared.request.cancel()
             vkUserLongPoll.shared.firstLaunch = true
             
-            UserDefaults.standard.removeObject(forKey: "\(vkSingleton.shared.userAppID)")
+            UserDefaults.standard.set(false, forKey: appID)
             
             for id in vkGroupLongPoll.shared.request.keys {
                 if let request = vkGroupLongPoll.shared.request[id] {

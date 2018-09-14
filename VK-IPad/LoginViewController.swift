@@ -129,7 +129,8 @@ class LoginViewController: UIViewController {
         cleanCookies()
         
         deleteAccountFromRealm(userID: Int(vkSingleton.shared.userID)!)
-        UserDefaults.standard.removeObject(forKey: "\(vkSingleton.shared.userAppID)")
+        UserDefaults.standard.set(false, forKey: "\(vkSingleton.shared.userAppID)")
+        
         
         vkSingleton.shared.accessToken = ""
         vkSingleton.shared.userID = ""
@@ -223,6 +224,8 @@ extension LoginViewController: WKNavigationDelegate {
             vkSingleton.shared.accessToken = token
             vkSingleton.shared.userID = id
             userDefaults.set(vkSingleton.shared.userID, forKey: "vkUserID")
+            
+            userDefaults.set("\(vkSingleton.shared.userAppID)", forKey: "vkAppID_\(id)")
             userDefaults.set(true, forKey: "\(vkSingleton.shared.userAppID)")
             
             performSegue(withIdentifier: "goProfile", sender: nil)
@@ -237,23 +240,6 @@ extension LoginViewController: WKNavigationDelegate {
         }
     }
     
-    func getAppID() -> String {
-        
-        var result = ""
-        let count = vkSingleton.shared.vkAppID.count
-        
-        if count > 0 {
-            result = vkSingleton.shared.vkAppID[count - 1]
-        
-            let num = getNumberOfAccounts()
-            if num < count {
-                result = vkSingleton.shared.vkAppID[num]
-            }
-        }
-        
-        return result
-    }
-    
     func getFreeAppID() -> String {
         
         var result = ""
@@ -261,8 +247,10 @@ extension LoginViewController: WKNavigationDelegate {
         
         if count > 0 {
             result = vkSingleton.shared.vkAppID[count - 1]
-            for appID in vkSingleton.shared.vkAppID {
-                if !UserDefaults.standard.bool(forKey: appID) {
+            for index in 0...count-1 {
+                let appID = vkSingleton.shared.vkAppID[index]
+                
+                if UserDefaults.standard.bool(forKey: appID) == false {
                     result = appID
                     break
                 }

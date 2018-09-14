@@ -12,7 +12,7 @@ final class vkSingleton {
     static let shared = vkSingleton()
     
     let apiURL = "https://api.vk.com"
-    let vkAppID: [String] = ["6604375"]
+    let vkAppID: [String] = ["6604375","6692619","6692628","6692638"]
     let version = "5.71"
     let lpVersion = "3"
     
