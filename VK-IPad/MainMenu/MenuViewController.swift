@@ -325,7 +325,9 @@ class MenuViewController: UITableViewController {
             self.unregisterDeviceOnPush()
             vkUserLongPoll.shared.request.cancel()
             vkUserLongPoll.shared.firstLaunch = true
-             
+            
+            UserDefaults.standard.removeObject(forKey: "\(vkSingleton.shared.userAppID)")
+            
             for id in vkGroupLongPoll.shared.request.keys {
                 if let request = vkGroupLongPoll.shared.request[id] {
                     request.cancel()

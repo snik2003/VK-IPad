@@ -108,7 +108,7 @@ class LoginViewController: UIViewController {
         urlComponents.host = "oauth.vk.com"
         urlComponents.path = "/authorize"
         
-        if let appID = Int(vkSingleton.shared.vkAppID[0]) {
+        if let appID = Int(getFreeAppID()), appID > 0 {
             vkSingleton.shared.userAppID = appID
         
             urlComponents.queryItems = [
@@ -129,6 +129,7 @@ class LoginViewController: UIViewController {
         cleanCookies()
         
         deleteAccountFromRealm(userID: Int(vkSingleton.shared.userID)!)
+        UserDefaults.standard.removeObject(forKey: "\(vkSingleton.shared.userAppID)")
         
         vkSingleton.shared.accessToken = ""
         vkSingleton.shared.userID = ""
@@ -222,6 +223,7 @@ extension LoginViewController: WKNavigationDelegate {
             vkSingleton.shared.accessToken = token
             vkSingleton.shared.userID = id
             userDefaults.set(vkSingleton.shared.userID, forKey: "vkUserID")
+            userDefaults.set(true, forKey: "\(vkSingleton.shared.userAppID)")
             
             performSegue(withIdentifier: "goProfile", sender: nil)
             
@@ -233,5 +235,40 @@ extension LoginViewController: WKNavigationDelegate {
             
             vkAutorize()
         }
+    }
+    
+    func getAppID() -> String {
+        
+        var result = ""
+        let count = vkSingleton.shared.vkAppID.count
+        
+        if count > 0 {
+            result = vkSingleton.shared.vkAppID[count - 1]
+        
+            let num = getNumberOfAccounts()
+            if num < count {
+                result = vkSingleton.shared.vkAppID[num]
+            }
+        }
+        
+        return result
+    }
+    
+    func getFreeAppID() -> String {
+        
+        var result = ""
+        let count = vkSingleton.shared.vkAppID.count
+        
+        if count > 0 {
+            result = vkSingleton.shared.vkAppID[count - 1]
+            for appID in vkSingleton.shared.vkAppID {
+                if !UserDefaults.standard.bool(forKey: appID) {
+                    result = appID
+                    break
+                }
+            }
+        }
+        
+        return result
     }
 }
