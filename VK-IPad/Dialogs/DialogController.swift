@@ -10,6 +10,7 @@ import UIKit
 import DCCommentView
 import SwiftyJSON
 import WebKit
+import Photos
 
 enum DialogSource {
     case all
@@ -1270,7 +1271,19 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
                             let appDelegate = UIApplication.shared.delegate as! AppDelegate
                             appDelegate.myOrientation = .all
                             
-                            self.present(self.pickerController, animated: true)
+                            let status = PHPhotoLibrary.authorizationStatus()
+                            switch status {
+                            case .authorized:
+                                self.present(self.pickerController, animated: true)
+                            case .denied, .restricted:
+                                self.showErrorMessage(title: "Загрузить с устройства", msg: "Доступ к галерее устройства запрещен.\nВы можете поменять это в разделе «Настройки»\nвашего устройства.")
+                            case .notDetermined:
+                                PHPhotoLibrary.requestAuthorization() { status in
+                                    if status == .authorized {
+                                        self.present(self.pickerController, animated: true)
+                                    }
+                                }
+                            }
                         }
                         alertController2.addAction(action1)
                         
@@ -1278,13 +1291,29 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
                         let action2 = UIAlertAction(title: "Сфотографировать", style: .default) { action in
                             
                             if UIImagePickerController.isSourceTypeAvailable(.camera) {
-                                self.pickerController.sourceType = .camera
-                                self.pickerController.cameraCaptureMode = .photo
-                                self.pickerController.modalPresentationStyle = .currentContext
-                                
-                                self.delegate.present(self.pickerController, animated: true)
+                                let status = AVCaptureDevice.authorizationStatus(for: AVMediaType.video)
+                                switch status {
+                                case .authorized:
+                                    self.pickerController.sourceType = .camera
+                                    self.pickerController.cameraCaptureMode = .photo
+                                    self.pickerController.modalPresentationStyle = .currentContext
+                                    
+                                    self.present(self.pickerController, animated: true)
+                                case .denied, .restricted:
+                                    self.showErrorMessage(title: "Сфотографировать", msg: "Доступ к камере устройства запрещен.\nВы можете поменять это в разделе «Настройки»\nвашего устройства.")
+                                case .notDetermined:
+                                    AVCaptureDevice.requestAccess(for: AVMediaType.video) { granted in
+                                        if granted {
+                                            self.pickerController.sourceType = .camera
+                                            self.pickerController.cameraCaptureMode = .photo
+                                            self.pickerController.modalPresentationStyle = .currentContext
+                                            
+                                            self.present(self.pickerController, animated: true)
+                                        }
+                                    }
+                                }
                             } else {
-                                self.showErrorMessage(title: "Сфотографировать", msg: "Ошибка! Камера на устройстве не активна.")
+                                self.showErrorMessage(title: "Сфотографировать", msg: "Камера не активна либо отсутствует на устройстве.")
                             }
                         }
                         alertController2.addAction(action2)

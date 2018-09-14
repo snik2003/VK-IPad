@@ -19,7 +19,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>1.2.2</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>2</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -28,11 +28,9 @@
 		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>Приложение "ВКлючайся!" запрашивает доступ к вашей библиотеке фотографий и камере.</string>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Приложение "ВКлючайся!" запрашивает доступ к вашей библиотеке фотографий и камере.</string>
+	<string>Вы сможете делать фотографии и отправлять их в личных сообщениях, прикреплять к вашим записям и комментариям.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Приложение "ВКлючайся!" запрашивает доступ к вашей библиотеке фотографий и камере.</string>
+	<string>Вы сможете добавлять медиафайлы из галереи устройства и сохранять их, отправлять в личных сообщениях или прикреплять к своим записям и комментариям.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

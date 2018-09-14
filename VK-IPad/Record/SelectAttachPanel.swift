@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Photos
 import Popover
 
 class SelectAttachPanel: UIView, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
@@ -207,23 +208,55 @@ class SelectAttachPanel: UIView, UIImagePickerControllerDelegate, UINavigationCo
                     let appDelegate = UIApplication.shared.delegate as! AppDelegate
                     appDelegate.myOrientation = .all
                     
-                    self.delegate.present(self.pickerController, animated: true)
+                    let status = PHPhotoLibrary.authorizationStatus()
+                    switch status {
+                    case .authorized:
+                        self.delegate.present(self.pickerController, animated: true)
+                    case .denied, .restricted:
+                        if let title = self.actions[key] {
+                            self.delegate.showErrorMessage(title: title, msg: "Доступ к галерее устройства запрещен.\nВы можете поменять это в разделе «Настройки»\nвашего устройства.")
+                        }
+                    case .notDetermined:
+                        PHPhotoLibrary.requestAuthorization() { status in
+                            if status == .authorized {
+                                self.delegate.present(self.pickerController, animated: true)
+                            }
+                        }
+                    }
                 }
 
                 if key == 5 {
                     self.load.delegate = self.delegate
                     self.pickerController.delegate = self
                     
+                    
                     if UIImagePickerController.isSourceTypeAvailable(.camera) {
-                        self.pickerController.sourceType = .camera
-                        self.pickerController.cameraCaptureMode = .photo
-                        self.pickerController.modalPresentationStyle = .currentContext
-                        
-                        self.delegate.present(self.pickerController, animated: true)
+                        let status = AVCaptureDevice.authorizationStatus(for: AVMediaType.video)
+                        switch status {
+                        case .authorized:
+                            self.pickerController.sourceType = .camera
+                            self.pickerController.cameraCaptureMode = .photo
+                            self.pickerController.modalPresentationStyle = .currentContext
+                            
+                            self.delegate.present(self.pickerController, animated: true)
+                        case .denied, .restricted:
+                            if let title = self.actions[key] {
+                                self.delegate.showErrorMessage(title: title, msg: "Доступ к камере устройства запрещен.\nВы можете поменять это в разделе «Настройки»\nвашего устройства.")
+                            }
+                        case .notDetermined:
+                            AVCaptureDevice.requestAccess(for: AVMediaType.video) { granted in
+                                if granted {
+                                    self.pickerController.sourceType = .camera
+                                    self.pickerController.cameraCaptureMode = .photo
+                                    self.pickerController.modalPresentationStyle = .currentContext
+                                    
+                                    self.delegate.present(self.pickerController, animated: true)
+                                }
+                            }
+                        }
                     } else {
-                        
                         if let title = self.actions[key] {
-                            self.delegate.showErrorMessage(title: title, msg: "Ошибка! Камера на устройстве не активна.")
+                            self.delegate.showErrorMessage(title: title, msg: "Камера не активна либо отсутствует на устройстве.")
                         }
                     }
                 }
