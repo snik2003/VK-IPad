@@ -235,6 +235,7 @@ extension MenuViewController: vkUserLongPollProtocol {
                                     }
                                 
                                     OperationQueue.main.addOperation {
+                                        controller.dialogs.remove(at: 0)
                                         controller.dialogs.append(mess)
                                         controller.totalCount += 1
                                         controller.tableView.reloadData()

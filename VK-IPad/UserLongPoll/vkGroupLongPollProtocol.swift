@@ -239,9 +239,9 @@ extension MenuViewController: vkGroupLongPollProtocol {
                                         mess.fromID = mess.userID
                                     }
                                     
-                                    print(mess.body)
                                     if update.type == "" && update.fwdCount == 0 && controller.chatID == 0 {
                                         OperationQueue.main.addOperation {
+                                            controller.dialogs.remove(at: 0)
                                             controller.dialogs.append(mess)
                                             controller.totalCount += 1
                                             controller.tableView.reloadData()
