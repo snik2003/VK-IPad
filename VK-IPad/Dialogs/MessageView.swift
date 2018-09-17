@@ -21,6 +21,8 @@ class vkMessageView: UIView {
         static let inBackColor = UIColor(red: 244/255, green: 223/255, blue: 200/255, alpha: 1)
         static let outBackColor = UIColor(red: 200/255, green: 200/255, blue: 238/255, alpha: 1)
         static let fwdBackColor = UIColor(red: 234/255, green: 255/255, blue: 214/255, alpha: 1)
+        
+        static let radiusCorner: CGFloat = 10
     }
     
     var delegate: DialogController!
@@ -37,6 +39,7 @@ class vkMessageView: UIView {
     
     let fwdView = UIView()
     var fwdHeight: CGFloat = 0
+    
     
     func configureView(calcHeight: Bool) -> CGFloat {
         
@@ -110,15 +113,17 @@ class vkMessageView: UIView {
             if dialog.out == 0 {
                 leftX = 60
                 bodyView.backgroundColor = Constants.inBackColor
+                //bodyView.roundCorners([.bottomLeft, .bottomRight, .topRight], radius: Constants.radiusCorner)
             } else {
                 leftX = maxWidth - 60 - (label.frame.width + 20)
                 bodyView.backgroundColor = Constants.outBackColor
+                //bodyView.roundCorners([.bottomLeft, .topLeft, .topRight], radius: Constants.radiusCorner)
             }
             if forward {
                 bodyView.backgroundColor = Constants.fwdBackColor
             }
             bodyView.frame = CGRect(x: leftX, y: height, width: label.frame.width + 20, height: label.frame.height)
-            bodyView.configureMessageView()
+            bodyView.configureMessageView(out: dialog.out, radius: Constants.radiusCorner)
             self.addSubview(bodyView)
         }
         
@@ -935,10 +940,24 @@ class vkMessageView: UIView {
 
 extension UIView {
     
-    func configureMessageView() {
-        self.layer.borderColor = UIColor.gray.cgColor
-        self.layer.borderWidth = 1
-        self.layer.cornerRadius = 6
+    func configureMessageView(out: Int, radius: CGFloat) {
+        
+        if #available(iOS 11.0, *) {
+            self.layer.borderColor = UIColor.gray.cgColor
+            self.layer.borderWidth = 1
+            self.layer.cornerRadius = radius
+            if out == 0 {
+                self.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner, .layerMaxXMinYCorner]
+            } else {
+                self.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner, .layerMinXMinYCorner]
+            }
+        } else {
+            if out == 0 {
+                self.roundCorners([.bottomLeft, .bottomRight, .topRight], radius: radius)
+            } else {
+                self.roundCorners([.bottomLeft, .bottomRight, .topLeft], radius: radius)
+            }
+        }
     }
     
     func configureViewWithPhotos(color: UIColor) {
@@ -963,5 +982,18 @@ extension UIView {
         self.layer.borderColor = UIColor.gray.cgColor
         self.layer.borderWidth = 2
         self.layer.cornerRadius = 6
+    }
+    
+    func roundCorners(_ corners: UIRectCorner, radius: CGFloat) {
+        
+        let mask = CAShapeLayer()
+        mask.bounds = self.frame
+        mask.position = self.center
+        //mask.borderColor = UIColor.gray.cgColor
+        //mask.borderWidth = 1
+        
+        mask.path = UIBezierPath(roundedRect: self.bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius)).cgPath
+        
+        self.layer.mask = mask
     }
 }
