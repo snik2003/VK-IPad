@@ -643,7 +643,7 @@
                                         <color key="backgroundColor" red="0.019607843140000001" green="0.4039215686" blue="0.64313725489999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <inset key="separatorInset" minX="15" minY="0.0" maxX="15" maxY="0.0"/>
                                     </tableViewCell>
-                                    <tableViewCell hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="menuCell" textLabel="f7s-j6-owW" style="IBUITableViewCellStyleDefault" id="UZl-aq-Z9L">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="menuCell" textLabel="f7s-j6-owW" style="IBUITableViewCellStyleDefault" id="UZl-aq-Z9L">
                                         <rect key="frame" x="0.0" y="575" width="375" height="40"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="UZl-aq-Z9L" id="pZy-ME-6qN">

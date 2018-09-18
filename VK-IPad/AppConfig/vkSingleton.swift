@@ -45,4 +45,6 @@ final class vkSingleton {
     
     var forwardMessages: [String] = []
     var repostObject: AnyObject?
+    
+    var linkAppStore = "https://itunes.apple.com/ru/app/id1436024942"
 }

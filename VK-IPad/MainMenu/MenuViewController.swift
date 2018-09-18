@@ -150,6 +150,11 @@ class MenuViewController: UITableViewController {
             self.openDialogController(ownerID: vkSingleton.shared.supportGroupID, startID: -1)
         }
         
+        // оставить отзыв в AppStore
+        if indexPath.section == 2 && indexPath.row == 3 {
+            self.writeReviewAppStore()
+        }
+        
         // выйти из учетной записи
         if indexPath.section == 2 && indexPath.row == 4 {
             self.exitAccountFunc()
@@ -161,10 +166,6 @@ class MenuViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
         if indexPath.section == 1 && indexPath.row == 6 {
-            return 0
-        }
-        
-        if indexPath.section == 2 && indexPath.row == 3 {
             return 0
         }
         
@@ -377,6 +378,12 @@ class MenuViewController: UITableViewController {
             }
         }
         OperationQueue().addOperation(getServerDataOperation)
+    }
+    
+    func writeReviewAppStore() {
+        if let validURL = URL(string: "\(vkSingleton.shared.linkAppStore)?action=write-review") {
+            UIApplication.shared.open(validURL, options: [:])
+        }
     }
 }
 
