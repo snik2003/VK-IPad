@@ -9,6 +9,7 @@
 import UIKit
 import SwiftyJSON
 import SCLAlertView
+import ImageScrollView
 
 class PhotoViewController: UITableViewController {
 
@@ -134,7 +135,7 @@ class PhotoViewController: UITableViewController {
         case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: "photoCell", for: indexPath) as! PhotoViewCell
             
-            ViewControllerUtils().showActivityIndicator(uiView: cell.photoImage)
+            ViewControllerUtils().showActivityIndicator(uiView: cell.imageScrollView)
             cell.backgroundColor = UIColor(displayP3Red: 205/255, green: 205/255, blue: 205/255, alpha: 1)
             let photo = photos[numPhoto]
             
@@ -152,8 +153,14 @@ class PhotoViewController: UITableViewController {
             let getCacheImage = GetCacheImage(url: url, lifeTime: .userPhotoImage)
             getCacheImage.completionBlock = {
                 OperationQueue.main.addOperation {
-                    cell.photoImage.image = getCacheImage.outputImage
-                    cell.photoImage.contentMode = .scaleAspectFit
+                    if let myImage = getCacheImage.outputImage {
+                        cell.imageScrollView.imageContentMode = .aspectFit
+                        cell.imageScrollView.initialOffset = .center
+                        cell.imageScrollView.display(image: myImage)
+                    }
+                    
+                    
+                    /*cell.photoImage.contentMode = .scaleAspectFit
                     
                     cell.photoImage.isUserInteractionEnabled = true
                     cell.photoImage.addGestureRecognizer(self.pinch)
@@ -164,7 +171,7 @@ class PhotoViewController: UITableViewController {
                             self.pinch.scale = 12.0
                         }
                         cell.photoImage.transform = CGAffineTransform(scaleX: self.pinch.scale, y: self.pinch.scale)
-                    }
+                    }*/
                     
                     ViewControllerUtils().hideActivityIndicator()
                 }
@@ -224,8 +231,9 @@ class PhotoViewController: UITableViewController {
         }
         
         if start {
-            if let cell = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? PhotoViewCell {
-                cell.photoImage.image = nil
+            if let cell = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? PhotoViewCell,
+                let noPhoto = UIImage(named: "nophoto") {
+                cell.imageScrollView.display(image: noPhoto)
             }
             
             if let cell = tableView.cellForRow(at: IndexPath(row: 0, section: 1)) as? PhotoViewCell {

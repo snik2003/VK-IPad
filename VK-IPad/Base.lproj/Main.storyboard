@@ -109,20 +109,20 @@
                                     <rect key="frame" x="0.0" y="0.0" width="1366" height="399.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Qn5-6Y-cDn">
+                                        <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="24s-lD-hiP" customClass="ImageScrollView" customModule="ImageScrollView">
                                             <rect key="frame" x="0.0" y="0.0" width="1366" height="400"/>
-                                        </imageView>
+                                        </scrollView>
                                     </subviews>
                                 </tableViewCellContentView>
                                 <color key="backgroundColor" red="0.90588235289999997" green="0.90980392160000001" blue="0.92549019610000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
-                                    <constraint firstItem="Qn5-6Y-cDn" firstAttribute="height" secondItem="eP6-84-eGi" secondAttribute="height" id="5kh-kO-fsN"/>
-                                    <constraint firstItem="Qn5-6Y-cDn" firstAttribute="width" secondItem="eP6-84-eGi" secondAttribute="width" id="Hu8-5A-HDc"/>
-                                    <constraint firstItem="Qn5-6Y-cDn" firstAttribute="centerY" secondItem="eP6-84-eGi" secondAttribute="centerY" id="YQf-4g-sqB"/>
-                                    <constraint firstItem="Qn5-6Y-cDn" firstAttribute="centerX" secondItem="eP6-84-eGi" secondAttribute="centerX" id="u18-34-Kdl"/>
+                                    <constraint firstItem="24s-lD-hiP" firstAttribute="centerY" secondItem="eP6-84-eGi" secondAttribute="centerY" id="Glv-W2-d8K"/>
+                                    <constraint firstItem="24s-lD-hiP" firstAttribute="width" secondItem="eP6-84-eGi" secondAttribute="width" id="hAM-ke-58S"/>
+                                    <constraint firstItem="24s-lD-hiP" firstAttribute="centerX" secondItem="eP6-84-eGi" secondAttribute="centerX" id="w7z-FK-eRI"/>
+                                    <constraint firstItem="24s-lD-hiP" firstAttribute="height" secondItem="eP6-84-eGi" secondAttribute="height" id="zhT-8U-LxP"/>
                                 </constraints>
                                 <connections>
-                                    <outlet property="photoImage" destination="Qn5-6Y-cDn" id="7cT-6V-SXW"/>
+                                    <outlet property="imageScrollView" destination="24s-lD-hiP" id="kCK-3j-N7N"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="likesCell" rowHeight="40" id="OKL-Iv-xyu" customClass="PhotoViewCell" customModule="VK_IPad" customModuleProvider="target">

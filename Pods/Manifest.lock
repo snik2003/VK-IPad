@@ -4,6 +4,7 @@ PODS:
   - DCCommentView (0.1.6)
   - DropDown (2.3.2)
   - FLAnimatedImage (1.0.12)
+  - ImageScrollView (1.5)
   - Popover (1.2.0)
   - Realm (3.9.0):
     - Realm/Headers (= 3.9.0)
@@ -23,6 +24,7 @@ DEPENDENCIES:
   - DCCommentView (~> 0.1)
   - DropDown
   - FLAnimatedImage (~> 1.0)
+  - ImageScrollView
   - Popover
   - RealmSwift (~> 3.0)
   - SCLAlertView (~> 0.8)
@@ -37,6 +39,7 @@ SPEC REPOS:
     - DCCommentView
     - DropDown
     - FLAnimatedImage
+    - ImageScrollView
     - Popover
     - Realm
     - RealmSwift
@@ -51,6 +54,7 @@ SPEC CHECKSUMS:
   DCCommentView: 9b46fc2c78f64a28c72f482e5f7d75574b8ff5a8
   DropDown: 7f87abecc28f9b4edad810fe1211c5c018c257e5
   FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
+  ImageScrollView: 22b3ad3f215a227403eee376fd226559516390b4
   Popover: 28c1ac8e937ab2b3965bd2da7dd18324357abc41
   Realm: 3d36f208bf3aff8335dc3298742140182bde4edb
   RealmSwift: aa4d11917bfcfaa3ed51f219102a487ecd895447
@@ -59,6 +63,6 @@ SPEC CHECKSUMS:
   SwiftMessages: 32ce3cfc8388b41aae56ff4853cc752a20101147
   SwiftyJSON: c29297daf073d2aa016295d5809cdd68045c39b3
 
-PODFILE CHECKSUM: 5b4672a35aa5362b818bb8f41b09fcc6cef48ada
+PODFILE CHECKSUM: c7934b17e1a98707e83f8616c010ce1d6517e6a5
 
 COCOAPODS: 1.5.0

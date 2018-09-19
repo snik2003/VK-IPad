@@ -8,10 +8,12 @@
 
 import UIKit
 import SwiftyJSON
+import ImageScrollView
 
 class PhotoViewCell: UITableViewCell {
 
-    @IBOutlet weak var photoImage: UIImageView!
+
+    @IBOutlet weak var imageScrollView: ImageScrollView!
     var delegate: PhotoViewController!
     
     var photo: Photo!
