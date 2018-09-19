@@ -1055,7 +1055,10 @@
 				DEVELOPMENT_TEAM = WML363H532;
 				INFOPLIST_FILE = "VK-IPad/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "snik2003.VK-IPad";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "1e8db3b2-a86a-48b5-8d78-afd41092f3a4";
@@ -1076,7 +1079,10 @@
 				DEVELOPMENT_TEAM = WML363H532;
 				INFOPLIST_FILE = "VK-IPad/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "snik2003.VK-IPad";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "11f741b8-943a-44fd-8ba1-e001e8f03287";
