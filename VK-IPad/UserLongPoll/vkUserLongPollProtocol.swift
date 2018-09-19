@@ -328,6 +328,17 @@ extension MenuViewController: vkUserLongPollProtocol {
                                     }
                                 }
                             }
+                        } else if update.elements[0] == 62 {
+                            if controller.chatID == update.elements[2] {
+                                typing = true
+                                
+                                OperationQueue.main.addOperation {
+                                    if controller.chatID != 0 {
+                                        controller.titleView.typing = true
+                                        controller.titleView.setChatTyping(userID: update.elements[1])
+                                    }
+                                }
+                            }
                         }
                     }
                     
@@ -337,6 +348,12 @@ extension MenuViewController: vkUserLongPollProtocol {
                                 controller.titleView.timer.invalidate()
                                 controller.titleView.typing = false
                                 controller.titleView.setTyping()
+                            }
+                            
+                            if controller.chatID != 0 {
+                                controller.titleView.timer.invalidate()
+                                controller.titleView.typing = false
+                                controller.titleView.setChatTyping(userID: 0)
                             }
                         }
                     }
