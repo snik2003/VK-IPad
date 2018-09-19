@@ -13,20 +13,20 @@ import SCLAlertView
 
 class CommentCell: UITableViewCell {
 
-    var delegate: UIViewController!
+    weak var delegate: UIViewController!
     var editID: Int = 0
     
     var canComment = 1
     
-    var comment: Comment!
+    weak var comment: Comment!
     var users: [UserProfile]!
     var groups: [GroupProfile]!
     
     var cellWidth: CGFloat = 0
     
     var indexPath: IndexPath!
-    var cell: UITableViewCell!
-    var tableView: UITableView!
+    weak var cell: UITableViewCell!
+    weak var tableView: UITableView!
     
     let avatarImage = UIImageView()
     let nameLabel = UILabel()

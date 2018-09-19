@@ -16,7 +16,7 @@ import SCLAlertView
 
 class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSource, WKNavigationDelegate, DCCommentViewDelegate {
     
-    var delegate: UIViewController!
+    weak var delegate: UIViewController!
     var heights: [IndexPath: CGFloat] = [:]
     
     var tableView = UITableView()

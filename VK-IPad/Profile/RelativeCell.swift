@@ -10,7 +10,7 @@ import UIKit
 
 class RelativeCell: UITableViewCell {
     
-    var delegate: UIViewController!
+    weak var delegate: UIViewController!
     
     var cellWidth: CGFloat = 0
     

@@ -11,7 +11,7 @@ import SwiftyJSON
 
 class LoadToServer {
     
-    var delegate: UIViewController!
+    weak var delegate: UIViewController!
     
     func wallPhoto(ownerID: String, image: UIImage, filename: String, completion: @escaping ([Photo]) -> Void) {
         

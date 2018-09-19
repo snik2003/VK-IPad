@@ -12,12 +12,12 @@ import SwiftyJSON
 
 class DialogTitleView: UIView {
 
-    var delegate: DialogController!
+    weak var delegate: DialogController!
     var status = ""
     
-    var conversation: Conversation2!
-    var user: UserProfile!
-    var group: GroupProfile!
+    weak var conversation: Conversation2!
+    weak var user: UserProfile!
+    weak var group: GroupProfile!
     
     var typing = false
     var isTimer = false
@@ -390,45 +390,48 @@ class DialogTitleView: UIView {
     
     func setChatTyping(userID: Int) {
         
-        if !typing {
-            isTimer = false
-            timer.invalidate()
-            statusLabel.text = "Групповая беседа (\(conversation.chatSettings.membersCount.membersAdder()))"
-            statusLabel.adjustsFontSizeToFitWidth = true
-            statusLabel.minimumScaleFactor = 0.4
-            statusLabel.textAlignment = .right
-            statusLabel.frame = CGRect(x: 0, y: 20, width: 350, height: 16)
-        } else if !isTimer && userID > 0 {
-            let url = "/method/users.get"
-            let parameters = [
-                "user_id": "\(userID)",
-                "access_token": vkSingleton.shared.accessToken,
-                "fields": "id,first_name,last_name",
-                "v": vkSingleton.shared.version
-            ]
-            
-            let getServerDataOperation = GetServerDataOperation(url: url, parameters: parameters)
-            getServerDataOperation.completionBlock = {
-                guard let data = getServerDataOperation.data else { return }
-                guard let json = try? JSON(data: data) else { print("json error"); return }
+        if let conversation = delegate.conversation.first {
+            if !typing {
+                isTimer = false
+                timer.invalidate()
                 
-                if let user = json["response"].compactMap({ UserProfile(json: $0.1) }).first {
-                    OperationQueue.main.addOperation {
-                        self.typingText = "\(user.firstName) \(user.lastName) печатает новое сообщение"
-                        
-                        self.statusLabel.textAlignment = .left
-                        self.statusLabel.text = self.typingText
-                        let width = self.delegate.getTextSize(text: "\(self.typingText)...", font: self.offlineFont!, maxWidth: 350).width
-                        self.statusLabel.frame = CGRect(x: 350 - width, y: 21, width: width, height: 16)
-                        
-                        self.timer = Timer.scheduledTimer(timeInterval: 0.333, target: self, selector:
-                            #selector(self.animateDots), userInfo: nil, repeats: true)
-                        self.timer.fire()
-                        self.isTimer = true
+                statusLabel.text = "Групповая беседа (\(conversation.chatSettings.membersCount.membersAdder()))"
+                statusLabel.adjustsFontSizeToFitWidth = true
+                statusLabel.minimumScaleFactor = 0.4
+                statusLabel.textAlignment = .right
+                statusLabel.frame = CGRect(x: 0, y: 20, width: 350, height: 16)
+            } else if !isTimer && userID > 0 {
+                let url = "/method/users.get"
+                let parameters = [
+                    "user_id": "\(userID)",
+                    "access_token": vkSingleton.shared.accessToken,
+                    "fields": "id,first_name,last_name",
+                    "v": vkSingleton.shared.version
+                ]
+                
+                let getServerDataOperation = GetServerDataOperation(url: url, parameters: parameters)
+                getServerDataOperation.completionBlock = {
+                    guard let data = getServerDataOperation.data else { return }
+                    guard let json = try? JSON(data: data) else { print("json error"); return }
+                    
+                    if let user = json["response"].compactMap({ UserProfile(json: $0.1) }).first {
+                        OperationQueue.main.addOperation {
+                            self.typingText = "\(user.firstName) \(user.lastName) печатает новое сообщение"
+                            
+                            self.statusLabel.textAlignment = .left
+                            self.statusLabel.text = self.typingText
+                            let width = self.delegate.getTextSize(text: "\(self.typingText)...", font: self.offlineFont!, maxWidth: 350).width
+                            self.statusLabel.frame = CGRect(x: 350 - width, y: 21, width: width, height: 16)
+                            
+                            self.timer = Timer.scheduledTimer(timeInterval: 0.333, target: self, selector:
+                                #selector(self.animateDots), userInfo: nil, repeats: true)
+                            self.timer.fire()
+                            self.isTimer = true
+                        }
                     }
                 }
+                OperationQueue().addOperation(getServerDataOperation)
             }
-            OperationQueue().addOperation(getServerDataOperation)
         }
     }
     

@@ -14,9 +14,9 @@ class StickerView: UIView {
     var width: CGFloat = 0
     var height: CGFloat = 0
     
-    var delegate: UIViewController!
-    var button: UIButton!
-    var popover: Popover!
+    weak var delegate: UIViewController!
+    weak var button: UIButton!
+    weak var popover: Popover!
     
     let product1 = [97, 98, 99, 100, 101, 102, 103, 105, 106, 107, 108, 109, 110,
                     111, 112, 113, 114, 115, 116, 118, 121, 125, 126, 127, 128]

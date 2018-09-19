@@ -583,7 +583,7 @@ class UserInfoController: UITableViewController {
     }
 }
 
-struct InfoInProfile {
+class InfoInProfile {
     var image: String
     var value: String
     var comment: String

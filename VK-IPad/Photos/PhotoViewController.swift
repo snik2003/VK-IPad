@@ -13,7 +13,7 @@ import ImageScrollView
 
 class PhotoViewController: UITableViewController {
 
-    var delegate: UIViewController!
+    weak var delegate: UIViewController!
     
     var photos: [Photo] = []
     var photo: [Photo] = []

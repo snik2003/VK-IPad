@@ -18,7 +18,7 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var segmentedControl: UISegmentedControl!
     
-    var delegate: UIViewController!
+    weak var delegate: UIViewController!
     
     var userID = ""
     var type = "friends"
@@ -943,7 +943,7 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
     }
 }
 
-struct Sections {
+class Sections {
     var numSection: Int
     var letter: String
     var countRows: Int

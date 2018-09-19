@@ -25,10 +25,11 @@ class vkMessageView: UIView {
         static let radiusCorner: CGFloat = 10
     }
     
-    var delegate: DialogController!
-    var cell: MessageCell!
+    weak var delegate: DialogController!
+    weak var cell: MessageCell!
+    weak var dialog: Dialog!
+    
     var indexPath: IndexPath!
-    var dialog: Dialog!
     
     var forward = false
     

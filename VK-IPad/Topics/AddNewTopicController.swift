@@ -10,7 +10,7 @@ import UIKit
 
 class AddNewTopicController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
-    var delegate: UIViewController!
+    weak var delegate: UIViewController!
     var attachPanel = AttachPanel()
     var selectView = SelectAttachPanel()
     

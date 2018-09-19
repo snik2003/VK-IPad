@@ -14,7 +14,7 @@ class AttachPanel: UIView {
     
     var showPanel = true
     
-    var delegate: UIViewController! {
+    weak var delegate: UIViewController! {
         didSet {
             if !(delegate is TopicController || delegate is NewRecordController || delegate is DialogController) {
                 maxAttachCount = 2

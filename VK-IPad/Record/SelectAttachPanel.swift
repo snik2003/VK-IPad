@@ -71,7 +71,7 @@ class SelectAttachPanel: UIView, UIImagePickerControllerDelegate, UINavigationCo
     var sizes: [String: CGSize] = [:]
     var maxWidth: CGFloat = 400
     
-    var delegate: UIViewController!
+    weak var delegate: UIViewController!
     var button: UIButton!
     
     var attachPanel: AttachPanel!

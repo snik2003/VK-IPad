@@ -11,7 +11,7 @@ import SwiftyJSON
 
 class AttachmentsView: UIView {
 
-    var delegate: UIViewController!
+    weak var delegate: UIViewController!
     
     var photos: [Photo] = []
     

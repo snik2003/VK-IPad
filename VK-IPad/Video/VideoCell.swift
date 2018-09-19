@@ -12,8 +12,8 @@ import SwiftyJSON
 
 class VideoCell: UITableViewCell {
 
-    var delegate: VideoController!
-    var video: Video!
+    weak var delegate: VideoController!
+    weak var video: Video!
     var users: [UserProfile]!
     var groups: [GroupProfile]!
     
@@ -21,8 +21,8 @@ class VideoCell: UITableViewCell {
     var reposts: [Likes]!
 
     var indexPath: IndexPath!
-    var cell: UITableViewCell!
-    var tableView: UITableView!
+    weak var cell: UITableViewCell!
+    weak var tableView: UITableView!
     
     var cellWidth: CGFloat = 0
     

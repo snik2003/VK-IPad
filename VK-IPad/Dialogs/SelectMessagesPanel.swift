@@ -11,8 +11,8 @@ import Popover
 
 class SelectMessagesPanel: UIView {
 
-    var delegate: DialogController!
-    var dialog: Dialog!
+    weak var delegate: DialogController!
+    weak var dialog: Dialog!
     var indexPath: IndexPath!
     
     var popover: Popover!

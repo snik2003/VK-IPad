@@ -11,7 +11,7 @@ import BEMCheckBox
 
 class MessageCell: UITableViewCell {
 
-    var delegate: DialogController!
+    weak var delegate: DialogController!
     var dialog: Dialog!
     var indexPath: IndexPath!
     

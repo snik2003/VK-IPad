@@ -11,12 +11,12 @@ import BEMCheckBox
 
 class PhotosListCell: UITableViewCell {
     
-    var delegate: UIViewController!
+    weak var delegate: UIViewController!
     
     var photos: [Photo]!
     
     var indexPath: IndexPath!
-    var tableView: UITableView!
+    weak var tableView: UITableView!
     
     var cellWidth: CGFloat = 0
     var source: String = ""

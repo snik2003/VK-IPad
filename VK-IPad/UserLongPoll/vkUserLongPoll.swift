@@ -25,7 +25,7 @@ final class vkUserLongPoll {
     var request: GetLongPollServerRequest!
 }
 
-struct Updates {
+class Updates {
     var elements: [Int] = []
     var text: String = ""
     var title: String = ""
