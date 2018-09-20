@@ -97,6 +97,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
             navigationItem.rightBarButtonItem = nil
             getPreviewMessages()
         } else {
+            ViewControllerUtils().showActivityIndicator(uiView: self.view)
             
             setDialogTitle()
             getDialog()
@@ -112,7 +113,6 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        ViewControllerUtils().showActivityIndicator(uiView: self.view)
         //self.showMessageNotification(text: "Привет! Все хорошо!", userID: 451439315)
     }
     

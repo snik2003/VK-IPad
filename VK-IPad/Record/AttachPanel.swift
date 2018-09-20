@@ -549,6 +549,10 @@ class AttachPanel: UIView {
             }
         }
         
+        if link != "" {
+            return "\(strArray.joined(separator: ",")),\(link)"
+        }
+        
         return strArray.joined(separator: ",")
     }
 }
