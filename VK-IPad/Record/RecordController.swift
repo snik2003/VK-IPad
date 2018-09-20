@@ -62,7 +62,7 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
             self.configureTableView()
             
             self.tableView.separatorStyle = .none
-            ViewControllerUtils().showActivityIndicator(uiView: self.view)
+            ViewControllerUtils().showActivityIndicator2(controller: self)
             
             if self.preview {
                 self.title = "Предварительный просмотр"
@@ -77,6 +77,10 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
         }
     }
 
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
@@ -631,7 +635,7 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
         var parameters = ["":""]
         
         heights.removeAll(keepingCapacity: false)
-        ViewControllerUtils().showActivityIndicator(uiView: self.view)
+        ViewControllerUtils().showActivityIndicator2(controller: self)
         
         if type == "post" {
             url = "/method/wall.getComments"

@@ -15,7 +15,7 @@ class LoadToServer {
     
     func wallPhoto(ownerID: String, image: UIImage, filename: String, completion: @escaping ([Photo]) -> Void) {
         
-        ViewControllerUtils().showActivityIndicator(uiView: self.delegate.view)
+        ViewControllerUtils().showActivityIndicator2(controller: self.delegate)
         
         var url = "/method/photos.getWallUploadServer"
         var parameters = [
@@ -100,7 +100,7 @@ class LoadToServer {
     
     func wallDocument(ownerID: String, image: UIImage, filename: String, imageData: Data, completion: @escaping ([Document]) -> Void) {
         
-        ViewControllerUtils().showActivityIndicator(uiView: self.delegate.view)
+        ViewControllerUtils().showActivityIndicator2(controller: self.delegate)
         
         var url = "/method/docs.getWallUploadServer"
         var parameters = [

@@ -74,7 +74,7 @@ class FavePostsController: UIViewController, UITableViewDelegate, UITableViewDat
         
         OperationQueue.main.addOperation {
             self.tableView.separatorStyle = .none
-            ViewControllerUtils().showActivityIndicator(uiView: self.view)
+            ViewControllerUtils().showActivityIndicator2(controller: self)
         }
         
         if offset == 0 {

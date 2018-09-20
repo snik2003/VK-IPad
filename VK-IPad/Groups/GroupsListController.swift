@@ -50,7 +50,7 @@ class GroupsListController: UIViewController, UITableViewDelegate, UITableViewDa
             
             self.tableView.separatorStyle = .none
             if self.type != "search" {
-                ViewControllerUtils().showActivityIndicator(uiView: self.view)
+                ViewControllerUtils().showActivityIndicator2(controller: self)
             }
             
             if self.type == "invites" {
@@ -151,7 +151,7 @@ class GroupsListController: UIViewController, UITableViewDelegate, UITableViewDa
     
     func refreshSearch() {
         OperationQueue.main.addOperation {
-            ViewControllerUtils().showActivityIndicator(uiView: self.view)
+            ViewControllerUtils().showActivityIndicator2(controller: self)
         }
         
         let text = searchBar.text!

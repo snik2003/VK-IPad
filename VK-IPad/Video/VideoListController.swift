@@ -69,7 +69,7 @@ class VideoListController: UIViewController, UITableViewDelegate, UITableViewDat
             
             self.tableView.separatorStyle = .none
             if self.type != "search" {
-                ViewControllerUtils().showActivityIndicator(uiView: self.view)
+                ViewControllerUtils().showActivityIndicator2(controller: self)
             }
         }
         
@@ -133,7 +133,7 @@ class VideoListController: UIViewController, UITableViewDelegate, UITableViewDat
     
     func refreshSearch() {
         OperationQueue.main.addOperation {
-            ViewControllerUtils().showActivityIndicator(uiView: self.view)
+            ViewControllerUtils().showActivityIndicator2(controller: self)
         }
         
         isRefresh = true

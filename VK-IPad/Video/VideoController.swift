@@ -58,7 +58,7 @@ class VideoController: UIViewController, UITableViewDelegate, UITableViewDataSou
             self.navigationItem.rightBarButtonItem = barButton
             
             self.tableView.separatorStyle = .none
-            ViewControllerUtils().showActivityIndicator(uiView: self.view)
+            ViewControllerUtils().showActivityIndicator2(controller: self)
         }
         
         getVideo()

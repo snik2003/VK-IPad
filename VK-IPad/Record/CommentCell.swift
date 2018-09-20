@@ -337,7 +337,7 @@ class CommentCell: UITableViewCell {
                         
                         OperationQueue().addOperation {
                             OperationQueue.main.addOperation {
-                                ViewControllerUtils().showActivityIndicator(uiView: self.delegate.view)
+                                ViewControllerUtils().showActivityIndicator2(controller: self.delegate)
                             }
                             
                             self.delegate.saveGifToDevice(url: url)

@@ -135,7 +135,7 @@ class PhotoViewController: UITableViewController {
         case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: "photoCell", for: indexPath) as! PhotoViewCell
             
-            ViewControllerUtils().showActivityIndicator(uiView: cell.imageScrollView)
+            ViewControllerUtils().showActivityIndicator2(controller: self)
             cell.backgroundColor = UIColor(displayP3Red: 205/255, green: 205/255, blue: 205/255, alpha: 1)
             let photo = photos[numPhoto]
             

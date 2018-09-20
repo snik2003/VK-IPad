@@ -97,7 +97,7 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
         isRefresh = true
         
         OperationQueue.main.addOperation {
-            ViewControllerUtils().showActivityIndicator(uiView: self.view)
+            ViewControllerUtils().showActivityIndicator2(controller: self)
         }
         
         var url: String = ""
@@ -430,7 +430,7 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
     {
         users.removeAll(keepingCapacity: false)
         tableView.reloadData()
-        ViewControllerUtils().showActivityIndicator(uiView: self.view)
+        ViewControllerUtils().showActivityIndicator2(controller: self)
         
         switch sender.selectedSegmentIndex {
         case 0:

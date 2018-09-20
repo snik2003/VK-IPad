@@ -241,7 +241,7 @@ class TopicController: UIViewController, UITableViewDelegate, UITableViewDataSou
         let opq = OperationQueue()
         
         OperationQueue.main.addOperation {
-            ViewControllerUtils().showActivityIndicator(uiView: self.view)
+            ViewControllerUtils().showActivityIndicator2(controller: self)
         }
         
         let url = "/method/board.getComments"
@@ -309,7 +309,7 @@ class TopicController: UIViewController, UITableViewDelegate, UITableViewDataSou
     @objc func loadMoreComments() {
         
         heights.removeAll(keepingCapacity: false)
-        ViewControllerUtils().showActivityIndicator(uiView: self.view)
+        ViewControllerUtils().showActivityIndicator2(controller: self)
         
         let url = "/method/board.getComments"
         let parameters = [

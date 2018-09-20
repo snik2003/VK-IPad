@@ -97,7 +97,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
             navigationItem.rightBarButtonItem = nil
             getPreviewMessages()
         } else {
-            ViewControllerUtils().showActivityIndicator(uiView: self.view)
+            ViewControllerUtils().showActivityIndicator2(controller: self)
             
             setDialogTitle()
             getDialog()
@@ -389,7 +389,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
         users.removeAll(keepingCapacity: false)
         groups.removeAll(keepingCapacity: false)
         heights.removeAll(keepingCapacity: false)
-        ViewControllerUtils().showActivityIndicator(uiView: self.view)
+        ViewControllerUtils().showActivityIndicator2(controller: self)
         
         let url = "/method/messages.getImportantMessages"
         let parameters = [
@@ -440,7 +440,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
         users.removeAll(keepingCapacity: false)
         groups.removeAll(keepingCapacity: false)
         heights.removeAll(keepingCapacity: false)
-        ViewControllerUtils().showActivityIndicator(uiView: self.view)
+        ViewControllerUtils().showActivityIndicator2(controller: self)
         
         let forwards = vkSingleton.shared.forwardMessages.sorted().map { $0 }.joined(separator: ",")
         
@@ -482,7 +482,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
     func loadMoreMessages() {
         
         heights.removeAll(keepingCapacity: false)
-        ViewControllerUtils().showActivityIndicator(uiView: self.view)
+        ViewControllerUtils().showActivityIndicator2(controller: self)
         
         let startID = self.dialogs[0].id
         
@@ -615,7 +615,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
     func loadMoreImportantMessages() {
         
         heights.removeAll(keepingCapacity: false)
-        ViewControllerUtils().showActivityIndicator(uiView: self.view)
+        ViewControllerUtils().showActivityIndicator2(controller: self)
         
         let url = "/method/messages.getImportantMessages"
         let parameters = [
@@ -1094,7 +1094,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
                         self.source = .all
                         self.offset = 0
                         
-                        ViewControllerUtils().showActivityIndicator(uiView: self.view)
+                        ViewControllerUtils().showActivityIndicator2(controller: self)
                         self.getDialog()
                     }
                     alertController.addAction(action3)
@@ -1203,7 +1203,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
                         self.source = .all
                         self.offset = 0
                         
-                        ViewControllerUtils().showActivityIndicator(uiView: self.view)
+                        ViewControllerUtils().showActivityIndicator2(controller: self)
                         self.getDialog()
                     }
                     alertController.addAction(action3)

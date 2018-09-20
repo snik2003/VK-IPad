@@ -42,6 +42,47 @@ class ViewControllerUtils {
         ViewControllerUtils.container.removeFromSuperview()
     }
     
+    func showActivityIndicator2(controller: UIViewController) {
+        
+        if let split = controller.navigationController?.splitViewController,
+            let detail = split.viewControllers[0].childViewControllers[0] as? MenuViewController {
+            
+            let width = split.view.bounds.width - detail.view.bounds.width
+            let height = split.view.bounds.height
+            let centerPoint = CGPoint(x: width/2, y: height/2 - 20)
+            
+            ViewControllerUtils.container.frame = CGRect(x: 0, y: 0, width: width, height: height)
+            ViewControllerUtils.container.center = centerPoint
+            ViewControllerUtils.container.backgroundColor = .clear
+            
+            ViewControllerUtils.loadingView.frame = CGRect(x: 0, y: 0, width: 220, height: 100)
+            ViewControllerUtils.loadingView.center = centerPoint
+            ViewControllerUtils.loadingView.backgroundColor = UIColorFromHex(rgbValue: 0x444444, alpha: 0.7)
+            ViewControllerUtils.loadingView.clipsToBounds = true
+            ViewControllerUtils.loadingView.layer.cornerRadius = 10
+            
+            let label1 = UILabel()
+            label1.setActivityText(text: "Подождите!")
+            label1.frame = CGRect(x: 10, y: 0, width: 200, height: 30)
+            
+            let label2 = UILabel()
+            label2.setActivityText(text: "Идет загрузка данных...")
+            label2.frame = CGRect(x: 10, y: 70, width: 200, height: 30)
+            
+            ViewControllerUtils.activityIndicator.frame = CGRect(x: 0, y: 0, width: 40, height: 40);
+            ViewControllerUtils.activityIndicator.activityIndicatorViewStyle = .whiteLarge
+            ViewControllerUtils.activityIndicator.center = CGPoint(x: ViewControllerUtils.loadingView.frame.size.width / 2, y: ViewControllerUtils.loadingView.frame.size.height / 2);
+            
+            ViewControllerUtils.loadingView.addSubview(label1)
+            ViewControllerUtils.loadingView.addSubview(ViewControllerUtils.activityIndicator)
+            ViewControllerUtils.loadingView.addSubview(label2)
+            
+            ViewControllerUtils.container.addSubview(ViewControllerUtils.loadingView)
+            controller.view.addSubview(ViewControllerUtils.container)
+            ViewControllerUtils.activityIndicator.startAnimating()
+        }
+    }
+    
     func UIColorFromHex(rgbValue: UInt32, alpha: Double=1.0) -> UIColor {
         let red = CGFloat((rgbValue & 0xFF0000) >> 16)/256.0
         let green = CGFloat((rgbValue & 0xFF00) >> 8)/256.0
@@ -54,5 +95,15 @@ extension UIView {
     var visibleRect: CGRect {
         guard let superview = superview else { return frame }
         return frame.intersection(superview.bounds)
+    }
+}
+
+extension UILabel {
+    func setActivityText(text: String) {
+        
+        self.text = text
+        self.textAlignment = .center
+        self.font = UIFont(name: "Verdana", size: 15)
+        self.textColor = .white
     }
 }

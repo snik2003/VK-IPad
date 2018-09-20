@@ -66,7 +66,7 @@ class NewsfeedController: UITableViewController {
         OperationQueue.main.addOperation {
             self.refreshControl?.beginRefreshing()
             self.tableView.separatorStyle = .none
-            ViewControllerUtils().showActivityIndicator(uiView: self.view)
+            ViewControllerUtils().showActivityIndicator2(controller: self)
         }
         
         if startFrom == "" && offset == 0 {

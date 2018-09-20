@@ -46,7 +46,7 @@ class ProfileViewController: UITableViewController, WKNavigationDelegate {
             self.refreshControl?.tintColor = UIColor.gray
             self.tableView.addSubview(self.refreshControl!)
             
-            ViewControllerUtils().showActivityIndicator(uiView: self.view)
+            ViewControllerUtils().showActivityIndicator2(controller: self)
         }
         
         self.view.layoutIfNeeded()
@@ -283,7 +283,7 @@ class ProfileViewController: UITableViewController, WKNavigationDelegate {
     func refreshWall(filter: String) {
         if userProfile.count > 0 {
             isRefresh = true
-            ViewControllerUtils().showActivityIndicator(uiView: self.view)
+            ViewControllerUtils().showActivityIndicator2(controller: self)
             heights.removeAll(keepingCapacity: false)
             filterRecords = filter
             recordsCount = 0

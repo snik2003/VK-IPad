@@ -45,7 +45,7 @@ class GroupProfileViewController: UITableViewController {
             self.refreshControl?.tintColor = UIColor.gray
             self.tableView.addSubview(self.refreshControl!)
             
-            ViewControllerUtils().showActivityIndicator(uiView: self.view)
+            ViewControllerUtils().showActivityIndicator2(controller: self)
         }
         
         refresh()
@@ -264,7 +264,7 @@ class GroupProfileViewController: UITableViewController {
     
     func refreshWall(filter: String) {
         isRefresh = true
-        ViewControllerUtils().showActivityIndicator(uiView: self.view)
+        ViewControllerUtils().showActivityIndicator2(controller: self)
         heights.removeAll(keepingCapacity: false)
         filterRecords = filter
         recordsCount = 0

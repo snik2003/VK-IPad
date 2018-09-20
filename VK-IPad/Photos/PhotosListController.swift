@@ -47,7 +47,7 @@ class PhotosListController: UIViewController, UITableViewDelegate, UITableViewDa
             self.configureTableView()
             
             self.tableView.separatorStyle = .none
-            ViewControllerUtils().showActivityIndicator(uiView: self.view)
+            ViewControllerUtils().showActivityIndicator2(controller: self)
         }
         
         getPhotos()

@@ -103,7 +103,7 @@ class PhotoAlbumsListCell: UITableViewCell {
                             controller.offset = 0
                             controller.tableView.separatorStyle = .none
                             controller.tableView.frame = CGRect(x: 0, y: 0, width: controller.view.bounds.width, height: controller.view.bounds.height)
-                            ViewControllerUtils().showActivityIndicator(uiView: controller.view)
+                            ViewControllerUtils().showActivityIndicator2(controller: controller)
                             
                             controller.getPhotos()
                         } else {

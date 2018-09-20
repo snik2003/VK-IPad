@@ -65,7 +65,7 @@ class TopicsListController: UIViewController, UITableViewDelegate, UITableViewDa
         
         OperationQueue.main.addOperation {
             self.tableView.reloadData()
-            ViewControllerUtils().showActivityIndicator(uiView: self.view)
+            ViewControllerUtils().showActivityIndicator2(controller: self)
         }
         
         let url = "/method/board.getTopics"

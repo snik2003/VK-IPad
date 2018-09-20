@@ -62,7 +62,7 @@ class GroupDialogsController: UIViewController, UITableViewDelegate, UITableView
     func getConversations() {
         
         isRefresh = true
-        ViewControllerUtils().showActivityIndicator(uiView: self.view)
+        ViewControllerUtils().showActivityIndicator2(controller: self)
         
         let url = "/method/messages.getConversations"
         let parameters = [
