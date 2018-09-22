@@ -26,7 +26,7 @@
                                     <constraint firstAttribute="height" constant="500" id="aRG-cj-2PV"/>
                                 </constraints>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ВКлючайся! для IPad" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="zXQ-Zm-xLI">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ВКлючайся! для iPad" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="zXQ-Zm-xLI">
                                 <rect key="frame" x="493" y="292" width="380" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="bwg-Zw-jDm"/>

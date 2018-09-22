@@ -1040,7 +1040,7 @@
             </objects>
             <point key="canvasLocation" x="2234" y="1078"/>
         </scene>
-        <!--Оценили-->
+        <!--Likes Users Controller-->
         <scene sceneID="Q5T-Ng-4hk">
             <objects>
                 <viewController storyboardIdentifier="LikesUsersController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="eor-zz-W0v" customClass="LikesUsersController" customModule="VK_IPad" customModuleProvider="target" sceneMemberID="viewController">
@@ -1104,7 +1104,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="d8D-U0-Wax"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Оценили" id="YRA-Qv-EAw">
+                    <navigationItem key="navigationItem" id="YRA-Qv-EAw">
                         <barButtonItem key="backBarButtonItem" title="Назад" id="gHG-u6-Eea"/>
                     </navigationItem>
                     <connections>

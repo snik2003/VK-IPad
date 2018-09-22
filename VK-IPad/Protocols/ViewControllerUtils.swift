@@ -55,7 +55,7 @@ class ViewControllerUtils {
             ViewControllerUtils.container.center = centerPoint
             ViewControllerUtils.container.backgroundColor = .clear
             
-            ViewControllerUtils.loadingView.frame = CGRect(x: 0, y: 0, width: 220, height: 100)
+            ViewControllerUtils.loadingView.frame = CGRect(x: 0, y: 0, width: 200, height: 100)
             ViewControllerUtils.loadingView.center = centerPoint
             ViewControllerUtils.loadingView.backgroundColor = UIColorFromHex(rgbValue: 0x444444, alpha: 0.7)
             ViewControllerUtils.loadingView.clipsToBounds = true
@@ -63,11 +63,11 @@ class ViewControllerUtils {
             
             let label1 = UILabel()
             label1.setActivityText(text: "Подождите!")
-            label1.frame = CGRect(x: 10, y: 0, width: 200, height: 30)
+            label1.frame = CGRect(x: 0, y: 0, width: 200, height: 30)
             
             let label2 = UILabel()
-            label2.setActivityText(text: "Идет загрузка данных...")
-            label2.frame = CGRect(x: 10, y: 70, width: 200, height: 30)
+            label2.setActivityText(text: "Идет загрузка данных")
+            label2.frame = CGRect(x: 0, y: 70, width: 200, height: 30)
             
             ViewControllerUtils.activityIndicator.frame = CGRect(x: 0, y: 0, width: 40, height: 40);
             ViewControllerUtils.activityIndicator.activityIndicatorViewStyle = .whiteLarge

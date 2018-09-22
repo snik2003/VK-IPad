@@ -37,9 +37,14 @@ class LikesUsersController: UIViewController, UITableViewDelegate, UITableViewDa
         }
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        tableView.frame = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height)
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        
     }
     
     @IBAction func indexChanged(sender: UISegmentedControl)
@@ -92,14 +97,14 @@ class LikesUsersController: UIViewController, UITableViewDelegate, UITableViewDa
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let viewHeader = UIView()
         
-        viewHeader.backgroundColor = UIColor.white
+        viewHeader.backgroundColor = .white
         return viewHeader
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let viewFooter = UIView()
         
-        viewFooter.backgroundColor = UIColor.white
+        viewFooter.backgroundColor = .white
         return viewFooter
     }
     
