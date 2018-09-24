@@ -31,6 +31,18 @@ class TopicsListController: UIViewController, UITableViewDelegate, UITableViewDa
     
     var width: CGFloat = 0
     
+    var navHeight: CGFloat {
+        var topSpace: CGFloat = 0
+        
+        if #available(iOS 11.0, *) {
+            topSpace = self.view.safeAreaInsets.top
+        } else {
+            topSpace = self.topLayoutGuide.length
+        }
+        
+        return topSpace
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -133,7 +145,7 @@ class TopicsListController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     func createTableView() {
-        tableView.frame = CGRect(x: 0, y: 64, width: self.view.frame.width, height: self.view.frame.height - 64)
+        tableView.frame = CGRect(x: 0, y: navHeight, width: self.view.frame.width, height: self.view.frame.height - navHeight)
         self.view.addSubview(tableView)
     }
     

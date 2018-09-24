@@ -662,11 +662,12 @@ extension UIViewController: VkOperationProtocol {
                             if record.canComment == 1 {
                                 controller.record[0].canComment = 0
                                 
-                                controller.tableView.frame = CGRect(x: 0, y: 64, width: controller.view.bounds.width, height: controller.view.bounds.height)
+                                controller.tableView.frame = CGRect(x: 0, y: 64, width: controller.view.bounds.width, height: controller.view.bounds.height - 64)
                                 controller.view.addSubview(controller.tableView)
                                 controller.commentView.removeFromSuperview()
                             } else {
                                 controller.record[0].canComment = 1
+                                controller.commentView.layoutSubviews()
                                 controller.view.addSubview(controller.commentView)
                             }
                             
@@ -1079,8 +1080,6 @@ extension UIViewController: VkOperationProtocol {
             } else {
                 parameters["close_comments"] = "0"
             }
-            
-            print(parameters)
             
             let request = GetServerDataOperation(url: url, parameters: parameters)
             request.completionBlock = {

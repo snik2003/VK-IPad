@@ -129,7 +129,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
     }
     
     func configureTableView() {
-        tableView.frame = CGRect(x: 0, y: 64, width: self.view.bounds.width, height: self.view.bounds.height)
+        tableView.frame = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height)
         tableView.backgroundColor = vkSingleton.shared.dialogColor
         
         commentView = DCCommentView(scrollView: self.tableView, frame: self.tableView.bounds)
@@ -1102,7 +1102,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
             }
         
         
-            if dialogs.count < totalCount {
+            /*if dialogs.count < totalCount {
                 if self.source == .all {
                     let action4 = UIAlertAction(title: "Дозагрузить сообщения в беседу", style: .destructive) { action in
                         
@@ -1118,7 +1118,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
                     }
                     alertController.addAction(action4)
                 }
-            }
+            }*/
             
             
             if let popoverController = alertController.popoverPresentationController {
@@ -1345,7 +1345,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
             }
             
             
-            if dialogs.count < totalCount {
+            /*if dialogs.count < totalCount {
                 if self.source == .all {
                     let action4 = UIAlertAction(title: "Дозагрузить сообщения в беседу", style: .destructive) { action in
                         
@@ -1361,7 +1361,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
                     }
                     alertController.addAction(action4)
                 }
-            }
+            }*/
             
             
             if let popoverController = alertController.popoverPresentationController {
@@ -1416,7 +1416,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
                 }
             }
             
-            if dialogs.count < totalCount {
+            /*if dialogs.count < totalCount {
                 if self.source == .all {
                     let action4 = UIAlertAction(title: "Дозагрузить сообщения в беседу", style: .destructive) { action in
                         
@@ -1432,7 +1432,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
                     }
                     alertController.addAction(action4)
                 }
-            }
+            }*/
             
             
             if let popoverController = alertController.popoverPresentationController {

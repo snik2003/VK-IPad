@@ -197,10 +197,13 @@
     CGFloat textH = self.messageBarView.frame.size.height;
     if(textH == 0) {
         textH = self.normalHeight;
-        self.scrollView.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height-textH-self.tabHeight);
+        
+        self.scrollView.frame = CGRectMake(0, 64, self.frame.size.width, self.frame.size.height-textH-self.tabHeight - 64);
+        
         self.messageBarView.frame = CGRectMake(0, self.scrollView.frame.origin.y+self.scrollView.frame.size.height, self.frame.size.width, textH);
         self.maxScrollHeight = self.scrollView.frame.size.height;
     }
+    
     self.blurBar.frame = CGRectMake(0, 0, self.messageBarView.frame.size.width, self.messageBarView.frame.size.height);
     CGFloat pad = 10;
     CGFloat btnWidth = 30;
@@ -550,11 +553,11 @@
     //[self.scrollView scrollRectToVisible:CGRectMake(0.0, self.scrollView.contentSize.height - 1.0, 1.0, 1.0) animated:YES];*/
     
     CGRect frame = self.messageBarView.frame;
-    frame.origin.y += self.tabHeight;
+    frame.origin.y += self.tabHeight - 64;
     self.messageBarView.frame = frame;
     
     frame = self.scrollView.frame;
-    frame.size.height += self.tabHeight;
+    frame.size.height += self.tabHeight - 64;
     self.scrollView.frame = frame;
     
     [self.scrollView setContentOffset:CGPointMake(0, self.scrollView.contentSize.height - self.scrollView.bounds.size.height)];

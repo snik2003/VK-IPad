@@ -77,16 +77,13 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
         }
     }
 
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
     
     func configureTableView() {
-        tableView.frame = CGRect(x: 0, y: 64, width: self.view.bounds.width, height: self.view.bounds.height)
+        tableView.frame = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height)
         
         if !preview {
             commentView = DCCommentView(scrollView: self.tableView, frame: self.tableView.bounds)
@@ -266,7 +263,7 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if section == 0 {
             if record.count > 0 {
-                return 5
+                return 0
             }
         }
         return 0.001
@@ -471,7 +468,7 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
                         }
                         
                         if self.record[0].canComment == 0 {
-                            self.tableView.frame = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height)
+                            self.tableView.frame = CGRect(x: 0, y: 64, width: self.view.bounds.width, height: self.view.bounds.height - 64)
                             self.view.addSubview(self.tableView)
                             self.commentView.removeFromSuperview()
                         } else {
@@ -604,7 +601,7 @@ class RecordController: UIViewController, UITableViewDelegate, UITableViewDataSo
                     
                     if self.record.count > 0 {
                         if self.record[0].canComment == 0 {
-                            self.tableView.frame = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height)
+                            self.tableView.frame = CGRect(x: 0, y: 64, width: self.view.bounds.width, height: self.view.bounds.height - 64)
                             self.view.addSubview(self.tableView)
                             self.commentView.removeFromSuperview()
                         } else {
