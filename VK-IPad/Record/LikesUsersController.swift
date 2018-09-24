@@ -40,7 +40,7 @@ class LikesUsersController: UIViewController, UITableViewDelegate, UITableViewDa
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        tableView.frame = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height)
+        tableView.frame = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height - segmentedControl.bounds.height - 40)
     }
     
     override func didReceiveMemoryWarning() {

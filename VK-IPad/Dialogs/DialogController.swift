@@ -30,7 +30,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
     var chatID = 0
     var groupID = 0
     
-    weak var delegate: UIViewController!
+    var delegate: UIViewController!
     
     var heights: [IndexPath: CGFloat] = [:]
     var width: CGFloat = 0

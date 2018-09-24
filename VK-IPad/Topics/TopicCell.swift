@@ -10,15 +10,15 @@ import UIKit
 
 class TopicCell: UITableViewCell {
     
-    weak var delegate: UIViewController!
+    var delegate: UIViewController!
     
-    weak var topic: Topic!
-    weak var group: GroupProfile!
+    var topic: Topic!
+    var group: GroupProfile!
     var users: [UserProfile] = []
     
     var indexPath: IndexPath!
-    weak var cell: UITableViewCell!
-    weak var tableView: UITableView!
+    var cell: UITableViewCell!
+    var tableView: UITableView!
     var cellWidth: CGFloat = 0
     
     

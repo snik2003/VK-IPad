@@ -10,7 +10,7 @@ import UIKit
 
 class SwitchOptionCell: UITableViewCell {
 
-    weak var delegate: UIViewController!
+    var delegate: UIViewController!
     
     var optSwitch = UISwitch()
     var headerLabel = UILabel()

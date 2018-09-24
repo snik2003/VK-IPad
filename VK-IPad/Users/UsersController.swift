@@ -18,7 +18,7 @@ class UsersController: UIViewController, UITableViewDelegate, UITableViewDataSou
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var segmentedControl: UISegmentedControl!
     
-    weak var delegate: UIViewController!
+    var delegate: UIViewController!
     
     var userID = ""
     var type = "friends"

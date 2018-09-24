@@ -10,7 +10,7 @@ import UIKit
 
 class PersonalInfoCell: UITableViewCell {
 
-    weak var delegate: UIViewController!
+    var delegate: UIViewController!
     var inform: InfoInProfile!
     
     var cellWidth: CGFloat = 0

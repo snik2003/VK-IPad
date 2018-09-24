@@ -13,8 +13,8 @@ import FLAnimatedImage
 
 class RecordCell: UITableViewCell {
     
-    weak var delegate: UIViewController!
-    weak var record: Record!
+    var delegate: UIViewController!
+    var record: Record!
     var users: [UserProfile]!
     var groups: [GroupProfile]!
     
@@ -24,8 +24,8 @@ class RecordCell: UITableViewCell {
     var showLikesPanel = false
     
     var indexPath: IndexPath!
-    weak var cell: UITableViewCell!
-    weak var tableView: UITableView!
+    var cell: UITableViewCell!
+    var tableView: UITableView!
     
     var cellWidth: CGFloat = 0
     var leftX: CGFloat = 20

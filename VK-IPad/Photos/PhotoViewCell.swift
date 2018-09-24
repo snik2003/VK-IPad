@@ -15,8 +15,8 @@ class PhotoViewCell: UITableViewCell {
 
     @IBOutlet weak var imageScrollView: ImageScrollView!
     
-    weak var delegate: PhotoViewController!
-    weak var photo: Photo!
+    var delegate: PhotoViewController!
+    var photo: Photo!
     
     var cellWidth: CGFloat = 0
     

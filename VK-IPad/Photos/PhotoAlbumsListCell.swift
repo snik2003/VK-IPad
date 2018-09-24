@@ -10,7 +10,7 @@ import UIKit
 
 class PhotoAlbumsListCell: UITableViewCell {
     
-    weak var delegate: UIViewController!
+    var delegate: UIViewController!
     var albums: [PhotoAlbum]!
     
     var indexPath: IndexPath!

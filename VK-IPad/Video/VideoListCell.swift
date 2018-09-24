@@ -21,7 +21,7 @@ class VideoListCell: UITableViewCell {
     var markCheck: BEMCheckBox!
     var fadeImage: UIImageView!
     
-    weak var delegate: UIViewController!
+    var delegate: UIViewController!
     
     var video: Video!
     var source: String = ""

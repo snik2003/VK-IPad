@@ -12,7 +12,7 @@ import SCLAlertView
 
 class ChangeAccountView: UIView {
 
-    weak var delegate: UIViewController!
+    var delegate: UIViewController!
     var popover: Popover!
     
     let width: CGFloat = 290

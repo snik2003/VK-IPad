@@ -12,12 +12,12 @@ import SwiftyJSON
 
 class DialogTitleView: UIView {
 
-    weak var delegate: DialogController!
+    var delegate: DialogController!
     var status = ""
     
-    weak var conversation: Conversation2!
-    weak var user: UserProfile!
-    weak var group: GroupProfile!
+    var conversation: Conversation2!
+    var user: UserProfile!
+    var group: GroupProfile!
     
     var typing = false
     var isTimer = false
@@ -261,7 +261,7 @@ class DialogTitleView: UIView {
                 statusLabel.frame = CGRect(x: 0, y: 21, width: 350, height: 16)
             } else if !isTimer {
                 typingText = "печатает новое сообщение"
-                
+                print(typingText)
                 statusLabel.textAlignment = .left
                 statusLabel.textColor = UIColor.white
                 statusLabel.font = offlineFont

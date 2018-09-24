@@ -14,7 +14,7 @@ class VideoListController: UIViewController, UITableViewDelegate, UITableViewDat
     var searchBar: UISearchBar!
     var tableView: UITableView!
     
-    weak var delegate: UIViewController!
+    var delegate: UIViewController!
     
     let heightRow: CGFloat = 0
     

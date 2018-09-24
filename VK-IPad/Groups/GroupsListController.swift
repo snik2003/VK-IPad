@@ -14,7 +14,7 @@ class GroupsListController: UIViewController, UITableViewDelegate, UITableViewDa
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var tableView: UITableView!
     
-    weak var delegate: UIViewController!
+    var delegate: UIViewController!
     
     
     var userID = ""

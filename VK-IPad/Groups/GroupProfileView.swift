@@ -12,8 +12,8 @@ import SCLAlertView
 
 class GroupProfileView: UIView {
 
-    weak var delegate: GroupProfileViewController!
-    weak var profile: GroupProfile!
+    var delegate: GroupProfileViewController!
+    var profile: GroupProfile!
 
     let dopButton = UIButton()
     let isMemberButton = UIButton()

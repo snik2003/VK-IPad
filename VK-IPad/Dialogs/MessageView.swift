@@ -25,9 +25,9 @@ class vkMessageView: UIView {
         static let radiusCorner: CGFloat = 10
     }
     
-    weak var delegate: DialogController!
-    weak var cell: MessageCell!
-    weak var dialog: Dialog!
+    var delegate: DialogController!
+    var cell: MessageCell!
+    var dialog: Dialog!
     
     var indexPath: IndexPath!
     

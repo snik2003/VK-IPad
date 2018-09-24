@@ -17,7 +17,7 @@ class PasswordController: UIViewController {
     
     var newPass1 = ""
     var newPass2 = ""
-    weak var delegate: OptionsController!
+    var delegate: OptionsController!
     
     let kPasswordDigit = 4
     let tintColor = UIColor.white

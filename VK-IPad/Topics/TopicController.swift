@@ -37,7 +37,7 @@ class TopicController: UIViewController, UITableViewDelegate, UITableViewDataSou
     var commentView: DCCommentView!
     //var optButton: UIBarButtonItem!
     
-    weak var delegate: UIViewController!
+    var delegate: UIViewController!
 
     var attachPanel = AttachPanel()
     

@@ -11,8 +11,8 @@ import SwiftyJSON
 
 class ProfileView: UIView {
 
-    weak var delegate: ProfileViewController!
-    weak var user: UserProfile!
+    var delegate: ProfileViewController!
+    var user: UserProfile!
     
     var photos: [Photo] = []
     

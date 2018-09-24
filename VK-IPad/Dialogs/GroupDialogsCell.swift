@@ -11,9 +11,9 @@ import SwiftyJSON
 
 class GroupDialogsCell: UITableViewCell {
 
-    weak var delegate: GroupDialogsController!
-    weak var conversation: Conversation!
-    weak var dialog: Dialog!
+    var delegate: GroupDialogsController!
+    var conversation: Conversation!
+    var dialog: Dialog!
     
     var users: [UserProfile] = []
     var groups: [GroupProfile] = []

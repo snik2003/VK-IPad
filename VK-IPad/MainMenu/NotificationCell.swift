@@ -10,15 +10,15 @@ import UIKit
 
 class NotificationCell: UITableViewCell {
 
-    weak var delegate: NotificationController!
+    var delegate: NotificationController!
     
-    weak var not: Notification!
+    var not: Notification!
     var users: [UserProfile]!
     var groups: [GroupProfile]!
     
     var indexPath: IndexPath!
-    weak var cell: UITableViewCell!
-    weak var tableView: UITableView!
+    var cell: UITableViewCell!
+    var tableView: UITableView!
     
     var notLabel = UILabel()
     

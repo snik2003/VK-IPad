@@ -25,8 +25,8 @@ class TopicsListController: UIViewController, UITableViewDelegate, UITableViewDa
     var count = 30
     var isRefresh = false
     
-    var searchBar: UISearchBar!
-    var tableView: UITableView!
+    var searchBar = UISearchBar(frame: CGRect.zero)
+    var tableView = UITableView()
     var optButton: UIBarButtonItem!
     
     var width: CGFloat = 0
@@ -36,8 +36,13 @@ class TopicsListController: UIViewController, UITableViewDelegate, UITableViewDa
         
         
         OperationQueue.main.addOperation {
-            self.createSearchBar()
-            self.createTableView()
+            self.tableView.frame = CGRect(x: 0, y: 164, width: self.view.frame.width, height: self.view.frame.height - 64)
+            self.view.addSubview(self.tableView)
+            
+            self.tableView.delegate = self
+            self.tableView.dataSource = self
+            
+            self.tableView.register(TopicCell.self, forCellReuseIdentifier: "topicCell")
             
             self.searchBar.delegate = self
             self.searchBar.returnKeyType = .search
@@ -55,6 +60,12 @@ class TopicsListController: UIViewController, UITableViewDelegate, UITableViewDa
         getTopics()
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        self.createTableView()
+    }
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         
@@ -116,20 +127,13 @@ class TopicsListController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     func createSearchBar() {
-        searchBar = UISearchBar(frame: CGRect(x: 0, y: 0, width: self.width, height: 0))
+        searchBar.frame = CGRect(x: 0, y: 0, width: self.width, height: 0)
         
         self.view.addSubview(searchBar)
     }
     
     func createTableView() {
-        tableView = UITableView()
-        tableView.frame = CGRect(x: 0, y: searchBar.frame.maxY, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height - searchBar.frame.maxY)
-        
-        tableView.delegate = self
-        tableView.dataSource = self
-        
-        tableView.register(TopicCell.self, forCellReuseIdentifier: "topicCell")
-        
+        tableView.frame = CGRect(x: 0, y: 64, width: self.view.frame.width, height: self.view.frame.height - 64)
         self.view.addSubview(tableView)
     }
     
@@ -276,9 +280,7 @@ class TopicsListController: UIViewController, UITableViewDelegate, UITableViewDa
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         
         if isRefresh == false {
-            OperationQueue.main.addOperation {
-                self.getTopics()
-            }
+            self.getTopics()
         }
     }
     

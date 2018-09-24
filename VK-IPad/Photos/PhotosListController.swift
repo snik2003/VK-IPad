@@ -10,7 +10,7 @@ import UIKit
 
 class PhotosListController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
-    weak var delegate: UIViewController!
+    var delegate: UIViewController!
     
     var ownerID = ""
     var albumID = ""

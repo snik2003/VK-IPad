@@ -21,10 +21,10 @@ class NewRecordController: UIViewController, UITableViewDelegate, UITableViewDat
     var ownerID = ""
     var width: CGFloat = 0
     
-    weak var delegate: UIViewController!
+    var delegate: UIViewController!
     var attachPanel = AttachPanel()
     
-    weak var record: Record!
+    var record: Record!
     
     var textView = UITextView()
     
