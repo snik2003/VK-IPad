@@ -294,7 +294,7 @@ class ProfileViewController: UITableViewController, WKNavigationDelegate {
                 wallProfiles.removeAll(keepingCapacity: false)
                 
                 profileView.updateOwnerButtons()
-                profileView.recordsCountLabel.text = "Всего записей: 0"
+                profileView.recordsCountLabel.text = "Нет записей"
                 
                 offset += self.count
                 tableView.reloadData()
@@ -341,7 +341,11 @@ class ProfileViewController: UITableViewController, WKNavigationDelegate {
                     
                     OperationQueue.main.addOperation {
                         self.profileView.updateOwnerButtons()
-                        self.profileView.recordsCountLabel.text = "Всего записей: \(self.recordsCount)"
+                        if self.recordsCount > 0 {
+                            self.profileView.recordsCountLabel.text = "Всего записей: \(self.recordsCount)"
+                        } else {
+                            self.profileView.recordsCountLabel.text = "Нет записей"
+                        }
                         
                         self.offset += self.count
                         self.tableView.reloadData()

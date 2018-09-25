@@ -759,8 +759,8 @@ class NotificationCell: UITableViewCell {
                 }
             } else if self.postString.hasPrefix("фото") {
                 if let photo = self.not.parent.photo {
-                    self.delegate.openWallRecord(ownerID: photo.ownerID, postID: photo.id, accessKey: photo.accessKey, type: "photo")
-                    //self.delegate.openPhotoViewController(numPhoto: 0, photos: [photo])
+                    //self.delegate.openWallRecord(ownerID: photo.ownerID, postID: photo.id, accessKey: photo.accessKey, type: "photo")
+                    self.delegate.openPhotoViewController(numPhoto: 0, photos: [photo])
                 }
             } else if self.postString.hasPrefix("видео") {
                 if let video = self.not.parent.video {

@@ -28,6 +28,8 @@ class NotificationController: UITableViewController {
         self.refreshControl?.addTarget(self, action: #selector(self.updateNotifications), for: UIControlEvents.valueChanged)
         refreshControl?.tintColor = UIColor.black
         tableView.addSubview(refreshControl!)
+        
+        self.refreshControl?.beginRefreshing()
     }
 
     override func didReceiveMemoryWarning() {
@@ -37,11 +39,8 @@ class NotificationController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        OperationQueue.main.addOperation {
-            self.refreshControl?.beginRefreshing()
-            self.tableView.separatorStyle = .none
-            ViewControllerUtils().showActivityIndicator2(controller: self)
-        }
+        tableView.separatorStyle = .none
+        ViewControllerUtils().showActivityIndicator2(controller: self)
         
         getNotifications()
     }

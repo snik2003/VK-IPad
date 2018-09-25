@@ -1318,9 +1318,12 @@ class GroupProfileView: UIView {
             view.addSubview(postponedButton)
         }
         
-        recordsCountLabel.text = "Всего записей: \(delegate.recordsCount)"
+        if delegate.recordsCount > 0 {
+            recordsCountLabel.text = "Всего записей: \(delegate.recordsCount)"
+        } else {
+            recordsCountLabel.text = "Нет записей"
+        }
         recordsCountLabel.textAlignment = .right
-        recordsCountLabel.textColor = recordsCountLabel.tintColor
         recordsCountLabel.font = UIFont(name: "Verdana", size: 13)!
         
         recordsCountLabel.frame = CGRect(x: view.bounds.width - 10 - 150, y: 5, width: 150, height: buttonHeight)

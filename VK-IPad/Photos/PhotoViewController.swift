@@ -197,6 +197,7 @@ class PhotoViewController: UITableViewController {
                     self.openWallRecord(ownerID: cell.photo.ownerID, postID: cell.photo.id, accessKey: cell.photo.accessKey, type: "photo")
                 }
 
+                cell.usersButton.isEnabled = (self.likes.count > 0)
                 cell.usersButton.removeTarget(nil, action: nil, for: .allEvents)
                 cell.usersButton.add(for: .touchUpInside) {
                     cell.usersButton.smallButtonTouched()
