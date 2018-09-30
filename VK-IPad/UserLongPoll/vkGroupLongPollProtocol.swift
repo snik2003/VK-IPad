@@ -9,6 +9,7 @@
 import UIKit
 import SwiftyJSON
 import Alamofire
+import AVFoundation
 
 protocol vkGroupLongPollProtocol {
     
@@ -247,16 +248,17 @@ extension MenuViewController: vkGroupLongPollProtocol {
                                             controller.totalCount += 1
                                             controller.tableView.reloadData()
                                             controller.tableView.scrollToRow(at: IndexPath(row: 0, section: 3), at: .bottom, animated: false)
+                                            AudioServicesPlaySystemSound(1003)
+                                            controller.markAsReadMessages()
                                         }
                                     } else {
                                         OperationQueue.main.addOperation {
                                             controller.offset = 0
                                             controller.startMessageID = update.elements[1]
                                             controller.getDialog()
+                                            AudioServicesPlaySystemSound(1003)
                                         }
                                     }
-                                    
-                                    controller.markAsReadMessages()
                                 }
                             } else if update.elements[0] == 5 {
                                 if controller.userID == "\(update.elements[3])" {
@@ -267,6 +269,7 @@ extension MenuViewController: vkGroupLongPollProtocol {
                                     OperationQueue.main.addOperation {
                                         controller.offset = 0
                                         controller.getDialog()
+                                        AudioServicesPlaySystemSound(1003)
                                     }
                                 }
                             } else if update.elements[0] == 6 {

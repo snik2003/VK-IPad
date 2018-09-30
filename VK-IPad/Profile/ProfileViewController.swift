@@ -193,7 +193,11 @@ class ProfileViewController: UITableViewController, WKNavigationDelegate {
             if self.userProfile.count > 0 {
                 let user = self.userProfile[0]
                 if user.blacklisted == 1 {
-                    self.showErrorMessage(title: "Предупреждение", msg: "\nВы находитесь в черном списке \(user.firstNameGen)\n")
+                    if user.sex == 1 {
+                        self.showErrorMessage(title: "Предупреждение", msg: "\nУ \(user.firstNameGen) закрытый профиль\n или Вы находитесь в её черном списке.\n")
+                    } else {
+                        self.showErrorMessage(title: "Предупреждение", msg: "\nУ \(user.firstNameGen) закрытый профиль\n или Вы находитесь в его черном списке.\n")
+                    }
                 }
             }
             

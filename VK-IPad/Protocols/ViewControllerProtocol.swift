@@ -13,6 +13,7 @@ import SwiftyJSON
 import Popover
 import Photos
 import SwiftMessages
+import AVFoundation
 
 protocol ViewControllerProtocol {
     
@@ -110,6 +111,7 @@ extension UIViewController: ViewControllerProtocol {
             
             alert.addButton("OK", action: {})
             alert.showError(title, subTitle: msg)
+            AudioServicesPlaySystemSound(1000)
         }
     }
     
@@ -128,6 +130,7 @@ extension UIViewController: ViewControllerProtocol {
             
             alert.addButton("OK", action: {})
             alert.showSuccess(title, subTitle: msg)
+            AudioServicesPlaySystemSound(1001)
         }
     }
     
@@ -146,6 +149,7 @@ extension UIViewController: ViewControllerProtocol {
             
             alert.addButton("OK", action: {})
             alert.showInfo(title, subTitle: msg)
+            AudioServicesPlaySystemSound(1001)
         }
     }
     

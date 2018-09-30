@@ -9,6 +9,7 @@
 import UIKit
 import SwiftyJSON
 import Alamofire
+import AVFoundation
 
 protocol vkUserLongPollProtocol {
     func getLongPollServer()
@@ -241,16 +242,17 @@ extension MenuViewController: vkUserLongPollProtocol {
                                         controller.totalCount += 1
                                         controller.tableView.reloadData()
                                         controller.tableView.scrollToRow(at: IndexPath(row: 0, section: 3), at: .bottom, animated: false)
+                                        AudioServicesPlaySystemSound(1003)
+                                        controller.markAsReadMessages()
                                     }
                                 } else {
                                     OperationQueue.main.addOperation {
                                         controller.totalCount += 1
                                         controller.loadNewMessages(messageID: update.elements[1])
                                         controller.tableView.scrollToRow(at: IndexPath(row: 0, section: 3), at: .bottom, animated: false)
+                                        AudioServicesPlaySystemSound(1003)
                                     }
                                 }
-                                
-                                controller.markAsReadMessages()
                             }
                         } else if update.elements[0] == 5 {
                             if controller.userID == "\(update.elements[3])" {
@@ -261,6 +263,8 @@ extension MenuViewController: vkUserLongPollProtocol {
                                 OperationQueue.main.addOperation {
                                     controller.offset = 0
                                     controller.getDialog()
+                                    self.showMessageNotification(title: "", text: update.text, userID: update.elements[3], chatID: 0, groupID: 0, startID: -1)
+                                    AudioServicesPlaySystemSound(1003)
                                 }
                             }
                         } else if update.elements[0] == 6 {

@@ -394,7 +394,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
         let url = "/method/messages.getImportantMessages"
         let parameters = [
             "access_token": vkSingleton.shared.accessToken,
-            "offset": "\(offset)",
+            "offset": "0",
             "count": "200",
             "peer_id": "\(userID)",
             "fields": "id,first_name,last_name,last_seen,photo_max_orig,photo_max,deactivated,first_name_abl,first_name_gen,last_name_gen,online,can_write_private_message,sex",
@@ -409,9 +409,9 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
             guard let json = try? JSON(data: data) else { print("json error"); return }
             //print(json)
             
-            self.totalCount = json["response"]["messages"]["count"].intValue
-            
             let dialogs = json["response"]["messages"]["items"].compactMap { Dialog(json: $0.1) }
+            self.totalCount = dialogs.count
+            
             for dialog in dialogs.reversed() {
                 if "\(dialog.peerID)" == self.userID {
                     self.dialogs.append(dialog)
@@ -429,6 +429,12 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
                 self.tableView.separatorStyle = .none
                 self.tableView.scrollToRow(at: IndexPath(row: 0, section: 3), at: .bottom, animated: false)
                 ViewControllerUtils().hideActivityIndicator()
+                
+                if self.totalCount == 0 {
+                    self.showErrorMessage(title: "«Важные» сообщения", msg: "В данном диалоге нет сообщений, помеченных как «важные».")
+                } else {
+                    AudioServicesPlaySystemSound(1001)
+                }
             }
         }
         OperationQueue().addOperation(getServerDataOperation)
@@ -1096,6 +1102,7 @@ class DialogController: UIViewController, UITableViewDelegate, UITableViewDataSo
                         
                         ViewControllerUtils().showActivityIndicator2(controller: self)
                         self.getDialog()
+                        AudioServicesPlaySystemSound(1001)
                     }
                     alertController.addAction(action3)
                 }
